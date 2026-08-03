@@ -2,10 +2,23 @@ package com.suri.pipsurios.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Fondo principal
+val PipBlack = Color(0xFF000000)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Verde principal (texto)
+val PipGreen = Color(0xFF00FF66)
+
+// Verde brillante (elementos importantes)
+val PipGreenBright = Color(0xFF66FF99)
+
+// Verde tenue (texto secundario)
+val PipGreenDim = Color(0xFF009944)
+
+// Gris (elementos desactivados)
+val PipGray = Color(0xFF5A5A5A)
+
+// Ámbar (avisos)
+val PipAmber = Color(0xFFFFB000)
+
+// Rojo (errores)
+val PipRed = Color(0xFFFF4444)

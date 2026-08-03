@@ -10,9 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import com.suri.pipsurios.ui.theme.PipBlack
+import com.suri.pipsurios.ui.theme.PipGreen
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.unit.dp
+import com.suri.pipsurios.BuildConfig
+import com.suri.pipsurios.ui.theme.PipGreenDim
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,14 +35,40 @@ fun PIPSuriOSScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(PipBlack),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "PIP-SuriOS\nINITIALIZING...",
-            color = Color(0xFF00FF66),
-            fontSize = 30.sp,
-            fontFamily = FontFamily.Monospace
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "PIP-BOY by RobCo",
+                color = PipGreen,
+                fontSize = 30.sp,
+                fontFamily = FontFamily.Monospace
+            )
+
+            Text(
+                text = "SuriOS v. ${BuildConfig.VERSION_NAME}",
+                color = PipGreenDim,
+                fontSize = 18.sp,
+                fontFamily = FontFamily.Monospace
+            )
+
+            Text(
+                text = "Brotherhood of Steel Mode",
+                color = PipGreenDim,
+                fontSize = 18.sp,
+                fontFamily = FontFamily.Monospace
+            )
+
+            Text(
+                text = "INITIALIZING...",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace
+            )
+        }
     }
 }
