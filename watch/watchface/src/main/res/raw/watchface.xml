@@ -71,6 +71,245 @@
                     </Font>
                 </Text>
             </PartText>
+
+            <Condition>
+                <Expressions>
+                    <Expression name="active_steps_zero"><![CDATA[[STEP_COUNT] == 0]]></Expression>
+                    <Expression name="active_steps_under_1000"><![CDATA[[STEP_COUNT] >= 1 && [STEP_COUNT] < 1000]]></Expression>
+                    <Expression name="active_steps_up_to_999999"><![CDATA[[STEP_COUNT] <= 999999]]></Expression>
+                </Expressions>
+                <Compare expression="active_steps_zero">
+                    <PartText
+                        name="surios_steps_active_zero"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="28">--</Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Compare expression="active_steps_under_1000">
+                    <PartText
+                        name="surios_steps_active_under_1000"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="28">
+                                <Template>%s
+                                    <Parameter expression="[STEP_COUNT]" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Compare expression="active_steps_up_to_999999">
+                    <PartText
+                        name="surios_steps_active_grouped"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="28">
+                                <Template>%s %s
+                                    <Parameter expression="floor([STEP_COUNT] / 1000)" />
+                                    <Parameter expression="numberFormat(&quot;000&quot;, [STEP_COUNT] % 1000)" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Default>
+                    <PartText
+                        name="surios_steps_active_capped"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="28">999 999+</Font>
+                        </Text>
+                    </PartText>
+                </Default>
+            </Condition>
+
+            <Condition>
+                <Expressions>
+                    <Expression name="active_battery_charging">[BATTERY_CHARGING_STATUS]</Expression>
+                </Expressions>
+                <Compare expression="active_battery_charging">
+                    <PartText
+                        name="surios_battery_recharging_active"
+                        height="28"
+                        width="106"
+                        x="292"
+                        y="207">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="15">RECHARGING</Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Default>
+                    <Group
+                        name="surios_battery_active"
+                        height="450"
+                        width="450"
+                        x="0"
+                        y="0">
+                        <PartDraw
+                            name="surios_battery_outline"
+                            height="24"
+                            width="63"
+                            x="314"
+                            y="191">
+                            <Rectangle height="24" width="58" x="0" y="0">
+                                <Stroke color="#FF66FF66" thickness="2" />
+                            </Rectangle>
+                            <Rectangle height="10" width="5" x="58" y="7">
+                                <Fill color="#FF66FF66" />
+                            </Rectangle>
+                        </PartDraw>
+
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_1"><![CDATA[[BATTERY_PERCENT] >= 1]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_1">
+                                <PartDraw height="16" width="4" x="318" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_2"><![CDATA[[BATTERY_PERCENT] >= 11]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_2">
+                                <PartDraw height="16" width="4" x="323" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_3"><![CDATA[[BATTERY_PERCENT] >= 21]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_3">
+                                <PartDraw height="16" width="4" x="328" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_4"><![CDATA[[BATTERY_PERCENT] >= 31]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_4">
+                                <PartDraw height="16" width="4" x="333" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_5"><![CDATA[[BATTERY_PERCENT] >= 41]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_5">
+                                <PartDraw height="16" width="4" x="338" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_6"><![CDATA[[BATTERY_PERCENT] >= 51]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_6">
+                                <PartDraw height="16" width="4" x="343" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_7"><![CDATA[[BATTERY_PERCENT] >= 61]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_7">
+                                <PartDraw height="16" width="4" x="348" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_8"><![CDATA[[BATTERY_PERCENT] >= 71]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_8">
+                                <PartDraw height="16" width="4" x="353" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_9"><![CDATA[[BATTERY_PERCENT] >= 81]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_9">
+                                <PartDraw height="16" width="4" x="358" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_10"><![CDATA[[BATTERY_PERCENT] >= 91]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_10">
+                                <PartDraw height="16" width="4" x="363" y="195">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+
+                        <PartText
+                            name="surios_battery_percent_active"
+                            height="32"
+                            width="80"
+                            x="305"
+                            y="224">
+                            <Text align="CENTER">
+                                <Font
+                                    color="#FF66FF66"
+                                    family="SYNC_TO_DEVICE"
+                                    size="24">
+                                    <Template>%s%%
+                                        <Parameter expression="[BATTERY_PERCENT]" />
+                                    </Template>
+                                </Font>
+                            </Text>
+                        </PartText>
+                    </Group>
+                </Default>
+            </Condition>
         </Group>
 
         <Group
@@ -123,6 +362,123 @@
                     </Font>
                 </Text>
             </PartText>
+
+            <Condition>
+                <Expressions>
+                    <Expression name="ambient_steps_zero"><![CDATA[[STEP_COUNT] == 0]]></Expression>
+                    <Expression name="ambient_steps_under_1000"><![CDATA[[STEP_COUNT] >= 1 && [STEP_COUNT] < 1000]]></Expression>
+                    <Expression name="ambient_steps_up_to_999999"><![CDATA[[STEP_COUNT] <= 999999]]></Expression>
+                </Expressions>
+                <Compare expression="ambient_steps_zero">
+                    <PartText
+                        name="surios_steps_ambient_zero"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="28">--</Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Compare expression="ambient_steps_under_1000">
+                    <PartText
+                        name="surios_steps_ambient_under_1000"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="28">
+                                <Template>%s
+                                    <Parameter expression="[STEP_COUNT]" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Compare expression="ambient_steps_up_to_999999">
+                    <PartText
+                        name="surios_steps_ambient_grouped"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="28">
+                                <Template>%s %s
+                                    <Parameter expression="floor([STEP_COUNT] / 1000)" />
+                                    <Parameter expression="numberFormat(&quot;000&quot;, [STEP_COUNT] % 1000)" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Default>
+                    <PartText
+                        name="surios_steps_ambient_capped"
+                        height="40"
+                        width="88"
+                        x="61"
+                        y="205">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="28">999 999+</Font>
+                        </Text>
+                    </PartText>
+                </Default>
+            </Condition>
+
+            <Condition>
+                <Expressions>
+                    <Expression name="ambient_battery_charging">[BATTERY_CHARGING_STATUS]</Expression>
+                </Expressions>
+                <Compare expression="ambient_battery_charging">
+                    <PartText
+                        name="surios_battery_recharging_ambient"
+                        height="28"
+                        width="106"
+                        x="292"
+                        y="207">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="15">RECHARGING</Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Default>
+                    <PartText
+                        name="surios_battery_percent_ambient"
+                        height="32"
+                        width="80"
+                        x="305"
+                        y="224">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="24">
+                                <Template>%s%%
+                                    <Parameter expression="[BATTERY_PERCENT]" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+                </Default>
+            </Condition>
         </Group>
     </Scene>
 </WatchFace>
