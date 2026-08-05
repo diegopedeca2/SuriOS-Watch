@@ -20,7 +20,7 @@ Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 002 | Sprint 002 completado; Sprint 003 no activo |
+| SuriOS Watch | Ninguno | Sprint 003 | Sprint 003 completado; Sprint 004 no activo |
 | PIP-SuriOS | Ninguno | Sprint 002 | Sprint 002 completado |
 
 ## 3. Historial y planificación
@@ -29,7 +29,7 @@ Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.
 |---:|---|---|---|---|---|---|---|
 | 001 | SuriOS Watch | Base de la Watch Face | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [SPRINT_001](SPRINT_001.md) |
 | 002 | Ecosistema SuriOS | Migración a un build Gradle multiproyecto | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 002 v1.2](SPRINT_002_v1.2.md) |
-| 003 | SuriOS Watch | Ambient Mode con hora y fecha | Aprobado | Pendiente; no activo | — | — | [Sprint 003 v1.1](SPRINT_003_v1.1.md) |
+| 003 | SuriOS Watch | Ambient Mode con hora y fecha | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 003 v1.1](SPRINT_003_v1.1.md) |
 | 004 | SuriOS Watch | Batería y pasos | Pendiente de documento de Sprint | Pendiente | — | — | — |
 | 005 | SuriOS Watch | Spotify y Google Wallet | Pendiente de documento de Sprint | Pendiente | — | — | — |
 | 006 | SuriOS Watch | Optimización, regresión y cierre | Pendiente de documento de Sprint | Pendiente | — | — | — |
@@ -81,22 +81,39 @@ Commit técnico:
 
 Durante la validación física se observó una ralentización temporal asociada a la depuración ADB, desaparecida al desactivar la depuración. No afecta al funcionamiento normal de la aplicación.
 
-## 7. Estadísticas
+## 7. Cierre de Sprint 003
+
+- Ambient Mode implementado mediante `Variant` en WFF v1.
+- Fondo PipBlack, hora PipGreen y fecha PipGreenDim.
+- Modo activo conservado íntegramente.
+- Validaciones superadas mediante Gradle, Android Studio, Wear OS Large Round y Xiaomi Watch 2.
+- Entrada, salida y actualización en estado ambiente correctas.
+- Sin regresiones funcionales o visuales.
+- Único archivo funcional modificado: `watch/watchface/src/main/res/raw/watchface.xml`.
+- No se introdujeron código Kotlin o Java ni servicios.
+
+Commit técnico:
+
+| Commit | Papel |
+|---|---|
+| `bc35866153d43442dc896a4bd9370e0f5cf29f4c` | Implementación de Ambient Mode con hora y fecha. |
+
+## 8. Estadísticas
 
 ### Ecosistema
 
-- Sprints completados: 2.
+- Sprints completados: 3.
 - Sprints activos: 0.
-- Sprints aprobados pendientes de implementación: 1.
+- Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 3.
 
 ### SuriOS Watch
 
-- Sprints completados: 2.
+- Sprints completados: 3.
 - Sprints activos: 0.
-- Sprints funcionales aprobados pendientes: 1.
+- Sprints funcionales aprobados pendientes: 0.
 - Sprints funcionales pendientes de documento: 3.
 
-## 8. Estado operativo
+## 9. Estado operativo
 
-[ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo. Sprint 003 es el siguiente Sprint previsto, pero no debe iniciarse sin autorización expresa.
+[ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo. Sprint 004 es el siguiente Sprint previsto, pero no está autorizado ni debe iniciarse sin autorización expresa.

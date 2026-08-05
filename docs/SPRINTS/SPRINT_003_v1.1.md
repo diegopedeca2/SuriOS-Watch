@@ -7,7 +7,7 @@ version: 1.1
 project: SuriOS Watch
 type: Funcional
 document_status: Aprobado
-implementation_status: Pendiente; no activo
+implementation_status: Completado
 priority: Alta
 replaces: Sprint 003 v1.0
 owner: Diego Pérez de Camino
@@ -16,7 +16,7 @@ date: 2026-08-05
 
 ## 1. Control documental
 
-Esta versión sustituye a `SPRINT-003 v1.0.md`, que permanece histórica. No puede activarse antes de completar y aprobar Sprint 002 ni sin autorización expresa reflejada en [ACTIVE_SPRINT](ACTIVE_SPRINT.md).
+Esta versión sustituye a `SPRINT-003 v1.0.md`, que permanece histórica. La implementación fue completada y validada el 2026-08-05. [ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo tras su cierre.
 
 Referencias obligatorias:
 
@@ -73,13 +73,13 @@ Los indicadores se incorporarán al Ambient Mode durante Sprint 004, no durante 
 - No modificar arquitectura aprobada en ADR-002.
 - No realizar commit sin autorización.
 
-## 7. Archivos previsiblemente afectados
+## 7. Archivo modificado
 
-Durante la implementación futura autorizada:
+La implementación modificó exclusivamente:
 
-- configuración WFF estrictamente relacionada con Ambient Mode;
-- `watchface.xml` o ruta equivalente tras Sprint 002;
-- únicamente archivos imprescindibles para el cambio de estado.
+- `watch/watchface/src/main/res/raw/watchface.xml`.
+
+No se añadieron código Kotlin o Java, servicios, dependencias, permisos, recursos alternativos ni configuraciones específicas por dispositivo.
 
 ## 8. Criterios de aceptación
 
@@ -126,16 +126,25 @@ Durante la implementación futura autorizada:
 - documentación mínima del resultado;
 - propuesta de commit.
 
-## 12. Definition of Done
+## 12. Cierre técnico
 
-Sprint 003 estará terminado cuando:
+Sprint 003 está completado. La implementación quedó registrada en el commit técnico:
 
-- cumpla todos los criterios;
-- no existan regresiones;
-- modo activo permanezca igual;
-- Ambient Mode funcione correctamente;
-- el propietario apruebe el resultado;
-- se autorice y cree un commit estable.
+- `bc35866153d43442dc896a4bd9370e0f5cf29f4c` — `Sprint 003 - Ambient Mode`.
+
+Ambient Mode se implementó mediante elementos `Variant` compatibles con WFF v1. La representación activa y la representación ambiente permanecen separadas, mientras el fondo PipBlack es compartido. El modo activo conserva íntegramente sus posiciones, dimensiones, formatos, alineaciones, colores y tipografía temporal autorizada.
+
+Validaciones superadas:
+
+| Validación | Resultado |
+|---|---|
+| Compilación Gradle | Correcta para `:watchface` y para `assembleDebug` conjunto. |
+| Android Studio | Correcto; módulo y configuración reconocidos desde el build raíz. |
+| Wear OS Large Round | Modo activo y Ambient Mode correctos; estado ambiente confirmado mediante Logcat. |
+| Xiaomi Watch 2 | Instalación y validación física correctas. |
+| Transición | Entrada y salida de Ambient Mode correctas. |
+| Actualización | Hora y fecha actualizadas correctamente en ambiente. |
+| Regresión | Sin regresiones funcionales, visuales o de geometría. |
 
 ## 13. Continuidad
 
@@ -146,4 +155,4 @@ Sprint 004 incorporará batería y pasos tanto al modo activo como, mediante sus
 | Versión | Estado | Descripción |
 |---|---|---|
 | 1.0 | Histórica, sustituida | Primera definición aprobada. |
-| 1.1 | Aprobada, pendiente de activación | Alinea alcance con WFPRD v1.4 y Ambient Mode por fases. |
+| 1.1 | Aprobada; implementación completada | Alinea el alcance y registra implementación, validaciones y cierre técnico. |
