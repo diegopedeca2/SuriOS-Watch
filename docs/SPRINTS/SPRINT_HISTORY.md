@@ -20,7 +20,7 @@ Su objetivo es ofrecer una visión rápida del progreso del proyecto sin necesid
 
 | Proyecto | Sprint activo | Estado |
 |----------|---------------|--------|
-| SuriOS Watch | Sprint 001 | 🟡 En preparación |
+| SuriOS Watch | Sprint 001 | 🟢 Completado |
 | PIP-SuriOS | No iniciado | ⚪ Pendiente |
 
 ---
@@ -29,7 +29,7 @@ Su objetivo es ofrecer una visión rápida del progreso del proyecto sin necesid
 
 | Sprint | Proyecto | Objetivo | Estado | Inicio | Fin | Documento |
 |---------|----------|----------|--------|--------|-----|-----------|
-| 001 | SuriOS Watch | Base de la Watch Face | 🟡 En preparación | -- | -- | SPRINT_001.md |
+| 001 | SuriOS Watch | Base de la Watch Face | 🟢 Completado | 2026-08-05 | 2026-08-05 | SPRINT_001.md |
 
 ---
 
@@ -68,9 +68,9 @@ Pendiente de planificación.
 
 ## SuriOS Watch
 
-- Sprints completados: 0
+- Sprints completados: 1
 - Sprints en desarrollo: 0
-- Sprints pendientes: 5
+- Sprints pendientes: 4
 
 ## PIP-SuriOS
 
@@ -84,3 +84,13 @@ Pendiente de planificación.
 Este documento actúa únicamente como índice de seguimiento.
 
 Toda la información funcional y técnica de cada Sprint se encuentra en su correspondiente documento individual.
+
+## Cierre de Sprint 001
+
+- Compilación correcta.
+- Instalación y validación visual correctas en emulador Wear OS.
+- Instalación correcta en Xiaomi Watch 2.
+- Validación física superada y aprobada por el propietario.
+- Commit técnico asociado: `e530164`, “Sprint 001 - Base funcional de la Watch Face”.
+- `SYNC_TO_DEVICE` se mantiene como solución temporal autorizada; la decisión sobre la tipografía definitiva permanece pendiente.
+- Sprint 002 no iniciado.

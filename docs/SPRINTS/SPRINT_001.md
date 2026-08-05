@@ -5,7 +5,10 @@ document: SPRINT
 project: SuriOS Watch
 version: 1.0
 sprint: 001
-status: Planned
+document_status: Approved
+implementation_status: Completed
+start_date: 2026-08-05
+end_date: 2026-08-05
 priority: Alta
 owner: Diego Pérez de Camino
 ---
@@ -14,7 +17,7 @@ owner: Diego Pérez de Camino
 
 ## Estado
 
-- **Estado:** En desarrollo
+- **Estado:** Completado
 - **Prioridad:** Alta
 - **Proyecto:** SuriOS Watch
 - **Perfil:** CIVILIAN
@@ -116,6 +119,26 @@ El Sprint únicamente podrá darse por terminado cuando:
 - No existan errores críticos.
 - La documentación permanezca consistente.
 - El propietario apruebe el resultado.
+
+---
+
+# Resultado del cierre
+
+- **Fecha de finalización:** 2026-08-05.
+- **Compilación:** Correcta.
+- **Instalación en emulador Wear OS:** Correcta.
+- **Validación visual en emulador:** Correcta.
+- **Instalación en Xiaomi Watch 2:** Correcta.
+- **Validación física:** Superada y aprobada por el propietario.
+- **Commit técnico asociado:** `e530164`, “Sprint 001 - Base funcional de la Watch Face”.
+- **Artefacto validado:** `watch/watchface/src/main/res/raw/watchface.xml`.
+- **Resultado:** Sprint 001 completado y aprobado.
+
+## Tipografía temporal
+
+Se mantiene `family="SYNC_TO_DEVICE"` como solución temporal expresamente autorizada para el Sprint 001.
+
+Esta autorización no convierte `SYNC_TO_DEVICE` en la tipografía definitiva, no sustituye la decisión pendiente sobre Consolas y no autoriza otra fuente. La validación de la tipografía definitiva permanece pendiente.
 
 ---
 
