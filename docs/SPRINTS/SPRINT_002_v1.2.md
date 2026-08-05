@@ -8,7 +8,7 @@ project: SuriOS Ecosystem
 affected_products: PIP-SuriOS, SuriOS Watch
 type: Infraestructura
 document_status: Aprobado
-implementation_status: Pendiente; no activo
+implementation_status: Completado
 priority: Alta
 replaces: Sprint 002 v1.1
 owner: Diego Pérez de Camino
@@ -17,7 +17,7 @@ date: 2026-08-05
 
 ## 1. Control documental
 
-Esta versión sustituye a `SPRINT-002 v1.1.md`, que permanece histórica. La aprobación documental no activa el Sprint. Solo [ACTIVE_SPRINT](ACTIVE_SPRINT.md) puede identificar trabajo activo tras autorización expresa.
+Esta versión sustituye a `SPRINT-002 v1.1.md`, que permanece histórica. La implementación fue completada y validada el 2026-08-05. [ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo tras su cierre.
 
 Referencias obligatorias:
 
@@ -72,18 +72,9 @@ El repositorio mantiene dos wrappers, catálogos y configuraciones raíz. ADR-00
 
 ## 7. Archivos previsiblemente afectados
 
-Únicamente durante la futura implementación autorizada:
+La implementación modificó `settings.gradle.kts` para incorporar `:watchface` al build raíz y retiró exclusivamente los nueve archivos duplicados del antiguo build independiente bajo `watch/`.
 
-- `settings.gradle.kts`;
-- `build.gradle.kts` raíz y de módulos;
-- `gradle.properties`;
-- `gradle/`;
-- `gradlew` y `gradlew.bat`;
-- catálogos de versiones;
-- `.gitignore`;
-- rutas estrictamente necesarias para integrar módulos.
-
-La lista no autoriza cambios fuera del Sprint activo.
+No se modificaron `app/**`, `watch/watchface/**`, código funcional, manifiestos, XML funcionales, recursos gráficos, identificadores, diseño ni comportamiento.
 
 ## 8. Criterios de aceptación
 
@@ -135,16 +126,26 @@ La lista no autoriza cambios fuera del Sprint activo.
 - documentación técnica mínima;
 - propuesta de commit reversible.
 
-## 12. Definition of Done
+## 12. Cierre técnico
 
-Sprint 002 estará terminado cuando:
+Sprint 002 está completado. La migración quedó registrada en el commit técnico:
 
-- todos los criterios sean correctos;
-- no existan regresiones;
-- se hayan ejecutado las validaciones;
-- no existan cambios ajenos;
-- el propietario apruebe el resultado;
-- se autorice y cree un commit estable específico.
+- `fe59cfb54895ba2eec52d5d27255dfe721f96a37` — `Sprint 002 - Migración a monorepo Gradle`.
+
+Validaciones superadas:
+
+| Entorno | Resultado |
+|---|---|
+| Gradle CLI | Correcto: módulos individuales, compilación conjunta y pruebas autorizadas. |
+| Android Studio | Correcto: build raíz único y módulos `:app` y `:watchface` importados. |
+| Emuladores | Correcto: PIP-SuriOS y SuriOS Watch instalados y ejecutados. |
+| Xiaomi Watch 2 | Correcto: instalación, selección y validación visual y funcional. |
+
+El wrapper único y el build Gradle multiproyecto están operativos. `app/**` y `watch/watchface/**` permanecen sin modificaciones funcionales y no se detectaron regresiones.
+
+### Observación no bloqueante
+
+Durante la validación física se observó una ralentización temporal asociada a la depuración ADB, desaparecida al desactivar la depuración. No afecta al funcionamiento normal de la aplicación.
 
 ## 13. Continuidad
 
@@ -155,4 +156,4 @@ El siguiente Sprint previsto es [Sprint 003 v1.1](SPRINT_003_v1.1.md), dedicado 
 | Versión | Estado | Descripción |
 |---|---|---|
 | 1.1 | Histórica, sustituida | Primera definición aprobada de la migración. |
-| 1.2 | Aprobada, pendiente de activación | Normaliza referencias, proyecto afectado y jerarquía documental. |
+| 1.2 | Aprobada; implementación completada | Normaliza referencias y registra la migración, sus validaciones y el cierre técnico. |

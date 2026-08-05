@@ -20,15 +20,15 @@ Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 001 | Esperando autorización para Sprint 002 |
-| PIP-SuriOS | Ninguno | Ninguno | Sprint 002 aprobado documentalmente, no activo |
+| SuriOS Watch | Ninguno | Sprint 002 | Sprint 002 completado; Sprint 003 no activo |
+| PIP-SuriOS | Ninguno | Sprint 002 | Sprint 002 completado |
 
 ## 3. Historial y planificación
 
 | Sprint | Proyecto | Objetivo | Estado documental | Implementación | Inicio | Fin | Documento |
 |---:|---|---|---|---|---|---|---|
 | 001 | SuriOS Watch | Base de la Watch Face | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [SPRINT_001](SPRINT_001.md) |
-| 002 | Ecosistema SuriOS | Migración a un build Gradle multiproyecto | Aprobado | Pendiente; no activo | — | — | [Sprint 002 v1.2](SPRINT_002_v1.2.md) |
+| 002 | Ecosistema SuriOS | Migración a un build Gradle multiproyecto | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 002 v1.2](SPRINT_002_v1.2.md) |
 | 003 | SuriOS Watch | Ambient Mode con hora y fecha | Aprobado | Pendiente; no activo | — | — | [Sprint 003 v1.1](SPRINT_003_v1.1.md) |
 | 004 | SuriOS Watch | Batería y pasos | Pendiente de documento de Sprint | Pendiente | — | — | — |
 | 005 | SuriOS Watch | Spotify y Google Wallet | Pendiente de documento de Sprint | Pendiente | — | — | — |
@@ -63,22 +63,40 @@ Commits diferenciados:
 
 `family="SYNC_TO_DEVICE"` permanece como solución temporal autorizada. La tipografía definitiva sigue pendiente en [BACKLOG v1.2](../BACKLOG/BACKLOG_v1.2.md). Esta deuda no reabre Sprint 001.
 
-## 6. Estadísticas
+## 6. Cierre de Sprint 002
+
+- Build Gradle multiproyecto único y wrapper raíz único operativos.
+- Módulos `:app` y `:watchface` integrados desde la raíz.
+- Validaciones superadas mediante Gradle CLI, Android Studio, emuladores y Xiaomi Watch 2.
+- `app/**` y `watch/watchface/**` permanecen sin modificaciones funcionales.
+- No se detectaron regresiones funcionales o visuales permanentes.
+
+Commit técnico:
+
+| Commit | Papel |
+|---|---|
+| `fe59cfb54895ba2eec52d5d27255dfe721f96a37` | Migración a un único build Gradle multiproyecto. |
+
+### Observación no bloqueante
+
+Durante la validación física se observó una ralentización temporal asociada a la depuración ADB, desaparecida al desactivar la depuración. No afecta al funcionamiento normal de la aplicación.
+
+## 7. Estadísticas
 
 ### Ecosistema
 
-- Sprints completados: 1.
+- Sprints completados: 2.
 - Sprints activos: 0.
-- Sprints aprobados pendientes de implementación: 2.
+- Sprints aprobados pendientes de implementación: 1.
 - Sprints pendientes de documento: 3.
 
 ### SuriOS Watch
 
-- Sprints completados: 1.
+- Sprints completados: 2.
 - Sprints activos: 0.
 - Sprints funcionales aprobados pendientes: 1.
 - Sprints funcionales pendientes de documento: 3.
 
-## 7. Estado operativo
+## 8. Estado operativo
 
-[ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo. No debe iniciarse Sprint 002 sin autorización expresa.
+[ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo. Sprint 003 es el siguiente Sprint previsto, pero no debe iniciarse sin autorización expresa.
