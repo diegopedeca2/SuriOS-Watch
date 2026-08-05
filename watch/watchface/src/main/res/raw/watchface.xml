@@ -22,43 +22,107 @@
             </Rectangle>
         </PartDraw>
 
-        <DigitalClock
+        <Group
+            name="surios_active"
             height="450"
             width="450"
             x="0"
             y="0">
-            <TimeText
-                format="hh:mm"
-                hourFormat="24"
-                height="92"
-                width="340"
-                x="55"
-                y="42">
-                <Font
-                    color="#FF66FF66"
-                    family="SYNC_TO_DEVICE"
-                    size="82" />
-            </TimeText>
-        </DigitalClock>
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
 
-        <PartText
-            name="surios_date"
-            height="38"
-            width="320"
-            x="65"
-            y="138">
-            <Text>
-                <Font
-                    color="#FF3FAF5A"
-                    family="SYNC_TO_DEVICE"
-                    size="28">
-                    <Template>%s/%s/%s
-                        <Parameter expression="[DAY_Z]" />
-                        <Parameter expression="[MONTH_Z]" />
-                        <Parameter expression="[YEAR]" />
-                    </Template>
-                </Font>
-            </Text>
-        </PartText>
+            <DigitalClock
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <TimeText
+                    format="hh:mm"
+                    hourFormat="24"
+                    height="92"
+                    width="340"
+                    x="55"
+                    y="42">
+                    <Font
+                        color="#FF66FF66"
+                        family="SYNC_TO_DEVICE"
+                        size="82" />
+                </TimeText>
+            </DigitalClock>
+
+            <PartText
+                name="surios_date"
+                height="38"
+                width="320"
+                x="65"
+                y="138">
+                <Text>
+                    <Font
+                        color="#FF3FAF5A"
+                        family="SYNC_TO_DEVICE"
+                        size="28">
+                        <Template>%s/%s/%s
+                            <Parameter expression="[DAY_Z]" />
+                            <Parameter expression="[MONTH_Z]" />
+                            <Parameter expression="[YEAR]" />
+                        </Template>
+                    </Font>
+                </Text>
+            </PartText>
+        </Group>
+
+        <Group
+            name="surios_ambient"
+            alpha="0"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="255" />
+
+            <DigitalClock
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <TimeText
+                    format="hh:mm"
+                    hourFormat="24"
+                    height="92"
+                    width="340"
+                    x="55"
+                    y="42">
+                    <Font
+                        color="#FF66FF66"
+                        family="SYNC_TO_DEVICE"
+                        size="82" />
+                </TimeText>
+            </DigitalClock>
+
+            <PartText
+                name="surios_date_ambient"
+                height="38"
+                width="320"
+                x="65"
+                y="138">
+                <Text>
+                    <Font
+                        color="#FF3FAF5A"
+                        family="SYNC_TO_DEVICE"
+                        size="28">
+                        <Template>%s/%s/%s
+                            <Parameter expression="[DAY_Z]" />
+                            <Parameter expression="[MONTH_Z]" />
+                            <Parameter expression="[YEAR]" />
+                        </Template>
+                    </Font>
+                </Text>
+            </PartText>
+        </Group>
     </Scene>
 </WatchFace>
