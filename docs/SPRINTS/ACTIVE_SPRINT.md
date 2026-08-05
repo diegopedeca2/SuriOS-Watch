@@ -1,25 +1,31 @@
 # ACTIVE_SPRINT
 
-Sprint activo:
+---
+document: ACTIVE_SPRINT
+status: Registro operativo canónico
+last_updated: 2026-08-05
+---
 
-Ninguno
+## Sprint activo
 
-Estado:
+**Ninguno.**
 
-Sin Sprint activo
+## Estado
 
-Proyecto:
+Esperando autorización expresa para activar [Sprint 002 v1.2](SPRINT_002_v1.2.md).
 
-SuriOS Watch
+Su documento está aprobado, pero su implementación permanece pendiente y no está autorizada por este estado.
 
-Estado del proyecto:
+## Proyecto
 
-Esperando autorización para Sprint 002
+Ecosistema SuriOS: PIP-SuriOS y SuriOS Watch.
 
-Último Sprint completado:
+## Último Sprint completado
 
-SPRINT_001.md
+[Sprint 001](SPRINT_001.md), finalizado el 2026-08-05.
 
-Fecha de finalización:
+## Referencias
 
-2026-08-05
+- [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md).
+- [SPRINT_HISTORY](SPRINT_HISTORY.md).
+- [ADR-001 v1.2](../ADR/ADR_001_v1.2.md).
