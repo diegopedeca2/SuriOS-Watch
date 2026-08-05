@@ -6,7 +6,7 @@ project: SuriOS Ecosystem
 version: 1.1
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-05
+last_updated: 2026-08-06
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 ---
 
@@ -20,7 +20,7 @@ Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 003 | Sprint 003 completado; Sprint 004 no activo |
+| SuriOS Watch | Ninguno | Sprint 004 | Sprint 004 completado; Sprint 005 no activo |
 | PIP-SuriOS | Ninguno | Sprint 002 | Sprint 002 completado |
 
 ## 3. Historial y planificación
@@ -30,7 +30,7 @@ Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.
 | 001 | SuriOS Watch | Base de la Watch Face | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [SPRINT_001](SPRINT_001.md) |
 | 002 | Ecosistema SuriOS | Migración a un build Gradle multiproyecto | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 002 v1.2](SPRINT_002_v1.2.md) |
 | 003 | SuriOS Watch | Ambient Mode con hora y fecha | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 003 v1.1](SPRINT_003_v1.1.md) |
-| 004 | SuriOS Watch | Batería y pasos | Pendiente de documento de Sprint | Pendiente | — | — | — |
+| 004 | SuriOS Watch | Batería y pasos | Aprobado | Completado | 2026-08-06 | 2026-08-06 | [Sprint 004 v1.0](SPRINT_004_v1.0.md) |
 | 005 | SuriOS Watch | Spotify y Google Wallet | Pendiente de documento de Sprint | Pendiente | — | — | — |
 | 006 | SuriOS Watch | Optimización, regresión y cierre | Pendiente de documento de Sprint | Pendiente | — | — | — |
 
@@ -98,22 +98,43 @@ Commit técnico:
 |---|---|
 | `bc35866153d43442dc896a4bd9370e0f5cf29f4c` | Implementación de Ambient Mode con hora y fecha. |
 
-## 8. Estadísticas
+## 8. Cierre de Sprint 004
+
+- Batería y pasos implementados declarativamente mediante WFF v1.
+- Indicador horizontal de batería con diez niveles y porcentaje entero.
+- Estado `RECHARGING` que sustituye icono y porcentaje durante la carga.
+- Indicador de pasos con los cuatro rangos aprobados: `--` para cero, número simple hasta 999, espacio de millares hasta 999 999 y `999 999+` para valores superiores.
+- Integración en Ambient Mode mediante porcentaje de batería y pasos, sin icono de batería.
+- Validaciones superadas mediante Gradle CLI, Android Studio, Wear OS Large Round y Xiaomi Watch 2.
+- Sin regresiones funcionales o visuales.
+- Único archivo funcional modificado: `watch/watchface/src/main/res/raw/watchface.xml`.
+
+Commit técnico:
+
+| Commit | Papel |
+|---|---|
+| `0e1a73f339889d874ed27089832b6b5d8fc64e0a` | Implementación de los indicadores de batería y pasos. |
+
+### Observación no bloqueante
+
+Wear OS puede mostrar su propia pantalla o esfera de carga al entrar en Ambient Mode mientras el reloj está conectado al cargador. El comportamiento se observó en el emulador Wear OS Large Round y en el Xiaomi Watch 2; no constituye un fallo de SuriOS Watch.
+
+## 9. Estadísticas
 
 ### Ecosistema
 
-- Sprints completados: 3.
+- Sprints completados: 4.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
-- Sprints pendientes de documento: 3.
+- Sprints pendientes de documento: 2.
 
 ### SuriOS Watch
 
-- Sprints completados: 3.
+- Sprints completados: 4.
 - Sprints activos: 0.
 - Sprints funcionales aprobados pendientes: 0.
-- Sprints funcionales pendientes de documento: 3.
+- Sprints funcionales pendientes de documento: 2.
 
-## 9. Estado operativo
+## 10. Estado operativo
 
-[ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo. Sprint 004 es el siguiente Sprint previsto, pero no está autorizado ni debe iniciarse sin autorización expresa.
+[ACTIVE_SPRINT](ACTIVE_SPRINT.md) confirma que no existe ningún Sprint activo. Sprint 005 es el siguiente Sprint previsto, pero no está autorizado ni debe iniciarse sin autorización expresa.
