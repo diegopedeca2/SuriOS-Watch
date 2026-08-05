@@ -24,3 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "PIP-SuriOS"
 include(":app")
+include(":watchface")
+project(":watchface").projectDir = file("watch/watchface")
