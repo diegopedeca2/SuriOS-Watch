@@ -88,6 +88,24 @@ Commit técnico:
 
 Esta mejora no altera el cierre de Sprint 005, no activa un nuevo Sprint y no autoriza Sprint 006.
 
+### Referencias visuales CAPS, STATUS y RADIO
+
+La referencia estética de los accesos visuales quedó completada y validada el 2026-08-08.
+
+- Se incorporó la referencia visual `CAPS`.
+- Se incorporó la referencia visual `STATUS`.
+- Se incorporó la referencia visual `RADIO`.
+- Las tres etiquetas quedaron alineadas horizontalmente sobre una misma coordenada Y.
+- La validación visual fue superada en el emulador Wear OS Large Round y en Xiaomi Watch 2.
+
+Commit técnico:
+
+`566aa60b395423d502e6fdf99a243bfa4b5a5d14`
+
+**Actualización estética - Alineación de accesos CAPS, STATUS y RADIO**
+
+Esta referencia visual no inicia Sprint 006 ni autoriza la implementación funcional de los accesos.
+
 ---
 
 ## Referencias

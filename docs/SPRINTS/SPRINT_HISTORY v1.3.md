@@ -223,6 +223,18 @@ La mejora estética quedó completada y validada el 2026-08-07, fuera de Sprint 
 |---|---|
 | `807e8e122c3eab93a8d783380068c391615d61b2` | Actualización estética de la firma inferior Suri WatchOS v1.5. |
 
+### Referencias visuales CAPS, STATUS y RADIO
+
+La referencia estética de los accesos visuales quedó completada y validada el 2026-08-08, sin iniciar Sprint 006 ni incorporar interacción funcional.
+
+- Se incorporaron las referencias visuales `CAPS`, `STATUS` y `RADIO`.
+- Las tres etiquetas quedaron alineadas horizontalmente sobre una misma coordenada Y.
+- La validación visual fue superada en el emulador Wear OS Large Round y en Xiaomi Watch 2.
+
+| Commit | Papel |
+|---|---|
+| `566aa60b395423d502e6fdf99a243bfa4b5a5d14` | Alineación horizontal de las referencias visuales CAPS, STATUS y RADIO. |
+
 Sprint 006 es el siguiente Sprint previsto, pero permanece pendiente y no autorizado. No existe ningún Sprint activo tras el cierre de Sprint 005.
 
 ---
