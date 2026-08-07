@@ -210,6 +210,19 @@ La corrección sustituyó los bloques condicionales de activo y ambiente por un 
 |---|---|
 | `1b8218df318a56bc17822b560f3c4dd4d0f6f603` | Corrección de la actualización del contador de pasos. |
 
+### Mejora estética posterior: firma inferior Suri WatchOS v1.5
+
+La mejora estética quedó completada y validada el 2026-08-07, fuera de Sprint 006 y sin modificar el estado cerrado de Sprint 005.
+
+- Se eliminó el texto `BROTHERHOOD OF STEEL`.
+- Se sustituyó `v1.0` por `v1.5`.
+- El bloque inferior formado por `Suri WatchOS` y `v1.5` se reposicionó hacia el borde inferior visible de la esfera.
+- La validación visual fue superada en Wear OS Large Round y Xiaomi Watch 2.
+
+| Commit | Papel |
+|---|---|
+| `807e8e122c3eab93a8d783380068c391615d61b2` | Actualización estética de la firma inferior Suri WatchOS v1.5. |
+
 Sprint 006 es el siguiente Sprint previsto, pero permanece pendiente y no autorizado. No existe ningún Sprint activo tras el cierre de Sprint 005.
 
 ---

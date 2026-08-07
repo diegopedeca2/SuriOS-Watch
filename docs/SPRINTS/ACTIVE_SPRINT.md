@@ -71,6 +71,25 @@ Commit técnico de la corrección:
 
 ---
 
+## Mejora estética posterior
+
+La firma inferior de SuriOS Watch quedó actualizada y validada el 2026-08-07.
+
+- Se eliminó el texto `BROTHERHOOD OF STEEL`.
+- Se sustituyó `v1.0` por `v1.5`.
+- El bloque formado por `Suri WatchOS` y `v1.5` se reposicionó hacia el borde inferior de la esfera.
+- La validación visual fue superada en Wear OS Large Round y Xiaomi Watch 2.
+
+Commit técnico:
+
+`807e8e122c3eab93a8d783380068c391615d61b2`
+
+**Actualización estética - Firma inferior Suri WatchOS v1.5**
+
+Esta mejora no altera el cierre de Sprint 005, no activa un nuevo Sprint y no autoriza Sprint 006.
+
+---
+
 ## Referencias
 
 - PROJECT_GUIDE v1.1
