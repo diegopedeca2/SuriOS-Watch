@@ -59,7 +59,15 @@ Integrar Spotify y Google Wallet en SuriOS Watch.
 
 Sprint 006 permanece pendiente y no autorizado. Esta previsión no activa el Sprint ni autoriza implementación.
 
-La incidencia conocida del contador de pasos permanece abierta como incidencia independiente y fuera del alcance del Sprint 005. No bloquea su cierre.
+La incidencia independiente del contador de pasos quedó resuelta y cerrada el 2026-08-07.
+
+La causa estaba en la estructura declarativa de `Condition` solapados, no en Xiaomi Health Services ni en `[STEP_COUNT]`. La solución utiliza un único `PartText` dinámico por modo y fue validada físicamente en Xiaomi Watch 2, incluidos dos incrementos consecutivos y la transición activo ↔ ambiente.
+
+Commit técnico de la corrección:
+
+`1b8218df318a56bc17822b560f3c4dd4d0f6f603`
+
+**Fix - Actualización del contador de pasos**
 
 ---
 

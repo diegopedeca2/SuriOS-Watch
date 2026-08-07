@@ -198,9 +198,17 @@ La validación visual fue superada en Wear OS Large Round y Xiaomi Watch 2, sin 
 |---|---|
 | `a7ba0f5d3798815ace4d5877c211c0f7b884b1f3` | Implementación del emblema oficial de la Hermandad del Acero. |
 
-### Incidencia independiente
+### Incidencia independiente del contador de pasos
 
-La incidencia conocida del contador de pasos permanece abierta y queda expresamente fuera del alcance de Sprint 005. No bloquea su cierre.
+La incidencia quedó resuelta y cerrada el 2026-08-07, después del cierre de Sprint 005 y sin modificar su alcance histórico.
+
+La investigación confirmó que Xiaomi Health Services, `StepComplicationService` y `[STEP_COUNT]` entregaban correctamente el valor real. El fallo estaba en la lógica declarativa de presentación mediante condiciones solapadas, que podía conservar un valor renderizado anterior.
+
+La corrección sustituyó los bloques condicionales de activo y ambiente por un único `PartText` dinámico basado directamente en `[STEP_COUNT]`. Se validó físicamente en Xiaomi Watch 2 el valor inicial, dos actualizaciones consecutivas sin reiniciar la esfera, Ambient Mode y la transición activo ↔ ambiente, sin duplicaciones, superposiciones ni regresiones funcionales.
+
+| Commit | Papel |
+|---|---|
+| `1b8218df318a56bc17822b560f3c4dd4d0f6f603` | Corrección de la actualización del contador de pasos. |
 
 Sprint 006 es el siguiente Sprint previsto, pero permanece pendiente y no autorizado. No existe ningún Sprint activo tras el cierre de Sprint 005.
 
