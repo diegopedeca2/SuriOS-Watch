@@ -22,6 +22,20 @@
             </Rectangle>
         </PartDraw>
 
+        <PartImage
+            name="surios_brotherhood_emblem"
+            alpha="64"
+            height="346"
+            width="292"
+            x="79"
+            y="62">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
+            <Image resource="brotherhood_emblem_pipgreen" />
+        </PartImage>
+
         <Group
             name="surios_active"
             height="450"
