@@ -265,6 +265,41 @@
                     </Group>
                 </Default>
             </Condition>
+
+            <Group
+                name="surios_lower_text_active"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <PartText
+                    name="surios_lower_product"
+                    height="38"
+                    width="380"
+                    x="35"
+                    y="344">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF3FAF5A"
+                            family="SYNC_TO_DEVICE"
+                            size="28">Suri WatchOS</Font>
+                    </Text>
+                </PartText>
+
+                <PartText
+                    name="surios_lower_version"
+                    height="38"
+                    width="320"
+                    x="65"
+                    y="382">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF3FAF5A"
+                            family="SYNC_TO_DEVICE"
+                            size="28">v1.5</Font>
+                    </Text>
+                </PartText>
+            </Group>
         </Group>
 
         <Group
