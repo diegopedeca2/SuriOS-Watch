@@ -267,6 +267,55 @@
             </Condition>
 
             <Group
+                name="surios_fallout_access_labels_active"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <PartText
+                    name="surios_wallet_caps"
+                    height="30"
+                    width="96"
+                    x="57"
+                    y="270">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF3FAF5A"
+                            family="SYNC_TO_DEVICE"
+                            size="20">CAPS</Font>
+                    </Text>
+                </PartText>
+
+                <PartText
+                    name="surios_status_reference"
+                    height="30"
+                    width="96"
+                    x="177"
+                    y="270">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF3FAF5A"
+                            family="SYNC_TO_DEVICE"
+                            size="20">STATUS</Font>
+                    </Text>
+                </PartText>
+
+                <PartText
+                    name="surios_spotify_radio"
+                    height="30"
+                    width="96"
+                    x="297"
+                    y="270">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF3FAF5A"
+                            family="SYNC_TO_DEVICE"
+                            size="20">RADIO</Font>
+                    </Text>
+                </PartText>
+            </Group>
+
+            <Group
                 name="surios_lower_text_active"
                 height="450"
                 width="450"
