@@ -20,6 +20,8 @@ Sprint 006 está completado y cerrado técnica, funcional y documentalmente.
 
 No existe ningún Sprint activo. Sprint 007 no se ha iniciado.
 
+PIW-SuriOS v1.9 constituye la versión visual consolidada vigente de SuriOS Watch.
+
 ---
 
 ## Proyecto
@@ -53,15 +55,33 @@ La validación funcional definitiva fue realizada manualmente en Xiaomi Watch 2 
 
 ---
 
+## Consolidación visual PIW-SuriOS v1.9
+
+La mejora estética posterior a Sprint 006 quedó completada y validada el 2026-08-08.
+
+- Los textos `CAPS`, `STATUS` y `RADIO` utilizan el color PIPGreen principal.
+- Cada acceso incorpora un contorno rectangular fino, sin relleno y del mismo color PIPGreen principal.
+- La firma inferior `Suri WatchOS` fue sustituida por `PIW-SuriOS`, abreviatura de **Personal Information Watch**.
+- La versión visible se actualizó de `v1.5` a `v1.9`.
+- La validación visual fue superada en Wear OS Large Round y Xiaomi Watch 2.
+
+Commit técnico:
+
+`ab85f56806713efec733ea1d9085ad56ad6578b2`
+
+**Actualización estética - PIW-SuriOS v1.9**
+
+Esta mejora no modifica el cierre de Sprint 006 ni inicia Sprint 007.
+
+---
+
 ## Continuidad
 
-El proyecto queda preparado para una última ronda futura de pequeños ajustes estéticos orientados a declarar oficialmente Suri WatchOS v1.9.
-
-Estos ajustes no forman parte de Sprint 006 y no se han iniciado.
+PIW-SuriOS v1.9 queda oficialmente consolidado como estado visual vigente de SuriOS Watch.
 
 La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento del sistema. No se ha iniciado.
 
-Una vez declarada y sincronizada la versión 1.9, el foco principal de desarrollo pasará a PIP-SuriOS.
+El foco principal de desarrollo puede pasar a PIP-SuriOS.
 
 ---
 

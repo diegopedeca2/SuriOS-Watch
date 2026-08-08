@@ -263,11 +263,29 @@ La validación funcional definitiva fue realizada manualmente en Xiaomi Watch 2 
 
 Documento de cierre: [Sprint 006 v1.0](SPRINT_006_v1.0.md).
 
-No existe ningún Sprint activo. Sprint 007 y la versión 2.0 no se han iniciado. El proyecto queda preparado para una futura ronda final de pequeños ajustes estéticos orientados a Suri WatchOS v1.9.
+No existe ningún Sprint activo. Sprint 007 y la versión 2.0 no se han iniciado. La consolidación visual posterior a este cierre queda registrada en la sección siguiente.
 
 ---
 
-## 11. Estadísticas
+## 11. Consolidación visual posterior: PIW-SuriOS v1.9
+
+La actualización estética quedó completada y validada el 2026-08-08, después del cierre de Sprint 006 y sin iniciar Sprint 007.
+
+- Los accesos `CAPS`, `STATUS` y `RADIO` adoptaron el color PIPGreen principal utilizado por la hora.
+- Se incorporó un contorno rectangular fino, sin relleno y uniforme alrededor de cada acceso.
+- La firma inferior `Suri WatchOS` fue sustituida por `PIW-SuriOS`, abreviatura de **Personal Information Watch**.
+- La versión visible fue actualizada de `v1.5` a `v1.9`.
+- La validación visual fue superada en Wear OS Large Round y Xiaomi Watch 2.
+
+| Commit | Papel |
+|---|---|
+| `ab85f56806713efec733ea1d9085ad56ad6578b2` | Actualización estética y consolidación visual de PIW-SuriOS v1.9. |
+
+PIW-SuriOS v1.9 queda consolidado como estado visual vigente de SuriOS Watch. La versión 2.0 permanece reservada y no iniciada.
+
+---
+
+## 12. Estadísticas
 
 ### Ecosistema
 
@@ -286,7 +304,7 @@ No existe ningún Sprint activo. Sprint 007 y la versión 2.0 no se han iniciado
 - Sprints funcionales pendientes de documento: 0.
 ---
 
-## 12. Estado operativo
+## 13. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
@@ -294,4 +312,4 @@ Actualmente confirma que Sprint 006 está completado y que no existe ningún Spr
 
 Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
-El proyecto queda preparado para una futura ronda final de pequeños ajustes estéticos orientados a declarar oficialmente Suri WatchOS v1.9.
+PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch. El foco principal de desarrollo puede pasar a PIP-SuriOS.
