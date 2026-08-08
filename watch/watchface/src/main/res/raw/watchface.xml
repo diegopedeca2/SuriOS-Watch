@@ -272,6 +272,17 @@
                 width="450"
                 x="0"
                 y="0">
+                <PartDraw
+                    name="surios_wallet_caps_outline"
+                    height="30"
+                    width="96"
+                    x="57"
+                    y="270">
+                    <Rectangle height="30" width="96" x="0" y="0">
+                        <Stroke color="#FF66FF66" thickness="1" />
+                    </Rectangle>
+                </PartDraw>
+
                 <PartText
                     name="surios_wallet_caps"
                     height="30"
@@ -280,12 +291,23 @@
                     y="270">
                     <Text align="CENTER">
                         <Font
-                            color="#FF3FAF5A"
+                            color="#FF66FF66"
                             family="SYNC_TO_DEVICE"
                             size="20">CAPS</Font>
                     </Text>
                     <Launch target="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity" />
                 </PartText>
+
+                <PartDraw
+                    name="surios_status_reference_outline"
+                    height="30"
+                    width="96"
+                    x="177"
+                    y="270">
+                    <Rectangle height="30" width="96" x="0" y="0">
+                        <Stroke color="#FF66FF66" thickness="1" />
+                    </Rectangle>
+                </PartDraw>
 
                 <PartText
                     name="surios_status_reference"
@@ -295,12 +317,23 @@
                     y="270">
                     <Text align="CENTER">
                         <Font
-                            color="#FF3FAF5A"
+                            color="#FF66FF66"
                             family="SYNC_TO_DEVICE"
                             size="20">STATUS</Font>
                     </Text>
                     <Launch target="com.xiaomi.wear.fitness/com.xiaomi.wear.fitness.sport.component.vitality.SportVitalityActivity" />
                 </PartText>
+
+                <PartDraw
+                    name="surios_spotify_radio_outline"
+                    height="30"
+                    width="96"
+                    x="297"
+                    y="270">
+                    <Rectangle height="30" width="96" x="0" y="0">
+                        <Stroke color="#FF66FF66" thickness="1" />
+                    </Rectangle>
+                </PartDraw>
 
                 <PartText
                     name="surios_spotify_radio"
@@ -310,7 +343,7 @@
                     y="270">
                     <Text align="CENTER">
                         <Font
-                            color="#FF3FAF5A"
+                            color="#FF66FF66"
                             family="SYNC_TO_DEVICE"
                             size="20">RADIO</Font>
                     </Text>
@@ -334,7 +367,7 @@
                         <Font
                             color="#FF3FAF5A"
                             family="SYNC_TO_DEVICE"
-                            size="28">Suri WatchOS</Font>
+                            size="28">PIW-SuriOS</Font>
                     </Text>
                 </PartText>
 
@@ -348,7 +381,7 @@
                         <Font
                             color="#FF3FAF5A"
                             family="SYNC_TO_DEVICE"
-                            size="28">v1.5</Font>
+                            size="28">v1.9</Font>
                     </Text>
                 </PartText>
             </Group>
