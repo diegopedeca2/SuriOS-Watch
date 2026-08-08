@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-07
+last_updated: 2026-08-08
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -31,7 +31,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 005 | Sprint 005 completado; Sprint 006 pendiente y no autorizado |
+| SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
 | PIP-SuriOS | Ninguno | Sprint 002 | Sprint 002 completado |
 
 ---
@@ -45,7 +45,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 003 | SuriOS Watch | Ambient Mode con hora y fecha | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 003 v1.1](OLD/SPRINT_003_v1.1.md) |
 | 004 | SuriOS Watch | Batería y pasos | Aprobado | Completado | 2026-08-06 | 2026-08-06 | [Sprint 004 v1.0](OLD/SPRINT_004_v1.0.md) |
 | 005 | SuriOS Watch | Implementación del emblema oficial de la Hermandad del Acero | Aprobado | Completado | 2026-08-06 | 2026-08-07 | [Sprint 005 v1.2](SPRINT_005_v1.2.md) |
-| 006 | SuriOS Watch | Spotify y Google Wallet | Pendiente de documento de Sprint | Pendiente | — | — | — |
+| 006 | SuriOS Watch | Accesos directos CAPS, STATUS y RADIO | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
 
 ---
 
@@ -55,7 +55,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 2. Sprint 003 — Ambient Mode.
 3. Sprint 004 — batería y pasos.
 4. Sprint 005 — implementación del emblema oficial de la Hermandad del Acero.
-5. Sprint 006 — Spotify y Google Wallet.
+5. Sprint 006 — accesos directos CAPS, STATUS y RADIO para Google Wallet, Estadísticas/Salud y Spotify.
 
 El roadmap procede de:
 
@@ -235,35 +235,63 @@ La referencia estética de los accesos visuales quedó completada y validada el 
 |---|---|
 | `566aa60b395423d502e6fdf99a243bfa4b5a5d14` | Alineación horizontal de las referencias visuales CAPS, STATUS y RADIO. |
 
-Sprint 006 es el siguiente Sprint previsto, pero permanece pendiente y no autorizado. No existe ningún Sprint activo tras el cierre de Sprint 005.
+Esta mejora estética precedió al inicio funcional de Sprint 006. El cierre posterior queda registrado en la sección siguiente.
 
 ---
 
-## 10. Estadísticas
+## 10. Cierre de Sprint 006
+
+Sprint 006 quedó completado el 2026-08-08.
+
+Las referencias visuales existentes se convirtieron en accesos directos declarativos mediante `Launch` en Watch Face Format v1:
+
+- `CAPS` abre Google Wallet.
+- `STATUS` abre Estadísticas/Salud del Xiaomi Watch 2.
+- `RADIO` abre Spotify.
+
+No se alteraron posiciones, tamaños, fuentes, colores, alineación ni ningún otro elemento visual o funcional de la esfera.
+
+Se superaron XML bien formado, `git diff --check`, validación oficial WFF v1, compilación individual, compilación incremental y compilación conjunta. La APK se instaló en Wear OS Large Round y Xiaomi Watch 2.
+
+La validación funcional definitiva fue realizada manualmente en Xiaomi Watch 2 y confirmó el funcionamiento correcto de los tres accesos. La solicitud de PIN o desbloqueo de Google Wallet se considera comportamiento de seguridad esperado.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `b1a4d1605cac01e86380fb6294b0cfc995ed4de0` | Accesos directos CAPS, STATUS y RADIO. |
+
+Documento de cierre: [Sprint 006 v1.0](SPRINT_006_v1.0.md).
+
+No existe ningún Sprint activo. Sprint 007 y la versión 2.0 no se han iniciado. El proyecto queda preparado para una futura ronda final de pequeños ajustes estéticos orientados a Suri WatchOS v1.9.
+
+---
+
+## 11. Estadísticas
 
 ### Ecosistema
 
 - Sprints registrados: 6.
-- Sprints completados: 5.
+- Sprints completados: 6.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
-- Sprints pendientes de documento: 1.
+- Sprints pendientes de documento: 0.
 
 ### SuriOS Watch
 
 - Sprints registrados: 6.
-- Sprints completados: 5.
+- Sprints completados: 6.
 - Sprints activos: 0.
 - Sprints funcionales aprobados pendientes: 0.
-- Sprints funcionales pendientes de documento: 1.
+- Sprints funcionales pendientes de documento: 0.
 ---
 
-## 11. Estado operativo
+## 12. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 005 está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 006 está completado y que no existe ningún Sprint activo.
 
-Sprint 006 permanece como siguiente Sprint previsto, pendiente y no autorizado.
+Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
-No existe actualmente ningún Sprint autorizado para implementación.
+El proyecto queda preparado para una futura ronda final de pequeños ajustes estéticos orientados a declarar oficialmente Suri WatchOS v1.9.

@@ -4,7 +4,7 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canónico
-last_updated: 2026-08-07
+last_updated: 2026-08-08
 
 ---
 
@@ -16,15 +16,9 @@ last_updated: 2026-08-07
 
 ## Estado
 
-Sprint 005 v1.2 está completado y cerrado técnica y documentalmente.
+Sprint 006 está completado y cerrado técnica, funcional y documentalmente.
 
-No existe ningún Sprint activo ni autorizado para implementación.
-
-Sprint 006 queda reservado para la futura integración de Spotify y Google Wallet.
-
-Sprint 006 permanece en estado **Pendiente** y no dispone todavía de autorización de implementación.
-
-No deberá iniciarse sin autorización expresa del propietario.
+No existe ningún Sprint activo. Sprint 007 no se ha iniciado.
 
 ---
 
@@ -39,81 +33,42 @@ Ecosistema SuriOS:
 
 ## Último Sprint completado
 
-[Sprint 005 v1.2](SPRINT_005_v1.2.md), finalizado el 2026-08-07.
+[Sprint 006 v1.0](SPRINT_006_v1.0.md), finalizado el 2026-08-08.
 
 Commit técnico:
 
-`a7ba0f5d3798815ace4d5877c211c0f7b884b1f3`
+`b1a4d1605cac01e86380fb6294b0cfc995ed4de0`
 
-**Sprint 005 - Emblema oficial**
+**Sprint 006 - Accesos directos CAPS, STATUS y RADIO**
+
+Implementación final:
+
+- `CAPS` abre Google Wallet.
+- `STATUS` abre la aplicación de Estadísticas/Salud del Xiaomi Watch 2.
+- `RADIO` abre Spotify.
+- La solicitud de PIN o desbloqueo de Google Wallet es un comportamiento de seguridad esperado y constituye una validación satisfactoria.
+- No se modificó la estética aprobada.
+
+La validación funcional definitiva fue realizada manualmente en Xiaomi Watch 2 y resultó satisfactoria para los tres accesos.
 
 ---
 
-## Siguiente Sprint previsto
+## Continuidad
 
-**Sprint 006 — Integración de Spotify y Google Wallet**
+El proyecto queda preparado para una última ronda futura de pequeños ajustes estéticos orientados a declarar oficialmente Suri WatchOS v1.9.
 
-Objetivo:
+Estos ajustes no forman parte de Sprint 006 y no se han iniciado.
 
-Integrar Spotify y Google Wallet en SuriOS Watch.
+La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento del sistema. No se ha iniciado.
 
-Sprint 006 permanece pendiente y no autorizado. Esta previsión no activa el Sprint ni autoriza implementación.
-
-La incidencia independiente del contador de pasos quedó resuelta y cerrada el 2026-08-07.
-
-La causa estaba en la estructura declarativa de `Condition` solapados, no en Xiaomi Health Services ni en `[STEP_COUNT]`. La solución utiliza un único `PartText` dinámico por modo y fue validada físicamente en Xiaomi Watch 2, incluidos dos incrementos consecutivos y la transición activo ↔ ambiente.
-
-Commit técnico de la corrección:
-
-`1b8218df318a56bc17822b560f3c4dd4d0f6f603`
-
-**Fix - Actualización del contador de pasos**
-
----
-
-## Mejora estética posterior
-
-La firma inferior de SuriOS Watch quedó actualizada y validada el 2026-08-07.
-
-- Se eliminó el texto `BROTHERHOOD OF STEEL`.
-- Se sustituyó `v1.0` por `v1.5`.
-- El bloque formado por `Suri WatchOS` y `v1.5` se reposicionó hacia el borde inferior de la esfera.
-- La validación visual fue superada en Wear OS Large Round y Xiaomi Watch 2.
-
-Commit técnico:
-
-`807e8e122c3eab93a8d783380068c391615d61b2`
-
-**Actualización estética - Firma inferior Suri WatchOS v1.5**
-
-Esta mejora no altera el cierre de Sprint 005, no activa un nuevo Sprint y no autoriza Sprint 006.
-
-### Referencias visuales CAPS, STATUS y RADIO
-
-La referencia estética de los accesos visuales quedó completada y validada el 2026-08-08.
-
-- Se incorporó la referencia visual `CAPS`.
-- Se incorporó la referencia visual `STATUS`.
-- Se incorporó la referencia visual `RADIO`.
-- Las tres etiquetas quedaron alineadas horizontalmente sobre una misma coordenada Y.
-- La validación visual fue superada en el emulador Wear OS Large Round y en Xiaomi Watch 2.
-
-Commit técnico:
-
-`566aa60b395423d502e6fdf99a243bfa4b5a5d14`
-
-**Actualización estética - Alineación de accesos CAPS, STATUS y RADIO**
-
-Esta referencia visual no inicia Sprint 006 ni autoriza la implementación funcional de los accesos.
+Una vez declarada y sincronizada la versión 1.9, el foco principal de desarrollo pasará a PIP-SuriOS.
 
 ---
 
 ## Referencias
 
-- PROJECT_GUIDE v1.1
-- SPRINT_HISTORY
-- ADR-001 v1.2
-- ADR-002 v1.0
-- ADR-003 v1.0
-- BROTHERHOOD_EMBLEM_ASSET_SPEC v1.3
-- WFPRD_BROTHERHOOD_EMBLEM v1.3
+- [Sprint 006 v1.0](SPRINT_006_v1.0.md)
+- [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
+- [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)
+- [WFPRD v1.5](../WFPRD/WFPRD_v1.5.md)
+- [WATCHFACE_LAYOUT v1.3](../WATCHFACE_LAYOUT/WATCHFACE_LAYOUT_v1.3.md)
