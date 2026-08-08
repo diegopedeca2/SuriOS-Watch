@@ -284,6 +284,7 @@
                             family="SYNC_TO_DEVICE"
                             size="20">CAPS</Font>
                     </Text>
+                    <Launch target="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity" />
                 </PartText>
 
                 <PartText
@@ -298,6 +299,7 @@
                             family="SYNC_TO_DEVICE"
                             size="20">STATUS</Font>
                     </Text>
+                    <Launch target="com.xiaomi.wear.fitness/com.xiaomi.wear.fitness.sport.component.vitality.SportVitalityActivity" />
                 </PartText>
 
                 <PartText
@@ -312,6 +314,7 @@
                             family="SYNC_TO_DEVICE"
                             size="20">RADIO</Font>
                     </Text>
+                    <Launch target="com.spotify.music/com.spotify.wear.main.MainActivity" />
                 </PartText>
             </Group>
 
