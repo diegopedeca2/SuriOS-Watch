@@ -85,6 +85,28 @@ El foco principal de desarrollo puede pasar a PIP-SuriOS.
 
 ---
 
+## Cierre de PIP-SuriOS v0.5
+
+Sprint 003 de PIP-SuriOS quedó completado y cerrado técnica y funcionalmente el 2026-08-08.
+
+- La identidad visual del alcance incluye Splash, Loading, Mode Selection, HOME OPERATION y HOME CIVILIAN.
+- La aplicación permanece bloqueada en orientación horizontal.
+- HOME OPERATION presenta el menú visual de módulos sin funcionalidad real.
+- HOME CIVILIAN permanece identificada como `UNDER CONSTRUCTION`.
+- Se incorporó un Adaptive Icon temporal oficial de Android con fondo PipBlack y distintivo `PIP` en PIPGreen.
+- El nombre visible de la aplicación es `PIP-SuriOS`.
+- La validación visual y funcional fue superada en el emulador Pixel 8 y en el Samsung Galaxy A56.
+
+Commit técnico:
+
+`c72b95a5a90f3fe7ba7df3475c378a9a75364ab7`
+
+**Sprint 003 - Finalización de PIP-SuriOS v0.5**
+
+PIP-SuriOS v0.5 constituye la versión móvil estable vigente para el alcance implementado. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
+
+---
+
 ## Referencias
 
 - [Sprint 006 v1.0](SPRINT_006_v1.0.md)

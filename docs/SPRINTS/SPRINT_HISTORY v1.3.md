@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 002 | Sprint 002 completado |
+| PIP-SuriOS | Ninguno | Sprint 003 | Sprint 003 completado; v0.5 estable |
 
 ---
 
@@ -285,12 +285,40 @@ PIW-SuriOS v1.9 queda consolidado como estado visual vigente de SuriOS Watch. La
 
 ---
 
-## 12. Estadísticas
+## 12. Cierre de Sprint 003 de PIP-SuriOS
+
+Sprint 003 de PIP-SuriOS quedó completado el 2026-08-08 con la consolidación de PIP-SuriOS v0.5.
+
+El alcance cerrado comprende:
+
+- Splash Screen con identidad PIP-SuriOS y emblema oficial integrado.
+- Loading Screen visual con transición automática.
+- Selección local de modos OPERATION y CIVILIAN mediante Compose.
+- HOME OPERATION con distribución visual en dos columnas y módulos sin funcionalidad real.
+- HOME CIVILIAN con estado `UNDER CONSTRUCTION`.
+- Navegación local Splash → Loading → Mode Selection → Home → Back.
+- Orientación horizontal permanente.
+- Adaptive Icon oficial de Android con fondo PipBlack y distintivo temporal `PIP` en PIPGreen.
+- Nombre visible `PIP-SuriOS`.
+
+Se superaron la compilación inicial, la compilación incremental, el análisis lint, la validación XML y `git diff --check`. La instalación y validación visual fueron satisfactorias en el emulador Pixel 8 y en el Samsung Galaxy A56.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `c72b95a5a90f3fe7ba7df3475c378a9a75364ab7` | Finalización técnica y visual de PIP-SuriOS v0.5. |
+
+PIP-SuriOS v0.5 queda declarada funcional y estable para su alcance. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
+
+---
+
+## 13. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 6.
-- Sprints completados: 6.
+- Sprints registrados: 7.
+- Sprints completados: 7.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -302,9 +330,16 @@ PIW-SuriOS v1.9 queda consolidado como estado visual vigente de SuriOS Watch. La
 - Sprints activos: 0.
 - Sprints funcionales aprobados pendientes: 0.
 - Sprints funcionales pendientes de documento: 0.
+
+### PIP-SuriOS
+
+- Último Sprint completado: Sprint 003.
+- Versión vigente: PIP-SuriOS v0.5.
+- Sprints activos: 0.
+- Sprint 004: no iniciado.
 ---
 
-## 13. Estado operativo
+## 14. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
@@ -312,4 +347,6 @@ Actualmente confirma que Sprint 006 está completado y que no existe ningún Spr
 
 Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
-PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch. El foco principal de desarrollo puede pasar a PIP-SuriOS.
+PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
+
+PIP-SuriOS v0.5 constituye el estado móvil funcional y estable vigente. Sprint 004 de PIP-SuriOS no se ha iniciado.
