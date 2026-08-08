@@ -1,6 +1,7 @@
 package com.suri.pipsurios.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
@@ -13,20 +14,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
+import com.suri.pipsurios.R
 
 @Composable
-fun HomeOperationScreen(onBack: () -> Unit) {
+fun HomeOperationScreen(
+    onBack: () -> Unit,
+    onInventorySelected: () -> Unit,
+    onMapSelected: () -> Unit,
+    onCommsSelected: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(PipBlack),
     ) {
+        Image(
+            painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxSize(0.82f)
+                .alpha(0.26f),
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(PipGreenDim)
+        )
+
         Text(
             text = "OPERATION - HOMESCREEN",
             color = PipGreen,
@@ -44,10 +66,13 @@ fun HomeOperationScreen(onBack: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ModuleColumn(
-                entries = listOf("> INVENTORY", "> MAP", "> COMMS")
+                entries = listOf("> INVENTORY", "> MAP", "> COMMS"),
+                onInventorySelected = onInventorySelected,
+                onMapSelected = onMapSelected,
+                onCommsSelected = onCommsSelected
             )
             ModuleColumn(
-                entries = listOf("> DATA", "> RADIO", "> STATS")
+                entries = listOf("> DATA", "> CURRENT GEAR", "> STATS")
             )
         }
 
@@ -63,7 +88,7 @@ fun HomeOperationScreen(onBack: () -> Unit) {
         )
 
         Text(
-            text = "PIP-SuriOS v0.5",
+            text = "PIP-SuriOS v1.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -75,7 +100,12 @@ fun HomeOperationScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun ModuleColumn(entries: List<String>) {
+private fun ModuleColumn(
+    entries: List<String>,
+    onInventorySelected: (() -> Unit)? = null,
+    onMapSelected: (() -> Unit)? = null,
+    onCommsSelected: (() -> Unit)? = null
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(18.dp),
         horizontalAlignment = Alignment.Start
@@ -85,7 +115,16 @@ private fun ModuleColumn(entries: List<String>) {
                 text = entry,
                 color = PipGreen,
                 fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace
+                fontFamily = FontFamily.Monospace,
+                modifier = when {
+                    entry == "> INVENTORY" && onInventorySelected != null ->
+                        Modifier.clickable(onClick = onInventorySelected)
+                    entry == "> MAP" && onMapSelected != null ->
+                        Modifier.clickable(onClick = onMapSelected)
+                    entry == "> COMMS" && onCommsSelected != null ->
+                        Modifier.clickable(onClick = onCommsSelected)
+                    else -> Modifier
+                }
             )
         }
     }

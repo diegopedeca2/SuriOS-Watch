@@ -18,14 +18,14 @@ import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipRed
 
 @Composable
-fun HomeCivilianScreen(onBack: () -> Unit) {
+fun MapTerrainScreen(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(PipBlack),
+            .background(PipBlack)
     ) {
         Text(
-            text = "CIVILIAN - HOMESCREEN",
+            text = "MAP - TERRAIN",
             color = PipGreen,
             fontSize = 30.sp,
             fontFamily = FontFamily.Monospace,
