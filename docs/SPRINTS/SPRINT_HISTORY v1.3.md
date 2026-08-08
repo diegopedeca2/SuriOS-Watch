@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-08
+last_updated: 2026-08-09
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 003 | Sprint 003 completado; v0.5 estable |
+| PIP-SuriOS | Ninguno | Sprint 004 | Sprint 004 completado; v1.0 estable |
 
 ---
 
@@ -46,6 +46,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 004 | SuriOS Watch | Batería y pasos | Aprobado | Completado | 2026-08-06 | 2026-08-06 | [Sprint 004 v1.0](OLD/SPRINT_004_v1.0.md) |
 | 005 | SuriOS Watch | Implementación del emblema oficial de la Hermandad del Acero | Aprobado | Completado | 2026-08-06 | 2026-08-07 | [Sprint 005 v1.2](SPRINT_005_v1.2.md) |
 | 006 | SuriOS Watch | Accesos directos CAPS, STATUS y RADIO | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
+| 003 | PIP-SuriOS | Identidad visual, navegación principal y Adaptive Icon | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
+| 004 | PIP-SuriOS | MAP, COMMS, INVENTORY y consolidación visual v1.0 | Aprobado | Completado | 2026-08-08 | 2026-08-09 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
 
 ---
 
@@ -61,6 +63,17 @@ El roadmap procede de:
 
 - [ADR-001 v1.2](../ADR/ADR_001_v1.2.md)
 - [WFPRD v1.5](../WFPRD/WFPRD_v1.5.md)
+
+### Planificación informativa de PIP-SuriOS
+
+A partir de Sprint 005, el desarrollo se organizará por capacidades funcionales. Esta planificación no implica el inicio de ningún Sprint:
+
+1. Sprint 005 — Gestión de equipamiento (`CURRENT GEAR` + `INVENTORY`).
+2. Sprint 006 — Integración avanzada con CivTAK.
+3. Sprint 007 — DATA / Mission Log.
+4. Sprint 008 — STATS.
+5. Sprint 009 — COMMS avanzado.
+6. Sprint 010 — Optimización visual, animaciones y refinamiento de la experiencia de usuario.
 
 ---
 
@@ -317,16 +330,47 @@ Se superaron la compilación inicial, la compilación incremental, el análisis 
 
 Sprint 003 queda completamente cerrado. PIP-SuriOS v0.5 queda declarada funcional, estable, documentada y sincronizada con GitHub para su alcance.
 
-No existe ningún Sprint activo. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
+En el momento de ese cierre no existía ningún Sprint activo y Sprint 004 de PIP-SuriOS todavía no había comenzado.
 
 ---
 
-## 13. Estadísticas
+## 13. Cierre de Sprint 004 de PIP-SuriOS
+
+Sprint 004 quedó completado el 2026-08-09 con la consolidación de PIP-SuriOS v1.0.
+
+El alcance cerrado comprende:
+
+- módulo MAP con selector TERRAIN/OPERATION;
+- detección y lanzamiento de CivTAK mediante `PackageManager`;
+- fallback automático a Google Maps cuando CivTAK no está disponible;
+- retorno estable al selector MAP tras lanzar una aplicación externa;
+- módulo COMMS con tabla PMR informativa, desplazable y validada;
+- módulo INVENTORY con categorías, fichas de equipamiento y navegación local;
+- incorporación visual de `CURRENT GEAR` en HOME OPERATION;
+- consolidación de las firmas visibles `PIP-SuriOS v1.0`;
+- identidad común mediante el emblema oficial en Splash y HOME OPERATION;
+- orientación horizontal permanente.
+
+Se superaron compilación principal, compilación incremental, análisis lint, validación XML y `git diff --check`. La validación visual y funcional fue satisfactoria en Pixel 8 Emulator y Samsung Galaxy A56.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `d55d26c298db5b60d3e96cfb83ce070e9a318129` | Finalización técnica y visual de PIP-SuriOS v1.0. |
+
+Sprint 004 queda completamente cerrado. PIP-SuriOS v1.0 queda declarada estable para su alcance.
+
+No existe ningún Sprint activo. Sprint 005 todavía no ha comenzado.
+
+---
+
+## 14. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 7.
-- Sprints completados: 7.
+- Sprints registrados: 8.
+- Sprints completados: 8.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -341,20 +385,20 @@ No existe ningún Sprint activo. Sprint 004 de PIP-SuriOS todavía no ha comenza
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 003.
-- Versión vigente: PIP-SuriOS v0.5.
+- Último Sprint completado: Sprint 004.
+- Versión vigente: PIP-SuriOS v1.0.
 - Sprints activos: 0.
-- Sprint 004: no iniciado.
+- Sprint 005: no iniciado.
 ---
 
-## 14. Estado operativo
+## 15. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 006 está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 004 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
 Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v0.5 constituye el estado móvil funcional y estable vigente. Sprint 004 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v1.0 constituye el estado móvil funcional y estable vigente. Sprint 005 de PIP-SuriOS no se ha iniciado.

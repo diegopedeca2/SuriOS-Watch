@@ -4,7 +4,7 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canónico
-last_updated: 2026-08-08
+last_updated: 2026-08-09
 
 ---
 
@@ -16,9 +16,9 @@ last_updated: 2026-08-08
 
 ## Estado
 
-Sprint 006 está completado y cerrado técnica, funcional y documentalmente.
+Sprint 004 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
 
-No existe ningún Sprint activo. Sprint 007 no se ha iniciado.
+No existe ningún Sprint activo. Sprint 005 de PIP-SuriOS todavía no ha comenzado.
 
 PIW-SuriOS v1.9 constituye la versión visual consolidada vigente de SuriOS Watch.
 
@@ -85,31 +85,38 @@ El foco principal de desarrollo puede pasar a PIP-SuriOS.
 
 ---
 
-## Cierre de PIP-SuriOS v0.5
+## Cierre de PIP-SuriOS v1.0
 
-Sprint 003 de PIP-SuriOS quedó completado y cerrado técnica y funcionalmente el 2026-08-08.
+Sprint 004 de PIP-SuriOS quedó completado y cerrado el 2026-08-09.
 
-- La identidad visual del alcance incluye Splash, Loading, Mode Selection, HOME OPERATION y HOME CIVILIAN.
-- La aplicación permanece bloqueada en orientación horizontal.
-- HOME OPERATION presenta el menú visual de módulos sin funcionalidad real.
-- HOME CIVILIAN permanece identificada como `UNDER CONSTRUCTION`.
-- Se incorporó un Adaptive Icon temporal oficial de Android con fondo PipBlack y distintivo `PIP` en PIPGreen.
-- El nombre visible de la aplicación es `PIP-SuriOS`.
-- La validación visual y funcional fue superada en Pixel 8 Emulator y en Samsung Galaxy A56.
+- El módulo MAP incorpora selección TERRAIN/OPERATION, detección y lanzamiento de CivTAK y fallback automático a Google Maps.
+- El módulo COMMS incorpora la tabla PMR informativa y desplazable de 16 canales.
+- El módulo INVENTORY incorpora categorías, fichas informativas y navegación local completa.
+- HOME OPERATION incorpora `CURRENT GEAR` como referencia visual para el siguiente ciclo funcional.
+- La identidad visual visible se consolidó como `PIP-SuriOS v1.0`.
+- La aplicación conserva la orientación horizontal permanente.
+- La validación visual y funcional fue superada en Pixel 8 Emulator y Samsung Galaxy A56.
 
 Commit técnico:
 
-`c72b95a5a90f3fe7ba7df3475c378a9a75364ab7`
+`d55d26c298db5b60d3e96cfb83ce070e9a318129`
 
-**Sprint 003 - Finalización de PIP-SuriOS v0.5**
+**Sprint 004 - Finalización de PIP-SuriOS v1.0**
 
-Commit documental de cierre técnico y operativo:
+PIP-SuriOS v1.0 constituye la versión móvil estable vigente para el alcance implementado.
 
-`15c777984b2ebddae1510bd70adcae4e8a7b6bb0`
+No existe ningún Sprint activo. Sprint 005 de PIP-SuriOS todavía no ha comenzado.
 
-Sprint 003 queda oficialmente cerrado. PIP-SuriOS v0.5 constituye la versión móvil estable vigente para el alcance implementado y está sincronizada con GitHub.
+## Planificación informativa posterior
 
-No existe ningún Sprint activo. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
+La planificación siguiente no está iniciada. A partir de Sprint 005, el desarrollo se organizará por capacidades funcionales:
+
+1. Sprint 005 — Gestión de equipamiento (`CURRENT GEAR` + `INVENTORY`).
+2. Sprint 006 — Integración avanzada con CivTAK.
+3. Sprint 007 — DATA / Mission Log.
+4. Sprint 008 — STATS.
+5. Sprint 009 — COMMS avanzado.
+6. Sprint 010 — Optimización visual, animaciones y refinamiento de la experiencia de usuario.
 
 ---
 
