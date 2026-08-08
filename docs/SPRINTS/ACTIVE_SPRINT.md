@@ -95,7 +95,7 @@ Sprint 003 de PIP-SuriOS quedó completado y cerrado técnica y funcionalmente e
 - HOME CIVILIAN permanece identificada como `UNDER CONSTRUCTION`.
 - Se incorporó un Adaptive Icon temporal oficial de Android con fondo PipBlack y distintivo `PIP` en PIPGreen.
 - El nombre visible de la aplicación es `PIP-SuriOS`.
-- La validación visual y funcional fue superada en el emulador Pixel 8 y en el Samsung Galaxy A56.
+- La validación visual y funcional fue superada en Pixel 8 Emulator y en Samsung Galaxy A56.
 
 Commit técnico:
 
@@ -103,7 +103,13 @@ Commit técnico:
 
 **Sprint 003 - Finalización de PIP-SuriOS v0.5**
 
-PIP-SuriOS v0.5 constituye la versión móvil estable vigente para el alcance implementado. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
+Commit documental de cierre técnico y operativo:
+
+`15c777984b2ebddae1510bd70adcae4e8a7b6bb0`
+
+Sprint 003 queda oficialmente cerrado. PIP-SuriOS v0.5 constituye la versión móvil estable vigente para el alcance implementado y está sincronizada con GitHub.
+
+No existe ningún Sprint activo. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
 
 ---
 

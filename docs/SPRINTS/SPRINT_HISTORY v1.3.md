@@ -301,7 +301,7 @@ El alcance cerrado comprende:
 - Adaptive Icon oficial de Android con fondo PipBlack y distintivo temporal `PIP` en PIPGreen.
 - Nombre visible `PIP-SuriOS`.
 
-Se superaron la compilación inicial, la compilación incremental, el análisis lint, la validación XML y `git diff --check`. La instalación y validación visual fueron satisfactorias en el emulador Pixel 8 y en el Samsung Galaxy A56.
+Se superaron la compilación inicial, la compilación incremental, el análisis lint, la validación XML y `git diff --check`. La instalación y validación visual fueron satisfactorias en Pixel 8 Emulator y en Samsung Galaxy A56.
 
 ### Commit técnico
 
@@ -309,7 +309,15 @@ Se superaron la compilación inicial, la compilación incremental, el análisis 
 |---|---|
 | `c72b95a5a90f3fe7ba7df3475c378a9a75364ab7` | Finalización técnica y visual de PIP-SuriOS v0.5. |
 
-PIP-SuriOS v0.5 queda declarada funcional y estable para su alcance. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
+### Cierre administrativo
+
+| Commit | Papel |
+|---|---|
+| `15c777984b2ebddae1510bd70adcae4e8a7b6bb0` | Documentación del cierre de Sprint 003 y PIP-SuriOS v0.5. |
+
+Sprint 003 queda completamente cerrado. PIP-SuriOS v0.5 queda declarada funcional, estable, documentada y sincronizada con GitHub para su alcance.
+
+No existe ningún Sprint activo. Sprint 004 de PIP-SuriOS todavía no ha comenzado.
 
 ---
 
