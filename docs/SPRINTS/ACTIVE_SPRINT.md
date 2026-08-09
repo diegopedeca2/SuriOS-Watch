@@ -14,51 +14,47 @@ last_updated: 2026-08-09
 
 ## Estado
 
-Sprint 005 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
+Sprint 006 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
 
-No existe ningún Sprint activo. Sprint 006 de PIP-SuriOS no se ha iniciado.
+No existe ningún Sprint activo. Sprint 007 de PIP-SuriOS no se ha iniciado.
 
 PIW-SuriOS v1.9 continúa siendo la versión visual consolidada vigente de SuriOS Watch y no fue modificada durante este Sprint.
 
 ## Último Sprint completado de PIP-SuriOS
 
-[Sprint 005 v1.0](SPRINT_005_v1.0.md), finalizado el 2026-08-09.
+[Sprint 006 v1.0](SPRINT_006_v1.0.md), finalizado el 2026-08-09.
 
-**Sprint 005 - Implementación de MORSE TERMINAL**
+**Sprint 006 - Inventory y Current Gear PIP-SuriOS v1.4**
 
 Commit técnico:
 
-`84a2c42e6a82f2fa1a3b863deff0eb9b362f60ba`
+`148be0bf52c65813b8f42ca383f207cd8fc9e834`
 
 Implementación final:
 
-- COMMS incorpora un selector entre `FREQUENCIES` y `MORSE`.
-- `FREQUENCIES` conserva la tabla PMR existente sin cambios funcionales.
-- `COMMS // MORSE TERMINAL` incorpora los modos `TEXT > MORSE` y `MORSE > TEXT`.
-- Las conversiones funcionan completamente offline con soporte inicial A-Z y 0-9.
-- `TEXT > MORSE` utiliza una Activity vertical exclusiva y permite transmitir mediante la linterna.
-- La transmisión incorpora `TRANSMIT // FLASH`, `STOP`, cancelación segura y apagado garantizado del flash.
-- Ambos modos incorporan controles `CLEAR` y `DELETE` adecuados a su entrada.
-- La aplicación oculta la barra superior mediante `WindowInsetsController` y conserva la navegación inferior.
-- La temporización Morse depende de una constante centralizada y configurable.
+- INVENTORY incorpora el selector `ARMORY`, `CONSUMABLES` y `LOADOUTS`.
+- ARMORY conserva íntegramente las categorías y fichas existentes.
+- CONSUMABLES incorpora las ramas BBs, GRENADES y GAS.
+- LOADOUTS incorpora HEADGEAR y FRONT PANEL.
+- CURRENT GEAR incorpora PRIMARY WEAPON, SECONDARY WEAPON, ACCESORIES, HEADGEAR y FRONT PANEL.
+- Los selectores dependientes reutilizan `InventoryItem` y `PrimaryWeaponRole` cuando corresponde.
+- ACCESORIES permite multiselección temporal.
+- HEADGEAR y FRONT PANEL presentan listados visuales dependientes del perfil o rol.
+- Todo el estado de CURRENT GEAR es temporal mediante `remember`, sin persistencia.
+- La identidad visible consolidada es `PIP-SuriOS v1.4`.
 
-La validación manual fue superada en Samsung Galaxy A56 y Pixel 8 Emulator, incluida la transmisión real mediante flash en el Galaxy A56.
-
-## Estado estable anterior
-
-Sprint 004 de PIP-SuriOS consolidó PIP-SuriOS v1.0 con MAP, tabla PMR de COMMS, INVENTORY y navegación local. Sprint 005 amplía ese estado estable sin modificar MAP, INVENTORY, HOME, PIW-SuriOS ni la watchface.
+La validación manual fue superada en Samsung Galaxy A56 y Pixel 8 Emulator.
 
 ## Roadmap de PIP-SuriOS
 
-- MORSE TERMINAL queda implementado dentro del módulo COMMS mediante Sprint 005.
-- Sprint 005 queda cerrado.
+- Sprint 006 queda cerrado.
 - No existe Sprint activo.
-- Sprint 006 no se ha iniciado.
-- La planificación posterior conserva su carácter informativo y requiere autorización expresa para comenzar.
+- Sprint 007 no se ha iniciado.
+- La planificación posterior requiere autorización expresa.
 
 ## Referencias
 
-- [Sprint 005 v1.0](SPRINT_005_v1.0.md)
+- [Sprint 006 v1.0](SPRINT_006_v1.0.md)
 - [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
 - [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)
 - [EDL](../EDL/EDL.md)

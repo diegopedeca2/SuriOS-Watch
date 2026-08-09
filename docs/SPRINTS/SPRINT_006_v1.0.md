@@ -1,129 +1,131 @@
-# Sprint 006 — Accesos directos CAPS, STATUS y RADIO
+# Sprint 006 — Inventory y Current Gear PIP-SuriOS v1.4
 
 ---
 
 document: SPRINT
 sprint: 006
 version: 1.0
-project: SuriOS Watch
+project: PIP-SuriOS
 type: Funcional
-document_status: Aprobado
+document_status: Cerrado
 implementation_status: Completado
 priority: Alta
 owner: Diego Pérez de Camino
-date: 2026-08-08
+date: 2026-08-09
 
 ---
 
 ## 1. Objetivo
 
-Convertir las referencias visuales existentes `CAPS`, `STATUS` y `RADIO` en accesos directos funcionales sin modificar la estética aprobada de la esfera.
+Ampliar el módulo INVENTORY, implementar la primera versión navegable y funcional de CURRENT GEAR y consolidar la identidad visible como `PIP-SuriOS v1.4`.
 
-Destinos:
+## 2. INVENTORY
 
-- `CAPS` → Google Wallet.
-- `STATUS` → aplicación de Estadísticas/Salud del Xiaomi Watch 2.
-- `RADIO` → Spotify.
+INVENTORY incorpora una pantalla previa de selección con tres ramas.
 
----
+### ARMORY
 
-## 2. Alcance ejecutado
+- SNIPER
+- ASSAULT
+- DEMOLITION
+- HANDGUN
+- ACCESORIES
 
-La implementación se limitó a:
+ARMORY conserva íntegramente las fichas, contenidos, colores, scroll y retornos existentes.
 
-- añadir interacción a las tres etiquetas existentes;
-- conservar Watch Face Format v1;
-- mantener posiciones, tamaños, fuente, color, alineación y comportamiento visual;
-- validar compilación, instalación y funcionamiento físico.
+### CONSUMABLES
 
-No se modificaron emblema, geometría, hora, fecha, batería, pasos, firma inferior, recursos gráficos, colores ni tipografías.
+- BBs
+- GRENADES
+- GAS
 
----
+Las ramas y submenús son visuales y navegables, sin cantidades, edición ni persistencia.
 
-## 3. Implementación
+### LOADOUTS
 
-Único archivo técnico modificado:
+- HEADGEAR
+- FRONT PANEL
 
-`watch/watchface/src/main/res/raw/watchface.xml`
+Los perfiles y paneles son visuales y navegables. No existe todavía selección activa ni lógica de loadout.
 
-Se añadió un elemento declarativo `Launch` a cada `PartText` existente:
+## 3. CURRENT GEAR
 
-| Referencia | Destino |
-|---|---|
-| CAPS | `com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity` |
-| STATUS | `com.xiaomi.wear.fitness/com.xiaomi.wear.fitness.sport.component.vitality.SportVitalityActivity` |
-| RADIO | `com.spotify.music/com.spotify.wear.main.MainActivity` |
+CURRENT GEAR queda accesible desde OPERATION - HOMESCREEN mediante una pantalla `LOADING...` de 1500 ms.
 
-No fueron necesarios código ejecutable, servicios, permisos, dependencias, recursos ni cambios de Gradle o manifiesto.
+Categorías implementadas:
 
-La arquitectura WFF v1 prevista resultó suficiente y no fue necesario introducir mecanismos alternativos.
+- PRIMARY WEAPON
+- SECONDARY WEAPON
+- ACCESORIES
+- HEADGEAR
+- FRONT PANEL
 
----
+### Comportamiento
 
-## 4. Auditoría técnica
+- PRIMARY WEAPON utiliza selectores dependientes ROLE y WEAPON.
+- SECONDARY WEAPON utiliza selectores dependientes TYPE y WEAPON para HANDGUN y DEMOLITION.
+- ACCESORIES permite multiselección temporal de varios elementos.
+- HEADGEAR conserva PROFILE como selector y muestra ITEM como listado visual dependiente.
+- FRONT PANEL conserva ROLE como selector y muestra PANEL como listado visual dependiente.
+- Los selectores dependientes limpian automáticamente las selecciones incompatibles.
+- Se reutilizan `InventoryItem` y `PrimaryWeaponRole` siempre que corresponde.
+- El estado se gestiona temporalmente mediante `remember`.
+- No se implementan persistencia, guardado, cantidades ni equipamiento activo.
 
-Resultados satisfactorios:
+## 4. Arquitectura
 
-- XML bien formado.
-- `git diff --check` sin errores.
-- exactamente tres elementos `Launch`.
-- validación mediante WFF Validator 1.7.0 contra Watch Face Format v1.
-- `:watchface:assembleDebug` correcto.
-- compilación incremental correcta y completamente `UP-TO-DATE`.
-- `assembleDebug` conjunto correcto.
-- APK instalada correctamente en Wear OS Large Round.
-- APK instalada correctamente en Xiaomi Watch 2.
-- ausencia de cambios visuales en el diff técnico.
+- Navegación integrada en el estado Compose existente de `MainActivity`.
+- Nuevas pantallas Compose específicas para CURRENT GEAR.
+- Componentes de selector con estética terminal propia.
+- Catálogo compartido entre ARMORY y CURRENT GEAR mediante `InventoryItem` y `PrimaryWeaponRole`.
+- Estado efímero local sin DataStore, SharedPreferences, Room ni ViewModel de persistencia.
 
----
+## 5. Identidad visual
 
-## 5. Validación funcional
+Todas las firmas visibles de la aplicación quedan consolidadas como:
 
-La validación funcional definitiva fue realizada manualmente en Xiaomi Watch 2 con resultado satisfactorio:
+`PIP-SuriOS v1.4`
 
-- `CAPS` abre correctamente Google Wallet.
-- `STATUS` abre correctamente la aplicación de Estadísticas/Salud.
-- `RADIO` abre correctamente Spotify.
-- si Google Wallet solicita PIN o desbloqueo del reloj, se considera comportamiento de seguridad esperado y acceso correcto.
+El `versionName` técnico de Gradle no se modifica.
 
-También se verificó la conservación del renderizado aprobado y la ausencia de regresiones en hora, fecha, batería, pasos, emblema, firma inferior y Ambient Mode.
+## 6. Validaciones
 
----
+Validación manual superada en:
 
-## 6. Limitaciones
+- Samsung Galaxy A56
+- Pixel 8 Emulator
 
-- Los destinos se vinculan a componentes concretos instalados y verificados en Xiaomi Watch 2; un cambio futuro de paquetes o actividades por parte de sus proveedores podría requerir mantenimiento.
-- Wear OS Large Round no dispone de Google Wallet, Spotify ni la aplicación propietaria de Salud de Xiaomi; por ello la validación funcional definitiva de los destinos se realizó en el dispositivo físico objetivo.
-- La seguridad de Google Wallet puede exigir desbloqueo o PIN antes de mostrar la cartera.
+Se verificó:
 
-Estas limitaciones no bloquean el cierre del Sprint.
-
----
+- navegación completa de INVENTORY;
+- conservación íntegra de ARMORY;
+- navegación de CONSUMABLES y LOADOUTS;
+- funcionamiento de las cinco categorías de CURRENT GEAR;
+- selectores dependientes;
+- multiselección temporal de ACCESORIES;
+- listados visuales de HEADGEAR y FRONT PANEL;
+- BACK en todos los niveles;
+- orientación horizontal;
+- ausencia de recortes y regresiones;
+- compilación principal e incremental correctas;
+- lint correcto;
+- pruebas unitarias correctas;
+- `git diff --check` correcto.
 
 ## 7. Commit técnico
 
-`b1a4d1605cac01e86380fb6294b0cfc995ed4de0` — **Sprint 006 - Accesos directos CAPS, STATUS y RADIO**
+`148be0bf52c65813b8f42ca383f207cd8fc9e834` — **Sprint 006 - Inventory y Current Gear PIP-SuriOS v1.4**
 
-Archivo incluido:
+## 8. Estado final y roadmap
 
-`watch/watchface/src/main/res/raw/watchface.xml`
-
----
-
-## 8. Estado final
-
-Sprint 006 completado el 2026-08-08.
+Sprint 006 de PIP-SuriOS cerrado el 2026-08-09.
 
 No existe ningún Sprint activo. Sprint 007 no se ha iniciado.
-
-El proyecto queda preparado para una futura ronda final de pequeños ajustes estéticos orientados a Suri WatchOS v1.9. La versión 2.0 permanece reservada y no iniciada.
-
----
 
 ## 9. Referencias
 
 - [ACTIVE_SPRINT](ACTIVE_SPRINT.md)
 - [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
 - [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)
-- [WFPRD v1.5](../WFPRD/WFPRD_v1.5.md)
-- [WATCHFACE_LAYOUT v1.3](../WATCHFACE_LAYOUT/WATCHFACE_LAYOUT_v1.3.md)
+- [EDL](../EDL/EDL.md)
+- [MRPD](../MRPD/MRPD.md)

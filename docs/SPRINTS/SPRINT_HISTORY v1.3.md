@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 005 | Sprint 005 completado; MORSE TERMINAL estable |
+| PIP-SuriOS | Ninguno | Sprint 006 | Sprint 006 completado; PIP-SuriOS v1.4 estable |
 
 ---
 
@@ -45,10 +45,11 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 003 | SuriOS Watch | Ambient Mode con hora y fecha | Aprobado | Completado | 2026-08-05 | 2026-08-05 | [Sprint 003 v1.1](OLD/SPRINT_003_v1.1.md) |
 | 004 | SuriOS Watch | Batería y pasos | Aprobado | Completado | 2026-08-06 | 2026-08-06 | [Sprint 004 v1.0](OLD/SPRINT_004_v1.0.md) |
 | 005 | SuriOS Watch | Implementación del emblema oficial de la Hermandad del Acero | Aprobado | Completado | 2026-08-06 | 2026-08-07 | [Sprint 005 v1.2](SPRINT_005_v1.2.md) |
-| 006 | SuriOS Watch | Accesos directos CAPS, STATUS y RADIO | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
+| 006 | SuriOS Watch | Accesos directos CAPS, STATUS y RADIO | Aprobado | Completado | 2026-08-08 | 2026-08-08 | Registro histórico en sección 10 |
 | 003 | PIP-SuriOS | Identidad visual, navegación principal y Adaptive Icon | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
 | 004 | PIP-SuriOS | MAP, COMMS, INVENTORY y consolidación visual v1.0 | Aprobado | Completado | 2026-08-08 | 2026-08-09 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
 | 005 | PIP-SuriOS | COMMS // MORSE TERMINAL | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 005 v1.0](SPRINT_005_v1.0.md) |
+| 006 | PIP-SuriOS | Inventory, Current Gear y consolidación visible v1.4 | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
 
 ---
 
@@ -70,8 +71,8 @@ El roadmap procede de:
 A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 
 1. Sprint 005 — MORSE TERMINAL dentro de COMMS. **Implementado y cerrado.**
-2. Sprint 006 — No iniciado; requerirá autorización expresa.
-3. Sprint 007 — DATA / Mission Log.
+2. Sprint 006 — INVENTORY ampliado y CURRENT GEAR. **Implementado y cerrado.**
+3. Sprint 007 — DATA / Mission Log. **No iniciado.**
 4. Sprint 008 — STATS.
 5. Sprint 009 — Evolución futura de COMMS posterior a MORSE TERMINAL.
 6. Sprint 010 — Optimización visual, animaciones y refinamiento de la experiencia de usuario.
@@ -275,7 +276,7 @@ La validación funcional definitiva fue realizada manualmente en Xiaomi Watch 2 
 |---|---|
 | `b1a4d1605cac01e86380fb6294b0cfc995ed4de0` | Accesos directos CAPS, STATUS y RADIO. |
 
-Documento de cierre: [Sprint 006 v1.0](SPRINT_006_v1.0.md).
+El cierre de Sprint 006 de SuriOS Watch se conserva en esta sección histórica. La ruta numérica compartida `SPRINT_006_v1.0.md` corresponde actualmente al Sprint 006 de PIP-SuriOS.
 
 No existe ningún Sprint activo. Sprint 007 y la versión 2.0 no se han iniciado. La consolidación visual posterior a este cierre queda registrada en la sección siguiente.
 
@@ -397,12 +398,53 @@ Sprint 005 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ---
 
-## 15. Estadísticas
+## 15. Cierre de Sprint 006 de PIP-SuriOS
+
+Sprint 006 quedó completado el 2026-08-09 con la ampliación de INVENTORY, la implementación funcional de CURRENT GEAR y la consolidación visible de `PIP-SuriOS v1.4`.
+
+### INVENTORY
+
+- selector principal entre ARMORY, CONSUMABLES y LOADOUTS;
+- ARMORY conserva SNIPER, ASSAULT, DEMOLITION, HANDGUN, ACCESORIES y todas sus fichas;
+- CONSUMABLES incorpora BBs, GRENADES y GAS;
+- LOADOUTS incorpora HEADGEAR y FRONT PANEL;
+- navegación local completa con retornos de un nivel.
+
+### CURRENT GEAR
+
+- PRIMARY WEAPON;
+- SECONDARY WEAPON;
+- ACCESORIES;
+- HEADGEAR;
+- FRONT PANEL;
+- selectores dependientes con limpieza automática de selecciones incompatibles;
+- multiselección temporal en ACCESORIES;
+- listados visuales dependientes en HEADGEAR y FRONT PANEL;
+- reutilización de `InventoryItem` y `PrimaryWeaponRole`;
+- estado temporal mediante `remember`, sin persistencia.
+
+Todas las firmas visibles quedaron consolidadas como `PIP-SuriOS v1.4`. El `versionName` técnico no fue modificado.
+
+Se superaron compilación principal, compilación incremental, análisis lint, pruebas unitarias y `git diff --check`. La validación manual fue satisfactoria en Samsung Galaxy A56 y Pixel 8 Emulator, con navegación completa y ausencia de regresiones.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `148be0bf52c65813b8f42ca383f207cd8fc9e834` | Inventory, Current Gear y consolidación visible PIP-SuriOS v1.4. |
+
+Documento de cierre: [Sprint 006 v1.0](SPRINT_006_v1.0.md).
+
+Sprint 006 queda completamente cerrado. No existe ningún Sprint activo y Sprint 007 no se ha iniciado.
+
+---
+
+## 16. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 9.
-- Sprints completados: 9.
+- Sprints registrados: 10.
+- Sprints completados: 10.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -417,21 +459,21 @@ Sprint 005 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 005.
-- Versión vigente: PIP-SuriOS v1.0.
+- Último Sprint completado: Sprint 006.
+- Versión vigente: PIP-SuriOS v1.4.
 - Sprints activos: 0.
-- Sprint 005: completado y cerrado.
-- Sprint 006: no iniciado.
+- Sprint 006: completado y cerrado.
+- Sprint 007: no iniciado.
 ---
 
-## 16. Estado operativo
+## 17. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 005 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 006 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
 Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS con MORSE TERMINAL constituye el estado móvil funcional y estable vigente. Sprint 005 está cerrado y Sprint 006 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v1.4 con INVENTORY ampliado, CURRENT GEAR y MORSE TERMINAL constituye el estado móvil funcional y estable vigente. Sprint 006 está cerrado y Sprint 007 de PIP-SuriOS no se ha iniciado.
