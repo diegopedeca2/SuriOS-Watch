@@ -41,7 +41,17 @@ import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
 import com.suri.pipsurios.ui.screens.InventoryDetailsScreen
 import com.suri.pipsurios.ui.screens.InventoryItem
 import com.suri.pipsurios.ui.screens.InventoryLoadingScreen
+import com.suri.pipsurios.ui.screens.InventoryModeSelectionScreen
 import com.suri.pipsurios.ui.screens.InventoryScreen
+import com.suri.pipsurios.ui.screens.InventoryVisualMenuScreen
+import com.suri.pipsurios.ui.screens.PrimaryWeaponRole
+import com.suri.pipsurios.ui.screens.CurrentGearLoadingScreen
+import com.suri.pipsurios.ui.screens.CurrentGearScreen
+import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
+import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
+import com.suri.pipsurios.ui.screens.AccesoriesScreen
+import com.suri.pipsurios.ui.screens.HeadgearScreen
+import com.suri.pipsurios.ui.screens.FrontPanelScreen
 import com.suri.pipsurios.ui.screens.LoadingScreen
 import com.suri.pipsurios.ui.screens.CivTakLoadingScreen
 import com.suri.pipsurios.ui.screens.CommsLoadingScreen
@@ -93,13 +103,34 @@ private enum class PIPSuriOSDestination {
     HomeOperation,
     HomeCivilian,
     InventoryLoading,
-    Inventory,
+    InventoryModeSelection,
+    InventoryArmory,
     InventorySniper,
     InventoryAssault,
     InventoryDemolition,
     InventoryHandgun,
     InventoryAccesories,
     InventoryDetails,
+    InventoryConsumables,
+    InventoryConsumablesBbs,
+    InventoryConsumablesGrenades,
+    InventoryGrenadesCartridges,
+    InventoryConsumablesGas,
+    InventoryLoadouts,
+    InventoryLoadoutsHeadgear,
+    InventoryHeadgearSuri14,
+    InventoryHeadgearBrotherhood,
+    InventoryLoadoutsFrontPanel,
+    InventoryFrontPanelSniperAssault,
+    InventoryFrontPanelLightAssault,
+    InventoryFrontPanelDemolition,
+    CurrentGearLoading,
+    CurrentGear,
+    CurrentGearPrimaryWeapon,
+    CurrentGearSecondaryWeapon,
+    CurrentGearAccesories,
+    CurrentGearHeadgear,
+    CurrentGearFrontPanel,
     CommsLoading,
     CommsModeSelection,
     CommsFrequencies,
@@ -145,7 +176,8 @@ private fun PIPSuriOSApp() {
                 onBack = { destination = PIPSuriOSDestination.ModeSelection },
                 onInventorySelected = { destination = PIPSuriOSDestination.InventoryLoading },
                 onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
-                onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading }
+                onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
+                onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading }
             )
 
             PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(
@@ -153,11 +185,18 @@ private fun PIPSuriOSApp() {
             )
 
             PIPSuriOSDestination.InventoryLoading -> InventoryLoadingScreen(
-                onFinished = { destination = PIPSuriOSDestination.Inventory }
+                onFinished = { destination = PIPSuriOSDestination.InventoryModeSelection }
             )
 
-            PIPSuriOSDestination.Inventory -> InventoryScreen(
+            PIPSuriOSDestination.InventoryModeSelection -> InventoryModeSelectionScreen(
                 onBack = { destination = PIPSuriOSDestination.HomeOperation },
+                onArmorySelected = { destination = PIPSuriOSDestination.InventoryArmory },
+                onConsumablesSelected = { destination = PIPSuriOSDestination.InventoryConsumables },
+                onLoadoutsSelected = { destination = PIPSuriOSDestination.InventoryLoadouts }
+            )
+
+            PIPSuriOSDestination.InventoryArmory -> InventoryScreen(
+                onBack = { destination = PIPSuriOSDestination.InventoryModeSelection },
                 onSniperSelected = { destination = PIPSuriOSDestination.InventorySniper },
                 onAssaultSelected = { destination = PIPSuriOSDestination.InventoryAssault },
                 onDemolitionSelected = { destination = PIPSuriOSDestination.InventoryDemolition },
@@ -167,50 +206,38 @@ private fun PIPSuriOSApp() {
 
             PIPSuriOSDestination.InventorySniper -> InventoryCategoryScreen(
                 title = "INVENTORY - SNIPER",
-                entries = listOf("> L96", "> LevAR-15"),
-                entryActions = mapOf(
-                    "> L96" to {
-                        selectedInventoryItem = InventoryItem.L96
-                        destination = PIPSuriOSDestination.InventoryDetails
-                    },
-                    "> LevAR-15" to {
-                        selectedInventoryItem = InventoryItem.LEVAR_15
+                entries = PrimaryWeaponRole.SNIPER.weapons.map { "> ${it.displayName}" },
+                entryActions = PrimaryWeaponRole.SNIPER.weapons.associate { item ->
+                    "> ${item.displayName}" to {
+                        selectedInventoryItem = item
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
-                ),
-                onBack = { destination = PIPSuriOSDestination.Inventory }
+                },
+                onBack = { destination = PIPSuriOSDestination.InventoryArmory }
             )
 
             PIPSuriOSDestination.InventoryAssault -> InventoryCategoryScreen(
                 title = "INVENTORY - ASSAULT",
-                entries = listOf("> MCX", "> APC-9K"),
-                entryActions = mapOf(
-                    "> MCX" to {
-                        selectedInventoryItem = InventoryItem.MCX
-                        destination = PIPSuriOSDestination.InventoryDetails
-                    },
-                    "> APC-9K" to {
-                        selectedInventoryItem = InventoryItem.APC_9K
+                entries = PrimaryWeaponRole.ASSAULT.weapons.map { "> ${it.displayName}" },
+                entryActions = PrimaryWeaponRole.ASSAULT.weapons.associate { item ->
+                    "> ${item.displayName}" to {
+                        selectedInventoryItem = item
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
-                ),
-                onBack = { destination = PIPSuriOSDestination.Inventory }
+                },
+                onBack = { destination = PIPSuriOSDestination.InventoryArmory }
             )
 
             PIPSuriOSDestination.InventoryDemolition -> InventoryCategoryScreen(
                 title = "INVENTORY - DEMOLITION",
-                entries = listOf("> MGL", "> VOLCANO"),
-                entryActions = mapOf(
-                    "> MGL" to {
-                        selectedInventoryItem = InventoryItem.MGL
-                        destination = PIPSuriOSDestination.InventoryDetails
-                    },
-                    "> VOLCANO" to {
-                        selectedInventoryItem = InventoryItem.VOLCANO
+                entries = PrimaryWeaponRole.DEMOLITION.weapons.map { "> ${it.displayName}" },
+                entryActions = PrimaryWeaponRole.DEMOLITION.weapons.associate { item ->
+                    "> ${item.displayName}" to {
+                        selectedInventoryItem = item
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
-                ),
-                onBack = { destination = PIPSuriOSDestination.Inventory }
+                },
+                onBack = { destination = PIPSuriOSDestination.InventoryArmory }
             )
 
             PIPSuriOSDestination.InventoryHandgun -> InventoryCategoryScreen(
@@ -226,7 +253,7 @@ private fun PIPSuriOSApp() {
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
                 ),
-                onBack = { destination = PIPSuriOSDestination.Inventory }
+                onBack = { destination = PIPSuriOSDestination.InventoryArmory }
             )
 
             PIPSuriOSDestination.InventoryAccesories -> InventoryCategoryScreen(
@@ -250,7 +277,7 @@ private fun PIPSuriOSApp() {
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
                 ),
-                onBack = { destination = PIPSuriOSDestination.Inventory }
+                onBack = { destination = PIPSuriOSDestination.InventoryArmory }
             )
 
             PIPSuriOSDestination.InventoryDetails -> InventoryDetailsScreen(
@@ -272,6 +299,142 @@ private fun PIPSuriOSApp() {
                             PIPSuriOSDestination.InventoryAccesories
                     }
                 }
+            )
+
+            PIPSuriOSDestination.InventoryConsumables -> InventoryVisualMenuScreen(
+                title = "INVENTORY - CONSUMABLES",
+                entries = listOf("> BBs", "> GRENADES", "> GAS"),
+                entryActions = mapOf(
+                    "> BBs" to { destination = PIPSuriOSDestination.InventoryConsumablesBbs },
+                    "> GRENADES" to { destination = PIPSuriOSDestination.InventoryConsumablesGrenades },
+                    "> GAS" to { destination = PIPSuriOSDestination.InventoryConsumablesGas }
+                ),
+                onBack = { destination = PIPSuriOSDestination.InventoryModeSelection }
+            )
+
+            PIPSuriOSDestination.InventoryConsumablesBbs -> InventoryVisualMenuScreen(
+                title = "CONSUMABLES - BBs",
+                entries = listOf(
+                    "> Random", "> 0,20", "> 0,20 TRACER", "> 0,28",
+                    "> 0,30", "> 0,30 TRACER", "> 0,40", "> 0,45"
+                ),
+                scrollable = true,
+                onBack = { destination = PIPSuriOSDestination.InventoryConsumables }
+            )
+
+            PIPSuriOSDestination.InventoryConsumablesGrenades -> InventoryVisualMenuScreen(
+                title = "CONSUMABLES - GRENADES",
+                entries = listOf("> 9mm CARTRIDGES", "> C02 VIALS", "> CASINGS"),
+                entryActions = mapOf(
+                    "> 9mm CARTRIDGES" to { destination = PIPSuriOSDestination.InventoryGrenadesCartridges }
+                ),
+                onBack = { destination = PIPSuriOSDestination.InventoryConsumables }
+            )
+
+            PIPSuriOSDestination.InventoryGrenadesCartridges -> InventoryVisualMenuScreen(
+                title = "GRENADES - 9mm CARTRIDGES",
+                entries = listOf("> SILVER", "> GOLD"),
+                onBack = { destination = PIPSuriOSDestination.InventoryConsumablesGrenades }
+            )
+
+            PIPSuriOSDestination.InventoryConsumablesGas -> InventoryVisualMenuScreen(
+                title = "CONSUMABLES - GAS",
+                entries = listOf("> 06 KG", "> 08 KG", "> 10 KG", "> 12 KG", "> 14 KG"),
+                onBack = { destination = PIPSuriOSDestination.InventoryConsumables }
+            )
+
+            PIPSuriOSDestination.InventoryLoadouts -> InventoryVisualMenuScreen(
+                title = "INVENTORY - LOADOUTS",
+                entries = listOf("> HEADGEAR", "> FRONT PANEL"),
+                entryActions = mapOf(
+                    "> HEADGEAR" to { destination = PIPSuriOSDestination.InventoryLoadoutsHeadgear },
+                    "> FRONT PANEL" to { destination = PIPSuriOSDestination.InventoryLoadoutsFrontPanel }
+                ),
+                onBack = { destination = PIPSuriOSDestination.InventoryModeSelection }
+            )
+
+            PIPSuriOSDestination.InventoryLoadoutsHeadgear -> InventoryVisualMenuScreen(
+                title = "LOADOUTS - HEADGEAR",
+                entries = listOf("> SURI-14", "> BROTHERHOOD"),
+                entryActions = mapOf(
+                    "> SURI-14" to { destination = PIPSuriOSDestination.InventoryHeadgearSuri14 },
+                    "> BROTHERHOOD" to { destination = PIPSuriOSDestination.InventoryHeadgearBrotherhood }
+                ),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadouts }
+            )
+
+            PIPSuriOSDestination.InventoryHeadgearSuri14 -> InventoryVisualMenuScreen(
+                title = "HEADGEAR - SURI-14",
+                entries = listOf("> VYPER", "> DYE MASK"),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadoutsHeadgear }
+            )
+
+            PIPSuriOSDestination.InventoryHeadgearBrotherhood -> InventoryVisualMenuScreen(
+                title = "HEADGEAR - BROTHERHOOD",
+                entries = listOf("> HELMET", "> NVG", "> GAS MASK", "> SECURITY GOGLES"),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadoutsHeadgear }
+            )
+
+            PIPSuriOSDestination.InventoryLoadoutsFrontPanel -> InventoryVisualMenuScreen(
+                title = "LOADOUTS - FRONT PANEL",
+                entries = listOf("> SNIPER - ASSAULT", "> LIGHT ASSAULT", "> DEMOLITION"),
+                entryActions = mapOf(
+                    "> SNIPER - ASSAULT" to { destination = PIPSuriOSDestination.InventoryFrontPanelSniperAssault },
+                    "> LIGHT ASSAULT" to { destination = PIPSuriOSDestination.InventoryFrontPanelLightAssault },
+                    "> DEMOLITION" to { destination = PIPSuriOSDestination.InventoryFrontPanelDemolition }
+                ),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadouts }
+            )
+
+            PIPSuriOSDestination.InventoryFrontPanelSniperAssault -> InventoryVisualMenuScreen(
+                title = "FRONT PANEL - SNIPER - ASSAULT",
+                entries = listOf("> L96", "> LevAR-15", "> MCX"),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadoutsFrontPanel }
+            )
+
+            PIPSuriOSDestination.InventoryFrontPanelLightAssault -> InventoryVisualMenuScreen(
+                title = "FRONT PANEL - LIGHT ASSAULT",
+                entries = listOf("> APC-9K"),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadoutsFrontPanel }
+            )
+
+            PIPSuriOSDestination.InventoryFrontPanelDemolition -> InventoryVisualMenuScreen(
+                title = "FRONT PANEL - DEMOLITION",
+                entries = listOf("> MGL", "> VOLCANO"),
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadoutsFrontPanel }
+            )
+
+            PIPSuriOSDestination.CurrentGearLoading -> CurrentGearLoadingScreen(
+                onFinished = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.CurrentGear -> CurrentGearScreen(
+                onPrimaryWeaponSelected = { destination = PIPSuriOSDestination.CurrentGearPrimaryWeapon },
+                onSecondaryWeaponSelected = { destination = PIPSuriOSDestination.CurrentGearSecondaryWeapon },
+                onAccesoriesSelected = { destination = PIPSuriOSDestination.CurrentGearAccesories },
+                onHeadgearSelected = { destination = PIPSuriOSDestination.CurrentGearHeadgear },
+                onFrontPanelSelected = { destination = PIPSuriOSDestination.CurrentGearFrontPanel },
+                onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.CurrentGearPrimaryWeapon -> PrimaryWeaponScreen(
+                onBack = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.CurrentGearSecondaryWeapon -> SecondaryWeaponScreen(
+                onBack = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.CurrentGearAccesories -> AccesoriesScreen(
+                onBack = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.CurrentGearHeadgear -> HeadgearScreen(
+                onBack = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.CurrentGearFrontPanel -> FrontPanelScreen(
+                onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CommsLoading -> CommsLoadingScreen(
@@ -384,7 +547,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v1.0",
+                text = "PIP-SuriOS v1.4",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

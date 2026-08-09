@@ -33,7 +33,7 @@ fun InventoryScreen(
     onHandgunSelected: () -> Unit,
     onAccesoriesSelected: () -> Unit
 ) {
-    InventoryLayout(title = "INVENTORY", onBack = onBack) {
+    InventoryLayout(title = "INVENTORY - ARMORY", onBack = onBack) {
         InventoryEntries(
             entries = listOf(
                 "> SNIPER" to onSniperSelected,
@@ -42,6 +42,40 @@ fun InventoryScreen(
                 "> HANDGUN" to onHandgunSelected,
                 "> ACCESORIES" to onAccesoriesSelected
             )
+        )
+    }
+}
+
+@Composable
+fun InventoryModeSelectionScreen(
+    onArmorySelected: () -> Unit,
+    onConsumablesSelected: () -> Unit,
+    onLoadoutsSelected: () -> Unit,
+    onBack: () -> Unit
+) {
+    InventoryLayout(title = "INVENTORY SELECT MODE", onBack = onBack) {
+        InventoryEntries(
+            entries = listOf(
+                "> ARMORY" to onArmorySelected,
+                "> CONSUMABLES" to onConsumablesSelected,
+                "> LOADOUTS" to onLoadoutsSelected
+            )
+        )
+    }
+}
+
+@Composable
+fun InventoryVisualMenuScreen(
+    title: String,
+    entries: List<String>,
+    entryActions: Map<String, () -> Unit> = emptyMap(),
+    scrollable: Boolean = false,
+    onBack: () -> Unit
+) {
+    InventoryLayout(title = title, onBack = onBack) {
+        InventoryEntries(
+            entries = entries.map { it to entryActions[it] },
+            scrollable = scrollable
         )
     }
 }
@@ -58,19 +92,28 @@ fun InventoryCategoryScreen(
     }
 }
 
-enum class InventoryItem {
-    L96,
-    LEVAR_15,
-    MCX,
-    APC_9K,
-    MGL,
-    VOLCANO,
-    DESERT_EAGLE,
-    AAP_01C,
-    DETON_A,
-    THUNDER_B,
-    TANTO,
-    MINI_KNIFE
+enum class InventoryItem(val displayName: String) {
+    L96("L96"),
+    LEVAR_15("LevAR-15"),
+    MCX("MCX"),
+    APC_9K("APC-9K"),
+    MGL("MGL"),
+    VOLCANO("VOLCANO"),
+    DESERT_EAGLE("DESERT EAGLE"),
+    AAP_01C("AAP-01C"),
+    DETON_A("DETON-A"),
+    THUNDER_B("THUNDER B"),
+    TANTO("TANTO"),
+    MINI_KNIFE("MINI KNIFE")
+}
+
+enum class PrimaryWeaponRole(
+    val displayName: String,
+    val weapons: List<InventoryItem>
+) {
+    SNIPER("SNIPER", listOf(InventoryItem.L96, InventoryItem.LEVAR_15)),
+    ASSAULT("ASSAULT", listOf(InventoryItem.MCX, InventoryItem.APC_9K)),
+    DEMOLITION("DEMOLITION", listOf(InventoryItem.MGL, InventoryItem.VOLCANO))
 }
 
 private data class InventoryDetailLine(
@@ -315,7 +358,7 @@ private fun InventoryLayout(
         )
 
         Text(
-            text = "PIP-SuriOS v1.0",
+            text = "PIP-SuriOS v1.4",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -327,8 +370,20 @@ private fun InventoryLayout(
 }
 
 @Composable
-private fun InventoryEntries(entries: List<Pair<String, (() -> Unit)?>>) {
+private fun InventoryEntries(
+    entries: List<Pair<String, (() -> Unit)?>>,
+    scrollable: Boolean = false
+) {
+    val entriesModifier = if (scrollable) {
+        Modifier
+            .heightIn(max = 260.dp)
+            .verticalScroll(rememberScrollState())
+    } else {
+        Modifier
+    }
+
     Column(
+        modifier = entriesModifier,
         verticalArrangement = Arrangement.spacedBy(18.dp),
         horizontalAlignment = Alignment.Start
     ) {

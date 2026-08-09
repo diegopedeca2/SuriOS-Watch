@@ -31,7 +31,8 @@ fun HomeOperationScreen(
     onBack: () -> Unit,
     onInventorySelected: () -> Unit,
     onMapSelected: () -> Unit,
-    onCommsSelected: () -> Unit
+    onCommsSelected: () -> Unit,
+    onCurrentGearSelected: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -72,7 +73,8 @@ fun HomeOperationScreen(
                 onCommsSelected = onCommsSelected
             )
             ModuleColumn(
-                entries = listOf("> DATA", "> CURRENT GEAR", "> STATS")
+                entries = listOf("> DATA", "> CURRENT GEAR", "> STATS"),
+                onCurrentGearSelected = onCurrentGearSelected
             )
         }
 
@@ -88,7 +90,7 @@ fun HomeOperationScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v1.0",
+            text = "PIP-SuriOS v1.4",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -104,7 +106,8 @@ private fun ModuleColumn(
     entries: List<String>,
     onInventorySelected: (() -> Unit)? = null,
     onMapSelected: (() -> Unit)? = null,
-    onCommsSelected: (() -> Unit)? = null
+    onCommsSelected: (() -> Unit)? = null,
+    onCurrentGearSelected: (() -> Unit)? = null
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(18.dp),
@@ -123,6 +126,8 @@ private fun ModuleColumn(
                         Modifier.clickable(onClick = onMapSelected)
                     entry == "> COMMS" && onCommsSelected != null ->
                         Modifier.clickable(onClick = onCommsSelected)
+                    entry == "> CURRENT GEAR" && onCurrentGearSelected != null ->
+                        Modifier.clickable(onClick = onCurrentGearSelected)
                     else -> Modifier
                 }
             )
