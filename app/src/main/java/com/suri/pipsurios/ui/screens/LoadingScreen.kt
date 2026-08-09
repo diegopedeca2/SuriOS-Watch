@@ -25,9 +25,12 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun LoadingScreen(onFinished: () -> Unit) {
+    var loginVerifiedVisible by remember { mutableStateOf(false) }
     var systemReadyVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        delay(1_500)
+        loginVerifiedVisible = true
         delay(1_500)
         systemReadyVisible = true
         delay(1_500)
@@ -46,6 +49,10 @@ fun LoadingScreen(onFinished: () -> Unit) {
             horizontalAlignment = Alignment.Start
         ) {
             LoadingLine(text = "LOADING...")
+            LoadingLine(
+                text = "LOG-IN ID: SURI-14 VERIFIED",
+                modifier = Modifier.alpha(if (loginVerifiedVisible) 1f else 0f)
+            )
             LoadingLine(
                 text = "SYSTEM READY",
                 modifier = Modifier.alpha(if (systemReadyVisible) 1f else 0f)

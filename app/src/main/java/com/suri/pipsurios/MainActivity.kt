@@ -1,8 +1,11 @@
 package com.suri.pipsurios
 
 import android.os.Bundle
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -24,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import androidx.compose.foundation.layout.Column
@@ -42,6 +46,10 @@ import com.suri.pipsurios.ui.screens.LoadingScreen
 import com.suri.pipsurios.ui.screens.CivTakLoadingScreen
 import com.suri.pipsurios.ui.screens.CommsLoadingScreen
 import com.suri.pipsurios.ui.screens.CommsScreen
+import com.suri.pipsurios.ui.screens.CommsModeSelectionScreen
+import com.suri.pipsurios.ui.screens.MorseModeSelectionScreen
+import com.suri.pipsurios.ui.screens.MorseToTextInputScreen
+import com.suri.pipsurios.ui.screens.MorseToTextOutputScreen
 import com.suri.pipsurios.ui.screens.GoogleMapsLoadingScreen
 import com.suri.pipsurios.ui.screens.MapLoadingScreen
 import com.suri.pipsurios.ui.screens.MapModeSelectionScreen
@@ -55,11 +63,25 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hideStatusBar()
 
         setContent {
             PIPSuriOSTheme {
                 PIPSuriOSApp()
             }
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideStatusBar()
+    }
+
+    private fun hideStatusBar() {
+        window.decorView.windowInsetsController?.apply {
+            systemBarsBehavior =
+                WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(WindowInsets.Type.statusBars())
         }
     }
 }
@@ -79,7 +101,11 @@ private enum class PIPSuriOSDestination {
     InventoryAccesories,
     InventoryDetails,
     CommsLoading,
-    Comms,
+    CommsModeSelection,
+    CommsFrequencies,
+    MorseModeSelection,
+    MorseToTextInput,
+    MorseToTextOutput,
     MapLoading,
     MapModeSelection,
     MapTerrain,
@@ -90,8 +116,11 @@ private enum class PIPSuriOSDestination {
 
 @Composable
 private fun PIPSuriOSApp() {
+    val context = LocalContext.current
     var destination by remember { mutableStateOf(PIPSuriOSDestination.Splash) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
+    var morseInput by remember { mutableStateOf("") }
+    var morseOutput by remember { mutableStateOf("") }
 
     Crossfade(
         targetState = destination,
@@ -246,11 +275,47 @@ private fun PIPSuriOSApp() {
             )
 
             PIPSuriOSDestination.CommsLoading -> CommsLoadingScreen(
-                onFinished = { destination = PIPSuriOSDestination.Comms }
+                onFinished = { destination = PIPSuriOSDestination.CommsModeSelection }
             )
 
-            PIPSuriOSDestination.Comms -> CommsScreen(
+            PIPSuriOSDestination.CommsModeSelection -> CommsModeSelectionScreen(
+                onFrequenciesSelected = { destination = PIPSuriOSDestination.CommsFrequencies },
+                onMorseSelected = { destination = PIPSuriOSDestination.MorseModeSelection },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.CommsFrequencies -> CommsScreen(
+                onBack = { destination = PIPSuriOSDestination.CommsModeSelection }
+            )
+
+            PIPSuriOSDestination.MorseModeSelection -> MorseModeSelectionScreen(
+                onTextToMorseSelected = {
+                    context.startActivity(Intent(context, TextToMorseActivity::class.java))
+                },
+                onMorseToTextSelected = {
+                    morseInput = ""
+                    destination = PIPSuriOSDestination.MorseToTextInput
+                },
+                onBack = { destination = PIPSuriOSDestination.CommsModeSelection }
+            )
+
+            PIPSuriOSDestination.MorseToTextInput -> MorseToTextInputScreen(
+                input = morseInput,
+                onInputChanged = { morseInput = it },
+                onConvert = {
+                    morseOutput = com.suri.pipsurios.morse.MorseCodec.decode(morseInput)
+                    destination = PIPSuriOSDestination.MorseToTextOutput
+                },
+                onBack = { destination = PIPSuriOSDestination.MorseModeSelection }
+            )
+
+            PIPSuriOSDestination.MorseToTextOutput -> MorseToTextOutputScreen(
+                output = morseOutput,
+                onBack = {
+                    morseInput = ""
+                    morseOutput = ""
+                    destination = PIPSuriOSDestination.MorseToTextInput
+                }
             )
 
             PIPSuriOSDestination.MapLoading -> MapLoadingScreen(
