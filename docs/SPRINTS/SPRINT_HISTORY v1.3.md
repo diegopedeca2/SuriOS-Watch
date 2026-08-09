@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 004 | Sprint 004 completado; v1.0 estable |
+| PIP-SuriOS | Ninguno | Sprint 005 | Sprint 005 completado; MORSE TERMINAL estable |
 
 ---
 
@@ -48,6 +48,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 006 | SuriOS Watch | Accesos directos CAPS, STATUS y RADIO | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
 | 003 | PIP-SuriOS | Identidad visual, navegación principal y Adaptive Icon | Aprobado | Completado | 2026-08-08 | 2026-08-08 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
 | 004 | PIP-SuriOS | MAP, COMMS, INVENTORY y consolidación visual v1.0 | Aprobado | Completado | 2026-08-08 | 2026-08-09 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
+| 005 | PIP-SuriOS | COMMS // MORSE TERMINAL | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 005 v1.0](SPRINT_005_v1.0.md) |
 
 ---
 
@@ -66,13 +67,13 @@ El roadmap procede de:
 
 ### Planificación informativa de PIP-SuriOS
 
-A partir de Sprint 005, el desarrollo se organizará por capacidades funcionales. Esta planificación no implica el inicio de ningún Sprint:
+A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 
-1. Sprint 005 — Gestión de equipamiento (`CURRENT GEAR` + `INVENTORY`).
-2. Sprint 006 — Integración avanzada con CivTAK.
+1. Sprint 005 — MORSE TERMINAL dentro de COMMS. **Implementado y cerrado.**
+2. Sprint 006 — No iniciado; requerirá autorización expresa.
 3. Sprint 007 — DATA / Mission Log.
 4. Sprint 008 — STATS.
-5. Sprint 009 — COMMS avanzado.
+5. Sprint 009 — Evolución futura de COMMS posterior a MORSE TERMINAL.
 6. Sprint 010 — Optimización visual, animaciones y refinamiento de la experiencia de usuario.
 
 ---
@@ -361,16 +362,47 @@ Se superaron compilación principal, compilación incremental, análisis lint, v
 
 Sprint 004 queda completamente cerrado. PIP-SuriOS v1.0 queda declarada estable para su alcance.
 
-No existe ningún Sprint activo. Sprint 005 todavía no ha comenzado.
+No existe ningún Sprint activo. Sprint 005 está completado y Sprint 006 no se ha iniciado.
 
 ---
 
-## 14. Estadísticas
+## 14. Cierre de Sprint 005 de PIP-SuriOS
+
+Sprint 005 quedó completado el 2026-08-09 con la implementación de `COMMS // MORSE TERMINAL`.
+
+El alcance cerrado comprende:
+
+- selector COMMS entre `FREQUENCIES` y `MORSE`;
+- conservación de la tabla PMR existente;
+- conversión offline `TEXT > MORSE` y `MORSE > TEXT`;
+- soporte inicial A-Z y 0-9;
+- transmisión mediante linterna con `TRANSMIT // FLASH` y `STOP`;
+- apagado seguro al detener, limpiar o abandonar la Activity;
+- botones `CLEAR` y `DELETE`;
+- Activity vertical exclusiva para `TEXT > MORSE`;
+- modo inmersivo mediante `WindowInsetsController`;
+- temporización Morse centralizada y configurable.
+
+Se superaron compilación principal, compilación incremental, análisis lint, pruebas unitarias y `git diff --check`. La validación manual fue satisfactoria en Pixel 8 Emulator y Samsung Galaxy A56, incluida la transmisión real mediante flash y su apagado seguro.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `84a2c42e6a82f2fa1a3b863deff0eb9b362f60ba` | Implementación de COMMS // MORSE TERMINAL. |
+
+Documento de cierre: [Sprint 005 v1.0](SPRINT_005_v1.0.md).
+
+Sprint 005 queda completamente cerrado. No existe ningún Sprint activo y Sprint 006 de PIP-SuriOS no se ha iniciado.
+
+---
+
+## 15. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 8.
-- Sprints completados: 8.
+- Sprints registrados: 9.
+- Sprints completados: 9.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -385,20 +417,21 @@ No existe ningún Sprint activo. Sprint 005 todavía no ha comenzado.
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 004.
+- Último Sprint completado: Sprint 005.
 - Versión vigente: PIP-SuriOS v1.0.
 - Sprints activos: 0.
-- Sprint 005: no iniciado.
+- Sprint 005: completado y cerrado.
+- Sprint 006: no iniciado.
 ---
 
-## 15. Estado operativo
+## 16. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 004 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 005 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
 Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v1.0 constituye el estado móvil funcional y estable vigente. Sprint 005 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS con MORSE TERMINAL constituye el estado móvil funcional y estable vigente. Sprint 005 está cerrado y Sprint 006 de PIP-SuriOS no se ha iniciado.
