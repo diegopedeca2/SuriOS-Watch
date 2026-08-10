@@ -54,7 +54,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         )
 
         Text(
-            text = "PIP-SuriOS v1.4",
+            text = "PIP-SuriOS v1.5",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

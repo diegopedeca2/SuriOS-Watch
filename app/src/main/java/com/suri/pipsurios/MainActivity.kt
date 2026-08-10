@@ -52,6 +52,11 @@ import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
 import com.suri.pipsurios.ui.screens.AccesoriesScreen
 import com.suri.pipsurios.ui.screens.HeadgearScreen
 import com.suri.pipsurios.ui.screens.FrontPanelScreen
+import com.suri.pipsurios.ui.screens.StatusLoadingScreen
+import com.suri.pipsurios.ui.screens.StatusScreen
+import com.suri.pipsurios.ui.screens.ComplementsScreen
+import com.suri.pipsurios.ui.screens.DontForgetScreen
+import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import com.suri.pipsurios.ui.screens.LoadingScreen
 import com.suri.pipsurios.ui.screens.CivTakLoadingScreen
 import com.suri.pipsurios.ui.screens.CommsLoadingScreen
@@ -110,6 +115,7 @@ private enum class PIPSuriOSDestination {
     InventoryDemolition,
     InventoryHandgun,
     InventoryAccesories,
+    InventoryComplements,
     InventoryDetails,
     InventoryConsumables,
     InventoryConsumablesBbs,
@@ -131,6 +137,9 @@ private enum class PIPSuriOSDestination {
     CurrentGearAccesories,
     CurrentGearHeadgear,
     CurrentGearFrontPanel,
+    StatusLoading,
+    Status,
+    StatusDontForget,
     CommsLoading,
     CommsModeSelection,
     CommsFrequencies,
@@ -152,6 +161,8 @@ private fun PIPSuriOSApp() {
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var morseInput by remember { mutableStateOf("") }
     var morseOutput by remember { mutableStateOf("") }
+    var draftLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
+    var activeLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
 
     Crossfade(
         targetState = destination,
@@ -177,7 +188,8 @@ private fun PIPSuriOSApp() {
                 onInventorySelected = { destination = PIPSuriOSDestination.InventoryLoading },
                 onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
                 onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
-                onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading }
+                onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
+                onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading }
             )
 
             PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(
@@ -201,7 +213,8 @@ private fun PIPSuriOSApp() {
                 onAssaultSelected = { destination = PIPSuriOSDestination.InventoryAssault },
                 onDemolitionSelected = { destination = PIPSuriOSDestination.InventoryDemolition },
                 onHandgunSelected = { destination = PIPSuriOSDestination.InventoryHandgun },
-                onAccesoriesSelected = { destination = PIPSuriOSDestination.InventoryAccesories }
+                onAccesoriesSelected = { destination = PIPSuriOSDestination.InventoryAccesories },
+                onComplementsSelected = { destination = PIPSuriOSDestination.InventoryComplements }
             )
 
             PIPSuriOSDestination.InventorySniper -> InventoryCategoryScreen(
@@ -258,7 +271,7 @@ private fun PIPSuriOSApp() {
 
             PIPSuriOSDestination.InventoryAccesories -> InventoryCategoryScreen(
                 title = "INVENTORY - ACCESORIES",
-                entries = listOf("> DETON-A", "> THUNDER B", "> TANTO", "> MINI KNIFE"),
+                entries = listOf("> DETON-A", "> THUNDER B", "> TANTO", "> MINI KNIFE", "> VOLCANO"),
                 entryActions = mapOf(
                     "> DETON-A" to {
                         selectedInventoryItem = InventoryItem.DETON_A
@@ -277,6 +290,10 @@ private fun PIPSuriOSApp() {
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
                 ),
+                onBack = { destination = PIPSuriOSDestination.InventoryArmory }
+            )
+
+            PIPSuriOSDestination.InventoryComplements -> ComplementsScreen(
                 onBack = { destination = PIPSuriOSDestination.InventoryArmory }
             )
 
@@ -414,27 +431,55 @@ private fun PIPSuriOSApp() {
                 onAccesoriesSelected = { destination = PIPSuriOSDestination.CurrentGearAccesories },
                 onHeadgearSelected = { destination = PIPSuriOSDestination.CurrentGearHeadgear },
                 onFrontPanelSelected = { destination = PIPSuriOSDestination.CurrentGearFrontPanel },
+                onApply = {
+                    activeLoadout = draftLoadout.copy(accesories = draftLoadout.accesories.toSet())
+                },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
             )
 
             PIPSuriOSDestination.CurrentGearPrimaryWeapon -> PrimaryWeaponScreen(
+                configuration = draftLoadout,
+                onConfigurationChanged = { draftLoadout = it },
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearSecondaryWeapon -> SecondaryWeaponScreen(
+                configuration = draftLoadout,
+                onConfigurationChanged = { draftLoadout = it },
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearAccesories -> AccesoriesScreen(
+                configuration = draftLoadout,
+                onConfigurationChanged = { draftLoadout = it },
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearHeadgear -> HeadgearScreen(
+                configuration = draftLoadout,
+                onConfigurationChanged = { draftLoadout = it },
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearFrontPanel -> FrontPanelScreen(
+                configuration = draftLoadout,
+                onConfigurationChanged = { draftLoadout = it },
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.StatusLoading -> StatusLoadingScreen(
+                onFinished = { destination = PIPSuriOSDestination.Status }
+            )
+
+            PIPSuriOSDestination.Status -> StatusScreen(
+                activeLoadout = activeLoadout,
+                onDontForgetSelected = { destination = PIPSuriOSDestination.StatusDontForget },
+                onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.StatusDontForget -> DontForgetScreen(
+                activeLoadout = activeLoadout,
+                onBack = { destination = PIPSuriOSDestination.Status }
             )
 
             PIPSuriOSDestination.CommsLoading -> CommsLoadingScreen(
@@ -547,7 +592,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v1.4",
+                text = "PIP-SuriOS v1.5",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

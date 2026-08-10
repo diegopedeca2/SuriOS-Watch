@@ -3,11 +3,14 @@ package com.suri.pipsurios.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
+import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import kotlinx.coroutines.delay
 
 @Composable
@@ -49,9 +53,10 @@ fun CurrentGearScreen(
     onAccesoriesSelected: () -> Unit,
     onHeadgearSelected: () -> Unit,
     onFrontPanelSelected: () -> Unit,
+    onApply: () -> Unit,
     onBack: () -> Unit
 ) {
-    CurrentGearLayout(title = "CURRENT GEAR", onBack = onBack) {
+    CurrentGearLayout(title = "CURRENT GEAR", onBack = onBack, onApply = onApply) {
         Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
             listOf(
                 "> PRIMARY WEAPON", "> SECONDARY WEAPON", "> ACCESORIES",
@@ -78,9 +83,11 @@ fun CurrentGearScreen(
 }
 
 @Composable
-fun PrimaryWeaponScreen(onBack: () -> Unit) {
-    var selectedRole by remember { mutableStateOf<PrimaryWeaponRole?>(null) }
-    var selectedWeapon by remember { mutableStateOf<InventoryItem?>(null) }
+fun PrimaryWeaponScreen(
+    configuration: LoadoutConfiguration,
+    onConfigurationChanged: (LoadoutConfiguration) -> Unit,
+    onBack: () -> Unit
+) {
     var roleExpanded by remember { mutableStateOf(false) }
     var weaponExpanded by remember { mutableStateOf(false) }
 
@@ -91,7 +98,7 @@ fun PrimaryWeaponScreen(onBack: () -> Unit) {
         ) {
             TerminalDropdown(
                 label = "ROLE",
-                value = selectedRole?.displayName ?: "SELECT ROLE",
+                value = configuration.primaryRole?.displayName ?: "SELECT ROLE",
                 options = PrimaryWeaponRole.entries.toList(),
                 optionText = { it.displayName },
                 expanded = roleExpanded,
@@ -100,24 +107,25 @@ fun PrimaryWeaponScreen(onBack: () -> Unit) {
                     if (it) weaponExpanded = false
                 },
                 onSelected = { role ->
-                    selectedRole = role
-                    selectedWeapon = null
+                    onConfigurationChanged(
+                        configuration.copy(primaryRole = role, primaryWeapon = null)
+                    )
                     roleExpanded = false
                 }
             )
             TerminalDropdown(
                 label = "WEAPON",
-                value = selectedWeapon?.displayName ?: "SELECT WEAPON",
-                options = selectedRole?.weapons.orEmpty(),
+                value = configuration.primaryWeapon?.displayName ?: "SELECT WEAPON",
+                options = configuration.primaryRole?.weapons.orEmpty(),
                 optionText = { it.displayName },
-                enabled = selectedRole != null,
+                enabled = configuration.primaryRole != null,
                 expanded = weaponExpanded,
                 onExpandedChange = {
                     weaponExpanded = it
                     if (it) roleExpanded = false
                 },
                 onSelected = { weapon ->
-                    selectedWeapon = weapon
+                    onConfigurationChanged(configuration.copy(primaryWeapon = weapon))
                     weaponExpanded = false
                 }
             )
@@ -126,11 +134,13 @@ fun PrimaryWeaponScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun SecondaryWeaponScreen(onBack: () -> Unit) {
+fun SecondaryWeaponScreen(
+    configuration: LoadoutConfiguration,
+    onConfigurationChanged: (LoadoutConfiguration) -> Unit,
+    onBack: () -> Unit
+) {
     val handgunWeapons = listOf(InventoryItem.DESERT_EAGLE, InventoryItem.AAP_01C)
     val demolitionWeapons = PrimaryWeaponRole.DEMOLITION.weapons
-    var selectedType by remember { mutableStateOf<String?>(null) }
-    var selectedWeapon by remember { mutableStateOf<InventoryItem?>(null) }
     var typeExpanded by remember { mutableStateOf(false) }
     var weaponExpanded by remember { mutableStateOf(false) }
 
@@ -138,7 +148,7 @@ fun SecondaryWeaponScreen(onBack: () -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
             TerminalDropdown(
                 label = "TYPE",
-                value = selectedType ?: "SELECT TYPE",
+                value = configuration.secondaryType ?: "SELECT TYPE",
                 options = listOf("HANDGUN", "DEMOLITION"),
                 optionText = { it },
                 expanded = typeExpanded,
@@ -147,28 +157,29 @@ fun SecondaryWeaponScreen(onBack: () -> Unit) {
                     if (it) weaponExpanded = false
                 },
                 onSelected = { type ->
-                    selectedType = type
-                    selectedWeapon = null
+                    onConfigurationChanged(
+                        configuration.copy(secondaryType = type, secondaryWeapon = null)
+                    )
                     typeExpanded = false
                 }
             )
             TerminalDropdown(
                 label = "WEAPON",
-                value = selectedWeapon?.displayName ?: "SELECT WEAPON",
-                options = when (selectedType) {
+                value = configuration.secondaryWeapon?.displayName ?: "SELECT WEAPON",
+                options = when (configuration.secondaryType) {
                     "HANDGUN" -> handgunWeapons
                     "DEMOLITION" -> demolitionWeapons
                     else -> emptyList()
                 },
                 optionText = { it.displayName },
-                enabled = selectedType != null,
+                enabled = configuration.secondaryType != null,
                 expanded = weaponExpanded,
                 onExpandedChange = {
                     weaponExpanded = it
                     if (it) typeExpanded = false
                 },
                 onSelected = { weapon ->
-                    selectedWeapon = weapon
+                    onConfigurationChanged(configuration.copy(secondaryWeapon = weapon))
                     weaponExpanded = false
                 }
             )
@@ -177,32 +188,41 @@ fun SecondaryWeaponScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun AccesoriesScreen(onBack: () -> Unit) {
+fun AccesoriesScreen(
+    configuration: LoadoutConfiguration,
+    onConfigurationChanged: (LoadoutConfiguration) -> Unit,
+    onBack: () -> Unit
+) {
     val accesories = listOf(
         InventoryItem.DETON_A,
         InventoryItem.THUNDER_B,
         InventoryItem.TANTO,
-        InventoryItem.MINI_KNIFE
+        InventoryItem.MINI_KNIFE,
+        InventoryItem.VOLCANO
     )
-    var selected by remember { mutableStateOf(setOf<InventoryItem>()) }
     var expanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "CURRENT GEAR - ACCESORIES", onBack = onBack) {
         Box(modifier = Modifier.offset(y = (-12).dp)) {
             TerminalMultiSelect(
                 label = "ACCESORIES",
-                value = if (selected.isEmpty()) {
+                value = if (configuration.accesories.isEmpty()) {
                     "SELECT ACCESORIES"
                 } else {
-                    selected.joinToString(" + ") { it.displayName }
+                    configuration.accesories.joinToString(" + ") { it.displayName }
                 },
                 options = accesories,
                 optionText = { it.displayName },
-                selected = selected,
+                selected = configuration.accesories,
                 expanded = expanded,
                 onExpandedChange = { expanded = it },
                 onToggle = { item ->
-                    selected = if (item in selected) selected - item else selected + item
+                    val updated = if (item in configuration.accesories) {
+                        configuration.accesories - item
+                    } else {
+                        configuration.accesories + item
+                    }
+                    onConfigurationChanged(configuration.copy(accesories = updated))
                 }
             )
         }
@@ -215,8 +235,14 @@ private enum class HeadgearProfile(val displayName: String, val items: List<Stri
 }
 
 @Composable
-fun HeadgearScreen(onBack: () -> Unit) {
-    var selectedProfile by remember { mutableStateOf<HeadgearProfile?>(null) }
+fun HeadgearScreen(
+    configuration: LoadoutConfiguration,
+    onConfigurationChanged: (LoadoutConfiguration) -> Unit,
+    onBack: () -> Unit
+) {
+    val selectedProfile = HeadgearProfile.entries.find {
+        it.displayName == configuration.headgearProfile
+    }
     var profileExpanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "CURRENT GEAR - HEADGEAR", onBack = onBack) {
@@ -232,7 +258,7 @@ fun HeadgearScreen(onBack: () -> Unit) {
                 expanded = profileExpanded,
                 onExpandedChange = { profileExpanded = it },
                 onSelected = { profile ->
-                    selectedProfile = profile
+                    onConfigurationChanged(configuration.copy(headgearProfile = profile.displayName))
                     profileExpanded = false
                 }
             )
@@ -253,8 +279,14 @@ private enum class FrontPanelRole(val displayName: String, val panels: List<Inve
 }
 
 @Composable
-fun FrontPanelScreen(onBack: () -> Unit) {
-    var selectedRole by remember { mutableStateOf<FrontPanelRole?>(null) }
+fun FrontPanelScreen(
+    configuration: LoadoutConfiguration,
+    onConfigurationChanged: (LoadoutConfiguration) -> Unit,
+    onBack: () -> Unit
+) {
+    val selectedRole = FrontPanelRole.entries.find {
+        it.displayName == configuration.frontPanelRole
+    }
     var roleExpanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "CURRENT GEAR - FRONT PANEL", onBack = onBack) {
@@ -267,7 +299,7 @@ fun FrontPanelScreen(onBack: () -> Unit) {
                 expanded = roleExpanded,
                 onExpandedChange = { roleExpanded = it },
                 onSelected = { role ->
-                    selectedRole = role
+                    onConfigurationChanged(configuration.copy(frontPanelRole = role.displayName))
                     roleExpanded = false
                 }
             )
@@ -282,7 +314,7 @@ fun FrontPanelScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun TerminalVisualList(label: String, entries: List<String>) {
+internal fun TerminalVisualList(label: String, entries: List<String>) {
     Column(
         modifier = Modifier.width(270.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -301,7 +333,7 @@ private fun TerminalVisualList(label: String, entries: List<String>) {
 }
 
 @Composable
-private fun <T> TerminalDropdown(
+internal fun <T> TerminalDropdown(
     label: String,
     value: String,
     options: List<T>,
@@ -370,7 +402,13 @@ private fun <T> TerminalMultiSelect(
                 .padding(horizontal = 14.dp, vertical = 10.dp)
         )
         if (expanded) {
-            Column(modifier = Modifier.width(560.dp).border(1.dp, PipGreen)) {
+            Column(
+                modifier = Modifier
+                    .width(560.dp)
+                    .heightIn(max = 150.dp)
+                    .border(1.dp, PipGreen)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 options.forEach { option ->
                     Text(
                         text = if (option in selected) {
@@ -393,7 +431,12 @@ private fun <T> TerminalMultiSelect(
 }
 
 @Composable
-private fun CurrentGearLayout(title: String, onBack: () -> Unit, content: @Composable () -> Unit) {
+private fun CurrentGearLayout(
+    title: String,
+    onBack: () -> Unit,
+    onApply: (() -> Unit)? = null,
+    content: @Composable () -> Unit
+) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
             text = title,
@@ -411,11 +454,23 @@ private fun CurrentGearLayout(title: String, onBack: () -> Unit, content: @Compo
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v1.4",
+            text = "PIP-SuriOS v1.5",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
         )
+        if (onApply != null) {
+            Text(
+                text = "APPLY",
+                color = PipGreen,
+                fontSize = 20.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .clickable(onClick = onApply)
+                    .padding(end = 24.dp, bottom = 64.dp)
+            )
+        }
     }
 }

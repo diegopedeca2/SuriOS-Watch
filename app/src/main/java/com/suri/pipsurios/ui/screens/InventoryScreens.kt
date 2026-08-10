@@ -31,7 +31,8 @@ fun InventoryScreen(
     onAssaultSelected: () -> Unit,
     onDemolitionSelected: () -> Unit,
     onHandgunSelected: () -> Unit,
-    onAccesoriesSelected: () -> Unit
+    onAccesoriesSelected: () -> Unit,
+    onComplementsSelected: () -> Unit
 ) {
     InventoryLayout(title = "INVENTORY - ARMORY", onBack = onBack) {
         InventoryEntries(
@@ -40,8 +41,10 @@ fun InventoryScreen(
                 "> ASSAULT" to onAssaultSelected,
                 "> DEMOLITION" to onDemolitionSelected,
                 "> HANDGUN" to onHandgunSelected,
-                "> ACCESORIES" to onAccesoriesSelected
-            )
+                "> ACCESORIES" to onAccesoriesSelected,
+                "> COMPLEMENTS" to onComplementsSelected
+            ),
+            compact = true
         )
     }
 }
@@ -358,7 +361,7 @@ private fun InventoryLayout(
         )
 
         Text(
-            text = "PIP-SuriOS v1.4",
+            text = "PIP-SuriOS v1.5",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -372,7 +375,8 @@ private fun InventoryLayout(
 @Composable
 private fun InventoryEntries(
     entries: List<Pair<String, (() -> Unit)?>>,
-    scrollable: Boolean = false
+    scrollable: Boolean = false,
+    compact: Boolean = false
 ) {
     val entriesModifier = if (scrollable) {
         Modifier
@@ -384,7 +388,7 @@ private fun InventoryEntries(
 
     Column(
         modifier = entriesModifier,
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 18.dp),
         horizontalAlignment = Alignment.Start
     ) {
         entries.forEach { (text, onClick) ->
