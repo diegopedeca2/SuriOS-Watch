@@ -72,6 +72,7 @@ class ComplementCatalogTest {
 
         assertEquals(1, lines.count { it == "SLING: 1 POINT" })
         assertEquals(1, lines.count { it == "DBAL A2" })
+        assertTrue("PRIMARY" in lines)
     }
 
     @Test

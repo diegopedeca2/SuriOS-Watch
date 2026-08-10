@@ -37,6 +37,8 @@ import com.suri.pipsurios.BuildConfig
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.screens.HomeCivilianScreen
 import com.suri.pipsurios.ui.screens.HomeOperationScreen
+import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
+import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
 import com.suri.pipsurios.ui.screens.InventoryDetailsScreen
 import com.suri.pipsurios.ui.screens.InventoryItem
@@ -106,6 +108,8 @@ private enum class PIPSuriOSDestination {
     Loading,
     ModeSelection,
     HomeOperation,
+    ToolsLoading,
+    Tools,
     HomeCivilian,
     InventoryLoading,
     InventoryModeSelection,
@@ -189,7 +193,16 @@ private fun PIPSuriOSApp() {
                 onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
                 onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
                 onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
-                onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading }
+                onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading },
+                onToolsSelected = { destination = PIPSuriOSDestination.ToolsLoading }
+            )
+
+            PIPSuriOSDestination.ToolsLoading -> ToolsLoadingScreen(
+                onFinished = { destination = PIPSuriOSDestination.Tools }
+            )
+
+            PIPSuriOSDestination.Tools -> ToolsScreen(
+                onBack = { destination = PIPSuriOSDestination.HomeOperation }
             )
 
             PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(
@@ -350,7 +363,7 @@ private fun PIPSuriOSApp() {
 
             PIPSuriOSDestination.InventoryGrenadesCartridges -> InventoryVisualMenuScreen(
                 title = "GRENADES - 9mm CARTRIDGES",
-                entries = listOf("> SILVER", "> GOLD"),
+                entries = listOf("> TITAN", "> KAISER"),
                 onBack = { destination = PIPSuriOSDestination.InventoryConsumablesGrenades }
             )
 

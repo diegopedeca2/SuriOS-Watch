@@ -59,7 +59,7 @@ object ComplementCatalog {
             section(ComplementCategory.MAGS, "170 rds x4"),
             section(
                 ComplementCategory.OTHER,
-                "MINI LAUNCHER", "DBAL A2", "SILENCER TRACER", "HPA MAIN KIT"
+                "MINI LAUNCHER", "DBAL A2", "SILENCER TRACER", "HPA MAIN KIT", "PRIMARY"
             )
         ),
         key(ComplementRole.ASSAULT, InventoryItem.APC_9K) to definition(

@@ -290,7 +290,7 @@ private fun inventoryItemDetails(item: InventoryItem): InventoryItemDetails = wh
         title = "ACCESORIES - DETON-A",
         sections = listOf(
             section("UNITS AVAILABLE:", green("3")),
-            section("BACKUP:", green("20"))
+            section("BACKUP:", green("27"))
         )
     )
 
