@@ -14,48 +14,46 @@ last_updated: 2026-08-10
 
 ## Estado
 
-Sprint 007 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
+Sprint 008 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
 
-No existe ningún Sprint activo. Sprint 008 de PIP-SuriOS no se ha iniciado.
+No existe ningún Sprint activo. Sprint 009 de PIP-SuriOS no se ha iniciado.
 
 PIW-SuriOS v1.9 continúa siendo la versión visual consolidada vigente de SuriOS Watch y no fue modificada durante este Sprint.
 
 ## Último Sprint completado de PIP-SuriOS
 
-[Sprint 007 v1.0](SPRINT_007_v1.0.md), finalizado el 2026-08-10.
+[Sprint 008 v1.0](SPRINT_008_v1.0.md), iniciado y finalizado el 2026-08-10.
 
-**Sprint 007 - STATUS y Complements PIP-SuriOS v1.5**
+**Sprint 008 - Tools (Geiger Counter y Sonar) PIP-SuriOS v1.7**
 
 Commit técnico:
 
-`1dbc32f6e13c9f2a94c7c55c533733647fb8f67a`
+`353edbf212e810e29583db5d91400eb3dfac9ec9`
 
 Implementación final:
 
-- CURRENT GEAR mantiene un borrador de configuración durante la sesión.
-- APPLY copia el borrador al Loadout Activo.
-- STATUS presenta el Loadout Activo en modo de sólo lectura.
-- ARMORY incorpora COMPLEMENTS.
-- `ComplementCatalog` constituye la fuente única compartida por COMPLEMENTS y DON'T FORGET.
-- DON'T FORGET genera recordatorios para PRIMARY WEAPON, SECONDARY WEAPON y ACCESORIES.
-- La consolidación simple evita duplicados exactos.
-- El checklist interactivo permite alternar cada elemento entre `[ ]` y `[X]`.
-- No existe persistencia del Loadout Activo ni del checklist.
-- La identidad visible consolidada es `PIP-SuriOS v1.5`.
-- Se creó [PIP-SuriOS - User Guide](../USER_GUIDE.md) como manual oficial de uso.
+- TOOLS proporciona acceso a GEIGER COUNTER y SONAR mediante la navegación Compose existente.
+- GEIGER COUNTER es una simulación inmersiva controlada con VOLUME UP, con aguja analógica y clics de frecuencia variable.
+- SONAR escanea exclusivamente señales BLE permitidas por Android.
+- El tracking mantiene identificadores temporales, RSSI suavizado, baseline y estados BACKGROUND/NEW sólo durante la sesión.
+- CALIBRATE registra el entorno conocido como baseline.
+- El radar utiliza VERY CLOSE, CLOSE, MEDIUM y FAR sin mostrar metros ni dirección física.
+- El barrido dispone de pulso general y avisos diferenciados para contactos BACKGROUND y NEW.
+- La identidad visible consolidada es `PIP-SuriOS v1.7`.
+- No se incorporaron sensores reales, Wi-Fi, UWB, persistencia ni identificación de personas.
 
-La validación manual fue superada en Samsung Galaxy A56 y Pixel 8 Emulator.
+Las validaciones automáticas y la validación manual en Samsung Galaxy A56 fueron superadas. Pixel 8 Emulator se utilizó para las comprobaciones aplicables de interfaz, navegación y audio.
 
 ## Roadmap de PIP-SuriOS
 
-- Sprint 007 queda cerrado.
+- Sprint 008 queda cerrado.
 - No existe Sprint activo.
-- Sprint 008 no se ha iniciado.
+- Sprint 009 no se ha iniciado.
 - La planificación posterior requiere autorización expresa.
 
 ## Referencias
 
-- [Sprint 007 v1.0](SPRINT_007_v1.0.md)
+- [Sprint 008 v1.0](SPRINT_008_v1.0.md)
 - [User Guide](../USER_GUIDE.md)
 - [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
 - [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)

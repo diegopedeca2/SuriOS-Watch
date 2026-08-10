@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 007 | Sprint 007 completado; PIP-SuriOS v1.5 estable |
+| PIP-SuriOS | Ninguno | Sprint 008 | Sprint 008 completado; PIP-SuriOS v1.7 estable |
 
 ---
 
@@ -51,6 +51,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 005 | PIP-SuriOS | COMMS // MORSE TERMINAL | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 005 v1.0](SPRINT_005_v1.0.md) |
 | 006 | PIP-SuriOS | Inventory, Current Gear y consolidación visible v1.4 | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
 | 007 | PIP-SuriOS | STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 007 v1.0](SPRINT_007_v1.0.md) |
+| 008 | PIP-SuriOS | TOOLS, GEIGER COUNTER, SONAR y consolidación visible v1.7 | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 008 v1.0](SPRINT_008_v1.0.md) |
 
 ---
 
@@ -74,8 +75,8 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 1. Sprint 005 — MORSE TERMINAL dentro de COMMS. **Implementado y cerrado.**
 2. Sprint 006 — INVENTORY ampliado y CURRENT GEAR. **Implementado y cerrado.**
 3. Sprint 007 — STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET. **Implementado y cerrado.**
-4. Sprint 008 — **No iniciado; alcance pendiente de autorización.**
-5. Sprint 009 — Evolución futura pendiente de planificación.
+4. Sprint 008 — TOOLS, GEIGER COUNTER y SONAR. **Implementado y cerrado.**
+5. Sprint 009 — **No iniciado; evolución futura pendiente de planificación.**
 6. Sprint 010 — Evolución futura pendiente de planificación.
 
 ---
@@ -472,12 +473,49 @@ Sprint 007 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ---
 
-## 17. Estadísticas
+## 17. Cierre de Sprint 008 de PIP-SuriOS
+
+Sprint 008 quedó completado el 2026-08-10 con la implementación de TOOLS, GEIGER COUNTER y SONAR, consolidando la identidad visible `PIP-SuriOS v1.7`.
+
+### Alcance funcional
+
+- TOOLS integra accesos navegables a GEIGER COUNTER y SONAR mediante el estado Compose existente.
+- GEIGER COUNTER simula un medidor analógico controlado mediante VOLUME UP, con retorno progresivo y clics variables.
+- SONAR utiliza `BluetoothLeScanner` para descubrir exclusivamente señales BLE permitidas por Android.
+- El motor SONAR mantiene contactos temporales con RSSI actual y suavizado, tiempos de aparición, baseline, estado BACKGROUND/NEW y expiración.
+- CALIBRATE registra como BACKGROUND los contactos presentes en el entorno observado.
+- Los contactos posteriores al baseline se clasifican como NEW.
+- Las categorías VERY CLOSE, CLOSE, MEDIUM y FAR determinan la posición radial sin mostrar metros.
+- El radar utiliza ángulos visuales estables que no representan dirección física.
+- El barrido conserva un pulso general y emite avisos diferenciados para BACKGROUND y NEW, con prioridad acústica de NEW.
+- Los recursos de audio se detienen y liberan al abandonar la herramienta o enviar la aplicación a segundo plano.
+- No se almacenan nombres, direcciones MAC ni contactos de forma persistente.
+- Todas las firmas visibles se actualizaron a `PIP-SuriOS v1.7`.
+
+La arquitectura separa interfaz Compose, motores, temporización, control de tecla, escaneo BLE, tracking, modelos, suavizado, clasificación, calibración y audio.
+
+Se superaron compilación principal, compilación incremental, análisis lint, 19 pruebas unitarias y `git diff --check`. La validación manual completa fue satisfactoria en Samsung Galaxy A56; Pixel 8 Emulator cubrió las comprobaciones aplicables de interfaz, navegación y audio. CURRENT GEAR, STATUS, COMPLEMENTS, MORSE TERMINAL, MAP y COMMS continuaron operativos sin regresiones.
+
+SONAR conserva como limitación conocida que RSSI sólo permite estimar proximidad aproximada. No representa distancia exacta, dirección física ni localización de personas.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `353edbf212e810e29583db5d91400eb3dfac9ec9` | TOOLS, GEIGER COUNTER, SONAR, audio de contactos y consolidación visible PIP-SuriOS v1.7. |
+
+Documento de cierre: [Sprint 008 v1.0](SPRINT_008_v1.0.md).
+
+Sprint 008 queda completamente cerrado. No existe ningún Sprint activo y Sprint 009 no se ha iniciado.
+
+---
+
+## 18. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 11.
-- Sprints completados: 11.
+- Sprints registrados: 12.
+- Sprints completados: 12.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -492,21 +530,21 @@ Sprint 007 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 007.
-- Versión vigente: PIP-SuriOS v1.5.
+- Último Sprint completado: Sprint 008.
+- Versión vigente: PIP-SuriOS v1.7.
 - Sprints activos: 0.
-- Sprint 007: completado y cerrado.
-- Sprint 008: no iniciado.
+- Sprint 008: completado y cerrado.
+- Sprint 009: no iniciado.
 ---
 
-## 18. Estado operativo
+## 19. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 007 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 008 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
-Sprint 008 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
+Sprint 009 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v1.5 con INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET y MORSE TERMINAL constituye el estado móvil funcional y estable vigente. Sprint 007 está cerrado y Sprint 008 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v1.7 con INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET, MORSE TERMINAL, GEIGER COUNTER y SONAR constituye el estado móvil funcional y estable vigente. Sprint 008 está cerrado y Sprint 009 de PIP-SuriOS no se ha iniciado.

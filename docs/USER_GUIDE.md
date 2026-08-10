@@ -25,6 +25,7 @@ HOME OPERATION permite acceder a:
 - **MAP:** abre los accesos cartográficos TERRAIN y OPERATION.
 - **COMMS:** ofrece la tabla PMR y MORSE TERMINAL.
 - **STATUS:** muestra el resumen del Loadout Activo y su checklist DON'T FORGET.
+- **TOOLS:** reúne GEIGER COUNTER y SONAR.
 
 Utilice `< BACK` para regresar al nivel anterior.
 
@@ -96,6 +97,31 @@ DON'T FORGET genera automáticamente un checklist a partir de los complementos d
 
 Pulse una línea para alternar entre `[ ]` y `[X]`. Marcar un elemento sólo cambia el estado visual del checklist: no modifica CURRENT GEAR, INVENTORY, COMPLEMENTS ni el Loadout Activo.
 
+## TOOLS
+
+TOOLS reúne herramientas inmersivas y experimentales. Ninguna sustituye instrumentos profesionales ni debe interpretarse como una medición científica.
+
+### GEIGER COUNTER
+
+GEIGER COUNTER simula un contador Geiger con medidor analógico y sonido. Mantenga pulsado **VOLUME UP** para elevar progresivamente el nivel; al soltarlo, la aguja y la frecuencia de los clics regresan lentamente a `BACKGROUND`.
+
+Mientras esta pantalla está activa, **VOLUME UP** controla exclusivamente la simulación y no modifica el volumen multimedia. La herramienta no utiliza sensores ni mide radiación real.
+
+### SONAR
+
+SONAR realiza un escaneo de señales Bluetooth Low Energy cercanas permitido por Android. El Galaxy A56 se representa como `SURI-14` en el centro del radar y los contactos aparecen en cuatro categorías aproximadas:
+
+- VERY CLOSE
+- CLOSE
+- MEDIUM
+- FAR
+
+Las categorías proceden de RSSI suavizado. No representan metros, dirección física ni posición real; el ángulo de cada punto es únicamente una posición visual estable.
+
+Pulse **CALIBRATE** para observar el entorno y registrar los contactos presentes como `BACKGROUND`. Los contactos que aparezcan después del baseline se muestran como `NEW`. El barrido reproduce un pulso general y avisos diferenciados al atravesar contactos `BACKGROUND` o `NEW`.
+
+SONAR necesita Bluetooth activo y permisos de escaneo. No muestra nombres ni direcciones MAC y no conserva contactos al abandonar la sesión.
+
 ## Limitaciones actuales
 
 - No existe persistencia permanente.
@@ -104,6 +130,7 @@ Pulse una línea para alternar entre `[ ]` y `[X]`. Marcar un elemento sólo cam
 - No existen cantidades dinámicas, consumo automático de inventario ni sincronización de loadouts.
 - Varias opciones continúan siendo informativas o permanecen en desarrollo.
 - Las aplicaciones externas dependen de su propia instalación, permisos, configuración y conectividad.
+- SONAR sólo estima proximidad mediante RSSI BLE; obstáculos, orientación, potencia de emisión y condiciones ambientales pueden alterar la categoría.
 
 ## Roadmap
 
