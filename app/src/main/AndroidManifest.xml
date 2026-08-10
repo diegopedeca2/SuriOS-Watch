@@ -28,6 +28,12 @@
             android:theme="@style/Theme.PIPSuriOS"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".OperationInputActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

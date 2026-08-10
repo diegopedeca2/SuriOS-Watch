@@ -3,6 +3,8 @@ package com.suri.pipsurios
 import android.os.Bundle
 import android.content.Intent
 import android.view.KeyEvent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import android.view.WindowInsets
@@ -19,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +46,22 @@ import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterScreen
 import com.suri.pipsurios.ui.screens.ProximitySonarScreen
+import com.suri.pipsurios.ui.screens.DataLoadingScreen
+import com.suri.pipsurios.ui.screens.DataSavedScreen
+import com.suri.pipsurios.ui.screens.DataScreen
+import com.suri.pipsurios.ui.screens.DataPlaceholderScreen
+import com.suri.pipsurios.ui.screens.DataLogDetailScreen
+import com.suri.pipsurios.ui.screens.DataLogScreen
+import com.suri.pipsurios.ui.screens.OperationLoadoutScreen
+import com.suri.pipsurios.ui.screens.OperationConfirmScreen
+import com.suri.pipsurios.data.OperationConsumables
+import com.suri.pipsurios.data.OperationDraft
+import com.suri.pipsurios.data.OperationInputValidator
+import com.suri.pipsurios.data.OperationLoadoutSnapshot
+import com.suri.pipsurios.data.OperationLog
+import com.suri.pipsurios.data.OperationLogEntry
+import com.suri.pipsurios.data.OperationRepository
+import com.suri.pipsurios.data.SaveOperationResult
 import com.suri.pipsurios.geiger.VolumeKeyController
 import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
 import com.suri.pipsurios.ui.screens.InventoryDetailsScreen
@@ -81,6 +100,9 @@ import com.suri.pipsurios.ui.screens.ModeSelectionScreen
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     private val volumeKeyController = VolumeKeyController()
@@ -123,6 +145,14 @@ private enum class PIPSuriOSDestination {
     GeigerCounterLoading,
     GeigerCounter,
     ProximitySonar,
+    DataLoading,
+    Data,
+    DataLog,
+    DataLogDetail,
+    DataStatistics,
+    OperationLoadout,
+    OperationConfirm,
+    DataSaved,
     HomeCivilian,
     InventoryLoading,
     InventoryModeSelection,
@@ -171,6 +201,8 @@ private enum class PIPSuriOSDestination {
     GoogleMapsLoading
 }
 
+private enum class VerticalOperationStep { DATE_LOCATION, CONSUMABLES }
+
 @Composable
 private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     val context = LocalContext.current
@@ -180,6 +212,89 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     var morseOutput by remember { mutableStateOf("") }
     var draftLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
     var activeLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
+    var operationDraft by remember { mutableStateOf(OperationDraft()) }
+    var operationSaveError by remember { mutableStateOf<String?>(null) }
+    var operationSaving by remember { mutableStateOf(false) }
+    var operationLogEntries by remember { mutableStateOf(emptyList<OperationLogEntry>()) }
+    var operationLogUnreadableCount by remember { mutableStateOf(0) }
+    var operationLogsLoading by remember { mutableStateOf(false) }
+    var selectedOperationLog by remember { mutableStateOf<OperationLogEntry?>(null) }
+    var pendingVerticalStep by remember { mutableStateOf<VerticalOperationStep?>(null) }
+    val operationRepository = remember(context) { OperationRepository.from(context.applicationContext) }
+    val operationScope = rememberCoroutineScope()
+
+    val operationInputLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        when (pendingVerticalStep) {
+            VerticalOperationStep.DATE_LOCATION -> when (result.resultCode) {
+                OperationInputActivity.RESULT_NEXT -> {
+                    val data = result.data
+                    operationDraft = operationDraft.copy(
+                        date = data?.getStringExtra(OperationInputActivity.EXTRA_DATE).orEmpty(),
+                        location = data?.getStringExtra(OperationInputActivity.EXTRA_LOCATION).orEmpty()
+                    )
+                    operationSaveError = null
+                    destination = PIPSuriOSDestination.OperationLoadout
+                }
+                OperationInputActivity.RESULT_BACK -> destination = PIPSuriOSDestination.Data
+            }
+            VerticalOperationStep.CONSUMABLES -> when (result.resultCode) {
+                OperationInputActivity.RESULT_NEXT -> {
+                    val values = OperationInputActivity.CONSUMABLE_KEYS.map { key ->
+                        result.data?.getStringExtra(key)?.let(OperationInputValidator::parseDecimal)
+                    }
+                    if (values.all { it != null }) {
+                        operationDraft = operationDraft.copy(
+                            consumables = OperationConsumables(
+                                primaryMag = values[0]!!,
+                                secondaryMag = values[1]!!,
+                                grenades40mm = values[2]!!,
+                                grenades9mm = values[3]!!,
+                                grenadesCo2 = values[4]!!,
+                                primaryHpa = values[5]!!,
+                                secondaryHpa = values[6]!!
+                            )
+                        )
+                        operationSaveError = null
+                        destination = PIPSuriOSDestination.OperationConfirm
+                    }
+                }
+                OperationInputActivity.RESULT_BACK -> destination = PIPSuriOSDestination.OperationLoadout
+            }
+            null -> Unit
+        }
+        pendingVerticalStep = null
+    }
+
+    fun launchDateLocation() {
+        pendingVerticalStep = VerticalOperationStep.DATE_LOCATION
+        operationInputLauncher.launch(
+            OperationInputActivity.dateLocationIntent(
+                context,
+                operationDraft.date,
+                operationDraft.location
+            )
+        )
+    }
+
+    fun launchConsumables() {
+        pendingVerticalStep = VerticalOperationStep.CONSUMABLES
+        operationInputLauncher.launch(
+            OperationInputActivity.consumablesIntent(context, operationDraft.consumables)
+        )
+    }
+
+    fun openOperationLogs() {
+        destination = PIPSuriOSDestination.DataLog
+        operationLogsLoading = true
+        operationScope.launch {
+            val collection = withContext(Dispatchers.IO) { operationRepository.loadAll() }
+            operationLogEntries = collection.entries
+            operationLogUnreadableCount = collection.unreadableFileCount
+            operationLogsLoading = false
+        }
+    }
 
     Crossfade(
         targetState = destination,
@@ -205,6 +320,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onInventorySelected = { destination = PIPSuriOSDestination.InventoryLoading },
                 onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
                 onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
+                onDataSelected = { destination = PIPSuriOSDestination.DataLoading },
                 onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
                 onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading },
                 onToolsSelected = { destination = PIPSuriOSDestination.ToolsLoading }
@@ -235,6 +351,114 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
 
             PIPSuriOSDestination.ProximitySonar -> ProximitySonarScreen(
                 onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+
+            PIPSuriOSDestination.DataLoading -> DataLoadingScreen(
+                onFinished = { destination = PIPSuriOSDestination.Data }
+            )
+
+            PIPSuriOSDestination.Data -> DataScreen(
+                onInputOperation = {
+                    operationDraft = OperationDraft()
+                    operationSaveError = null
+                    launchDateLocation()
+                },
+                onLog = ::openOperationLogs,
+                onStatistics = { destination = PIPSuriOSDestination.DataStatistics },
+                onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.DataLog -> DataLogScreen(
+                entries = operationLogEntries,
+                unreadableFileCount = operationLogUnreadableCount,
+                loading = operationLogsLoading,
+                onEntrySelected = {
+                    selectedOperationLog = it
+                    destination = PIPSuriOSDestination.DataLogDetail
+                },
+                onBack = { destination = PIPSuriOSDestination.Data }
+            )
+
+            PIPSuriOSDestination.DataLogDetail -> selectedOperationLog?.let { entry ->
+                DataLogDetailScreen(
+                    log = entry.log,
+                    onBack = { destination = PIPSuriOSDestination.DataLog }
+                )
+            } ?: DataLogScreen(
+                entries = operationLogEntries,
+                unreadableFileCount = operationLogUnreadableCount,
+                loading = false,
+                onEntrySelected = {
+                    selectedOperationLog = it
+                    destination = PIPSuriOSDestination.DataLogDetail
+                },
+                onBack = { destination = PIPSuriOSDestination.Data }
+            )
+
+            PIPSuriOSDestination.DataStatistics -> DataPlaceholderScreen(
+                title = "DATA - STATISTICS",
+                onBack = { destination = PIPSuriOSDestination.Data }
+            )
+
+            PIPSuriOSDestination.OperationLoadout -> OperationLoadoutScreen(
+                activeLoadout = activeLoadout,
+                loadoutConfirmed = operationDraft.loadout != null,
+                onConfirmLoadout = {
+                    operationDraft = operationDraft.copy(
+                        loadout = OperationLoadoutSnapshot.from(activeLoadout)
+                    )
+                    operationSaveError = null
+                },
+                onNext = ::launchConsumables,
+                onBack = ::launchDateLocation
+            )
+
+            PIPSuriOSDestination.OperationConfirm -> OperationConfirmScreen(
+                draft = operationDraft,
+                saveError = operationSaveError,
+                saving = operationSaving,
+                onEdit = ::launchDateLocation,
+                onConfirm = {
+                    val loadout = operationDraft.loadout
+                    val consumables = operationDraft.consumables
+                    if (loadout != null && consumables != null) {
+                        operationScope.launch {
+                            operationSaving = true
+                            val result = withContext(Dispatchers.IO) {
+                                operationRepository.save(
+                                    OperationLog(
+                                        date = operationDraft.date,
+                                        location = operationDraft.location,
+                                        loadout = loadout,
+                                        consumables = consumables
+                                    )
+                                )
+                            }
+                            operationSaving = false
+                            when (result) {
+                                is SaveOperationResult.Saved -> {
+                                    operationSaveError = null
+                                    destination = PIPSuriOSDestination.DataSaved
+                                }
+                                is SaveOperationResult.AlreadyExists -> {
+                                    operationSaveError = "LOG ${result.file.nameWithoutExtension} ALREADY EXISTS"
+                                }
+                                is SaveOperationResult.Failure -> {
+                                    operationSaveError = "SAVE FAILED: ${result.message}"
+                                }
+                            }
+                        }
+                    }
+                },
+                onBack = ::launchConsumables
+            )
+
+            PIPSuriOSDestination.DataSaved -> DataSavedScreen(
+                onFinished = {
+                    operationDraft = OperationDraft()
+                    operationSaveError = null
+                    destination = PIPSuriOSDestination.Data
+                }
             )
 
             PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(

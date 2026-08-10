@@ -32,6 +32,7 @@ fun HomeOperationScreen(
     onInventorySelected: () -> Unit,
     onMapSelected: () -> Unit,
     onCommsSelected: () -> Unit,
+    onDataSelected: () -> Unit,
     onCurrentGearSelected: () -> Unit,
     onStatusSelected: () -> Unit,
     onToolsSelected: () -> Unit
@@ -76,6 +77,7 @@ fun HomeOperationScreen(
             )
             ModuleColumn(
                 entries = listOf("> DATA", "> CURRENT GEAR", "> STATUS", "> TOOLS"),
+                onDataSelected = onDataSelected,
                 onCurrentGearSelected = onCurrentGearSelected,
                 onStatusSelected = onStatusSelected,
                 onToolsSelected = onToolsSelected
@@ -111,6 +113,7 @@ private fun ModuleColumn(
     onInventorySelected: (() -> Unit)? = null,
     onMapSelected: (() -> Unit)? = null,
     onCommsSelected: (() -> Unit)? = null,
+    onDataSelected: (() -> Unit)? = null,
     onCurrentGearSelected: (() -> Unit)? = null,
     onStatusSelected: (() -> Unit)? = null,
     onToolsSelected: (() -> Unit)? = null
@@ -132,6 +135,8 @@ private fun ModuleColumn(
                         Modifier.clickable(onClick = onMapSelected)
                     entry == "> COMMS" && onCommsSelected != null ->
                         Modifier.clickable(onClick = onCommsSelected)
+                    entry == "> DATA" && onDataSelected != null ->
+                        Modifier.clickable(onClick = onDataSelected)
                     entry == "> CURRENT GEAR" && onCurrentGearSelected != null ->
                         Modifier.clickable(onClick = onCurrentGearSelected)
                     entry == "> STATUS" && onStatusSelected != null ->
