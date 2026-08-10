@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-09
+last_updated: 2026-08-10
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 006 | Sprint 006 completado; PIP-SuriOS v1.4 estable |
+| PIP-SuriOS | Ninguno | Sprint 007 | Sprint 007 completado; PIP-SuriOS v1.5 estable |
 
 ---
 
@@ -50,6 +50,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 004 | PIP-SuriOS | MAP, COMMS, INVENTORY y consolidación visual v1.0 | Aprobado | Completado | 2026-08-08 | 2026-08-09 | [ACTIVE_SPRINT](ACTIVE_SPRINT.md) |
 | 005 | PIP-SuriOS | COMMS // MORSE TERMINAL | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 005 v1.0](SPRINT_005_v1.0.md) |
 | 006 | PIP-SuriOS | Inventory, Current Gear y consolidación visible v1.4 | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
+| 007 | PIP-SuriOS | STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 007 v1.0](SPRINT_007_v1.0.md) |
 
 ---
 
@@ -72,10 +73,10 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 
 1. Sprint 005 — MORSE TERMINAL dentro de COMMS. **Implementado y cerrado.**
 2. Sprint 006 — INVENTORY ampliado y CURRENT GEAR. **Implementado y cerrado.**
-3. Sprint 007 — DATA / Mission Log. **No iniciado.**
-4. Sprint 008 — STATS.
-5. Sprint 009 — Evolución futura de COMMS posterior a MORSE TERMINAL.
-6. Sprint 010 — Optimización visual, animaciones y refinamiento de la experiencia de usuario.
+3. Sprint 007 — STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET. **Implementado y cerrado.**
+4. Sprint 008 — **No iniciado; alcance pendiente de autorización.**
+5. Sprint 009 — Evolución futura pendiente de planificación.
+6. Sprint 010 — Evolución futura pendiente de planificación.
 
 ---
 
@@ -439,12 +440,44 @@ Sprint 006 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ---
 
-## 16. Estadísticas
+## 16. Cierre de Sprint 007 de PIP-SuriOS
+
+Sprint 007 quedó completado el 2026-08-10 con la implementación de STATUS, el Loadout Activo, COMPLEMENTS y el checklist interactivo de DON'T FORGET, consolidando la identidad visible `PIP-SuriOS v1.5`.
+
+### Alcance funcional
+
+- CURRENT GEAR conserva un borrador de configuración durante la sesión.
+- APPLY copia el borrador al Loadout Activo.
+- STATUS consulta exclusivamente el Loadout Activo y es de sólo lectura.
+- ARMORY incorpora COMPLEMENTS con SNIPER, ASSAULT, HANDGUN, DEMOLITION y ACCESORIES.
+- `ComplementCatalog` centraliza BBs, SLING, HOLSTER, MAGs, AMMO y OTHER.
+- DON'T FORGET reutiliza el catálogo sin duplicar listas.
+- PRIMARY WEAPON, SECONDARY WEAPON y ACCESORIES alimentan los recordatorios.
+- La deduplicación simple elimina líneas idénticas sin sumar cantidades.
+- Cada recordatorio funciona como checklist `[ ] ↔ [X]` con estado temporal.
+- No se incorporó persistencia.
+- Se creó [PIP-SuriOS - User Guide](../USER_GUIDE.md) como manual oficial de uso.
+
+Se superaron compilación principal, compilación incremental, análisis lint, pruebas unitarias y `git diff --check`. La validación manual fue satisfactoria en Samsung Galaxy A56 y Pixel 8 Emulator, incluida la regeneración del checklist tras cambiar CURRENT GEAR y pulsar APPLY.
+
+### Commit técnico
+
+| Commit | Papel |
+|---|---|
+| `1dbc32f6e13c9f2a94c7c55c533733647fb8f67a` | STATUS, Loadout Activo, COMPLEMENTS, DON'T FORGET, checklist y consolidación visible v1.5. |
+
+Documento de cierre: [Sprint 007 v1.0](SPRINT_007_v1.0.md).
+
+Sprint 007 queda completamente cerrado. No existe ningún Sprint activo y Sprint 008 no se ha iniciado.
+
+---
+
+## 17. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 10.
-- Sprints completados: 10.
+- Sprints registrados: 11.
+- Sprints completados: 11.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -459,21 +492,21 @@ Sprint 006 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 006.
-- Versión vigente: PIP-SuriOS v1.4.
+- Último Sprint completado: Sprint 007.
+- Versión vigente: PIP-SuriOS v1.5.
 - Sprints activos: 0.
-- Sprint 006: completado y cerrado.
-- Sprint 007: no iniciado.
+- Sprint 007: completado y cerrado.
+- Sprint 008: no iniciado.
 ---
 
-## 17. Estado operativo
+## 18. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 006 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 007 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
-Sprint 007 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
+Sprint 008 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v1.4 con INVENTORY ampliado, CURRENT GEAR y MORSE TERMINAL constituye el estado móvil funcional y estable vigente. Sprint 006 está cerrado y Sprint 007 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v1.5 con INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET y MORSE TERMINAL constituye el estado móvil funcional y estable vigente. Sprint 007 está cerrado y Sprint 008 de PIP-SuriOS no se ha iniciado.
