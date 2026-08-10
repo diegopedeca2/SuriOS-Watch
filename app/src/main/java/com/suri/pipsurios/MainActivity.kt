@@ -2,6 +2,7 @@ package com.suri.pipsurios
 
 import android.os.Bundle
 import android.content.Intent
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import android.view.WindowInsets
@@ -39,6 +40,10 @@ import com.suri.pipsurios.ui.screens.HomeCivilianScreen
 import com.suri.pipsurios.ui.screens.HomeOperationScreen
 import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
+import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
+import com.suri.pipsurios.ui.screens.GeigerCounterScreen
+import com.suri.pipsurios.ui.screens.ProximitySonarScreen
+import com.suri.pipsurios.geiger.VolumeKeyController
 import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
 import com.suri.pipsurios.ui.screens.InventoryDetailsScreen
 import com.suri.pipsurios.ui.screens.InventoryItem
@@ -78,13 +83,15 @@ import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
+    private val volumeKeyController = VolumeKeyController()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hideStatusBar()
 
         setContent {
             PIPSuriOSTheme {
-                PIPSuriOSApp()
+                PIPSuriOSApp(volumeKeyController)
             }
         }
     }
@@ -93,6 +100,9 @@ class MainActivity : ComponentActivity() {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) hideStatusBar()
     }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean =
+        if (volumeKeyController.handle(event)) true else super.dispatchKeyEvent(event)
 
     private fun hideStatusBar() {
         window.decorView.windowInsetsController?.apply {
@@ -110,6 +120,9 @@ private enum class PIPSuriOSDestination {
     HomeOperation,
     ToolsLoading,
     Tools,
+    GeigerCounterLoading,
+    GeigerCounter,
+    ProximitySonar,
     HomeCivilian,
     InventoryLoading,
     InventoryModeSelection,
@@ -159,7 +172,7 @@ private enum class PIPSuriOSDestination {
 }
 
 @Composable
-private fun PIPSuriOSApp() {
+private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     val context = LocalContext.current
     var destination by remember { mutableStateOf(PIPSuriOSDestination.Splash) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
@@ -202,7 +215,26 @@ private fun PIPSuriOSApp() {
             )
 
             PIPSuriOSDestination.Tools -> ToolsScreen(
+                onGeigerCounterSelected = {
+                    destination = PIPSuriOSDestination.GeigerCounterLoading
+                },
+                onProximitySonarSelected = {
+                    destination = PIPSuriOSDestination.ProximitySonar
+                },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.GeigerCounterLoading -> GeigerCounterLoadingScreen(
+                onFinished = { destination = PIPSuriOSDestination.GeigerCounter }
+            )
+
+            PIPSuriOSDestination.GeigerCounter -> GeigerCounterScreen(
+                volumeKeyController = volumeKeyController,
+                onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+
+            PIPSuriOSDestination.ProximitySonar -> ProximitySonarScreen(
+                onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
             PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(
@@ -605,7 +637,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v1.5",
+                text = "PIP-SuriOS v1.7",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

@@ -105,7 +105,7 @@ fun ComplementsScreen(onBack: () -> Unit) {
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v1.5",
+            text = "PIP-SuriOS v1.7",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

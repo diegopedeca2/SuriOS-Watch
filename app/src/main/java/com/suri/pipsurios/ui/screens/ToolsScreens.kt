@@ -41,7 +41,11 @@ fun ToolsLoadingScreen(onFinished: () -> Unit) {
 }
 
 @Composable
-fun ToolsScreen(onBack: () -> Unit) {
+fun ToolsScreen(
+    onGeigerCounterSelected: () -> Unit,
+    onProximitySonarSelected: () -> Unit,
+    onBack: () -> Unit
+) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
             text = "TOOLS",
@@ -56,8 +60,20 @@ fun ToolsScreen(onBack: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Text("> GEIGER COUNTER", color = PipGreen, fontSize = 24.sp, fontFamily = FontFamily.Monospace)
-            Text("> SONAR", color = PipGreen, fontSize = 24.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                text = "> GEIGER COUNTER",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onGeigerCounterSelected)
+            )
+            Text(
+                text = "> SONAR",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onProximitySonarSelected)
+            )
         }
 
         Text(
@@ -69,7 +85,7 @@ fun ToolsScreen(onBack: () -> Unit) {
         )
 
         Text(
-            text = "PIP-SuriOS v1.5",
+            text = "PIP-SuriOS v1.7",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
