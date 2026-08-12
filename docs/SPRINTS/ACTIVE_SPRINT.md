@@ -4,7 +4,7 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canónico
-last_updated: 2026-08-10
+last_updated: 2026-08-12
 
 ---
 
@@ -14,46 +14,37 @@ last_updated: 2026-08-10
 
 ## Estado
 
-Sprint 008 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
+Sprint 009 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
 
-No existe ningún Sprint activo. Sprint 009 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v1.9 es la versión móvil consolidada vigente. No existe ningún Sprint activo y Sprint 010 no se ha iniciado.
 
 PIW-SuriOS v1.9 continúa siendo la versión visual consolidada vigente de SuriOS Watch y no fue modificada durante este Sprint.
 
 ## Último Sprint completado de PIP-SuriOS
 
-[Sprint 008 v1.0](SPRINT_008_v1.0.md), iniciado y finalizado el 2026-08-10.
+[Sprint 009 v1.0](SPRINT_009_v1.0.md), finalizado el 2026-08-12.
 
-**Sprint 008 - Tools (Geiger Counter y Sonar) PIP-SuriOS v1.7**
+**Sprint 009 - DATA, Statistics y Log PIP-SuriOS v1.9**
 
 Commit técnico:
 
-`353edbf212e810e29583db5d91400eb3dfac9ec9`
+`c9dc3720213d5fb4d5e77ba64ea163802548c5ba`
 
-Implementación final:
+El Sprint consolidó DATA con creación, almacenamiento JSON, consulta, edición y borrado seguro de LOG; estadísticas dinámicas; UNIFORM en el loadout completo; compatibilidad histórica; refinamientos de arranque, RADS, SONAR y DON'T FORGET.
 
-- TOOLS proporciona acceso a GEIGER COUNTER y SONAR mediante la navegación Compose existente.
-- GEIGER COUNTER es una simulación inmersiva controlada con VOLUME UP, con aguja analógica y clics de frecuencia variable.
-- SONAR escanea exclusivamente señales BLE permitidas por Android.
-- El tracking mantiene identificadores temporales, RSSI suavizado, baseline y estados BACKGROUND/NEW sólo durante la sesión.
-- CALIBRATE registra el entorno conocido como baseline.
-- El radar utiliza VERY CLOSE, CLOSE, MEDIUM y FAR sin mostrar metros ni dirección física.
-- El barrido dispone de pulso general y avisos diferenciados para contactos BACKGROUND y NEW.
-- La identidad visible consolidada es `PIP-SuriOS v1.7`.
-- No se incorporaron sensores reales, Wi-Fi, UWB, persistencia ni identificación de personas.
-
-Las validaciones automáticas y la validación manual en Samsung Galaxy A56 fueron superadas. Pixel 8 Emulator se utilizó para las comprobaciones aplicables de interfaz, navegación y audio.
+Las compilaciones, lint, 63 pruebas unitarias y las validaciones manuales aplicables en Samsung Galaxy A56 y Pixel 8 Emulator fueron superadas.
 
 ## Roadmap de PIP-SuriOS
 
-- Sprint 008 queda cerrado.
+- Sprint 009 queda cerrado.
+- PIP-SuriOS v1.9 queda consolidado.
 - No existe Sprint activo.
-- Sprint 009 no se ha iniciado.
-- La planificación posterior requiere autorización expresa.
+- Sprint 010 no se ha iniciado.
+- Cualquier trabajo posterior requiere autorización expresa.
 
 ## Referencias
 
-- [Sprint 008 v1.0](SPRINT_008_v1.0.md)
+- [Sprint 009 v1.0](SPRINT_009_v1.0.md)
 - [User Guide](../USER_GUIDE.md)
 - [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
 - [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)

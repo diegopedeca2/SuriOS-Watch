@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-10
+last_updated: 2026-08-12
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 008 | Sprint 008 completado; PIP-SuriOS v1.7 estable |
+| PIP-SuriOS | Ninguno | Sprint 009 | Sprint 009 completado; PIP-SuriOS v1.9 estable |
 
 ---
 
@@ -52,6 +52,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 006 | PIP-SuriOS | Inventory, Current Gear y consolidación visible v1.4 | Aprobado | Completado | 2026-08-09 | 2026-08-09 | [Sprint 006 v1.0](SPRINT_006_v1.0.md) |
 | 007 | PIP-SuriOS | STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 007 v1.0](SPRINT_007_v1.0.md) |
 | 008 | PIP-SuriOS | TOOLS, GEIGER COUNTER, SONAR y consolidación visible v1.7 | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 008 v1.0](SPRINT_008_v1.0.md) |
+| 009 | PIP-SuriOS | DATA, Statistics, Log, UNIFORM y consolidación visible v1.9 | Aprobado | Completado | 2026-08-10 | 2026-08-12 | [Sprint 009 v1.0](SPRINT_009_v1.0.md) |
 
 ---
 
@@ -76,8 +77,8 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 2. Sprint 006 — INVENTORY ampliado y CURRENT GEAR. **Implementado y cerrado.**
 3. Sprint 007 — STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET. **Implementado y cerrado.**
 4. Sprint 008 — TOOLS, GEIGER COUNTER y SONAR. **Implementado y cerrado.**
-5. Sprint 009 — **No iniciado; evolución futura pendiente de planificación.**
-6. Sprint 010 — Evolución futura pendiente de planificación.
+5. Sprint 009 — DATA, Statistics, Log, UNIFORM y consolidación visible v1.9. **Implementado y cerrado.**
+6. Sprint 010 — No iniciado.
 
 ---
 
@@ -510,12 +511,30 @@ Sprint 008 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ---
 
-## 18. Estadísticas
+## 18. Cierre de Sprint 009 de PIP-SuriOS
+
+Sprint 009 quedó completado el 2026-08-12 y consolidó `PIP-SuriOS v1.9`.
+
+El Sprint incorporó el flujo permanente DATA con creación, lectura, detalle, edición segura y eliminación confirmada de LOG JSON; estadísticas dinámicas de PRIMARY WEAPON, SECONDARY WEAPON, LOCATION, HEADGEAR y UNIFORM; compatibilidad con registros históricos; y UNIFORM en INVENTORY, CURRENT GEAR, STATUS e historial operativo.
+
+También finalizó la secuencia de arranque en dos fases, la denominación visible RADS, la nueva disposición de SONAR y el orden alfabético de DON'T FORGET. Se superaron las compilaciones, lint, 63 pruebas unitarias, `git diff --check` y la validación manual en Samsung Galaxy A56 y Pixel 8 Emulator.
+
+| Commit | Papel |
+|---|---|
+| `c9dc3720213d5fb4d5e77ba64ea163802548c5ba` | DATA, Statistics, Log, UNIFORM y refinamientos finales de PIP-SuriOS v1.9. |
+
+Documento de cierre: [Sprint 009 v1.0](SPRINT_009_v1.0.md).
+
+Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún Sprint activo y Sprint 010 no se ha iniciado.
+
+---
+
+## 19. Estadísticas
 
 ### Ecosistema
 
-- Sprints registrados: 12.
-- Sprints completados: 12.
+- Sprints registrados: 13.
+- Sprints completados: 13.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -530,21 +549,21 @@ Sprint 008 queda completamente cerrado. No existe ningún Sprint activo y Sprint
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 008.
-- Versión vigente: PIP-SuriOS v1.7.
+- Último Sprint completado: Sprint 009.
+- Versión vigente: PIP-SuriOS v1.9.
 - Sprints activos: 0.
-- Sprint 008: completado y cerrado.
-- Sprint 009: no iniciado.
+- Sprint 009: completado y cerrado.
+- Sprint 010: no iniciado.
 ---
 
-## 19. Estado operativo
+## 20. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 008 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 009 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
-Sprint 009 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
+Sprint 010 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v1.7 con INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET, MORSE TERMINAL, GEIGER COUNTER y SONAR constituye el estado móvil funcional y estable vigente. Sprint 008 está cerrado y Sprint 009 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v1.9 con DATA permanente, estadísticas, INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET, MORSE TERMINAL, RADS y SONAR constituye el estado móvil funcional y estable vigente. Sprint 009 está cerrado y Sprint 010 de PIP-SuriOS no se ha iniciado.

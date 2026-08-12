@@ -1,6 +1,6 @@
 # PIP-SuriOS - User Guide
 
-Manual oficial de usuario — PIP-SuriOS v1.7
+Manual oficial de usuario — PIP-SuriOS v1.9
 
 ## Índice
 
@@ -12,11 +12,12 @@ Manual oficial de usuario — PIP-SuriOS v1.7
 6. [INVENTORY](#6-inventory)
 7. [CURRENT GEAR](#7-current-gear)
 8. [STATUS](#8-status)
-9. [TOOLS](#9-tools)
-10. [Controles](#10-controles)
-11. [Limitaciones conocidas](#11-limitaciones-conocidas)
-12. [Historial de versiones](#12-historial-de-versiones)
-13. [Consejos de uso](#13-consejos-de-uso)
+9. [DATA](#9-data)
+10. [TOOLS](#10-tools)
+11. [Controles](#11-controles)
+12. [Limitaciones conocidas](#12-limitaciones-conocidas)
+13. [Historial de versiones](#13-historial-de-versiones)
+14. [Consejos de uso](#14-consejos-de-uso)
 
 ## 1. Introducción
 
@@ -24,7 +25,7 @@ PIP-SuriOS es una aplicación móvil de apoyo operativo con una estética inspir
 
 Está pensada principalmente para utilizarse en un Samsung Galaxy A56 en orientación horizontal. La pantalla TEXT > MORSE utiliza orientación vertical para facilitar la escritura con el teclado.
 
-La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y GEIGER COUNTER funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y SONAR necesita Bluetooth y sus permisos correspondientes.
+La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y RADS funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y SONAR necesita Bluetooth y sus permisos correspondientes.
 
 ## 2. Inicio de la aplicación
 
@@ -32,8 +33,9 @@ Al abrir PIP-SuriOS aparece una secuencia de arranque automática:
 
 1. `LOADING...`
 2. `LOG-IN ID: SURI-14 VERIFIED`
-3. `SYSTEM READY`
-4. `SELECT MODE`
+3. Los módulos de HOME se inicializan en el orden INVENTORY, MAP, COMMS, DATA, CURRENT GEAR, STATUS y TOOLS. Cada línea muestra primero `LOADING MÓDULO.....` y después `READY`.
+4. `SYSTEM READY`
+5. `SELECT MODE`
 
 Después puede elegirse uno de estos modos:
 
@@ -53,9 +55,10 @@ La pantalla `OPERATION - HOMESCREEN` es el punto principal de acceso. Contiene:
 - **INVENTORY:** consulta de armas, consumibles, equipamiento y complementos.
 - **MAP:** selección de los modos cartográficos TERRAIN y OPERATION.
 - **COMMS:** tabla de frecuencias PMR y MORSE TERMINAL.
+- **DATA:** registro permanente, consulta, edición, borrado y estadísticas de operaciones.
 - **CURRENT GEAR:** preparación del equipo de la sesión.
 - **STATUS:** consulta del Loadout Activo y checklist DON'T FORGET.
-- **TOOLS:** acceso a GEIGER COUNTER y SONAR.
+- **TOOLS:** acceso a RADS y SONAR.
 
 Algunos módulos muestran brevemente `LOADING...` antes de abrirse. Utilice `< BACK` para regresar al nivel anterior.
 
@@ -163,8 +166,11 @@ Reúne las referencias de equipamiento personal en:
 
 - HEADGEAR
 - FRONT PANEL
+- UNIFORM
 
 Seleccione una opción para consultar los perfiles disponibles y su contenido.
+
+UNIFORM muestra las referencias `MCBCK - SUMMER`, `MCBCK - LONG` y `DESERT`.
 
 Las entradas marcadas como `UNDER CONSTRUCTION` todavía no tienen información disponible.
 
@@ -177,6 +183,9 @@ CURRENT GEAR permite preparar el equipo que se utilizará durante la sesión. De
 - ACCESORIES
 - HEADGEAR
 - FRONT PANEL
+- UNIFORM
+
+UNIFORM permite seleccionar `MCBCK - SUMMER`, `MCBCK - LONG` o `DESERT` con el mismo estilo de selector que el resto del equipo.
 
 Las opciones disponibles se adaptan a las elecciones anteriores. Si cambia una categoría principal, cualquier selección que deje de ser compatible puede eliminarse automáticamente. ACCESORIES permite seleccionar varios elementos.
 
@@ -195,6 +204,7 @@ STATUS muestra:
 - ACCESORIES
 - HEADGEAR
 - FRONT PANEL
+- UNIFORM
 
 Los apartados aún no configurados aparecen como `NOT CONFIGURED`. STATUS es una pantalla de consulta: los cambios de equipo se realizan desde CURRENT GEAR.
 
@@ -210,23 +220,68 @@ Pulse una línea para alternar entre `[ ]` y `[X]`. Marcar un elemento sólo cam
 
 Después de cambiar el equipo y pulsar APPLY, STATUS y DON'T FORGET se actualizan con la nueva configuración.
 
-## 9. TOOLS
+Las líneas de DON'T FORGET se deduplican y se muestran en orden alfabético sin perder su estado `[ ]` o `[X]`.
 
-Desde HOME OPERATION, pulse **TOOLS**. Tras `LOADING...` puede elegir GEIGER COUNTER o SONAR.
+## 9. DATA
+
+DATA conserva un historial permanente de operaciones y permite consultarlo, editarlo y analizarlo.
+
+### INPUT OPERATION
+
+El alta de una operación sigue cuatro pasos:
+
+1. **DATE & LOCATION:** introduzca la fecha en formato `DD/MM/AAAA` y una ubicación.
+2. **CONFIRM LOADOUT:** revise y capture una copia del Loadout Activo, incluido UNIFORM. Los campos sin selección aparecen como `NOT CONFIGURED`.
+3. **CONSUMABLES:** indique cargadores, granadas y HPA utilizados. Se admiten hasta dos decimales, con coma o punto.
+4. **CONFIRM DATA:** revise fecha, ubicación, loadout y consumibles antes de guardar.
+
+El LOG guarda un snapshot histórico. Cambiar posteriormente CURRENT GEAR no modifica operaciones anteriores.
+
+### LOG y LOG DETAIL
+
+**LOG** enumera las operaciones guardadas. Abra una entrada para consultar **LOG DETAIL**, donde aparecen la fecha, ubicación, HEADGEAR, UNIFORM, el resto del loadout y los consumibles registrados.
+
+Los LOG creados antes de incorporar UNIFORM continúan siendo legibles y muestran ese apartado como `NOT CONFIGURED`.
+
+### EDIT
+
+**EDIT** abre el flujo de la operación con sus valores precargados. Puede modificar DATE & LOCATION, LOADOUT —incluidos HEADGEAR y UNIFORM— y CONSUMABLES. Revise el resultado y pulse **CONFIRM MODIFICATIONS** para guardarlo. Salir mediante BACK antes de confirmar no modifica el archivo.
+
+Si cambia la fecha y ya existe un LOG para la nueva fecha, PIP-SuriOS informa del conflicto y conserva el registro original.
+
+### DELETE
+
+**DELETE** solicita confirmación antes de eliminar permanentemente el LOG abierto. **CANCEL** vuelve al detalle sin borrar; **CONFIRM DELETE** elimina únicamente ese registro.
+
+### STATISTICS
+
+STATISTICS calcula porcentajes directamente desde los LOG persistentes. Incluye:
+
+- **PRIMARY WEAPON:** distribución entre todas las armas primarias admitidas.
+- **SECONDARY WEAPON:** distribución entre todas las armas secundarias admitidas.
+- **LOCATION:** ubicaciones registradas, normalizadas y ordenadas alfabéticamente.
+- **HEADGEAR:** distribución únicamente entre los perfiles `SURI-14` y `BROTHERHOOD`.
+- **UNIFORM:** distribución entre `MCBCK - SUMMER`, `MCBCK - LONG` y `DESERT`.
+
+Los valores vacíos o históricos que no correspondan a una opción válida no intervienen en el porcentaje. Si no hay datos válidos se muestra `NO DATA`.
+
+## 10. TOOLS
+
+Desde HOME OPERATION, pulse **TOOLS**. Tras `LOADING...` puede elegir RADS o SONAR.
 
 Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen instrumentos de medición profesionales.
 
-### GEIGER COUNTER
+### RADS
 
-GEIGER COUNTER simula el comportamiento de un contador Geiger mediante un medidor analógico de aguja, estados visuales y clics de audio.
+RADS simula el comportamiento de un contador Geiger mediante un medidor analógico de aguja, estados visuales y clics de audio.
 
 Al entrar, la aguja comienza en el mínimo y el estado es `BACKGROUND`. Mantenga pulsado el botón físico **VOLUME UP** para elevar progresivamente el nivel. La aguja avanza hacia `HIGH`, cambia el estado mostrado y aumenta la frecuencia de los clics.
 
 Al soltar VOLUME UP, la aguja y el sonido regresan lentamente al mínimo. El descenso no es instantáneo.
 
-Mientras GEIGER COUNTER está abierto, VOLUME UP controla la simulación y no modifica el volumen multimedia. Fuera de esta pantalla vuelve a comportarse normalmente.
+Mientras RADS está abierto, VOLUME UP controla la simulación y no modifica el volumen multimedia. Fuera de esta pantalla vuelve a comportarse normalmente.
 
-GEIGER COUNTER no utiliza sensores y no mide radiación real.
+RADS no utiliza sensores y no mide radiación real.
 
 ### SONAR
 
@@ -240,6 +295,8 @@ SONAR busca señales Bluetooth Low Energy cercanas y utiliza su intensidad para 
 - **FAR:** señal débil.
 
 La posición alrededor del círculo es únicamente una representación visual estable. **No indica la dirección física del dispositivo.** SONAR tampoco calcula metros ni muestra una distancia exacta: sólo utiliza la intensidad de la señal BLE para estimar proximidad.
+
+El panel CONTACTS muestra los totales CURRENT y NEW, además del reparto activo entre VERY CLOSE, CLOSE, MEDIUM y FAR. El panel SCAN muestra el estado del escaneo, el baseline y el acceso a CALIBRATE.
 
 #### CALIBRATE
 
@@ -260,7 +317,7 @@ Cada contacto genera como máximo un aviso en cada pasada. El sonido se detiene 
 
 SONAR no muestra nombres de dispositivos, direcciones MAC ni información personal. Detectar una señal electrónica no significa detectar o localizar a una persona.
 
-## 10. Controles
+## 11. Controles
 
 Los controles principales de PIP-SuriOS son:
 
@@ -277,32 +334,33 @@ Los controles principales de PIP-SuriOS son:
 
 Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecutar la acción indicada.
 
-## 11. Limitaciones conocidas
+## 12. Limitaciones conocidas
 
 - CIVILIAN y MAP TERRAIN permanecen en construcción.
 - CURRENT GEAR, el Loadout Activo, el checklist y la calibración de SONAR no se guardan permanentemente. Se pierden al cerrar o reiniciar la aplicación.
 - INVENTORY es informativo: no descuenta consumibles ni actualiza cantidades automáticamente.
 - MAP OPERATION depende de que CivTAK o Google Maps estén instalados y correctamente configurados.
 - TRANSMIT // FLASH depende de que el dispositivo tenga una linterna compatible.
-- GEIGER COUNTER es una simulación y no mide radiación.
+- RADS es una simulación y no mide radiación.
 - SONAR es experimental y sólo detecta señales BLE que Android y los dispositivos cercanos permitan descubrir.
 - La intensidad BLE puede variar por paredes, obstáculos, orientación, interferencias, potencia de emisión o posición del teléfono.
 - Las categorías de SONAR indican proximidad aproximada; no representan metros ni dirección física.
 - SONAR necesita Bluetooth activo y permisos de escaneo.
 - Un emulador puede mostrar la interfaz y el audio, pero normalmente no reproduce un entorno BLE físico comparable al de un teléfono real.
 
-## 12. Historial de versiones
+## 13. Historial de versiones
 
 | Versión | Hitos principales |
 |---|---|
 | **v1.0** | Incorporación funcional de MAP, COMMS e INVENTORY y consolidación del HOME operativo. |
 | **v1.4** | Ampliación de INVENTORY e incorporación funcional de CURRENT GEAR. |
 | **v1.5** | Incorporación de STATUS, Loadout Activo, COMPLEMENTS y DON'T FORGET. |
-| **v1.7** | Incorporación de TOOLS con GEIGER COUNTER y SONAR, junto con sus sonidos y refinamientos visuales. |
+| **v1.7** | Incorporación de TOOLS con el contador posteriormente denominado RADS y SONAR, junto con sus sonidos y refinamientos visuales. |
+| **v1.9** | Incorporación del historial DATA con alta, consulta, edición, borrado y estadísticas; UNIFORM en todo el flujo; RADS; nueva disposición de SONAR y refinamientos de arranque y DON'T FORGET. |
 
-PIP-SuriOS v1.7 corresponde al estado funcional cerrado tras Sprint 008.
+PIP-SuriOS v1.9 incorpora la ampliación funcional desarrollada durante Sprint 009.
 
-## 13. Consejos de uso
+## 14. Consejos de uso
 
 ### Preparación antes de la partida
 
@@ -340,9 +398,9 @@ Para obtener una referencia más útil del entorno:
 
 Paredes, obstáculos, interferencias y la posición del teléfono pueden cambiar la categoría mostrada aunque el dispositivo detectado no se haya movido.
 
-### Uso de GEIGER COUNTER
+### Uso de RADS
 
-GEIGER COUNTER tiene una finalidad exclusivamente inmersiva. Mantenga pulsado **VOLUME UP** para elevar la aguja y la frecuencia de los clics, y suelte el botón para regresar progresivamente al nivel mínimo.
+RADS tiene una finalidad exclusivamente inmersiva. Mantenga pulsado **VOLUME UP** para elevar la aguja y la frecuencia de los clics, y suelte el botón para regresar progresivamente al nivel mínimo.
 
 La herramienta no representa niveles reales de radiación y no debe utilizarse como instrumento de seguridad.
 
