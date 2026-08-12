@@ -84,6 +84,12 @@ import com.suri.pipsurios.ui.screens.InventoryLoadingScreen
 import com.suri.pipsurios.ui.screens.InventoryModeSelectionScreen
 import com.suri.pipsurios.ui.screens.InventoryScreen
 import com.suri.pipsurios.ui.screens.InventoryVisualMenuScreen
+import com.suri.pipsurios.ui.screens.StorageGroupScreen
+import com.suri.pipsurios.ui.screens.StorageItemScreen
+import com.suri.pipsurios.storage.StorageCatalog
+import com.suri.pipsurios.storage.StorageCalculator
+import com.suri.pipsurios.storage.StorageItem
+import com.suri.pipsurios.storage.StorageRepository
 import com.suri.pipsurios.ui.screens.PrimaryWeaponRole
 import com.suri.pipsurios.ui.screens.SecondaryWeaponCatalog
 import com.suri.pipsurios.ui.screens.HeadgearCatalog
@@ -191,11 +197,11 @@ private enum class PIPSuriOSDestination {
     InventoryAccesories,
     InventoryComplements,
     InventoryDetails,
-    InventoryConsumables,
-    InventoryConsumablesBbs,
-    InventoryConsumablesGrenades,
-    InventoryGrenadesCartridges,
-    InventoryConsumablesGas,
+    InventoryStorage,
+    InventoryStorageBbs,
+    InventoryStorageGrenades,
+    InventoryStorageGas,
+    InventoryStorageItem,
     InventoryLoadouts,
     InventoryLoadoutsHeadgear,
     InventoryHeadgearSuri14,
@@ -239,6 +245,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     val context = LocalContext.current
     var destination by remember { mutableStateOf(PIPSuriOSDestination.Splash) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
+    var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
     var morseInput by remember { mutableStateOf("") }
     var morseOutput by remember { mutableStateOf("") }
     var draftLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
@@ -273,6 +280,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     var operationLogDeleteError by remember { mutableStateOf<String?>(null) }
     var pendingVerticalStep by remember { mutableStateOf<VerticalOperationStep?>(null) }
     val operationRepository = remember(context) { OperationRepository.from(context.applicationContext) }
+    val storageRepository = remember(context) { StorageRepository.from(context.applicationContext) }
     val operationScope = rememberCoroutineScope()
 
     val operationInputLauncher = rememberLauncherForActivityResult(
@@ -491,6 +499,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             operationEditSaving = false
             when (result) {
                 is UpdateOperationResult.Updated -> {
+                    withContext(Dispatchers.IO) {
+                        storageRepository.reconcile(operationRepository.loadAll().entries.map { it.log })
+                    }
                     selectedOperationLog = null
                     operationEditDraft = null
                     destination = PIPSuriOSDestination.DataModified
@@ -519,6 +530,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             operationLogDeleting = false
             when (result) {
                 DeleteOperationResult.Deleted -> {
+                    withContext(Dispatchers.IO) {
+                        storageRepository.reconcile(operationRepository.loadAll().entries.map { it.log })
+                    }
                     selectedOperationLog = null
                     destination = PIPSuriOSDestination.DataDeleted
                 }
@@ -732,6 +746,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                             operationSaving = false
                             when (result) {
                                 is SaveOperationResult.Saved -> {
+                                    withContext(Dispatchers.IO) {
+                                        storageRepository.reconcile(operationRepository.loadAll().entries.map { it.log })
+                                    }
                                     operationSaveError = null
                                     destination = PIPSuriOSDestination.DataSaved
                                 }
@@ -775,7 +792,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             PIPSuriOSDestination.InventoryModeSelection -> InventoryModeSelectionScreen(
                 onBack = { destination = PIPSuriOSDestination.HomeOperation },
                 onArmorySelected = { destination = PIPSuriOSDestination.InventoryArmory },
-                onConsumablesSelected = { destination = PIPSuriOSDestination.InventoryConsumables },
+                onConsumablesSelected = { destination = PIPSuriOSDestination.InventoryStorage },
                 onLoadoutsSelected = { destination = PIPSuriOSDestination.InventoryLoadouts }
             )
 
@@ -890,47 +907,68 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 }
             )
 
-            PIPSuriOSDestination.InventoryConsumables -> InventoryVisualMenuScreen(
-                title = "INVENTORY - CONSUMABLES",
+            PIPSuriOSDestination.InventoryStorage -> InventoryVisualMenuScreen(
+                title = "INVENTORY - STORAGE",
                 entries = listOf("> BBs", "> GRENADES", "> GAS"),
                 entryActions = mapOf(
-                    "> BBs" to { destination = PIPSuriOSDestination.InventoryConsumablesBbs },
-                    "> GRENADES" to { destination = PIPSuriOSDestination.InventoryConsumablesGrenades },
-                    "> GAS" to { destination = PIPSuriOSDestination.InventoryConsumablesGas }
+                    "> BBs" to { destination = PIPSuriOSDestination.InventoryStorageBbs },
+                    "> GRENADES" to { destination = PIPSuriOSDestination.InventoryStorageGrenades },
+                    "> GAS" to { destination = PIPSuriOSDestination.InventoryStorageGas }
                 ),
                 onBack = { destination = PIPSuriOSDestination.InventoryModeSelection }
             )
 
-            PIPSuriOSDestination.InventoryConsumablesBbs -> InventoryVisualMenuScreen(
-                title = "CONSUMABLES - BBs",
-                entries = listOf(
-                    "> Random", "> 0,20", "> 0,20 TRACER", "> 0,28",
-                    "> 0,30", "> 0,30 TRACER", "> 0,40", "> 0,45"
-                ),
-                scrollable = true,
-                onBack = { destination = PIPSuriOSDestination.InventoryConsumables }
+            PIPSuriOSDestination.InventoryStorageBbs -> StorageGroupScreen(
+                title = "STORAGE - BBs", items = StorageCatalog.bbs,
+                onItem = { selectedStorageItem = it; destination = PIPSuriOSDestination.InventoryStorageItem },
+                onBack = { destination = PIPSuriOSDestination.InventoryStorage }
             )
 
-            PIPSuriOSDestination.InventoryConsumablesGrenades -> InventoryVisualMenuScreen(
-                title = "CONSUMABLES - GRENADES",
-                entries = listOf("> 9mm CARTRIDGES", "> C02 VIALS", "> CASINGS"),
-                entryActions = mapOf(
-                    "> 9mm CARTRIDGES" to { destination = PIPSuriOSDestination.InventoryGrenadesCartridges }
-                ),
-                onBack = { destination = PIPSuriOSDestination.InventoryConsumables }
+            PIPSuriOSDestination.InventoryStorageGrenades -> StorageGroupScreen(
+                title = "STORAGE - GRENADES", items = StorageCatalog.grenades,
+                onItem = { selectedStorageItem = it; destination = PIPSuriOSDestination.InventoryStorageItem },
+                onBack = { destination = PIPSuriOSDestination.InventoryStorage }
             )
 
-            PIPSuriOSDestination.InventoryGrenadesCartridges -> InventoryVisualMenuScreen(
-                title = "GRENADES - 9mm CARTRIDGES",
-                entries = listOf("> TITAN", "> KAISER"),
-                onBack = { destination = PIPSuriOSDestination.InventoryConsumablesGrenades }
+            PIPSuriOSDestination.InventoryStorageGas -> StorageGroupScreen(
+                title = "STORAGE - GAS", items = StorageCatalog.gas,
+                onItem = { selectedStorageItem = it; destination = PIPSuriOSDestination.InventoryStorageItem },
+                onBack = { destination = PIPSuriOSDestination.InventoryStorage }
             )
 
-            PIPSuriOSDestination.InventoryConsumablesGas -> InventoryVisualMenuScreen(
-                title = "CONSUMABLES - GAS",
-                entries = listOf("> 06 KG", "> 08 KG", "> 10 KG", "> 12 KG", "> 14 KG"),
-                onBack = { destination = PIPSuriOSDestination.InventoryConsumables }
-            )
+            PIPSuriOSDestination.InventoryStorageItem -> selectedStorageItem?.let { item ->
+                val logs = remember(item.stableId) { operationRepository.loadAll().entries.map { it.log } }
+                fun loadStorageBalance() = StorageCalculator.balance(
+                    item, storageRepository.reconcile(logs)[item.stableId], logs
+                )
+                var balance by remember(item.stableId) { mutableStateOf(loadStorageBalance()) }
+                StorageItemScreen(
+                    balance = balance,
+                    onPurchase = {
+                        if (storageRepository.purchase(item.stableId, logs)) {
+                            balance = balance.copy(
+                                purchase = balance.purchase + java.math.BigDecimal.ONE,
+                                total = balance.total + java.math.BigDecimal.ONE
+                            )
+                        }
+                    },
+                    onUsed = {
+                        if (storageRepository.use(item.stableId, logs)) {
+                            balance = balance.copy(
+                                used = balance.used + java.math.BigDecimal.ONE,
+                                total = balance.total - java.math.BigDecimal.ONE
+                            )
+                        }
+                    },
+                    onBack = {
+                        destination = when (item.group) {
+                            com.suri.pipsurios.storage.StorageGroup.BBS -> PIPSuriOSDestination.InventoryStorageBbs
+                            com.suri.pipsurios.storage.StorageGroup.GRENADES -> PIPSuriOSDestination.InventoryStorageGrenades
+                            com.suri.pipsurios.storage.StorageGroup.GAS -> PIPSuriOSDestination.InventoryStorageGas
+                        }
+                    }
+                )
+            }
 
             PIPSuriOSDestination.InventoryLoadouts -> InventoryVisualMenuScreen(
                 title = "INVENTORY - LOADOUTS",
@@ -1179,7 +1217,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v1.9",
+                text = "PIP-SuriOS v2.0",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

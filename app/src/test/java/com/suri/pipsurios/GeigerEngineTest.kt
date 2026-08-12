@@ -59,4 +59,19 @@ class GeigerEngineTest {
         assertTrue(background > critical)
         assertTrue(critical >= 80L)
     }
+
+    @Test fun manualRiseUsesReducedGradualTuning() {
+        val engine = GeigerEngine(Random(1))
+        repeat(10) { engine.update(true, 0.1f) }
+        assertEquals(0.18f, engine.snapshot().level, 0.001f)
+        assertTrue(GeigerEngine.RISE_PER_SECOND < 0.34f)
+    }
+
+    @Test fun clickCadenceChangesContinuouslyWithEffectiveLevel() {
+        val low = ClickScheduler.intervalMillis(0.2f, 0.5f)
+        val middle = ClickScheduler.intervalMillis(0.5f, 0.5f)
+        val high = ClickScheduler.intervalMillis(0.8f, 0.5f)
+        assertTrue(low > middle)
+        assertTrue(middle > high)
+    }
 }

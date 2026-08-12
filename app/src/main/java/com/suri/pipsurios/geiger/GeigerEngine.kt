@@ -40,8 +40,8 @@ class GeigerEngine(
     )
 
     companion object {
-        private const val RISE_PER_SECOND = 0.34f
-        private const val FALL_PER_SECOND = 0.16f
+        const val RISE_PER_SECOND = 0.18f
+        const val FALL_PER_SECOND = 0.16f
         private const val BASE_JITTER = 0.008f
         private const val LEVEL_JITTER = 0.025f
 

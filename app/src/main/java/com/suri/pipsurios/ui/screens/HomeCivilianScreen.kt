@@ -54,7 +54,7 @@ fun HomeCivilianScreen(onBack: () -> Unit) {
         )
 
         Text(
-            text = "PIP-SuriOS v1.9",
+            text = "PIP-SuriOS v2.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

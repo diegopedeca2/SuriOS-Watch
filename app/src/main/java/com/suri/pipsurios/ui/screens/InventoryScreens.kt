@@ -60,7 +60,7 @@ fun InventoryModeSelectionScreen(
         InventoryEntries(
             entries = listOf(
                 "> ARMORY" to onArmorySelected,
-                "> CONSUMABLES" to onConsumablesSelected,
+                "> STORAGE" to onConsumablesSelected,
                 "> LOADOUTS" to onLoadoutsSelected
             )
         )
@@ -367,7 +367,7 @@ private fun InventoryLayout(
         )
 
         Text(
-            text = "PIP-SuriOS v1.9",
+            text = "PIP-SuriOS v2.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -1,5 +1,10 @@
 package com.suri.pipsurios.ui.screens
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -36,6 +42,8 @@ import com.suri.pipsurios.geiger.ClickScheduler
 import com.suri.pipsurios.geiger.GeigerEngine
 import com.suri.pipsurios.geiger.GeigerSnapshot
 import com.suri.pipsurios.geiger.VolumeKeyController
+import com.suri.pipsurios.geiger.RadsInclination
+import com.suri.pipsurios.geiger.RadsMode
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
@@ -68,10 +76,36 @@ fun GeigerCounterScreen(
     val clickScheduler = remember { ClickScheduler(context.applicationContext) }
     var volumeUpPressed by remember { mutableStateOf(false) }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
+    var mode by remember { mutableStateOf(RadsMode.MANUAL) }
+    var sensorLevel by remember { mutableStateOf(0f) }
 
-    DisposableEffect(volumeKeyController) {
-        volumeKeyController.activate { volumeUpPressed = it }
+    DisposableEffect(volumeKeyController, mode) {
+        volumeKeyController.activate(
+            onPressedChanged = { pressed ->
+                if (mode == RadsMode.MANUAL) volumeUpPressed = pressed
+            },
+            onVolumeDown = {
+                mode = if (mode == RadsMode.MANUAL) RadsMode.SENSOR else RadsMode.MANUAL
+                volumeUpPressed = false
+            }
+        )
         onDispose { volumeKeyController.deactivate() }
+    }
+
+    DisposableEffect(context, mode) {
+        if (mode != RadsMode.SENSOR) return@DisposableEffect onDispose { }
+        val manager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        val sensor = manager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)
+        val listener = object : SensorEventListener {
+            override fun onSensorChanged(event: SensorEvent) {
+                val matrix = FloatArray(9)
+                SensorManager.getRotationMatrixFromVector(matrix, event.values)
+                sensorLevel = RadsInclination.smooth(sensorLevel, RadsInclination.levelFromRotationMatrix(matrix))
+            }
+            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
+        }
+        sensor?.let { manager.registerListener(listener, it, SensorManager.SENSOR_DELAY_GAME) }
+        onDispose { manager.unregisterListener(listener) }
     }
 
     DisposableEffect(clickScheduler) {
@@ -81,16 +115,24 @@ fun GeigerCounterScreen(
     LaunchedEffect(engine) {
         while (true) {
             delay(50)
-            snapshot = engine.update(volumeUpPressed, 0.05f)
+            val engineSnapshot = engine.update(volumeUpPressed && mode == RadsMode.MANUAL, 0.05f)
+            val displayedLevel = if (mode == RadsMode.SENSOR) sensorLevel else null
+            snapshot = displayedLevel?.let {
+                engineSnapshot.copy(level = it, needleLevel = it, status = GeigerEngine.statusFor(it))
+            } ?: engineSnapshot
         }
     }
 
+    val effectiveLevel by NeedleAnimation(snapshot.needleLevel)
+    val currentEffectiveLevel = rememberUpdatedState(effectiveLevel)
     LaunchedEffect(clickScheduler) {
-        clickScheduler.run { snapshot.level }
+        clickScheduler.run { currentEffectiveLevel.value }
     }
-
-    val animatedNeedle by NeedleAnimation(snapshot.needleLevel)
-    GeigerCounterContent(snapshot, animatedNeedle, onBack)
+    GeigerCounterContent(
+        snapshot.copy(level = effectiveLevel, needleLevel = effectiveLevel,
+            status = GeigerEngine.statusFor(effectiveLevel)),
+        effectiveLevel, mode, onBack
+    )
 }
 
 @Composable
@@ -104,11 +146,12 @@ fun NeedleAnimation(targetLevel: Float): State<Float> = animateFloatAsState(
 private fun GeigerCounterContent(
     snapshot: GeigerSnapshot,
     needleLevel: Float,
+    mode: RadsMode,
     onBack: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
-            text = "RADS",
+            text = if (mode == RadsMode.SENSOR) "RADS." else "RADS",
             color = PipGreen,
             fontSize = 30.sp,
             fontFamily = FontFamily.Monospace,
@@ -119,7 +162,7 @@ private fun GeigerCounterContent(
             text = "☢",
             color = PipGreen,
             fontSize = 34.sp,
-            modifier = Modifier.align(Alignment.TopCenter).padding(top = 48.dp)
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 36.dp)
         )
 
         Column(
@@ -141,7 +184,7 @@ private fun GeigerCounterContent(
         )
 
         Text(
-            text = "PIP-SuriOS v1.9",
+            text = "PIP-SuriOS v2.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -207,10 +250,17 @@ private fun AnalogGeigerMeter(level: Float) {
             color = PipGreen,
             fontSize = 16.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.BottomStart)
+            modifier = Modifier.align(Alignment.BottomStart).padding(start = 14.dp, bottom = 8.dp)
         )
         Text(
             text = "HIGH",
+            color = PipGreen,
+            fontSize = 16.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 4.dp)
+        )
+        Text(
+            text = "CRITICAL",
             color = PipGreen,
             fontSize = 16.sp,
             fontFamily = FontFamily.Monospace,

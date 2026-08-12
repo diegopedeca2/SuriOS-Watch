@@ -54,15 +54,14 @@ class ClickScheduler(
 
     companion object {
         fun intervalMillis(level: Float, randomUnit: Float): Long {
-            val base = when (GeigerEngine.statusFor(level)) {
-                GeigerStatus.BACKGROUND -> 1_600L
-                GeigerStatus.LOW -> 900L
-                GeigerStatus.MODERATE -> 520L
-                GeigerStatus.HIGH -> 260L
-                GeigerStatus.CRITICAL -> 120L
-            }
-            val variation = ((randomUnit.coerceIn(0f, 1f) * 2f - 1f) * base * 0.18f).toLong()
-            return (base + variation).coerceAtLeast(80L)
+            val normalized = level.coerceIn(0f, 1f)
+            val base = MAX_INTERVAL_MS - ((MAX_INTERVAL_MS - MIN_INTERVAL_MS) * normalized).toLong()
+            val variation = ((randomUnit.coerceIn(0f, 1f) * 2f - 1f) * base * VARIATION_FRACTION).toLong()
+            return (base + variation).coerceAtLeast(MIN_INTERVAL_MS)
         }
+
+        const val MAX_INTERVAL_MS = 1_600L
+        const val MIN_INTERVAL_MS = 120L
+        const val VARIATION_FRACTION = 0.12f
     }
 }
