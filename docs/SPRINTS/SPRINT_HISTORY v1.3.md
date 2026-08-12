@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 009 | Sprint 009 completado; PIP-SuriOS v1.9 estable |
+| PIP-SuriOS | Ninguno | Sprint 010 | Sprint 010 completado; PIP-SuriOS v2.0 estable |
 
 ---
 
@@ -53,6 +53,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 007 | PIP-SuriOS | STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 007 v1.0](SPRINT_007_v1.0.md) |
 | 008 | PIP-SuriOS | TOOLS, GEIGER COUNTER, SONAR y consolidación visible v1.7 | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 008 v1.0](SPRINT_008_v1.0.md) |
 | 009 | PIP-SuriOS | DATA, Statistics, Log, UNIFORM y consolidación visible v1.9 | Aprobado | Completado | 2026-08-10 | 2026-08-12 | [Sprint 009 v1.0](SPRINT_009_v1.0.md) |
+| 010 | PIP-SuriOS | RADS v2, STORAGE y consolidación visible v2.0 | Aprobado | Completado | 2026-08-12 | 2026-08-12 | [Sprint 010 v1.0](SPRINT_010_v1.0.md) |
 
 ---
 
@@ -78,7 +79,7 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 3. Sprint 007 — STATUS, Loadout Activo, COMPLEMENTS y checklist DON'T FORGET. **Implementado y cerrado.**
 4. Sprint 008 — TOOLS, GEIGER COUNTER y SONAR. **Implementado y cerrado.**
 5. Sprint 009 — DATA, Statistics, Log, UNIFORM y consolidación visible v1.9. **Implementado y cerrado.**
-6. Sprint 010 — No iniciado.
+6. Sprint 010 — Cerrado. RADS v2 y STORAGE. PIP-SuriOS v2.0.
 
 ---
 
@@ -533,8 +534,8 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### Ecosistema
 
-- Sprints registrados: 13.
-- Sprints completados: 13.
+- Sprints registrados: 14.
+- Sprints completados: 14.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -549,21 +550,41 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 009.
-- Versión vigente: PIP-SuriOS v1.9.
+- Último Sprint completado: Sprint 010.
+- Versión vigente: PIP-SuriOS v2.0.
 - Sprints activos: 0.
 - Sprint 009: completado y cerrado.
-- Sprint 010: no iniciado.
+- Sprint 010: completado y cerrado.
 ---
 
 ## 20. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 009 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 010 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
-Sprint 010 no se ha iniciado. La versión 2.0 permanece reservada para una futura fase de evolución funcional y refinamiento.
+Sprint 010 está cerrado y PIP-SuriOS v2.0 constituye la versión móvil consolidada vigente. Sprint 011 no se ha iniciado.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v1.9 con DATA permanente, estadísticas, INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET, MORSE TERMINAL, RADS y SONAR constituye el estado móvil funcional y estable vigente. Sprint 009 está cerrado y Sprint 010 de PIP-SuriOS no se ha iniciado.
+PIP-SuriOS v2.0 con DATA permanente, estadísticas, STORAGE, INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET, MORSE TERMINAL, RADS v2 y SONAR constituye el estado móvil funcional y estable vigente. Sprint 010 está cerrado y Sprint 011 no se ha iniciado.
+
+---
+
+## 21. Cierre de Sprint 010 de PIP-SuriOS
+
+Sprint 010 se abrió y completó el 2026-08-12, consolidando `PIP-SuriOS v2.0`.
+
+RADS evolucionó con una respuesta manual progresiva, escala LOW/HIGH/CRITICAL, sonido sincronizado con el nivel efectivo de la aguja y el modo alternativo `RADS.` controlado mediante Rotation Vector. STORAGE sustituyó al antiguo catálogo CONSUMABLES e incorporó un ledger persistente con PURCHASE, USED, CONSUMED y TOTAL.
+
+PURCHASE y USED son datos manuales persistentes. CONSUMED se calcula dinámicamente desde los OperationLog y TOTAL responde a `PURCHASE - USED - CONSUMED`, conservándose como cache reconciliada. La creación, edición o eliminación de LOG actualiza los valores derivados sin operaciones inversas. El formato mantiene compatibilidad con ledgers provisionales y con archivos sin TOTAL.
+
+La corrección crítica final aseguró el round-trip del ledger en Android, la conservación simultánea de varios artículos y la persistencia real tras salida/reentrada y cierre/reapertura. Se superaron compilación principal e incremental, lint, 79 pruebas unitarias, `git diff --check` y las validaciones manuales en Samsung Galaxy A56 y Pixel 8 Emulator.
+
+| Commit | Papel |
+|---|---|
+| `a254c7b78eb7359fc6f67e391d73a146d1d44842` | RADS v2, STORAGE, ledger persistente, reconciliación con LOG y consolidación visible PIP-SuriOS v2.0. |
+
+Documento de cierre: [Sprint 010 v1.0](SPRINT_010_v1.0.md).
+
+Sprint 010 queda cerrado. PIP-SuriOS v2.0 queda consolidado, no existe ningún Sprint activo y Sprint 011 no se ha iniciado.

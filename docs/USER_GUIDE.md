@@ -1,6 +1,6 @@
 # PIP-SuriOS - User Guide
 
-Manual oficial de usuario — PIP-SuriOS v1.9
+Manual oficial de usuario — PIP-SuriOS v2.0
 
 ## Índice
 
@@ -150,15 +150,21 @@ Cada ficha muestra la información disponible del elemento seleccionado, como mu
 
 ARMORY también contiene **COMPLEMENTS**. En esta sección puede seleccionar un rol y después un arma o elemento para consultar sus complementos asociados: munición, correas, fundas, cargadores y otros recordatorios. Esta misma información se utiliza para generar DON'T FORGET.
 
-### CONSUMABLES
+### STORAGE
 
-Permite consultar consumibles organizados en:
+STORAGE convierte el antiguo catálogo de consumibles en un inventario persistente organizado en:
 
 - BBs
 - GRENADES
 - GAS
 
-Seleccione una categoría y después un elemento para abrir su ficha informativa.
+Seleccione una categoría y un elemento para consultar `PURCHASE`, `USED`, `CONSUMED` y `TOTAL`.
+
+Cada pulsación de **PURCHASE** registra una unidad adquirida. Cada pulsación de **USED** registra una unidad retirada fuera de un LOG, por ejemplo por uso externo, pérdida, descarte o caducidad. `CONSUMED` es de solo lectura y procede automáticamente de operaciones registradas cuando existe una correspondencia inequívoca. `TOTAL` también es de solo lectura, representa la existencia actual calculada como `PURCHASE - USED - CONSUMED` y el sistema conserva su último valor coherente.
+
+TOTAL se conserva para recuperar rápidamente el último estado conocido, pero siempre se recalcula a partir de PURCHASE, USED y CONSUMED. Editar o eliminar un LOG recalcula CONSUMED y TOTAL sin crear operaciones inversas.
+
+BBs conserva preparada toda su infraestructura, pero todavía no descuenta consumo automáticamente. GAS permite PURCHASE y USED, pero no reparte el consumo entre `06 KG`, `08 KG`, `10 KG`, `12 KG` y `14 KG` porque INPUT OPERATION aún no distingue esos formatos. STORAGE GRENADES contiene `9mm GRENADES` y `CO2 GRENADES`, que se descuentan desde los campos equivalentes del LOG. `40mm GRENADES` continúa disponible en INPUT OPERATION y el historial DATA, pero no forma parte de STORAGE.
 
 ### LOADOUTS
 
@@ -273,7 +279,7 @@ Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen 
 
 ### RADS
 
-RADS simula el comportamiento de un contador Geiger mediante un medidor analógico de aguja, estados visuales y clics de audio.
+RADS simula el comportamiento de un contador Geiger mediante un medidor analógico de aguja, estados visuales y clics de audio. La escala incluye `LOW`, `HIGH` y `CRITICAL`.
 
 Al entrar, la aguja comienza en el mínimo y el estado es `BACKGROUND`. Mantenga pulsado el botón físico **VOLUME UP** para elevar progresivamente el nivel. La aguja avanza hacia `HIGH`, cambia el estado mostrado y aumenta la frecuencia de los clics.
 
@@ -281,7 +287,9 @@ Al soltar VOLUME UP, la aguja y el sonido regresan lentamente al mínimo. El des
 
 Mientras RADS está abierto, VOLUME UP controla la simulación y no modifica el volumen multimedia. Fuera de esta pantalla vuelve a comportarse normalmente.
 
-RADS no utiliza sensores y no mide radiación real.
+Pulse **VOLUME DOWN** para alternar silenciosamente entre `RADS` y `RADS.`. El punto identifica el modo de inclinación. En `RADS.` la aguja utiliza el Rotation Vector del teléfono: unos 45° constituyen la referencia baja y acercar el teléfono a la horizontal eleva la lectura hasta CRITICAL. El suavizado reduce vibraciones y el sensor se libera al salir de la pantalla.
+
+RADS no mide radiación real. Su modo `RADS.` utiliza orientación únicamente como control inmersivo.
 
 ### SONAR
 
@@ -338,6 +346,7 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 
 - CIVILIAN y MAP TERRAIN permanecen en construcción.
 - CURRENT GEAR, el Loadout Activo, el checklist y la calibración de SONAR no se guardan permanentemente. Se pierden al cerrar o reiniciar la aplicación.
+- STORAGE sí conserva PURCHASE y USED permanentemente; BBs y los formatos individuales de GAS todavía no tienen consumo automático.
 - INVENTORY es informativo: no descuenta consumibles ni actualiza cantidades automáticamente.
 - MAP OPERATION depende de que CivTAK o Google Maps estén instalados y correctamente configurados.
 - TRANSMIT // FLASH depende de que el dispositivo tenga una linterna compatible.
@@ -357,8 +366,9 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v1.5** | Incorporación de STATUS, Loadout Activo, COMPLEMENTS y DON'T FORGET. |
 | **v1.7** | Incorporación de TOOLS con el contador posteriormente denominado RADS y SONAR, junto con sus sonidos y refinamientos visuales. |
 | **v1.9** | Incorporación del historial DATA con alta, consulta, edición, borrado y estadísticas; UNIFORM en todo el flujo; RADS; nueva disposición de SONAR y refinamientos de arranque y DON'T FORGET. |
+| **v2.0** | RADS V2 con control progresivo y modo de inclinación; STORAGE persistente con PURCHASE, USED, CONSUMED y TOTAL dinámico enlazado al historial operativo. |
 
-PIP-SuriOS v1.9 incorpora la ampliación funcional desarrollada durante Sprint 009.
+PIP-SuriOS v2.0 incorpora la evolución funcional consolidada durante Sprint 010.
 
 ## 14. Consejos de uso
 
@@ -400,7 +410,7 @@ Paredes, obstáculos, interferencias y la posición del teléfono pueden cambiar
 
 ### Uso de RADS
 
-RADS tiene una finalidad exclusivamente inmersiva. Mantenga pulsado **VOLUME UP** para elevar la aguja y la frecuencia de los clics, y suelte el botón para regresar progresivamente al nivel mínimo.
+RADS tiene una finalidad exclusivamente inmersiva. Mantenga pulsado **VOLUME UP** para el control continuo o cambie con **VOLUME DOWN** al modo `RADS.` controlado por inclinación.
 
 La herramienta no representa niveles reales de radiación y no debe utilizarse como instrumento de seguridad.
 
