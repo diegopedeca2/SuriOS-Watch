@@ -30,6 +30,10 @@ import com.suri.pipsurios.data.OperationDraft
 import com.suri.pipsurios.data.OperationInputValidator
 import com.suri.pipsurios.data.OperationLog
 import com.suri.pipsurios.data.OperationLogEntry
+import com.suri.pipsurios.data.OperationEditDraft
+import com.suri.pipsurios.data.OperationLoadoutSnapshot
+import com.suri.pipsurios.data.PercentageDistribution
+import com.suri.pipsurios.data.StatisticsCalculator
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
@@ -56,6 +60,24 @@ fun DataSavedScreen(onFinished: () -> Unit) {
 }
 
 @Composable
+fun DataDeletedScreen(onFinished: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(1_500)
+        onFinished()
+    }
+    DataCenterMessage("DATA DELETED")
+}
+
+@Composable
+fun DataModifiedScreen(onFinished: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(1_500)
+        onFinished()
+    }
+    DataCenterMessage("DATA MODIFIED")
+}
+
+@Composable
 private fun DataCenterMessage(message: String) {
     Box(Modifier.fillMaxSize().background(PipBlack), contentAlignment = Alignment.Center) {
         Text(message, color = PipGreen, fontSize = 30.sp, fontFamily = FontFamily.Monospace)
@@ -78,6 +100,134 @@ fun DataScreen(
             DataMenuEntry("> INPUT OPERATION", onInputOperation)
             DataMenuEntry("> LOG", onLog)
             DataMenuEntry("> STATISTICS", onStatistics)
+        }
+    }
+}
+
+@Composable
+fun DataStatisticsScreen(
+    onPrimaryWeapon: () -> Unit,
+    onSecondaryWeapon: () -> Unit,
+    onLocation: () -> Unit,
+    onHeadgear: () -> Unit,
+    onUniform: () -> Unit,
+    onBack: () -> Unit
+) {
+    DataFrame(title = "DATA - STATISTICS", onBack = onBack) {
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            DataMenuEntry("> PRIMARY WEAPON", onPrimaryWeapon)
+            DataMenuEntry("> SECONDARY WEAPON", onSecondaryWeapon)
+            DataMenuEntry("> LOCATION", onLocation)
+            DataMenuEntry("> HEADGEAR", onHeadgear)
+            DataMenuEntry("> UNIFORM", onUniform)
+        }
+    }
+}
+
+@Composable
+fun PrimaryWeaponStatisticsScreen(
+    distribution: PercentageDistribution<String>?,
+    loading: Boolean,
+    onBack: () -> Unit
+) = WeaponStatisticsScreen(
+    title = "STATISTICS - PRIMARY WEAPON",
+    distribution = distribution,
+    loading = loading,
+    onBack = onBack
+)
+
+@Composable
+fun SecondaryWeaponStatisticsScreen(
+    distribution: PercentageDistribution<String>?,
+    loading: Boolean,
+    onBack: () -> Unit
+) = WeaponStatisticsScreen(
+    title = "STATISTICS - SECONDARY WEAPON",
+    distribution = distribution,
+    loading = loading,
+    onBack = onBack
+)
+
+@Composable
+fun LocationStatisticsScreen(
+    distribution: PercentageDistribution<String>?,
+    loading: Boolean,
+    onBack: () -> Unit
+) = WeaponStatisticsScreen(
+    title = "STATISTICS - LOCATION",
+    distribution = distribution,
+    loading = loading,
+    onBack = onBack
+)
+
+@Composable
+fun HeadgearStatisticsScreen(
+    distribution: PercentageDistribution<String>?,
+    loading: Boolean,
+    onBack: () -> Unit
+) = WeaponStatisticsScreen(
+    title = "STATISTICS - HEADGEAR",
+    distribution = distribution,
+    loading = loading,
+    onBack = onBack
+)
+
+@Composable
+fun UniformStatisticsScreen(
+    distribution: PercentageDistribution<String>?,
+    loading: Boolean,
+    onBack: () -> Unit
+) = WeaponStatisticsScreen(
+    title = "STATISTICS - UNIFORM",
+    distribution = distribution,
+    loading = loading,
+    onBack = onBack
+)
+
+@Composable
+private fun WeaponStatisticsScreen(
+    title: String,
+    distribution: PercentageDistribution<String>?,
+    loading: Boolean,
+    onBack: () -> Unit
+) {
+    DataFrame(title = title, onBack = onBack) {
+        if (loading) {
+            Text(
+                text = "LOADING...",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else if (distribution == null || distribution.validRecordCount == 0) {
+            Text(
+                text = "NO DATA",
+                color = PipRed,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else {
+            Column(
+                modifier = Modifier.align(Alignment.TopStart)
+                    .padding(start = 42.dp, end = 42.dp, top = 82.dp, bottom = 72.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+                distribution.entries.forEach { entry ->
+                    Text(
+                        text = "${entry.option} - ${StatisticsCalculator.formatPercentage(entry.percentage)}",
+                        color = PipGreen,
+                        fontSize = 24.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+            }
         }
     }
 }
@@ -150,14 +300,15 @@ fun DataLogScreen(
 }
 
 @Composable
-fun DataLogDetailScreen(log: OperationLog, onBack: () -> Unit) {
-    var editNotice by remember { mutableStateOf(false) }
-    LaunchedEffect(editNotice) {
-        if (editNotice) {
-            delay(1_500)
-            editNotice = false
-        }
-    }
+fun DataLogDetailScreen(
+    log: OperationLog,
+    deleting: Boolean,
+    deleteError: String?,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onBack: () -> Unit
+) {
+    var deleteConfirmationVisible by remember { mutableStateOf(false) }
     DataFrame(title = "DATA - LOG DETAIL", onBack = onBack) {
         Column(
             modifier = Modifier.align(Alignment.TopStart)
@@ -176,6 +327,7 @@ fun DataLogDetailScreen(log: OperationLog, onBack: () -> Unit) {
             )
             DataValue("HEADGEAR", log.loadout.headgear)
             DataValue("FRONT PANEL", log.loadout.frontPanel)
+            DataValue("UNIFORM", log.loadout.uniform)
             Text("CONSUMABLES", color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
             DataValue("PRIMARY MAG", OperationInputValidator.formatDecimal(log.consumables.primaryMag))
             DataValue("SECONDARY MAG", OperationInputValidator.formatDecimal(log.consumables.secondaryMag))
@@ -190,16 +342,179 @@ fun DataLogDetailScreen(log: OperationLog, onBack: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            DataButton("EDIT", onClick = { editNotice = true })
-            if (editNotice) {
+            if (deleteConfirmationVisible) {
                 Text(
-                    text = "UNDER CONSTRUCTION",
+                    text = "DELETE LOG?",
                     color = PipRed,
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                     fontFamily = FontFamily.Monospace
+                )
+                DataButton(
+                    label = if (deleting) "DELETING..." else "CONFIRM DELETE",
+                    onClick = onDelete,
+                    enabled = !deleting,
+                    color = PipRed
+                )
+                DataButton(
+                    label = "CANCEL",
+                    onClick = { deleteConfirmationVisible = false },
+                    enabled = !deleting
+                )
+            } else {
+                DataButton("EDIT", onClick = onEdit)
+                DataButton(
+                    label = "DELETE",
+                    onClick = { deleteConfirmationVisible = true },
+                    color = PipRed
                 )
             }
         }
+        deleteError?.let { error ->
+            Text(
+                text = error,
+                color = PipRed,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 70.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun OperationEditLoadoutScreen(
+    loadout: OperationLoadoutSnapshot,
+    onLoadoutChanged: (OperationLoadoutSnapshot) -> Unit,
+    onNext: () -> Unit,
+    onBack: () -> Unit
+) {
+    val primaryOptions = PrimaryWeaponRole.entries.flatMap { it.weapons }.map { it.displayName }
+    val secondaryOptions = SecondaryWeaponCatalog.weapons.map { it.displayName }
+    val accessoryOptions = listOf("DETON-A", "THUNDER B", "TANTO", "MINI KNIFE", "VOLCANO")
+    val headgearOptions = HeadgearCatalog.profiles
+    val frontPanelOptions = FrontPanelRole.entries.map { it.displayName }
+    val uniformOptions = UniformCatalog.options
+    var expanded by remember { mutableStateOf<String?>(null) }
+
+    DataFrame(title = "EDIT OPERATION - LOADOUT", onBack = onBack) {
+        Column(
+            modifier = Modifier.align(Alignment.TopCenter).padding(top = 72.dp, bottom = 82.dp)
+                .heightIn(max = 300.dp).verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            EditStringSelector(
+                "PRIMARY WEAPON", loadout.primaryWeapon, primaryOptions, expanded == "PRIMARY",
+                onExpandedChange = { expanded = if (expanded == "PRIMARY") null else "PRIMARY" },
+                onSelected = { value -> onLoadoutChanged(loadout.copy(primaryWeapon = value)); expanded = null }
+            )
+            EditStringSelector(
+                "SECONDARY WEAPON", loadout.secondaryWeapon, secondaryOptions, expanded == "SECONDARY",
+                onExpandedChange = { expanded = if (expanded == "SECONDARY") null else "SECONDARY" },
+                onSelected = { value -> onLoadoutChanged(loadout.copy(secondaryWeapon = value)); expanded = null }
+            )
+            EditStringSelector(
+                label = "UNIFORM",
+                value = loadout.uniform,
+                options = uniformOptions,
+                expanded = expanded == "UNIFORM",
+                placeholder = "SELECT UNIFORM",
+                onExpandedChange = { expanded = if (expanded == "UNIFORM") null else "UNIFORM" },
+                onSelected = { value ->
+                    onLoadoutChanged(loadout.copy(uniform = value))
+                    expanded = null
+                }
+            )
+            Text("ACCESORIES", color = PipGreenDim, fontSize = 15.sp, fontFamily = FontFamily.Monospace)
+            accessoryOptions.forEach { option ->
+                val selected = option in loadout.accesories
+                Text(
+                    text = if (selected) "[X] $option" else "[ ] $option",
+                    color = PipGreen,
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable {
+                        val updated = if (selected) loadout.accesories - option else loadout.accesories + option
+                        onLoadoutChanged(loadout.copy(accesories = updated))
+                    }
+                )
+            }
+            EditStringSelector(
+                "HEADGEAR", loadout.headgear, headgearOptions, expanded == "HEADGEAR",
+                onExpandedChange = { expanded = if (expanded == "HEADGEAR") null else "HEADGEAR" },
+                onSelected = { value -> onLoadoutChanged(loadout.copy(headgear = value)); expanded = null }
+            )
+            EditStringSelector(
+                "FRONT PANEL", loadout.frontPanel, frontPanelOptions, expanded == "FRONT",
+                onExpandedChange = { expanded = if (expanded == "FRONT") null else "FRONT" },
+                onSelected = { value -> onLoadoutChanged(loadout.copy(frontPanel = value)); expanded = null }
+            )
+        }
+        DataButton("NEXT", onNext, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp))
+    }
+}
+
+@Composable
+private fun EditStringSelector(
+    label: String,
+    value: String?,
+    options: List<String>,
+    expanded: Boolean,
+    placeholder: String = "NOT CONFIGURED",
+    onExpandedChange: () -> Unit,
+    onSelected: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(label, color = PipGreenDim, fontSize = 15.sp, fontFamily = FontFamily.Monospace)
+        Text(
+            text = value ?: placeholder,
+            color = PipGreen,
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.border(1.dp, PipGreen).clickable(onClick = onExpandedChange)
+                .padding(horizontal = 12.dp, vertical = 7.dp)
+        )
+        if (expanded) options.forEach { option ->
+            Text("> $option", color = PipGreen, fontSize = 17.sp, fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable { onSelected(option) }.padding(vertical = 3.dp))
+        }
+    }
+}
+
+@Composable
+fun OperationEditConfirmScreen(
+    draft: OperationEditDraft,
+    saveError: String?,
+    saving: Boolean,
+    onConfirm: () -> Unit,
+    onBack: () -> Unit
+) {
+    DataFrame(title = "EDIT OPERATION - CONFIRM MODIFICATIONS", onBack = onBack) {
+        Column(
+            modifier = Modifier.align(Alignment.TopStart)
+                .padding(start = 42.dp, end = 42.dp, top = 76.dp, bottom = 88.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            DataValue("DATE", draft.date)
+            DataValue("LOCATION", draft.location)
+            DataValue("PRIMARY WEAPON", draft.loadout.primaryWeapon)
+            DataValue("SECONDARY WEAPON", draft.loadout.secondaryWeapon)
+            DataValue("ACCESORIES", draft.loadout.accesories.takeIf { it.isNotEmpty() }?.joinToString(" + "))
+            DataValue("HEADGEAR", draft.loadout.headgear)
+            DataValue("FRONT PANEL", draft.loadout.frontPanel)
+            DataValue("UNIFORM", draft.loadout.uniform)
+            DataValue("PRIMARY MAG", OperationInputValidator.formatDecimal(draft.consumables.primaryMag))
+            DataValue("SECONDARY MAG", OperationInputValidator.formatDecimal(draft.consumables.secondaryMag))
+            DataValue("40mm GRENADES", OperationInputValidator.formatDecimal(draft.consumables.grenades40mm))
+            DataValue("9mm GRENADES", OperationInputValidator.formatDecimal(draft.consumables.grenades9mm))
+            DataValue("CO2 GRENADES", OperationInputValidator.formatDecimal(draft.consumables.grenadesCo2))
+            DataValue("PRIMARY HPA", OperationInputValidator.formatDecimal(draft.consumables.primaryHpa))
+            DataValue("SECONDARY HPA", OperationInputValidator.formatDecimal(draft.consumables.secondaryHpa))
+        }
+        saveError?.let { Text(it, color = PipRed, fontSize = 14.sp, fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 70.dp)) }
+        DataButton(if (saving) "SAVING..." else "CONFIRM MODIFICATIONS", onConfirm, !saving,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp))
     }
 }
 
@@ -226,6 +541,7 @@ fun OperationLoadoutScreen(
             )
             DataValue("HEADGEAR", activeLoadout.headgearProfile)
             DataValue("FRONT PANEL", activeLoadout.frontPanelRole)
+            DataValue("UNIFORM", activeLoadout.uniform)
         }
 
         Row(
@@ -266,6 +582,7 @@ fun OperationConfirmScreen(
             DataValue("ACCESORIES", loadout?.accesories?.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("HEADGEAR", loadout?.headgear)
             DataValue("FRONT PANEL", loadout?.frontPanel)
+            DataValue("UNIFORM", loadout?.uniform)
             Text("CONSUMABLES", color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
             DataValue("PRIMARY MAG", consumables?.primaryMag?.let(OperationInputValidator::formatDecimal))
             DataValue("SECONDARY MAG", consumables?.secondaryMag?.let(OperationInputValidator::formatDecimal))
@@ -319,7 +636,7 @@ private fun DataFrame(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v1.7",
+            text = "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -353,14 +670,21 @@ private fun DataValue(label: String, value: String?) {
 }
 
 @Composable
-private fun DataButton(label: String, onClick: () -> Unit, enabled: Boolean = true) {
-    val color: Color = if (enabled) PipGreen else PipGreenDim
+private fun DataButton(
+    label: String,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    color: Color = PipGreen,
+    modifier: Modifier = Modifier
+) {
+    val displayColor: Color = if (enabled) color else PipGreenDim
     Text(
         text = label,
-        color = color,
+        color = displayColor,
         fontSize = 18.sp,
         fontFamily = FontFamily.Monospace,
-        modifier = Modifier.border(1.dp, color).clickable(enabled = enabled, onClick = onClick)
+        modifier = modifier.border(1.dp, displayColor)
+            .clickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 9.dp)
     )
 }

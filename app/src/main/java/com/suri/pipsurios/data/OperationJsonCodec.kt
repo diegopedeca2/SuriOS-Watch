@@ -12,7 +12,8 @@ object OperationJsonCodec {
         appendLine("    \"secondaryWeapon\": ${nullableString(log.loadout.secondaryWeapon)},")
         appendLine("    \"accesories\": [${log.loadout.accesories.joinToString(", ") { string(it) }}],")
         appendLine("    \"headgear\": ${nullableString(log.loadout.headgear)},")
-        appendLine("    \"frontPanel\": ${nullableString(log.loadout.frontPanel)}")
+        appendLine("    \"frontPanel\": ${nullableString(log.loadout.frontPanel)},")
+        appendLine("    \"uniform\": ${nullableString(log.loadout.uniform)}")
         appendLine("  },")
         appendLine("  \"consumables\": {")
         appendLine("    \"primaryMag\": ${number(log.consumables.primaryMag)},")
@@ -38,7 +39,8 @@ object OperationJsonCodec {
                 secondaryWeapon = loadout.nullableStringValue("secondaryWeapon"),
                 accesories = loadout.arrayValue("accesories").map { it as String },
                 headgear = loadout.nullableStringValue("headgear"),
-                frontPanel = loadout.nullableStringValue("frontPanel")
+                frontPanel = loadout.nullableStringValue("frontPanel"),
+                uniform = loadout.nullableStringValue("uniform")
             ),
             consumables = OperationConsumables(
                 primaryMag = consumables.numberValue("primaryMag"),

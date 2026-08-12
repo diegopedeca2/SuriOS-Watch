@@ -11,7 +11,8 @@ data class OperationLoadoutSnapshot(
     val secondaryWeapon: String?,
     val accesories: List<String>,
     val headgear: String?,
-    val frontPanel: String?
+    val frontPanel: String?,
+    val uniform: String? = null
 ) {
     companion object {
         fun from(loadout: LoadoutConfiguration): OperationLoadoutSnapshot =
@@ -20,7 +21,8 @@ data class OperationLoadoutSnapshot(
                 secondaryWeapon = loadout.secondaryWeapon?.displayName,
                 accesories = loadout.accesories.map { it.displayName }.sorted(),
                 headgear = loadout.headgearProfile,
-                frontPanel = loadout.frontPanelRole
+                frontPanel = loadout.frontPanelRole,
+                uniform = loadout.uniform
             )
     }
 }
@@ -41,6 +43,26 @@ data class OperationDraft(
     val loadout: OperationLoadoutSnapshot? = null,
     val consumables: OperationConsumables? = null
 )
+
+data class OperationEditDraft(
+    val originalFilename: String,
+    val date: String,
+    val location: String,
+    val loadout: OperationLoadoutSnapshot,
+    val consumables: OperationConsumables
+) {
+    fun toOperationLog() = OperationLog(date, location, loadout, consumables)
+
+    companion object {
+        fun from(entry: OperationLogEntry) = OperationEditDraft(
+            originalFilename = entry.filename,
+            date = entry.log.date,
+            location = entry.log.location,
+            loadout = entry.log.loadout.copy(accesories = entry.log.loadout.accesories.toList()),
+            consumables = entry.log.consumables.copy()
+        )
+    }
+}
 
 data class OperationLog(
     val date: String,

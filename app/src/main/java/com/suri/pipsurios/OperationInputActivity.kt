@@ -55,6 +55,7 @@ import com.suri.pipsurios.ui.theme.PipRed
 
 class OperationInputActivity : ComponentActivity() {
     private val step: String by lazy { intent.getStringExtra(EXTRA_STEP) ?: STEP_DATE_LOCATION }
+    private val editMode: Boolean by lazy { intent.getBooleanExtra(EXTRA_EDIT_MODE, false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,11 +67,13 @@ class OperationInputActivity : ComponentActivity() {
             PIPSuriOSTheme {
                 when (step) {
                     STEP_CONSUMABLES -> ConsumablesInputScreen(
+                        title = if (editMode) "EDIT OPERATION - CONSUMABLES" else "INPUT OPERATION - CONSUMABLES",
                         initialValues = CONSUMABLE_KEYS.map { intent.getStringExtra(it).orEmpty() },
                         onNext = ::finishConsumables,
                         onBack = ::finishWithBack
                     )
                     else -> DateLocationInputScreen(
+                        title = if (editMode) "EDIT OPERATION - DATE & LOCATION" else "INPUT OPERATION - DATE & LOCATION",
                         initialDate = intent.getStringExtra(EXTRA_DATE).orEmpty(),
                         initialLocation = intent.getStringExtra(EXTRA_LOCATION).orEmpty(),
                         onNext = ::finishDateLocation,
@@ -119,6 +122,7 @@ class OperationInputActivity : ComponentActivity() {
         const val EXTRA_LOCATION = "operation_location"
 
         private const val EXTRA_STEP = "operation_step"
+        private const val EXTRA_EDIT_MODE = "operation_edit_mode"
         private const val STEP_DATE_LOCATION = "date_location"
         private const val STEP_CONSUMABLES = "consumables"
 
@@ -133,6 +137,9 @@ class OperationInputActivity : ComponentActivity() {
                 .putExtra(EXTRA_DATE, date)
                 .putExtra(EXTRA_LOCATION, location)
 
+        fun editDateLocationIntent(context: Context, date: String, location: String): Intent =
+            dateLocationIntent(context, date, location).putExtra(EXTRA_EDIT_MODE, true)
+
         fun consumablesIntent(context: Context, values: OperationConsumables?): Intent =
             Intent(context, OperationInputActivity::class.java)
                 .putExtra(EXTRA_STEP, STEP_CONSUMABLES)
@@ -141,11 +148,15 @@ class OperationInputActivity : ComponentActivity() {
                         intent.putExtra(CONSUMABLE_KEYS[index], OperationInputValidator.formatDecimal(value))
                     }
                 }
+
+        fun editConsumablesIntent(context: Context, values: OperationConsumables): Intent =
+            consumablesIntent(context, values).putExtra(EXTRA_EDIT_MODE, true)
     }
 }
 
 @Composable
 private fun DateLocationInputScreen(
+    title: String,
     initialDate: String,
     initialLocation: String,
     onNext: (String, String) -> Unit,
@@ -159,7 +170,7 @@ private fun DateLocationInputScreen(
     val validDate = OperationInputValidator.isValidDate(date)
     val validLocation = OperationInputValidator.isValidLocation(location)
     VerticalInputFrame(
-        title = "INPUT OPERATION - DATE & LOCATION",
+        title = title,
         onBack = onBack,
         nextEnabled = validDate && validLocation,
         onNext = { onNext(date, location.trim()) }
@@ -185,6 +196,7 @@ private fun DateLocationInputScreen(
 
 @Composable
 private fun ConsumablesInputScreen(
+    title: String,
     initialValues: List<String>,
     onNext: (OperationConsumables) -> Unit,
     onBack: () -> Unit
@@ -196,7 +208,7 @@ private fun ConsumablesInputScreen(
     var values by remember { mutableStateOf(initialValues) }
     val parsed = values.map(OperationInputValidator::parseDecimal)
     VerticalInputFrame(
-        title = "INPUT OPERATION - CONSUMABLES",
+        title = title,
         onBack = onBack,
         nextEnabled = parsed.all { it != null },
         onNext = {
@@ -261,7 +273,7 @@ private fun VerticalInputFrame(
             VerticalAction("NEXT", if (nextEnabled) PipGreen else PipGreenDim, onNext, nextEnabled)
         }
         Text(
-            "PIP-SuriOS v1.7",
+            "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,

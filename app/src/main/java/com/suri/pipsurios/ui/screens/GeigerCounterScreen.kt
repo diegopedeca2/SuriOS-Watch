@@ -108,7 +108,7 @@ private fun GeigerCounterContent(
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
-            text = "GEIGER COUNTER",
+            text = "RADS",
             color = PipGreen,
             fontSize = 30.sp,
             fontFamily = FontFamily.Monospace,
@@ -141,7 +141,7 @@ private fun GeigerCounterContent(
         )
 
         Text(
-            text = "PIP-SuriOS v1.7",
+            text = "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

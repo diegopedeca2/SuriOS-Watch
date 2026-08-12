@@ -35,4 +35,5 @@ data class SonarSnapshot(
     val hasBaseline: Boolean
 ) {
     val newContactCount: Int get() = contacts.count { it.state == ContactState.NEW }
+    fun contactCount(proximity: ProximityCategory): Int = contacts.count { it.proximity == proximity }
 }

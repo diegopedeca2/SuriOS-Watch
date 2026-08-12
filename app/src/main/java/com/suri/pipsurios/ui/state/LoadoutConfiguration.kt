@@ -10,5 +10,6 @@ data class LoadoutConfiguration(
     val secondaryWeapon: InventoryItem? = null,
     val accesories: Set<InventoryItem> = emptySet(),
     val headgearProfile: String? = null,
-    val frontPanelRole: String? = null
+    val frontPanelRole: String? = null,
+    val uniform: String? = null
 )

@@ -119,6 +119,12 @@ enum class PrimaryWeaponRole(
     DEMOLITION("DEMOLITION", listOf(InventoryItem.MGL, InventoryItem.VOLCANO))
 }
 
+object SecondaryWeaponCatalog {
+    val handgun = listOf(InventoryItem.DESERT_EAGLE, InventoryItem.AAP_01C)
+    val demolition = PrimaryWeaponRole.DEMOLITION.weapons
+    val weapons = handgun + demolition
+}
+
 private data class InventoryDetailLine(
     val text: String,
     val color: Color = PipGreen
@@ -361,7 +367,7 @@ private fun InventoryLayout(
         )
 
         Text(
-            text = "PIP-SuriOS v1.7",
+            text = "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

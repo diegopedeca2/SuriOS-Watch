@@ -89,4 +89,20 @@ class ComplementCatalogTest {
             assertTrue(lines.none { it == "GRENADES: 11" })
         }
     }
+
+    @Test
+    fun reminderLinesAreDeduplicatedThenSortedIgnoringCase() {
+        val lines = ComplementCatalog.reminderLines(
+            LoadoutConfiguration(
+                primaryRole = PrimaryWeaponRole.SNIPER,
+                primaryWeapon = InventoryItem.L96,
+                secondaryType = "HANDGUN",
+                secondaryWeapon = InventoryItem.AAP_01C,
+                accesories = setOf(InventoryItem.DETON_A, InventoryItem.THUNDER_B)
+            )
+        )
+
+        assertEquals(lines.distinct(), lines)
+        assertEquals(lines.sortedWith(String.CASE_INSENSITIVE_ORDER), lines)
+    }
 }

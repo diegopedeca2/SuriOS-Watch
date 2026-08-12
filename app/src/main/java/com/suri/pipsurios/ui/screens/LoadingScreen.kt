@@ -10,12 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,16 +22,32 @@ import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import kotlinx.coroutines.delay
 
+private val operationModules = listOf(
+    "INVENTORY",
+    "MAP",
+    "COMMS",
+    "DATA",
+    "CURRENT GEAR",
+    "STATUS",
+    "TOOLS"
+)
+
 @Composable
 fun LoadingScreen(onFinished: () -> Unit) {
-    var loginVerifiedVisible by remember { mutableStateOf(false) }
-    var systemReadyVisible by remember { mutableStateOf(false) }
+    var visibleLineCount by remember { mutableIntStateOf(1) }
+    var readyModuleCount by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(Unit) {
         delay(1_500)
-        loginVerifiedVisible = true
+        visibleLineCount++
         delay(1_500)
-        systemReadyVisible = true
+        operationModules.forEachIndexed { index, _ ->
+            visibleLineCount++
+            delay(750)
+            readyModuleCount = index + 1
+            delay(250)
+        }
+        visibleLineCount++
         delay(1_500)
         onFinished()
     }
@@ -45,18 +60,22 @@ fun LoadingScreen(onFinished: () -> Unit) {
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             horizontalAlignment = Alignment.Start
         ) {
             LoadingLine(text = "LOADING...")
-            LoadingLine(
-                text = "LOG-IN ID: SURI-14 VERIFIED",
-                modifier = Modifier.alpha(if (loginVerifiedVisible) 1f else 0f)
-            )
-            LoadingLine(
-                text = "SYSTEM READY",
-                modifier = Modifier.alpha(if (systemReadyVisible) 1f else 0f)
-            )
+            if (visibleLineCount >= 2) {
+                LoadingLine(text = "LOG-IN ID: SURI-14 VERIFIED")
+            }
+            operationModules.forEachIndexed { index, module ->
+                if (visibleLineCount >= index + 3) {
+                    val readySuffix = if (readyModuleCount > index) " READY" else ""
+                    LoadingLine(text = "LOADING $module.....$readySuffix")
+                }
+            }
+            if (visibleLineCount >= operationModules.size + 3) {
+                LoadingLine(text = "SYSTEM READY")
+            }
         }
     }
 }

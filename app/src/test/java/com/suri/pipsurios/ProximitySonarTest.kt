@@ -69,4 +69,24 @@ class ProximitySonarTest {
         assertEquals(ContactState.NEW, newcomer.state)
         assertEquals(1, tracker.snapshot().newContactCount)
     }
+
+    @Test
+    fun snapshotCountsExistingProximityClassificationAndUpdatesAfterExpiry() {
+        val tracker = ContactTracker()
+        tracker.observe(BleObservation("VERY", -50, 1_000L))
+        tracker.observe(BleObservation("CLOSE", -60, 1_000L))
+        tracker.observe(BleObservation("MEDIUM", -70, 1_000L))
+        tracker.observe(BleObservation("FAR", -90, 5_000L))
+
+        val initial = tracker.snapshot()
+        assertEquals(1, initial.contactCount(ProximityCategory.VERY_CLOSE))
+        assertEquals(1, initial.contactCount(ProximityCategory.CLOSE))
+        assertEquals(1, initial.contactCount(ProximityCategory.MEDIUM))
+        assertEquals(1, initial.contactCount(ProximityCategory.FAR))
+
+        tracker.expire(1_000L + SonarTuning.CONTACT_EXPIRY_MILLIS + 1L)
+        val expired = tracker.snapshot()
+        assertEquals(0, expired.contactCount(ProximityCategory.VERY_CLOSE))
+        assertEquals(1, expired.contactCount(ProximityCategory.FAR))
+    }
 }

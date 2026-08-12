@@ -123,6 +123,7 @@ object ComplementCatalog {
         return selectedDefinitions
             .flatMap { definition -> definition.sections.flatMap(::reminderLines) }
             .distinct()
+            .sortedWith(String.CASE_INSENSITIVE_ORDER)
     }
 
     private fun reminderLines(section: ComplementSection): List<String> = section.values.map { value ->

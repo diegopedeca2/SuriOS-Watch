@@ -7,11 +7,27 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
+import java.nio.file.AtomicMoveNotSupportedException
+import java.nio.file.StandardCopyOption
+import java.nio.file.Path
 
 sealed interface SaveOperationResult {
     data class Saved(val file: File) : SaveOperationResult
     data class AlreadyExists(val file: File) : SaveOperationResult
     data class Failure(val message: String) : SaveOperationResult
+}
+
+sealed interface DeleteOperationResult {
+    data object Deleted : DeleteOperationResult
+    data object NotFound : DeleteOperationResult
+    data class Failure(val message: String) : DeleteOperationResult
+}
+
+sealed interface UpdateOperationResult {
+    data class Updated(val filename: String) : UpdateOperationResult
+    data class Conflict(val filename: String) : UpdateOperationResult
+    data object OriginalNotFound : UpdateOperationResult
+    data class Failure(val message: String) : UpdateOperationResult
 }
 
 data class OperationLogEntry(
@@ -24,7 +40,20 @@ data class OperationLogCollection(
     val unreadableFileCount: Int
 )
 
-class OperationRepository(private val operationsDirectory: File) {
+class OperationRepository(
+    private val operationsDirectory: File,
+    private val updateWriter: (Path, String) -> Unit = { path, content ->
+        Files.writeString(
+            path,
+            content,
+            StandardCharsets.UTF_8,
+            StandardOpenOption.TRUNCATE_EXISTING,
+            StandardOpenOption.WRITE
+        )
+    }
+) {
+    private val validFilename = Regex("^\\d{8}\\.json$")
+
     fun save(log: OperationLog): SaveOperationResult {
         val filenameBase = OperationInputValidator.dateToFilenameBase(log.date)
             ?: return SaveOperationResult.Failure("INVALID DATE")
@@ -49,7 +78,7 @@ class OperationRepository(private val operationsDirectory: File) {
     }
 
     fun read(filename: String): OperationLog? {
-        if (!filename.matches(Regex("^\\d{8}\\.json$"))) return null
+        if (!filename.matches(validFilename)) return null
         val file = File(operationsDirectory, filename)
         if (!file.isFile) return null
         return runCatching { OperationJsonCodec.deserialize(file.readText(Charsets.UTF_8)) }.getOrNull()
@@ -57,7 +86,7 @@ class OperationRepository(private val operationsDirectory: File) {
 
     fun listLogs(): List<String> = operationsDirectory.listFiles()
         ?.asSequence()
-        ?.filter { it.isFile && it.name.matches(Regex("^\\d{8}\\.json$")) }
+        ?.filter { it.isFile && it.name.matches(validFilename) }
         ?.map { it.name }
         ?.sortedDescending()
         ?.toList()
@@ -75,6 +104,73 @@ class OperationRepository(private val operationsDirectory: File) {
             }
         }
         return OperationLogCollection(entries, unreadableFileCount)
+    }
+
+    fun delete(filename: String): DeleteOperationResult {
+        if (!filename.matches(validFilename)) return DeleteOperationResult.NotFound
+        val file = File(operationsDirectory, filename)
+        if (!file.isFile) return DeleteOperationResult.NotFound
+        return try {
+            if (Files.deleteIfExists(file.toPath())) {
+                DeleteOperationResult.Deleted
+            } else {
+                DeleteOperationResult.NotFound
+            }
+        } catch (error: IOException) {
+            DeleteOperationResult.Failure(error.message ?: "DELETE FAILED")
+        } catch (error: SecurityException) {
+            DeleteOperationResult.Failure(error.message ?: "DELETE FAILED")
+        }
+    }
+
+    fun update(originalFilename: String, updatedLog: OperationLog): UpdateOperationResult {
+        if (!originalFilename.matches(validFilename)) return UpdateOperationResult.OriginalNotFound
+        val originalFile = File(operationsDirectory, originalFilename)
+        if (!originalFile.isFile) return UpdateOperationResult.OriginalNotFound
+        val updatedBase = OperationInputValidator.dateToFilenameBase(updatedLog.date)
+            ?: return UpdateOperationResult.Failure("INVALID DATE")
+        val updatedFilename = "$updatedBase.json"
+        val updatedFile = File(operationsDirectory, updatedFilename)
+        if (updatedFilename != originalFilename && updatedFile.exists()) {
+            return UpdateOperationResult.Conflict(updatedFilename)
+        }
+
+        val temporaryFile = runCatching {
+            Files.createTempFile(operationsDirectory.toPath(), ".operation-update-", ".tmp")
+        }.getOrElse { error ->
+            return UpdateOperationResult.Failure(error.message ?: "UPDATE FAILED")
+        }
+
+        return try {
+            updateWriter(temporaryFile, OperationJsonCodec.serialize(updatedLog))
+            moveFile(temporaryFile, updatedFile.toPath(), updatedFilename == originalFilename)
+            if (updatedFilename != originalFilename) {
+                try {
+                    Files.delete(originalFile.toPath())
+                } catch (error: Exception) {
+                    Files.deleteIfExists(updatedFile.toPath())
+                    return UpdateOperationResult.Failure(error.message ?: "UPDATE FAILED")
+                }
+            }
+            UpdateOperationResult.Updated(updatedFilename)
+        } catch (error: Exception) {
+            Files.deleteIfExists(temporaryFile)
+            UpdateOperationResult.Failure(error.message ?: "UPDATE FAILED")
+        }
+    }
+
+    private fun moveFile(source: java.nio.file.Path, target: java.nio.file.Path, replace: Boolean) {
+        val options = if (replace) {
+            arrayOf(StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+        } else {
+            arrayOf(StandardCopyOption.ATOMIC_MOVE)
+        }
+        try {
+            Files.move(source, target, *options)
+        } catch (_: AtomicMoveNotSupportedException) {
+            val fallback = if (replace) arrayOf(StandardCopyOption.REPLACE_EXISTING) else emptyArray()
+            Files.move(source, target, *fallback)
+        }
     }
 
     companion object {

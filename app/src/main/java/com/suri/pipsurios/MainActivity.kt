@@ -48,20 +48,34 @@ import com.suri.pipsurios.ui.screens.GeigerCounterScreen
 import com.suri.pipsurios.ui.screens.ProximitySonarScreen
 import com.suri.pipsurios.ui.screens.DataLoadingScreen
 import com.suri.pipsurios.ui.screens.DataSavedScreen
+import com.suri.pipsurios.ui.screens.DataDeletedScreen
 import com.suri.pipsurios.ui.screens.DataScreen
-import com.suri.pipsurios.ui.screens.DataPlaceholderScreen
+import com.suri.pipsurios.ui.screens.DataStatisticsScreen
+import com.suri.pipsurios.ui.screens.PrimaryWeaponStatisticsScreen
+import com.suri.pipsurios.ui.screens.SecondaryWeaponStatisticsScreen
+import com.suri.pipsurios.ui.screens.LocationStatisticsScreen
+import com.suri.pipsurios.ui.screens.HeadgearStatisticsScreen
+import com.suri.pipsurios.ui.screens.UniformStatisticsScreen
+import com.suri.pipsurios.ui.screens.OperationEditLoadoutScreen
+import com.suri.pipsurios.ui.screens.OperationEditConfirmScreen
+import com.suri.pipsurios.ui.screens.DataModifiedScreen
 import com.suri.pipsurios.ui.screens.DataLogDetailScreen
 import com.suri.pipsurios.ui.screens.DataLogScreen
 import com.suri.pipsurios.ui.screens.OperationLoadoutScreen
 import com.suri.pipsurios.ui.screens.OperationConfirmScreen
 import com.suri.pipsurios.data.OperationConsumables
 import com.suri.pipsurios.data.OperationDraft
+import com.suri.pipsurios.data.OperationEditDraft
 import com.suri.pipsurios.data.OperationInputValidator
 import com.suri.pipsurios.data.OperationLoadoutSnapshot
 import com.suri.pipsurios.data.OperationLog
 import com.suri.pipsurios.data.OperationLogEntry
 import com.suri.pipsurios.data.OperationRepository
+import com.suri.pipsurios.data.DeleteOperationResult
+import com.suri.pipsurios.data.UpdateOperationResult
+import com.suri.pipsurios.data.PercentageDistribution
 import com.suri.pipsurios.data.SaveOperationResult
+import com.suri.pipsurios.data.StatisticsCalculator
 import com.suri.pipsurios.geiger.VolumeKeyController
 import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
 import com.suri.pipsurios.ui.screens.InventoryDetailsScreen
@@ -71,6 +85,9 @@ import com.suri.pipsurios.ui.screens.InventoryModeSelectionScreen
 import com.suri.pipsurios.ui.screens.InventoryScreen
 import com.suri.pipsurios.ui.screens.InventoryVisualMenuScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponRole
+import com.suri.pipsurios.ui.screens.SecondaryWeaponCatalog
+import com.suri.pipsurios.ui.screens.HeadgearCatalog
+import com.suri.pipsurios.ui.screens.UniformCatalog
 import com.suri.pipsurios.ui.screens.CurrentGearLoadingScreen
 import com.suri.pipsurios.ui.screens.CurrentGearScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
@@ -78,6 +95,7 @@ import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
 import com.suri.pipsurios.ui.screens.AccesoriesScreen
 import com.suri.pipsurios.ui.screens.HeadgearScreen
 import com.suri.pipsurios.ui.screens.FrontPanelScreen
+import com.suri.pipsurios.ui.screens.UniformScreen
 import com.suri.pipsurios.ui.screens.StatusLoadingScreen
 import com.suri.pipsurios.ui.screens.StatusScreen
 import com.suri.pipsurios.ui.screens.ComplementsScreen
@@ -150,9 +168,18 @@ private enum class PIPSuriOSDestination {
     DataLog,
     DataLogDetail,
     DataStatistics,
+    DataStatisticsPrimaryWeapon,
+    DataStatisticsSecondaryWeapon,
+    DataStatisticsLocation,
+    DataStatisticsHeadgear,
+    DataStatisticsUniform,
+    OperationEditLoadout,
+    OperationEditConfirm,
     OperationLoadout,
     OperationConfirm,
     DataSaved,
+    DataDeleted,
+    DataModified,
     HomeCivilian,
     InventoryLoading,
     InventoryModeSelection,
@@ -174,6 +201,7 @@ private enum class PIPSuriOSDestination {
     InventoryHeadgearSuri14,
     InventoryHeadgearBrotherhood,
     InventoryLoadoutsFrontPanel,
+    InventoryLoadoutsUniform,
     InventoryFrontPanelSniperAssault,
     InventoryFrontPanelLightAssault,
     InventoryFrontPanelDemolition,
@@ -184,6 +212,7 @@ private enum class PIPSuriOSDestination {
     CurrentGearAccesories,
     CurrentGearHeadgear,
     CurrentGearFrontPanel,
+    CurrentGearUniform,
     StatusLoading,
     Status,
     StatusDontForget,
@@ -201,7 +230,9 @@ private enum class PIPSuriOSDestination {
     GoogleMapsLoading
 }
 
-private enum class VerticalOperationStep { DATE_LOCATION, CONSUMABLES }
+private enum class VerticalOperationStep {
+    DATE_LOCATION, CONSUMABLES, EDIT_DATE_LOCATION, EDIT_CONSUMABLES
+}
 
 @Composable
 private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
@@ -218,7 +249,28 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     var operationLogEntries by remember { mutableStateOf(emptyList<OperationLogEntry>()) }
     var operationLogUnreadableCount by remember { mutableStateOf(0) }
     var operationLogsLoading by remember { mutableStateOf(false) }
+    var primaryWeaponStatistics by remember {
+        mutableStateOf<PercentageDistribution<String>?>(null)
+    }
+    var primaryWeaponStatisticsLoading by remember { mutableStateOf(false) }
+    var secondaryWeaponStatistics by remember {
+        mutableStateOf<PercentageDistribution<String>?>(null)
+    }
+    var secondaryWeaponStatisticsLoading by remember { mutableStateOf(false) }
+    var locationStatistics by remember {
+        mutableStateOf<PercentageDistribution<String>?>(null)
+    }
+    var locationStatisticsLoading by remember { mutableStateOf(false) }
+    var headgearStatistics by remember { mutableStateOf<PercentageDistribution<String>?>(null) }
+    var headgearStatisticsLoading by remember { mutableStateOf(false) }
+    var uniformStatistics by remember { mutableStateOf<PercentageDistribution<String>?>(null) }
+    var uniformStatisticsLoading by remember { mutableStateOf(false) }
     var selectedOperationLog by remember { mutableStateOf<OperationLogEntry?>(null) }
+    var operationEditDraft by remember { mutableStateOf<OperationEditDraft?>(null) }
+    var operationEditSaving by remember { mutableStateOf(false) }
+    var operationEditError by remember { mutableStateOf<String?>(null) }
+    var operationLogDeleting by remember { mutableStateOf(false) }
+    var operationLogDeleteError by remember { mutableStateOf<String?>(null) }
     var pendingVerticalStep by remember { mutableStateOf<VerticalOperationStep?>(null) }
     val operationRepository = remember(context) { OperationRepository.from(context.applicationContext) }
     val operationScope = rememberCoroutineScope()
@@ -262,6 +314,37 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 }
                 OperationInputActivity.RESULT_BACK -> destination = PIPSuriOSDestination.OperationLoadout
             }
+            VerticalOperationStep.EDIT_DATE_LOCATION -> when (result.resultCode) {
+                OperationInputActivity.RESULT_NEXT -> {
+                    operationEditDraft = operationEditDraft?.copy(
+                        date = result.data?.getStringExtra(OperationInputActivity.EXTRA_DATE).orEmpty(),
+                        location = result.data?.getStringExtra(OperationInputActivity.EXTRA_LOCATION).orEmpty()
+                    )
+                    destination = PIPSuriOSDestination.OperationEditLoadout
+                }
+                OperationInputActivity.RESULT_BACK -> {
+                    operationEditDraft = null
+                    operationEditError = null
+                    destination = PIPSuriOSDestination.DataLogDetail
+                }
+            }
+            VerticalOperationStep.EDIT_CONSUMABLES -> when (result.resultCode) {
+                OperationInputActivity.RESULT_NEXT -> {
+                    val values = OperationInputActivity.CONSUMABLE_KEYS.map { key ->
+                        result.data?.getStringExtra(key)?.let(OperationInputValidator::parseDecimal)
+                    }
+                    if (values.all { it != null }) {
+                        operationEditDraft = operationEditDraft?.copy(
+                            consumables = OperationConsumables(
+                                values[0]!!, values[1]!!, values[2]!!, values[3]!!,
+                                values[4]!!, values[5]!!, values[6]!!
+                            )
+                        )
+                        destination = PIPSuriOSDestination.OperationEditConfirm
+                    }
+                }
+                OperationInputActivity.RESULT_BACK -> destination = PIPSuriOSDestination.OperationEditLoadout
+            }
             null -> Unit
         }
         pendingVerticalStep = null
@@ -285,6 +368,22 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
         )
     }
 
+    fun launchEditDateLocation() {
+        val draft = operationEditDraft ?: return
+        pendingVerticalStep = VerticalOperationStep.EDIT_DATE_LOCATION
+        operationInputLauncher.launch(
+            OperationInputActivity.editDateLocationIntent(context, draft.date, draft.location)
+        )
+    }
+
+    fun launchEditConsumables() {
+        val draft = operationEditDraft ?: return
+        pendingVerticalStep = VerticalOperationStep.EDIT_CONSUMABLES
+        operationInputLauncher.launch(
+            OperationInputActivity.editConsumablesIntent(context, draft.consumables)
+        )
+    }
+
     fun openOperationLogs() {
         destination = PIPSuriOSDestination.DataLog
         operationLogsLoading = true
@@ -293,6 +392,143 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             operationLogEntries = collection.entries
             operationLogUnreadableCount = collection.unreadableFileCount
             operationLogsLoading = false
+        }
+    }
+
+    fun openPrimaryWeaponStatistics() {
+        destination = PIPSuriOSDestination.DataStatisticsPrimaryWeapon
+        primaryWeaponStatisticsLoading = true
+        operationScope.launch {
+            val distribution = withContext(Dispatchers.IO) {
+                val primaryWeapons = PrimaryWeaponRole.entries.flatMap { role ->
+                    role.weapons.map(InventoryItem::displayName)
+                }
+                val recordedWeapons = operationRepository.loadAll().entries.map { entry ->
+                    entry.log.loadout.primaryWeapon
+                }
+                StatisticsCalculator.percentageDistribution(primaryWeapons, recordedWeapons)
+            }
+            primaryWeaponStatistics = distribution
+            primaryWeaponStatisticsLoading = false
+        }
+    }
+
+    fun openSecondaryWeaponStatistics() {
+        destination = PIPSuriOSDestination.DataStatisticsSecondaryWeapon
+        secondaryWeaponStatisticsLoading = true
+        operationScope.launch {
+            val distribution = withContext(Dispatchers.IO) {
+                val secondaryWeapons = SecondaryWeaponCatalog.weapons.map(InventoryItem::displayName)
+                val recordedWeapons = operationRepository.loadAll().entries.map { entry ->
+                    entry.log.loadout.secondaryWeapon
+                }
+                StatisticsCalculator.percentageDistribution(secondaryWeapons, recordedWeapons)
+            }
+            secondaryWeaponStatistics = distribution
+            secondaryWeaponStatisticsLoading = false
+        }
+    }
+
+    fun openLocationStatistics() {
+        destination = PIPSuriOSDestination.DataStatisticsLocation
+        locationStatisticsLoading = true
+        operationScope.launch {
+            val distribution = withContext(Dispatchers.IO) {
+                val locations = operationRepository.loadAll().entries.map { entry ->
+                    entry.log.location
+                }
+                StatisticsCalculator.locationDistribution(locations)
+            }
+            locationStatistics = distribution
+            locationStatisticsLoading = false
+        }
+    }
+
+    fun openHeadgearStatistics() {
+        destination = PIPSuriOSDestination.DataStatisticsHeadgear
+        headgearStatisticsLoading = true
+        operationScope.launch {
+            val distribution = withContext(Dispatchers.IO) {
+                val values = operationRepository.loadAll().entries.map { it.log.loadout.headgear }
+                StatisticsCalculator.percentageDistribution(HeadgearCatalog.profiles, values)
+            }
+            headgearStatistics = distribution
+            headgearStatisticsLoading = false
+        }
+    }
+
+    fun openUniformStatistics() {
+        destination = PIPSuriOSDestination.DataStatisticsUniform
+        uniformStatisticsLoading = true
+        operationScope.launch {
+            val distribution = withContext(Dispatchers.IO) {
+                val values = operationRepository.loadAll().entries.map { it.log.loadout.uniform }
+                StatisticsCalculator.percentageDistribution(UniformCatalog.options, values)
+            }
+            uniformStatistics = distribution
+            uniformStatisticsLoading = false
+        }
+    }
+
+    fun startOperationEdit(entry: OperationLogEntry) {
+        val draft = OperationEditDraft.from(entry)
+        operationEditDraft = draft
+        operationEditError = null
+        pendingVerticalStep = VerticalOperationStep.EDIT_DATE_LOCATION
+        operationInputLauncher.launch(
+            OperationInputActivity.editDateLocationIntent(context, draft.date, draft.location)
+        )
+    }
+
+    fun saveOperationEdit() {
+        val draft = operationEditDraft ?: return
+        operationEditSaving = true
+        operationEditError = null
+        operationScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                operationRepository.update(draft.originalFilename, draft.toOperationLog())
+            }
+            operationEditSaving = false
+            when (result) {
+                is UpdateOperationResult.Updated -> {
+                    selectedOperationLog = null
+                    operationEditDraft = null
+                    destination = PIPSuriOSDestination.DataModified
+                }
+                is UpdateOperationResult.Conflict -> {
+                    operationEditError = "LOG ${result.filename.removeSuffix(".json")} ALREADY EXISTS"
+                }
+                UpdateOperationResult.OriginalNotFound -> {
+                    operationEditError = "UPDATE FAILED: ORIGINAL LOG NOT FOUND"
+                }
+                is UpdateOperationResult.Failure -> {
+                    operationEditError = "UPDATE FAILED: ${result.message}"
+                }
+            }
+        }
+    }
+
+    fun deleteSelectedOperationLog() {
+        val entry = selectedOperationLog ?: return
+        operationLogDeleting = true
+        operationLogDeleteError = null
+        operationScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                operationRepository.delete(entry.filename)
+            }
+            operationLogDeleting = false
+            when (result) {
+                DeleteOperationResult.Deleted -> {
+                    selectedOperationLog = null
+                    destination = PIPSuriOSDestination.DataDeleted
+                }
+                DeleteOperationResult.NotFound -> {
+                    operationLogDeleteError = "DELETE FAILED: LOG NOT FOUND"
+                }
+                is DeleteOperationResult.Failure -> {
+                    operationLogDeleteError = "DELETE FAILED: ${result.message}"
+                }
+            }
         }
     }
 
@@ -374,6 +610,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 loading = operationLogsLoading,
                 onEntrySelected = {
                     selectedOperationLog = it
+                    operationLogDeleteError = null
                     destination = PIPSuriOSDestination.DataLogDetail
                 },
                 onBack = { destination = PIPSuriOSDestination.Data }
@@ -382,6 +619,10 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             PIPSuriOSDestination.DataLogDetail -> selectedOperationLog?.let { entry ->
                 DataLogDetailScreen(
                     log = entry.log,
+                    deleting = operationLogDeleting,
+                    deleteError = operationLogDeleteError,
+                    onEdit = { startOperationEdit(entry) },
+                    onDelete = ::deleteSelectedOperationLog,
                     onBack = { destination = PIPSuriOSDestination.DataLog }
                 )
             } ?: DataLogScreen(
@@ -390,15 +631,69 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 loading = false,
                 onEntrySelected = {
                     selectedOperationLog = it
+                    operationLogDeleteError = null
                     destination = PIPSuriOSDestination.DataLogDetail
                 },
                 onBack = { destination = PIPSuriOSDestination.Data }
             )
 
-            PIPSuriOSDestination.DataStatistics -> DataPlaceholderScreen(
-                title = "DATA - STATISTICS",
+            PIPSuriOSDestination.DataStatistics -> DataStatisticsScreen(
+                onPrimaryWeapon = ::openPrimaryWeaponStatistics,
+                onSecondaryWeapon = ::openSecondaryWeaponStatistics,
+                onLocation = ::openLocationStatistics,
+                onHeadgear = ::openHeadgearStatistics,
+                onUniform = ::openUniformStatistics,
                 onBack = { destination = PIPSuriOSDestination.Data }
             )
+
+            PIPSuriOSDestination.DataStatisticsPrimaryWeapon -> PrimaryWeaponStatisticsScreen(
+                distribution = primaryWeaponStatistics,
+                loading = primaryWeaponStatisticsLoading,
+                onBack = { destination = PIPSuriOSDestination.DataStatistics }
+            )
+
+            PIPSuriOSDestination.DataStatisticsSecondaryWeapon -> SecondaryWeaponStatisticsScreen(
+                distribution = secondaryWeaponStatistics,
+                loading = secondaryWeaponStatisticsLoading,
+                onBack = { destination = PIPSuriOSDestination.DataStatistics }
+            )
+
+            PIPSuriOSDestination.DataStatisticsLocation -> LocationStatisticsScreen(
+                distribution = locationStatistics,
+                loading = locationStatisticsLoading,
+                onBack = { destination = PIPSuriOSDestination.DataStatistics }
+            )
+
+            PIPSuriOSDestination.DataStatisticsHeadgear -> HeadgearStatisticsScreen(
+                distribution = headgearStatistics,
+                loading = headgearStatisticsLoading,
+                onBack = { destination = PIPSuriOSDestination.DataStatistics }
+            )
+
+            PIPSuriOSDestination.DataStatisticsUniform -> UniformStatisticsScreen(
+                distribution = uniformStatistics,
+                loading = uniformStatisticsLoading,
+                onBack = { destination = PIPSuriOSDestination.DataStatistics }
+            )
+
+            PIPSuriOSDestination.OperationEditLoadout -> operationEditDraft?.let { draft ->
+                OperationEditLoadoutScreen(
+                    loadout = draft.loadout,
+                    onLoadoutChanged = { operationEditDraft = draft.copy(loadout = it) },
+                    onNext = ::launchEditConsumables,
+                    onBack = ::launchEditDateLocation
+                )
+            }
+
+            PIPSuriOSDestination.OperationEditConfirm -> operationEditDraft?.let { draft ->
+                OperationEditConfirmScreen(
+                    draft = draft,
+                    saveError = operationEditError,
+                    saving = operationEditSaving,
+                    onConfirm = ::saveOperationEdit,
+                    onBack = ::launchEditConsumables
+                )
+            }
 
             PIPSuriOSDestination.OperationLoadout -> OperationLoadoutScreen(
                 activeLoadout = activeLoadout,
@@ -459,6 +754,14 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                     operationSaveError = null
                     destination = PIPSuriOSDestination.Data
                 }
+            )
+
+            PIPSuriOSDestination.DataDeleted -> DataDeletedScreen(
+                onFinished = ::openOperationLogs
+            )
+
+            PIPSuriOSDestination.DataModified -> DataModifiedScreen(
+                onFinished = ::openOperationLogs
             )
 
             PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(
@@ -631,10 +934,11 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
 
             PIPSuriOSDestination.InventoryLoadouts -> InventoryVisualMenuScreen(
                 title = "INVENTORY - LOADOUTS",
-                entries = listOf("> HEADGEAR", "> FRONT PANEL"),
+                entries = listOf("> HEADGEAR", "> FRONT PANEL", "> UNIFORM"),
                 entryActions = mapOf(
                     "> HEADGEAR" to { destination = PIPSuriOSDestination.InventoryLoadoutsHeadgear },
-                    "> FRONT PANEL" to { destination = PIPSuriOSDestination.InventoryLoadoutsFrontPanel }
+                    "> FRONT PANEL" to { destination = PIPSuriOSDestination.InventoryLoadoutsFrontPanel },
+                    "> UNIFORM" to { destination = PIPSuriOSDestination.InventoryLoadoutsUniform }
                 ),
                 onBack = { destination = PIPSuriOSDestination.InventoryModeSelection }
             )
@@ -672,6 +976,12 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onBack = { destination = PIPSuriOSDestination.InventoryLoadouts }
             )
 
+            PIPSuriOSDestination.InventoryLoadoutsUniform -> InventoryVisualMenuScreen(
+                title = "LOADOUTS - UNIFORM",
+                entries = UniformCatalog.options.map { "> $it" },
+                onBack = { destination = PIPSuriOSDestination.InventoryLoadouts }
+            )
+
             PIPSuriOSDestination.InventoryFrontPanelSniperAssault -> InventoryVisualMenuScreen(
                 title = "FRONT PANEL - SNIPER - ASSAULT",
                 entries = listOf("> L96", "> LevAR-15", "> MCX"),
@@ -700,6 +1010,8 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onAccesoriesSelected = { destination = PIPSuriOSDestination.CurrentGearAccesories },
                 onHeadgearSelected = { destination = PIPSuriOSDestination.CurrentGearHeadgear },
                 onFrontPanelSelected = { destination = PIPSuriOSDestination.CurrentGearFrontPanel },
+                onUniformSelected = { destination = PIPSuriOSDestination.CurrentGearUniform },
+                isApplied = draftLoadout == activeLoadout,
                 onApply = {
                     activeLoadout = draftLoadout.copy(accesories = draftLoadout.accesories.toSet())
                 },
@@ -731,6 +1043,12 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             )
 
             PIPSuriOSDestination.CurrentGearFrontPanel -> FrontPanelScreen(
+                configuration = draftLoadout,
+                onConfigurationChanged = { draftLoadout = it },
+                onBack = { destination = PIPSuriOSDestination.CurrentGear }
+            )
+
+            PIPSuriOSDestination.CurrentGearUniform -> UniformScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
@@ -861,7 +1179,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v1.7",
+                text = "PIP-SuriOS v1.9",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

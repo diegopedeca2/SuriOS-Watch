@@ -221,13 +221,12 @@ private fun ProximitySonarContent(
         SonarRadar(
             contacts = snapshot.contacts,
             sweepAngle = sweepAngle,
-            modifier = Modifier.align(Alignment.CenterStart).padding(start = 84.dp)
+            modifier = Modifier.align(Alignment.Center)
         )
 
-        SonarReadout(
+        SonarContactsPanel(
             snapshot = snapshot,
-            scanStatus = scanStatus,
-            modifier = Modifier.align(Alignment.TopEnd).padding(top = 24.dp, end = 48.dp)
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 48.dp)
         )
 
         val controlText = when (scanStatus) {
@@ -240,13 +239,11 @@ private fun ProximitySonarContent(
             "BLUETOOTH OFF", "ERROR" -> onRetry
             else -> onCalibrate
         }
-        SonarAction(
-            text = controlText,
-            onClick = controlAction,
-            enabled = when (scanStatus) {
-                "PERMISSION REQUIRED", "BLUETOOTH OFF", "ERROR" -> true
-                else -> scanStatus == "SCANNING" && !snapshot.isCalibrating
-            },
+        SonarScanPanel(
+            snapshot = snapshot,
+            scanStatus = scanStatus,
+            controlText = controlText,
+            onControl = controlAction,
             modifier = Modifier.align(Alignment.CenterEnd).padding(end = 48.dp)
         )
 
@@ -258,7 +255,7 @@ private fun ProximitySonarContent(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v1.7",
+            text = "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -357,30 +354,58 @@ private fun SonarRadar(
 }
 
 @Composable
-private fun SonarReadout(
+private fun SonarContactsPanel(
+    snapshot: SonarSnapshot,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.width(210.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text("CONTACTS", color = PipGreenDim, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
+        Row(horizontalArrangement = Arrangement.spacedBy(40.dp)) {
+            SonarValue("CURRENT", snapshot.contacts.size.toString())
+            SonarValue("NEW", snapshot.newContactCount.toString(), PipAmber)
+        }
+        ProximityCategory.entries.forEach { proximity ->
+            SonarValue(proximity.displayLabel(), snapshot.contactCount(proximity).toString())
+        }
+    }
+}
+
+@Composable
+private fun SonarScanPanel(
     snapshot: SonarSnapshot,
     scanStatus: String,
+    controlText: String,
+    onControl: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.width(240.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
-            SonarValue("CONTACTS", snapshot.contacts.size.toString())
-            SonarValue("NEW", snapshot.newContactCount.toString(), PipAmber)
-        }
+        Text("SCAN", color = PipGreenDim, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
         SonarValue("SCAN STATUS", scanStatus)
         SonarValue("BASELINE", if (snapshot.hasBaseline) "READY" else "PENDING")
+        SonarAction(
+            text = controlText,
+            onClick = onControl,
+            enabled = when (scanStatus) {
+                "PERMISSION REQUIRED", "BLUETOOTH OFF", "ERROR" -> true
+                else -> scanStatus == "SCANNING" && !snapshot.isCalibrating
+            }
+        )
     }
 }
 
 @Composable
 private fun SonarValue(label: String, value: String, valueColor: Color = PipGreen) {
-    Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
-        Text(label, color = PipGreenDim, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
-        Text(value, color = valueColor, fontSize = 18.sp, fontFamily = FontFamily.Monospace)
+    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        Text(label, color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Text(value, color = valueColor, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
     }
 }
 

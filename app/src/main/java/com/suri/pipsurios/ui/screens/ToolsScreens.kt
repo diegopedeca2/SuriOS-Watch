@@ -61,7 +61,7 @@ fun ToolsScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "> GEIGER COUNTER",
+                text = "> RADS",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -85,7 +85,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v1.7",
+            text = "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -53,14 +53,21 @@ fun CurrentGearScreen(
     onAccesoriesSelected: () -> Unit,
     onHeadgearSelected: () -> Unit,
     onFrontPanelSelected: () -> Unit,
+    onUniformSelected: () -> Unit,
+    isApplied: Boolean,
     onApply: () -> Unit,
     onBack: () -> Unit
 ) {
-    CurrentGearLayout(title = "CURRENT GEAR", onBack = onBack, onApply = onApply) {
+    CurrentGearLayout(
+        title = "CURRENT GEAR",
+        onBack = onBack,
+        onApply = onApply,
+        isApplied = isApplied
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
             listOf(
                 "> PRIMARY WEAPON", "> SECONDARY WEAPON", "> ACCESORIES",
-                "> HEADGEAR", "> FRONT PANEL"
+                "> HEADGEAR", "> FRONT PANEL", "> UNIFORM"
             ).forEach { entry ->
                 Text(
                     text = entry,
@@ -73,7 +80,8 @@ fun CurrentGearScreen(
                             "> SECONDARY WEAPON" -> onSecondaryWeaponSelected
                             "> ACCESORIES" -> onAccesoriesSelected
                             "> HEADGEAR" -> onHeadgearSelected
-                            else -> onFrontPanelSelected
+                            "> FRONT PANEL" -> onFrontPanelSelected
+                            else -> onUniformSelected
                         }
                     )
                 )
@@ -139,8 +147,8 @@ fun SecondaryWeaponScreen(
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
     onBack: () -> Unit
 ) {
-    val handgunWeapons = listOf(InventoryItem.DESERT_EAGLE, InventoryItem.AAP_01C)
-    val demolitionWeapons = PrimaryWeaponRole.DEMOLITION.weapons
+    val handgunWeapons = SecondaryWeaponCatalog.handgun
+    val demolitionWeapons = SecondaryWeaponCatalog.demolition
     var typeExpanded by remember { mutableStateOf(false) }
     var weaponExpanded by remember { mutableStateOf(false) }
 
@@ -229,9 +237,17 @@ fun AccesoriesScreen(
     }
 }
 
-private enum class HeadgearProfile(val displayName: String, val items: List<String>) {
+enum class HeadgearProfile(val displayName: String, val items: List<String>) {
     SURI_14("SURI-14", listOf("VYPER", "DYE MASK")),
     BROTHERHOOD("BROTHERHOOD", listOf("HELMET", "NVG", "GAS MASK", "SECURITY GOGLES"))
+}
+
+object HeadgearCatalog {
+    val profiles = HeadgearProfile.entries.map(HeadgearProfile::displayName)
+}
+
+object UniformCatalog {
+    val options = listOf("MCBCK - SUMMER", "MCBCK - LONG", "DESERT")
 }
 
 @Composable
@@ -269,7 +285,7 @@ fun HeadgearScreen(
     }
 }
 
-private enum class FrontPanelRole(val displayName: String, val panels: List<InventoryItem>) {
+enum class FrontPanelRole(val displayName: String, val panels: List<InventoryItem>) {
     SNIPER_ASSAULT(
         "SNIPER - ASSAULT",
         PrimaryWeaponRole.SNIPER.weapons + InventoryItem.MCX
@@ -310,6 +326,30 @@ fun FrontPanelScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun UniformScreen(
+    configuration: LoadoutConfiguration,
+    onConfigurationChanged: (LoadoutConfiguration) -> Unit,
+    onBack: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    CurrentGearLayout(title = "CURRENT GEAR - UNIFORM", onBack = onBack) {
+        TerminalDropdown(
+            label = "UNIFORM",
+            value = configuration.uniform ?: "SELECT UNIFORM",
+            options = UniformCatalog.options,
+            optionText = { it },
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+            onSelected = { uniform ->
+                onConfigurationChanged(configuration.copy(uniform = uniform))
+                expanded = false
+            }
+        )
     }
 }
 
@@ -435,6 +475,7 @@ private fun CurrentGearLayout(
     title: String,
     onBack: () -> Unit,
     onApply: (() -> Unit)? = null,
+    isApplied: Boolean = false,
     content: @Composable () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
@@ -454,23 +495,30 @@ private fun CurrentGearLayout(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v1.7",
+            text = "PIP-SuriOS v1.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
         )
         if (onApply != null) {
-            Text(
-                text = "APPLY",
-                color = PipGreen,
-                fontSize = 20.sp,
-                fontFamily = FontFamily.Monospace,
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .clickable(onClick = onApply)
                     .padding(end = 24.dp, bottom = 64.dp)
-            )
+            ) {
+                Text(
+                    text = "APPLY",
+                    color = if (isApplied) PipBlack else PipGreen,
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier
+                        .background(if (isApplied) PipGreen else PipBlack)
+                        .border(1.dp, PipGreen)
+                        .clickable(onClick = onApply)
+                        .padding(horizontal = 14.dp, vertical = 9.dp)
+                )
+            }
         }
     }
 }
