@@ -1,6 +1,6 @@
 # PIP-SuriOS - User Guide
 
-Manual oficial de usuario — PIP-SuriOS v2.0
+Manual oficial de usuario — PIP-SuriOS v2.1
 
 ## Índice
 
@@ -35,18 +35,16 @@ Al abrir PIP-SuriOS aparece una secuencia de arranque automática:
 2. `LOG-IN ID: SURI-14 VERIFIED`
 3. Los módulos de HOME se inicializan en el orden INVENTORY, MAP, COMMS, DATA, CURRENT GEAR, STATUS y TOOLS. Cada línea muestra primero `LOADING MÓDULO.....` y después `READY`.
 4. `SYSTEM READY`
-5. `SELECT MODE`
+5. `SELECT SKIN`
 
-Después puede elegirse uno de estos modos:
+Después puede elegirse una skin visual:
 
-- **CIVILIAN:** abre la pantalla civil. Actualmente está en construcción y no contiene módulos funcionales.
-- **OPERATION:** abre el HOME operativo y permite acceder a todas las funciones descritas en este manual.
+- **BROTHERHOOD OF STEEL:** skin funcional disponible; abre el HOME operativo y todas las funciones descritas en este manual.
+- **SALAMANDER**, **IRON HAND**, **ADEPTUS MECHANICUS**, **NECRON** y **MANDALORIAN:** aparecen como `UNDER CONSTRUCTION`. Pulse `< BACK` para regresar a `SELECT SKIN`.
+
+La selección no se recuerda al cerrar la aplicación. Las skins cambian únicamente la presentación; las funciones y los datos permanecen compartidos.
 
 ## 3. HOME
-
-### CIVILIAN
-
-La pantalla `CIVILIAN - HOMESCREEN` muestra `UNDER CONSTRUCTION`. Utilice `< BACK` para volver a la selección de modo.
 
 ### OPERATION
 
@@ -68,7 +66,17 @@ Desde HOME OPERATION, pulse **MAP** y elija uno de sus dos modos.
 
 ### MAP TERRAIN
 
-Abre `MAP - TERRAIN`. Esta pantalla está actualmente marcada como `UNDER CONSTRUCTION` y todavía no ofrece funciones cartográficas.
+Abre el mapa topográfico **NAVY7**, incluido completamente offline en la aplicación. El mapa no necesita conexión a Internet.
+
+- Arrastre con un dedo para desplazarse.
+- Use pinch con dos dedos para ampliar o reducir. No hay botones de zoom.
+- La orientación heading-up gira el mundo cartográfico según la orientación del teléfono, mientras los textos y botones permanecen derechos.
+- El marcador GPS muestra la posición actual cuando Android concede permiso y existe un fix disponible.
+- **ADD RESPAWN** crea varios marcadores persistentes. Pulse uno, después `DELETE` y finalmente `CONFIRM` para eliminarlo.
+- **ADD RAD ZONE** permite definir varios polígonos persistentes. Pulse una zona, después `CLEAR` y `CONFIRM` para eliminarla.
+- Un doble toque sobre una zona despejada ofrece `EMPTY MAP`; la acción solo elimina RESPawns y RAD ZONES después de `CONFIRM`, nunca el mapa base.
+
+Al aproximarse al borde de una RAD ZONE, la cadencia Geiger aumenta progresivamente. Dentro de la zona alcanza el nivel de exposición directa. El umbral aproximado y el GPS no constituyen una medición de precisión.
 
 ### MAP OPERATION
 
@@ -273,7 +281,7 @@ Los valores vacíos o históricos que no correspondan a una opción válida no i
 
 ## 10. TOOLS
 
-Desde HOME OPERATION, pulse **TOOLS**. Tras `LOADING...` puede elegir RADS o SONAR.
+Desde HOME OPERATION, pulse **TOOLS**. Tras `LOADING...` puede elegir RADS, SONAR o SONAR-TESTING.
 
 Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen instrumentos de medición profesionales.
 
@@ -325,6 +333,19 @@ Cada contacto genera como máximo un aviso en cada pasada. El sonido se detiene 
 
 SONAR no muestra nombres de dispositivos, direcciones MAC ni información personal. Detectar una señal electrónica no significa detectar o localizar a una persona.
 
+### SONAR-TESTING
+
+SONAR-TESTING es una herramienta experimental para recoger datos de calibración BLE; no modifica automáticamente el SONAR estable ni sus umbrales.
+
+1. En `SET TEST`, seleccione TARGET, tipo de prueba, posición física NORTH/SOUTH/EAST/WEST y notas opcionales.
+2. En `IDENTIFY TARGET`, coloque temporalmente el objetivo junto a SURI-14 e inicie la identificación guiada. Confirme el candidato encontrado o elija entre los candidatos mostrados si existe ambigüedad.
+3. Coloque el objetivo en la posición indicada y pulse `START SAMPLE`. Las muestras estáticas duran aproximadamente 30 segundos; MOVEMENT continúa hasta `STOP MOVEMENT`.
+4. `RESULT` resume observaciones, RSSI RAW y suavizado, categorías y pérdidas/recuperaciones.
+
+`NEXT SAMPLE` conserva temporalmente el target identificado y permite cambiar la posición. `RE-IDENTIFY TARGET` repite la identificación cuando se pierde el contacto. `RESET TEST` limpia únicamente el estado temporal, sin borrar sesiones anteriores ni el contador `CAL-###`.
+
+`EXPORT CSV` genera un archivo UTF-8 y abre el Sharesheet de Android. El usuario decide dónde guardarlo o compartirlo. Las sesiones no almacenan permanentemente MAC, nombre BLE ni identificadores de hardware.
+
 ## 11. Controles
 
 Los controles principales de PIP-SuriOS son:
@@ -344,7 +365,8 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 
 ## 12. Limitaciones conocidas
 
-- CIVILIAN y MAP TERRAIN permanecen en construcción.
+- Las skins SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN permanecen en construcción.
+- MAP TERRAIN está técnicamente aceptado, pero su alineación GPS, heading, ergonomía, Geiger y consumo requieren validación física exterior en NAVY7.
 - CURRENT GEAR, el Loadout Activo, el checklist y la calibración de SONAR no se guardan permanentemente. Se pierden al cerrar o reiniciar la aplicación.
 - STORAGE sí conserva PURCHASE y USED permanentemente; BBs y los formatos individuales de GAS todavía no tienen consumo automático.
 - INVENTORY es informativo: no descuenta consumibles ni actualiza cantidades automáticamente.
@@ -367,8 +389,9 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v1.7** | Incorporación de TOOLS con el contador posteriormente denominado RADS y SONAR, junto con sus sonidos y refinamientos visuales. |
 | **v1.9** | Incorporación del historial DATA con alta, consulta, edición, borrado y estadísticas; UNIFORM en todo el flujo; RADS; nueva disposición de SONAR y refinamientos de arranque y DON'T FORGET. |
 | **v2.0** | RADS V2 con control progresivo y modo de inclinación; STORAGE persistente con PURCHASE, USED, CONSUMED y TOTAL dinámico enlazado al historial operativo. |
+| **v2.1** | SONAR-TESTING experimental, MAP TERRAIN offline NAVY7 y selección inicial de skins. |
 
-PIP-SuriOS v2.0 incorpora la evolución funcional consolidada durante Sprint 010.
+PIP-SuriOS v2.1 incorpora la evolución funcional consolidada durante Sprint 011.
 
 ## 14. Consejos de uso
 
@@ -386,7 +409,7 @@ Antes de comenzar:
 
 ### Uso de MAP
 
-Utilice CivTAK siempre que esté disponible para el acceso cartográfico operativo. Si CivTAK no está instalado, PIP-SuriOS intentará abrir Google Maps automáticamente como alternativa.
+Use MAP TERRAIN para NAVY7 offline y MAP OPERATION cuando necesite el flujo externo CivTAK/Google Maps. En MAP TERRAIN confirme las acciones destructivas y recuerde que la precisión depende del GPS y la orientación reales del dispositivo.
 
 Compruebe antes de la partida que la aplicación cartográfica elegida está instalada, configurada y preparada para funcionar en la zona de juego.
 

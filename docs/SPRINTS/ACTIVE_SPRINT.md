@@ -4,7 +4,7 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canónico
-last_updated: 2026-08-12
+last_updated: 2026-08-26
 
 ---
 
@@ -14,37 +14,43 @@ last_updated: 2026-08-12
 
 ## Estado
 
-Sprint 010 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
+Sprint 011: **CLOSED**
 
-PIP-SuriOS v2.0 es la versión móvil consolidada vigente. No existe ningún Sprint activo y Sprint 011 no se ha iniciado.
+Sprint activo: **ninguno**
+
+Sprint 012: **no iniciado**
+
+Sprint 011 de PIP-SuriOS está completado y cerrado técnica, funcional y documentalmente.
+
+PIP-SuriOS v2.1 es la versión móvil consolidada vigente. No existe ningún Sprint activo. Sprint 012 no se ha iniciado.
 
 PIW-SuriOS v1.9 continúa siendo la versión visual consolidada vigente de SuriOS Watch y no fue modificada durante este Sprint.
 
 ## Último Sprint completado de PIP-SuriOS
 
-[Sprint 010 v1.0](SPRINT_010_v1.0.md), finalizado el 2026-08-12.
+[Sprint 011 v1.0](SPRINT_011_v1.0.md), finalizado el 2026-08-26.
 
-**Sprint 010 - RADS v2 y STORAGE PIP-SuriOS v2.0**
+**Sprint 011 — SONAR-TESTING, MAP TERRAIN NAVY7 y SELECT SKIN — PIP-SuriOS v2.1**
 
 Commit técnico:
 
-`a254c7b78eb7359fc6f67e391d73a146d1d44842`
+`92f4ccda44fc2024caa2124eb854b702d3bedfab`
 
-El Sprint evolucionó RADS con control manual progresivo y modo de inclinación `RADS.`, y sustituyó CONSUMABLES por STORAGE con ledger persistente, cálculo dinámico desde LOG y persistencia verificada de PURCHASE, USED y TOTAL.
+El Sprint incorporó la herramienta experimental SONAR-TESTING, el visor MAP TERRAIN completamente offline para NAVY7 y la infraestructura inicial SELECT SKIN. SONAR estable, SonarTuning y MAP OPERATION conservaron su comportamiento funcional.
 
-Las compilaciones, lint, 79 pruebas unitarias y las validaciones manuales en Samsung Galaxy A56 y Pixel 8 Emulator fueron superadas.
+La validación técnica y la validación manual disponible en Samsung Galaxy A56 y Pixel 8 Emulator fueron superadas. La calibración empírica SONAR y la validación exterior de GPS, heading, ergonomía, RAD ZONES, Geiger, estabilidad y consumo quedan registradas como FIELD VALIDATION posterior, no como desarrollo técnico pendiente.
 
 ## Roadmap de PIP-SuriOS
 
-- Sprint 010 queda cerrado.
-- PIP-SuriOS v2.0 queda consolidado.
+- Sprint 011 queda cerrado.
+- PIP-SuriOS v2.1 queda consolidado.
 - No existe Sprint activo.
-- Sprint 011 no se ha iniciado.
+- Sprint 012 no se ha iniciado.
 - Cualquier trabajo posterior requiere autorización expresa.
 
 ## Referencias
 
-- [Sprint 010 v1.0](SPRINT_010_v1.0.md)
+- [Sprint 011 v1.0](SPRINT_011_v1.0.md)
 - [User Guide](../USER_GUIDE.md)
 - [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
 - [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)

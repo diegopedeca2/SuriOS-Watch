@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-12
+last_updated: 2026-08-26
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 010 | Sprint 010 completado; PIP-SuriOS v2.0 estable |
+| PIP-SuriOS | Ninguno | Sprint 011 | Sprint 011 completado; PIP-SuriOS v2.1 estable |
 
 ---
 
@@ -54,6 +54,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 008 | PIP-SuriOS | TOOLS, GEIGER COUNTER, SONAR y consolidación visible v1.7 | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 008 v1.0](SPRINT_008_v1.0.md) |
 | 009 | PIP-SuriOS | DATA, Statistics, Log, UNIFORM y consolidación visible v1.9 | Aprobado | Completado | 2026-08-10 | 2026-08-12 | [Sprint 009 v1.0](SPRINT_009_v1.0.md) |
 | 010 | PIP-SuriOS | RADS v2, STORAGE y consolidación visible v2.0 | Aprobado | Completado | 2026-08-12 | 2026-08-12 | [Sprint 010 v1.0](SPRINT_010_v1.0.md) |
+| 011 | PIP-SuriOS | SONAR-TESTING, MAP TERRAIN NAVY7, SELECT SKIN y consolidación visible v2.1 | Aprobado | Completado | 2026-08-12 | 2026-08-26 | [Sprint 011 v1.0](SPRINT_011_v1.0.md) |
 
 ---
 
@@ -80,6 +81,7 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 4. Sprint 008 — TOOLS, GEIGER COUNTER y SONAR. **Implementado y cerrado.**
 5. Sprint 009 — DATA, Statistics, Log, UNIFORM y consolidación visible v1.9. **Implementado y cerrado.**
 6. Sprint 010 — Cerrado. RADS v2 y STORAGE. PIP-SuriOS v2.0.
+7. Sprint 011 — Cerrado. SONAR-TESTING, MAP TERRAIN NAVY7 y SELECT SKIN. PIP-SuriOS v2.1.
 
 ---
 
@@ -534,8 +536,8 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### Ecosistema
 
-- Sprints registrados: 14.
-- Sprints completados: 14.
+- Sprints registrados: 15.
+- Sprints completados: 15.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -550,24 +552,25 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 010.
-- Versión vigente: PIP-SuriOS v2.0.
+- Último Sprint completado: Sprint 011.
+- Versión vigente: PIP-SuriOS v2.1.
 - Sprints activos: 0.
 - Sprint 009: completado y cerrado.
 - Sprint 010: completado y cerrado.
+- Sprint 011: completado y cerrado.
 ---
 
 ## 20. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 010 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 011 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
-Sprint 010 está cerrado y PIP-SuriOS v2.0 constituye la versión móvil consolidada vigente. Sprint 011 no se ha iniciado.
+Sprint 011 está cerrado y PIP-SuriOS v2.1 constituye la versión móvil consolidada vigente. Sprint 012 no se ha iniciado.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.0 con DATA permanente, estadísticas, STORAGE, INVENTORY, CURRENT GEAR, STATUS, COMPLEMENTS, DON'T FORGET, MORSE TERMINAL, RADS v2 y SONAR constituye el estado móvil funcional y estable vigente. Sprint 010 está cerrado y Sprint 011 no se ha iniciado.
+PIP-SuriOS v2.1 con DATA permanente, STORAGE, RADS v2, SONAR estable, SONAR-TESTING experimental, MAP TERRAIN NAVY7 offline y SELECT SKIN constituye el estado móvil funcional vigente. Sprint 011 está cerrado y Sprint 012 no se ha iniciado.
 
 ---
 
@@ -588,3 +591,25 @@ La corrección crítica final aseguró el round-trip del ledger en Android, la c
 Documento de cierre: [Sprint 010 v1.0](SPRINT_010_v1.0.md).
 
 Sprint 010 queda cerrado. PIP-SuriOS v2.0 queda consolidado, no existe ningún Sprint activo y Sprint 011 no se ha iniciado.
+
+---
+
+## 22. Cierre de Sprint 011 de PIP-SuriOS
+
+Sprint 011 se abrió el 2026-08-12 y se cerró el 2026-08-26, consolidando `PIP-SuriOS v2.1`.
+
+El Sprint incorporó SONAR-TESTING como herramienta experimental de captura BLE con identificación temporal, posiciones físicas manuales, muestras estáticas, CAL-MOVEMENT, RSSI RAW/suavizado, eventos, sesiones `CAL-###` y exportación CSV mediante Sharesheet. SONAR estable permaneció funcionalmente inalterado y `SonarTuning` no cambió.
+
+MAP TERRAIN incorporó NAVY7 completamente offline mediante MBTiles raster y SQLite directa, viewport fijo, clipping, pan 2D corregido, pinch, overzoom Z20, heading-up, GPS, overlays persistentes y proximidad Geiger al borde de RAD ZONES. MAP OPERATION conservó su comportamiento CivTAK/Google Maps.
+
+SELECT SKIN sustituyó la selección inicial anterior. Brotherhood of Steel representa la interfaz funcional vigente; SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN quedan identificadas como `UNDER CONSTRUCTION` sobre una arquitectura funcional compartida.
+
+Se completaron build, incremental, lint, suite unitaria, pruebas instrumentadas en Galaxy A56 y Pixel 8 Emulator, `git diff --check` y validación manual final disponible. La calibración SONAR y la evaluación exterior en NAVY7 permanecen registradas como FIELD VALIDATION posterior y no impiden el cierre técnico.
+
+| Commit | Papel |
+|---|---|
+| `92f4ccda44fc2024caa2124eb854b702d3bedfab` | SONAR-TESTING, MAP TERRAIN NAVY7, SELECT SKIN y consolidación visible PIP-SuriOS v2.1. |
+
+Documento de cierre: [Sprint 011 v1.0](SPRINT_011_v1.0.md).
+
+Sprint 011 queda cerrado. PIP-SuriOS v2.1 queda consolidado, no existe ningún Sprint activo y Sprint 012 no se ha iniciado.
