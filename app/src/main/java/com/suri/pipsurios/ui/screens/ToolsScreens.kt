@@ -44,6 +44,7 @@ fun ToolsLoadingScreen(onFinished: () -> Unit) {
 fun ToolsScreen(
     onGeigerCounterSelected: () -> Unit,
     onProximitySonarSelected: () -> Unit,
+    onSonarTestingSelected: () -> Unit,
     onBack: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
@@ -74,6 +75,13 @@ fun ToolsScreen(
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onProximitySonarSelected)
             )
+            Text(
+                text = "> SONAR-TESTING",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onSonarTestingSelected)
+            )
         }
 
         Text(
@@ -85,7 +93,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.0",
+            text = "PIP-SuriOS v2.1",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

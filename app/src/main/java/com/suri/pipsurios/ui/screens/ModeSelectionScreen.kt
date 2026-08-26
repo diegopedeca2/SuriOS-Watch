@@ -17,12 +17,11 @@ import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
+import com.suri.pipsurios.ui.skin.SkinCatalog
+import com.suri.pipsurios.ui.skin.SkinId
 
 @Composable
-fun ModeSelectionScreen(
-    onOperationSelected: () -> Unit,
-    onCivilianSelected: () -> Unit
-) {
+fun SkinSelectionScreen(onSkinSelected: (SkinId) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -35,27 +34,33 @@ fun ModeSelectionScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "SELECT MODE:",
+                text = "SELECT SKIN:",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace
             )
 
-            Text(
-                text = "> OPERATION",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onOperationSelected)
-            )
+            SkinCatalog.all.forEach { skin ->
+                Text(
+                    text = "> ${skin.displayName}",
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable { onSkinSelected(skin) }
+                )
+            }
+        }
+    }
+}
 
-            Text(
-                text = "> CIVILIAN",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onCivilianSelected)
-            )
+@Composable
+fun PendingSkinScreen(skin: SkinId, onBack: () -> Unit) {
+    Box(Modifier.fillMaxSize().background(PipBlack), contentAlignment = Alignment.Center) {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(skin.displayName, color = PipGreen, fontSize = 24.sp, fontFamily = FontFamily.Monospace)
+            Text("UNDER CONSTRUCTION", color = PipGreenDim, fontSize = 22.sp, fontFamily = FontFamily.Monospace)
+            Text("< BACK", color = PipGreen, fontSize = 22.sp, fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onBack).padding(12.dp))
         }
     }
 }

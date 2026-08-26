@@ -46,6 +46,7 @@ import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterScreen
 import com.suri.pipsurios.ui.screens.ProximitySonarScreen
+import com.suri.pipsurios.ui.screens.SonarTestingScreen
 import com.suri.pipsurios.ui.screens.DataLoadingScreen
 import com.suri.pipsurios.ui.screens.DataSavedScreen
 import com.suri.pipsurios.ui.screens.DataDeletedScreen
@@ -120,7 +121,9 @@ import com.suri.pipsurios.ui.screens.MapLoadingScreen
 import com.suri.pipsurios.ui.screens.MapModeSelectionScreen
 import com.suri.pipsurios.ui.screens.MapOperationScreen
 import com.suri.pipsurios.ui.screens.MapTerrainScreen
-import com.suri.pipsurios.ui.screens.ModeSelectionScreen
+import com.suri.pipsurios.ui.screens.SkinSelectionScreen
+import com.suri.pipsurios.ui.screens.PendingSkinScreen
+import com.suri.pipsurios.ui.skin.SkinId
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
@@ -163,12 +166,14 @@ private enum class PIPSuriOSDestination {
     Splash,
     Loading,
     ModeSelection,
+    SkinUnderConstruction,
     HomeOperation,
     ToolsLoading,
     Tools,
     GeigerCounterLoading,
     GeigerCounter,
     ProximitySonar,
+    SonarTesting,
     DataLoading,
     Data,
     DataLog,
@@ -244,6 +249,7 @@ private enum class VerticalOperationStep {
 private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     val context = LocalContext.current
     var destination by remember { mutableStateOf(PIPSuriOSDestination.Splash) }
+    var pendingSkin by remember { mutableStateOf<SkinId?>(null) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
     var morseInput by remember { mutableStateOf("") }
@@ -560,10 +566,20 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onFinished = { destination = PIPSuriOSDestination.ModeSelection }
             )
 
-            PIPSuriOSDestination.ModeSelection -> ModeSelectionScreen(
-                onOperationSelected = { destination = PIPSuriOSDestination.HomeOperation },
-                onCivilianSelected = { destination = PIPSuriOSDestination.HomeCivilian }
-            )
+            PIPSuriOSDestination.ModeSelection -> SkinSelectionScreen { skin ->
+                if (skin.implemented) destination = PIPSuriOSDestination.HomeOperation
+                else {
+                    pendingSkin = skin
+                    destination = PIPSuriOSDestination.SkinUnderConstruction
+                }
+            }
+
+            PIPSuriOSDestination.SkinUnderConstruction -> pendingSkin?.let { skin ->
+                PendingSkinScreen(skin) {
+                    pendingSkin = null
+                    destination = PIPSuriOSDestination.ModeSelection
+                }
+            }
 
             PIPSuriOSDestination.HomeOperation -> HomeOperationScreen(
                 onBack = { destination = PIPSuriOSDestination.ModeSelection },
@@ -587,6 +603,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onProximitySonarSelected = {
                     destination = PIPSuriOSDestination.ProximitySonar
                 },
+                onSonarTestingSelected = {
+                    destination = PIPSuriOSDestination.SonarTesting
+                },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
             )
 
@@ -600,6 +619,10 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             )
 
             PIPSuriOSDestination.ProximitySonar -> ProximitySonarScreen(
+                onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+
+            PIPSuriOSDestination.SonarTesting -> SonarTestingScreen(
                 onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
@@ -1217,14 +1240,14 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v2.0",
+                text = "PIP-SuriOS v2.1",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace
             )
 
             Text(
-                text = "Brotherhood of Steel Mode",
+                text = "Brotherhood of Steel Skin",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

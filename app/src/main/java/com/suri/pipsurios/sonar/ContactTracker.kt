@@ -53,10 +53,12 @@ class ContactTracker {
         }
     }
 
-    fun expire(now: Long) {
-        contacts.entries.removeAll { (_, contact) ->
+    fun expire(now: Long): List<SonarContact> {
+        val expired = contacts.values.filter { contact ->
             now - contact.lastSeen > SonarTuning.CONTACT_EXPIRY_MILLIS
         }
+        contacts.keys.removeAll(expired.mapTo(mutableSetOf()) { it.temporaryId })
+        return expired
     }
 
     fun snapshot(): SonarSnapshot = SonarSnapshot(
