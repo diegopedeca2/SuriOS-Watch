@@ -116,4 +116,4 @@ El transporte local HTTP sin autenticación, el backup de datos de la app móvil
 
 La versión v2.2 queda lista para una prueba de campo controlada. Los puntos funcionales prioritarios —escaneo BLE en ambos nodos, transmisión Wi-Fi local, identificación del nodo, registro bruto y comparación conservadora— están cubiertos y fueron desplegados en los dispositivos disponibles.
 
-Los hallazgos H1–H4 deben considerarse límites explícitos de esta versión experimental; H5 queda como deuda técnica no bloqueante.
+Los hallazgos H1–H4 deben considerarse límites explícitos de esta versión experimental; H5 queda como deuda técnica no bloqueante y H6 remite al análisis de vulnerabilidades posterior al cierre.
