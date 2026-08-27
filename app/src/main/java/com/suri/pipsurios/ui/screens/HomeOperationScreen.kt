@@ -30,10 +30,9 @@ import com.suri.pipsurios.R
 fun HomeOperationScreen(
     onBack: () -> Unit,
     onInventorySelected: () -> Unit,
-    onMapSelected: () -> Unit,
-    onCommsSelected: () -> Unit,
     onDataSelected: () -> Unit,
     onCurrentGearSelected: () -> Unit,
+    onSetUpSelected: () -> Unit,
     onStatusSelected: () -> Unit,
     onToolsSelected: () -> Unit
 ) {
@@ -54,7 +53,7 @@ fun HomeOperationScreen(
         )
 
         Text(
-            text = "OPERATION - HOMESCREEN",
+            text = "HOMESCREEN",
             color = PipGreen,
             fontSize = 30.sp,
             fontFamily = FontFamily.Monospace,
@@ -70,15 +69,14 @@ fun HomeOperationScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ModuleColumn(
-                entries = listOf("> INVENTORY", "> MAP", "> COMMS"),
+                entries = listOf("> SET-UP", "> CURRENT GEAR", "> INVENTORY"),
                 onInventorySelected = onInventorySelected,
-                onMapSelected = onMapSelected,
-                onCommsSelected = onCommsSelected
+                onCurrentGearSelected = onCurrentGearSelected,
+                onSetUpSelected = onSetUpSelected
             )
             ModuleColumn(
-                entries = listOf("> DATA", "> CURRENT GEAR", "> STATUS", "> TOOLS"),
+                entries = listOf("> STATUS", "> DATA", "> TOOLS"),
                 onDataSelected = onDataSelected,
-                onCurrentGearSelected = onCurrentGearSelected,
                 onStatusSelected = onStatusSelected,
                 onToolsSelected = onToolsSelected
             )
@@ -96,7 +94,7 @@ fun HomeOperationScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.1",
+            text = "PIP-SuriOS v2.2",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -111,10 +109,9 @@ fun HomeOperationScreen(
 private fun ModuleColumn(
     entries: List<String>,
     onInventorySelected: (() -> Unit)? = null,
-    onMapSelected: (() -> Unit)? = null,
-    onCommsSelected: (() -> Unit)? = null,
     onDataSelected: (() -> Unit)? = null,
     onCurrentGearSelected: (() -> Unit)? = null,
+    onSetUpSelected: (() -> Unit)? = null,
     onStatusSelected: (() -> Unit)? = null,
     onToolsSelected: (() -> Unit)? = null
 ) {
@@ -131,14 +128,12 @@ private fun ModuleColumn(
                 modifier = when {
                     entry == "> INVENTORY" && onInventorySelected != null ->
                         Modifier.clickable(onClick = onInventorySelected)
-                    entry == "> MAP" && onMapSelected != null ->
-                        Modifier.clickable(onClick = onMapSelected)
-                    entry == "> COMMS" && onCommsSelected != null ->
-                        Modifier.clickable(onClick = onCommsSelected)
                     entry == "> DATA" && onDataSelected != null ->
                         Modifier.clickable(onClick = onDataSelected)
                     entry == "> CURRENT GEAR" && onCurrentGearSelected != null ->
                         Modifier.clickable(onClick = onCurrentGearSelected)
+                    entry == "> SET-UP" && onSetUpSelected != null ->
+                        Modifier.clickable(onClick = onSetUpSelected)
                     entry == "> STATUS" && onStatusSelected != null ->
                         Modifier.clickable(onClick = onStatusSelected)
                     entry == "> TOOLS" && onToolsSelected != null ->

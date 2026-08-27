@@ -15,6 +15,7 @@ import com.suri.pipsurios.sonartesting.CalibrationTestType
 import com.suri.pipsurios.sonartesting.SonarTestingRecorder
 import com.suri.pipsurios.sonartesting.SonarTestingRepository
 import com.suri.pipsurios.sonartesting.SonarTestingTuning
+import com.suri.pipsurios.sonartesting.TestingNodeMode
 import com.suri.pipsurios.sonartesting.ManualCalibrationPosition
 import com.suri.pipsurios.sonartesting.IdentificationResult
 import com.suri.pipsurios.sonartesting.SonarIdentificationTuning
@@ -111,10 +112,22 @@ class SonarTestingTest {
     @Test fun csvHasStableColumnsUtf8FriendlyContentAndEscapesNotes() {
         val record = record(notes = "pasó, \"persona\"\nobjetivo movido")
         val csv = CalibrationCsv.encode(listOf(record))
-        assertEquals(18, CalibrationCsv.columns.size)
+        assertEquals(23, CalibrationCsv.columns.size)
         assertTrue(csv.startsWith("session_id,sample_id,test_type"))
         assertTrue(csv.contains("\"pasó, \"\"persona\"\"\nobjetivo movido\""))
         assertTrue(csv.contains("-61"))
+    }
+
+    @Test fun dualNodeSampleKeepsProbeMetadataInCsv() {
+        val record = record().copy(
+            nodeMode = TestingNodeMode.A56_AND_WATCH,
+            probeSessionId = "RPR-123-001",
+            probeLink = "CONNECTED"
+        )
+        val csv = CalibrationCsv.encode(listOf(record))
+        assertTrue(csv.contains("A56_AND_WATCH"))
+        assertTrue(csv.contains("RPR-123-001"))
+        assertTrue(csv.contains("CONNECTED"))
     }
 
     @Test fun repositorySeparatesMetadataAndObservationsAndExportsCsv() {

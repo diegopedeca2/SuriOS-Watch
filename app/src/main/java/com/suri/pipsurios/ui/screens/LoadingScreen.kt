@@ -22,13 +22,12 @@ import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import kotlinx.coroutines.delay
 
-private val operationModules = listOf(
-    "INVENTORY",
-    "MAP",
-    "COMMS",
-    "DATA",
+private val homeModules = listOf(
+    "SET-UP",
     "CURRENT GEAR",
+    "INVENTORY",
     "STATUS",
+    "DATA",
     "TOOLS"
 )
 
@@ -41,7 +40,7 @@ fun LoadingScreen(onFinished: () -> Unit) {
         delay(1_500)
         visibleLineCount++
         delay(1_500)
-        operationModules.forEachIndexed { index, _ ->
+        homeModules.forEachIndexed { index, _ ->
             visibleLineCount++
             delay(750)
             readyModuleCount = index + 1
@@ -67,13 +66,13 @@ fun LoadingScreen(onFinished: () -> Unit) {
             if (visibleLineCount >= 2) {
                 LoadingLine(text = "LOG-IN ID: SURI-14 VERIFIED")
             }
-            operationModules.forEachIndexed { index, module ->
+            homeModules.forEachIndexed { index, module ->
                 if (visibleLineCount >= index + 3) {
                     val readySuffix = if (readyModuleCount > index) " READY" else ""
                     LoadingLine(text = "LOADING $module.....$readySuffix")
                 }
             }
-            if (visibleLineCount >= operationModules.size + 3) {
+            if (visibleLineCount >= homeModules.size + 3) {
                 LoadingLine(text = "SYSTEM READY")
             }
         }

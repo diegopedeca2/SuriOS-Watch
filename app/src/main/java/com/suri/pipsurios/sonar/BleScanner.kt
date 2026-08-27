@@ -9,6 +9,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.SystemClock
+import java.util.Locale
 
 enum class BleScanStatus {
     IDLE,
@@ -27,7 +28,8 @@ class BleScanner(private val context: Context) {
 
     fun hasRequiredPermissions(): Boolean =
         context.checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
-            context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            context.checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED &&
+            context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
     @SuppressLint("MissingPermission")
     fun start(
@@ -50,7 +52,12 @@ class BleScanner(private val context: Context) {
                     BleObservation(
                         temporaryId = temporaryId,
                         rssi = result.rssi,
-                        observedAt = SystemClock.elapsedRealtime()
+                        observedAt = SystemClock.elapsedRealtime(),
+                        deviceIdentifier = result.device.address.uppercase(Locale.US),
+                        deviceName = result.scanRecord?.deviceName,
+                        advertisingDataHex = result.scanRecord?.bytes?.toHexString(),
+                        deviceType = runCatching { result.device.type }.getOrNull(),
+                        observedAtEpochMillis = System.currentTimeMillis()
                     )
                 )
             }
@@ -104,3 +111,6 @@ class BleScanner(private val context: Context) {
         nextSessionId = 1
     }
 }
+
+private fun ByteArray.toHexString(): String =
+    joinToString(separator = "") { byte -> "%02X".format(Locale.US, byte.toInt() and 0xFF) }

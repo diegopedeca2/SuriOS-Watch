@@ -14,6 +14,9 @@ val PipGreenBright = Color(0xFF66FF99)
 // Verde tenue (texto secundario)
 val PipGreenDim = Color(0xFF009944)
 
+// Remote P.R.S. node marker
+val PipBlue = Color(0xFF33AAFF)
+
 // Gris (elementos desactivados)
 val PipGray = Color(0xFF5A5A5A)
 

@@ -15,27 +15,77 @@ class SonarTestingRecorder(private val sink: (CalibrationRecord) -> Unit) {
         contactLost = false
     }
 
-    fun observe(observation: BleObservation, contact: SonarContact, timestampEpochMillis: Long) {
+    fun observe(
+        observation: BleObservation,
+        contact: SonarContact,
+        timestampEpochMillis: Long,
+        probeLink: String? = null,
+        probeRssi: Int? = null,
+        probeSampleCount: Int = 0
+    ) {
         val sample = active ?: return
         if (observation.temporaryId != sample.temporaryContactId) return
         scanCount++
         if (contactLost) {
-            write(sample, timestampEpochMillis, CalibrationEvent.CONTACT_RECOVERED, contact = contact)
+            write(
+                sample,
+                timestampEpochMillis,
+                CalibrationEvent.CONTACT_RECOVERED,
+                contact = contact,
+                probeLink = probeLink,
+                probeRssi = probeRssi,
+                probeSampleCount = probeSampleCount
+            )
             contactLost = false
         }
-        write(sample, timestampEpochMillis, CalibrationEvent.OBSERVATION, observation, contact)
+        write(
+            sample,
+            timestampEpochMillis,
+            CalibrationEvent.OBSERVATION,
+            observation,
+            contact,
+            probeLink = probeLink,
+            probeRssi = probeRssi,
+            probeSampleCount = probeSampleCount
+        )
     }
 
-    fun contactExpired(contact: SonarContact, timestampEpochMillis: Long) {
+    fun contactExpired(
+        contact: SonarContact,
+        timestampEpochMillis: Long,
+        probeLink: String? = null,
+        probeRssi: Int? = null,
+        probeSampleCount: Int = 0
+    ) {
         val sample = active ?: return
         if (contact.temporaryId != sample.temporaryContactId || contactLost) return
         contactLost = true
-        write(sample, timestampEpochMillis, CalibrationEvent.CONTACT_LOST, contact = contact)
+        write(
+            sample,
+            timestampEpochMillis,
+            CalibrationEvent.CONTACT_LOST,
+            contact = contact,
+            probeLink = probeLink,
+            probeRssi = probeRssi,
+            probeSampleCount = probeSampleCount
+        )
     }
 
-    fun complete(timestampEpochMillis: Long): CalibrationSample? {
+    fun complete(
+        timestampEpochMillis: Long,
+        probeLink: String? = null,
+        probeRssi: Int? = null,
+        probeSampleCount: Int = 0
+    ): CalibrationSample? {
         val sample = active ?: return null
-        write(sample, timestampEpochMillis, CalibrationEvent.SAMPLE_COMPLETE)
+        write(
+            sample,
+            timestampEpochMillis,
+            CalibrationEvent.SAMPLE_COMPLETE,
+            probeLink = probeLink,
+            probeRssi = probeRssi,
+            probeSampleCount = probeSampleCount
+        )
         active = null
         return sample
     }
@@ -48,7 +98,10 @@ class SonarTestingRecorder(private val sink: (CalibrationRecord) -> Unit) {
         timestamp: Long,
         event: CalibrationEvent,
         observation: BleObservation? = null,
-        contact: SonarContact? = null
+        contact: SonarContact? = null,
+        probeLink: String? = null,
+        probeRssi: Int? = null,
+        probeSampleCount: Int = 0
     ) {
         sink(
             CalibrationRecord(
@@ -71,7 +124,12 @@ class SonarTestingRecorder(private val sink: (CalibrationRecord) -> Unit) {
                 contactAgeMillis = null,
                 scanCount = scanCount,
                 event = event,
-                notes = sample.notes
+                notes = sample.notes,
+                nodeMode = sample.nodeMode,
+                probeSessionId = sample.probeSessionId,
+                probeLink = probeLink,
+                probeRssi = probeRssi,
+                probeSampleCount = probeSampleCount
             )
         )
     }

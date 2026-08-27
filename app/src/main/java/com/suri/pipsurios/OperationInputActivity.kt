@@ -273,7 +273,7 @@ private fun VerticalInputFrame(
             VerticalAction("NEXT", if (nextEnabled) PipGreen else PipGreenDim, onNext, nextEnabled)
         }
         Text(
-            "PIP-SuriOS v2.1",
+            "PIP-SuriOS v2.2",
             color = PipGreenDim,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,

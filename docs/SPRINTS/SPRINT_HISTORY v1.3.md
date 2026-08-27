@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-26
+last_updated: 2026-08-27
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 011 | Sprint 011 completado; PIP-SuriOS v2.1 estable |
+| PIP-SuriOS | Ninguno | Sprint 013 | Sprint 013 completado; PIP-SuriOS v2.2 estable para pruebas experimentales |
 
 ---
 
@@ -55,6 +55,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 009 | PIP-SuriOS | DATA, Statistics, Log, UNIFORM y consolidación visible v1.9 | Aprobado | Completado | 2026-08-10 | 2026-08-12 | [Sprint 009 v1.0](SPRINT_009_v1.0.md) |
 | 010 | PIP-SuriOS | RADS v2, STORAGE y consolidación visible v2.0 | Aprobado | Completado | 2026-08-12 | 2026-08-12 | [Sprint 010 v1.0](SPRINT_010_v1.0.md) |
 | 011 | PIP-SuriOS | SONAR-TESTING, MAP TERRAIN NAVY7, SELECT SKIN y consolidación visible v2.1 | Aprobado | Completado | 2026-08-12 | 2026-08-26 | [Sprint 011 v1.0](SPRINT_011_v1.0.md) |
+| 012 | PIP-SuriOS | Reorganización de HOMESCREEN, TOOLS y menú P.R.S. | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 012 v1.0](SPRINT_012_v1.0.md) |
+| 013 | PIP-SuriOS | P.R.S. v2.0, P.R.S. REMOTE PROBE, doble lectura y P.R.S. TESTING | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 013 v1.0](SPRINT_013_v1.0.md) |
 
 ---
 
@@ -82,6 +84,8 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 5. Sprint 009 — DATA, Statistics, Log, UNIFORM y consolidación visible v1.9. **Implementado y cerrado.**
 6. Sprint 010 — Cerrado. RADS v2 y STORAGE. PIP-SuriOS v2.0.
 7. Sprint 011 — Cerrado. SONAR-TESTING, MAP TERRAIN NAVY7 y SELECT SKIN. PIP-SuriOS v2.1.
+8. Sprint 012 — Cerrado. Reorganización de HOMESCREEN, TOOLS y P.R.S. PIP-SuriOS v2.1.
+9. Sprint 013 — Cerrado. P.R.S. v2.0, REMOTE PROBE, doble lectura y P.R.S. TESTING. PIP-SuriOS v2.2.
 
 ---
 
@@ -536,8 +540,8 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### Ecosistema
 
-- Sprints registrados: 15.
-- Sprints completados: 15.
+- Sprints registrados: 17.
+- Sprints completados: 17.
 - Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
@@ -552,25 +556,27 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 011.
-- Versión vigente: PIP-SuriOS v2.1.
+- Último Sprint completado: Sprint 013.
+- Versión vigente: PIP-SuriOS v2.2.
 - Sprints activos: 0.
 - Sprint 009: completado y cerrado.
 - Sprint 010: completado y cerrado.
 - Sprint 011: completado y cerrado.
+- Sprint 012: completado y cerrado.
+- Sprint 013: completado y cerrado.
 ---
 
 ## 20. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 011 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 013 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
 
-Sprint 011 está cerrado y PIP-SuriOS v2.1 constituye la versión móvil consolidada vigente. Sprint 012 no se ha iniciado.
+Sprint 012 está cerrado y PIP-SuriOS v2.2 constituye la versión móvil consolidada vigente tras el cierre de Sprint 013.
 
 PIW-SuriOS v1.9 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.1 con DATA permanente, STORAGE, RADS v2, SONAR estable, SONAR-TESTING experimental, MAP TERRAIN NAVY7 offline y SELECT SKIN constituye el estado móvil funcional vigente. Sprint 011 está cerrado y Sprint 012 no se ha iniciado.
+PIP-SuriOS v2.2 con DATA permanente, STORAGE, RADS v2, P.R.S. v1.0/v2.0, P.R.S. TESTING dual, REMOTE PROBE experimental, MAP TERRAIN NAVY7 offline, SELECT SKIN y TOOLS reorganizado constituye el estado móvil funcional vigente. Sprint 013 está cerrado.
 
 ---
 
@@ -612,4 +618,29 @@ Se completaron build, incremental, lint, suite unitaria, pruebas instrumentadas 
 
 Documento de cierre: [Sprint 011 v1.0](SPRINT_011_v1.0.md).
 
-Sprint 011 queda cerrado. PIP-SuriOS v2.1 queda consolidado, no existe ningún Sprint activo y Sprint 012 no se ha iniciado.
+Sprint 011 queda cerrado. PIP-SuriOS v2.1 quedó consolidado en ese Sprint; el trabajo posterior se documenta en la sección de cierre de Sprint 012.
+
+---
+
+## 23. Cierre de Sprint 012 de PIP-SuriOS
+
+Sprint 012 se abrió y se cerró el 2026-08-27, manteniendo `PIP-SuriOS v2.1` como versión consolidada.
+
+HOMESCREEN se reorganizó en dos columnas: SET-UP, CURRENT GEAR e INVENTORY a la izquierda; STATUS, DATA y TOOLS a la derecha. MAP y COMMS pasaron a TOOLS, que ahora se presenta en orden alfabético.
+
+Se añadió el menú PROXIMITY RADIO SCANNER con pantalla de carga propia y título `P.R.S.`. Sus entradas `P.R.S. v1.0` y `P.R.S. TESTING` conservan respectivamente la funcionalidad del escáner BLE y del flujo experimental SONAR-TESTING anterior. La lógica BLE, los umbrales y la persistencia no se duplicaron.
+
+Las firmas visibles continúan como `PIP-SuriOS v2.1` y el `versionName` técnico de la aplicación queda alineado en `2.1`.
+
+Se completaron assembleDebug, suite unitaria, lint, `git diff --check` y la comprobación manual de navegación y arranque en Samsung Galaxy A56 y Pixel 8 Emulator.
+
+Documento de cierre: [Sprint 012 v1.0](SPRINT_012_v1.0.md).
+
+Sprint 012 queda cerrado. PIP-SuriOS v2.1 queda consolidado y no existe ningún Sprint activo posterior.
+## Sprint 013 - P.R.S. v2.0, REMOTE PROBE y P.R.S. TESTING
+
+| Sprint | Proyecto | Objetivo | Estado documental | Implementacion | Inicio | Fin | Documento |
+|---:|---|---|---|---|---|---|---|
+| 013 | PIP-SuriOS | P.R.S. v2.0, REMOTE PROBE, doble lectura y P.R.S. TESTING | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 013 v1.0](SPRINT_013_v1.0.md) |
+
+Sprint 013 queda cerrado técnica, funcional y documentalmente. PIP-SuriOS v2.2 y PIW-SuriOS v2.0 quedan registrados como versiones consolidadas para pruebas experimentales. No existe un Sprint activo posterior.

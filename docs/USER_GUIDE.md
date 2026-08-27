@@ -1,6 +1,6 @@
 # PIP-SuriOS - User Guide
 
-Manual oficial de usuario — PIP-SuriOS v2.1
+Manual oficial de usuario — PIP-SuriOS v2.2
 
 ## Índice
 
@@ -25,7 +25,7 @@ PIP-SuriOS es una aplicación móvil de apoyo operativo con una estética inspir
 
 Está pensada principalmente para utilizarse en un Samsung Galaxy A56 en orientación horizontal. La pantalla TEXT > MORSE utiliza orientación vertical para facilitar la escritura con el teclado.
 
-La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y RADS funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y SONAR necesita Bluetooth y sus permisos correspondientes.
+La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y RADS funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y P.R.S. v1.0/P.R.S. v2.0 necesitan Bluetooth y sus permisos correspondientes. La guía de campo de P.R.S. está disponible en `TOOLS > PROXIMITY RADIO SCANNER > OPERATION GUIDE`.
 
 ## 2. Inicio de la aplicación
 
@@ -33,7 +33,7 @@ Al abrir PIP-SuriOS aparece una secuencia de arranque automática:
 
 1. `LOADING...`
 2. `LOG-IN ID: SURI-14 VERIFIED`
-3. Los módulos de HOME se inicializan en el orden INVENTORY, MAP, COMMS, DATA, CURRENT GEAR, STATUS y TOOLS. Cada línea muestra primero `LOADING MÓDULO.....` y después `READY`.
+3. Los módulos de HOME se inicializan en el orden SET-UP, CURRENT GEAR, INVENTORY, STATUS, DATA y TOOLS. Cada línea muestra primero `LOADING MÓDULO.....` y después `READY`.
 4. `SYSTEM READY`
 5. `SELECT SKIN`
 
@@ -46,23 +46,22 @@ La selección no se recuerda al cerrar la aplicación. Las skins cambian únicam
 
 ## 3. HOME
 
-### OPERATION
+### HOMESCREEN
 
-La pantalla `OPERATION - HOMESCREEN` es el punto principal de acceso. Contiene:
+La pantalla `HOMESCREEN` es el punto principal de acceso. Contiene:
 
+- **SET-UP:** configuración personal y preferencias de equipamiento.
+- **CURRENT GEAR:** preparación del equipo utilizado en la partida más reciente.
 - **INVENTORY:** consulta de armas, consumibles, equipamiento y complementos.
-- **MAP:** selección de los modos cartográficos TERRAIN y OPERATION.
-- **COMMS:** tabla de frecuencias PMR y MORSE TERMINAL.
-- **DATA:** registro permanente, consulta, edición, borrado y estadísticas de operaciones.
-- **CURRENT GEAR:** preparación del equipo de la sesión.
 - **STATUS:** consulta del Loadout Activo y checklist DON'T FORGET.
-- **TOOLS:** acceso a RADS y SONAR.
+- **DATA:** registro permanente, consulta, edición, borrado y estadísticas de operaciones.
+- **TOOLS:** acceso a COMMS, MAP, PROXIMITY RADIO SCANNER y RADS.
 
-Algunos módulos muestran brevemente `LOADING...` antes de abrirse. Utilice `< BACK` para regresar al nivel anterior.
+MAP y COMMS se abren desde TOOLS. Algunos módulos muestran brevemente `LOADING...` antes de abrirse. Utilice `< BACK` para regresar al nivel anterior.
 
 ## 4. MAP
 
-Desde HOME OPERATION, pulse **MAP** y elija uno de sus dos modos.
+Desde HOMESCREEN, pulse **TOOLS > MAP** y elija uno de sus dos modos.
 
 ### MAP TERRAIN
 
@@ -91,7 +90,7 @@ La aplicación externa puede solicitar su propia configuración, conexión o per
 
 ## 5. COMMS
 
-Desde HOME OPERATION, pulse **COMMS**. Después de la pantalla de carga puede elegir **FREQUENCIES** o **MORSE**.
+Desde HOMESCREEN, pulse **TOOLS > COMMS**. Después de la pantalla de carga puede elegir **FREQUENCIES** o **MORSE**.
 
 ### PMR Frequencies
 
@@ -142,7 +141,7 @@ La transmisión luminosa sigue las proporciones estándar de Morse:
 
 ## 6. INVENTORY
 
-Desde HOME OPERATION, pulse **INVENTORY**. El módulo se divide en tres apartados.
+Desde HOMESCREEN, pulse **INVENTORY**. El módulo se divide en tres apartados.
 
 ### ARMORY
 
@@ -190,7 +189,7 @@ Las entradas marcadas como `UNDER CONSTRUCTION` todavía no tienen información 
 
 ## 7. CURRENT GEAR
 
-CURRENT GEAR permite preparar el equipo que se utilizará durante la sesión. Desde HOME OPERATION, pulse **CURRENT GEAR** y configure los apartados necesarios:
+CURRENT GEAR permite consultar y preparar el equipo utilizado en la partida más reciente. Desde HOMESCREEN, pulse **CURRENT GEAR** y configure los apartados necesarios:
 
 - PRIMARY WEAPON
 - SECONDARY WEAPON
@@ -209,7 +208,7 @@ Si sale sin pulsar APPLY, STATUS continúa mostrando el último Loadout Activo c
 
 ## 8. STATUS
 
-Desde HOME OPERATION, pulse **STATUS** para consultar el Loadout Activo confirmado mediante APPLY.
+Desde HOMESCREEN, pulse **STATUS** para consultar el Loadout Activo confirmado mediante APPLY.
 
 STATUS muestra:
 
@@ -281,7 +280,7 @@ Los valores vacíos o históricos que no correspondan a una opción válida no i
 
 ## 10. TOOLS
 
-Desde HOME OPERATION, pulse **TOOLS**. Tras `LOADING...` puede elegir RADS, SONAR o SONAR-TESTING.
+Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de PROXIMITY RADIO SCANNER están P.R.S. v2.0, P.R.S. v1.0, P.R.S. TESTING y OPERATION GUIDE.
 
 Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen instrumentos de medición profesionales.
 
@@ -299,9 +298,9 @@ Pulse **VOLUME DOWN** para alternar silenciosamente entre `RADS` y `RADS.`. El p
 
 RADS no mide radiación real. Su modo `RADS.` utiliza orientación únicamente como control inmersivo.
 
-### SONAR
+### P.R.S. v1.0
 
-SONAR busca señales Bluetooth Low Energy cercanas y utiliza su intensidad para ofrecer una estimación aproximada de proximidad. Antes de entrar, active Bluetooth y conceda el permiso solicitado por Android.
+P.R.S. v1.0 (Proximity Radio Scanner) busca señales Bluetooth Low Energy cercanas y utiliza su intensidad para ofrecer una estimación aproximada de proximidad. Entre en **TOOLS > PROXIMITY RADIO SCANNER > P.R.S. v1.0**, active Bluetooth y conceda el permiso solicitado por Android.
 
 `SURI-14` representa el dispositivo del usuario en el centro del radar. Cada señal activa aparece como un punto situado en uno de estos anillos:
 
@@ -310,32 +309,56 @@ SONAR busca señales Bluetooth Low Energy cercanas y utiliza su intensidad para 
 - **MEDIUM:** señal intermedia.
 - **FAR:** señal débil.
 
-La posición alrededor del círculo es únicamente una representación visual estable. **No indica la dirección física del dispositivo.** SONAR tampoco calcula metros ni muestra una distancia exacta: sólo utiliza la intensidad de la señal BLE para estimar proximidad.
+La posición alrededor del círculo es únicamente una representación visual estable. **No indica la dirección física del dispositivo.** P.R.S. v1.0 tampoco calcula metros ni muestra una distancia exacta: sólo utiliza la intensidad de la señal BLE para estimar proximidad.
 
 El panel CONTACTS muestra los totales CURRENT y NEW, además del reparto activo entre VERY CLOSE, CLOSE, MEDIUM y FAR. El panel SCAN muestra el estado del escaneo, el baseline y el acceso a CALIBRATE.
 
 #### CALIBRATE
 
-Pulse **CALIBRATE** antes de realizar el barrido de una zona nueva. SONAR observará durante unos segundos las señales que ya forman parte del entorno.
+Pulse **CALIBRATE** antes de realizar el barrido de una zona nueva. P.R.S. v1.0 observará durante unos segundos las señales que ya forman parte del entorno.
 
 - **BACKGROUND:** contacto presente durante la calibración y considerado conocido.
 - **NEW:** contacto detectado después de la calibración que no formaba parte del entorno conocido.
 
-Los contactos que dejan de recibirse desaparecen automáticamente tras un breve periodo. La calibración y la lista de contactos sólo existen durante la sesión actual de SONAR.
+Los contactos que dejan de recibirse desaparecen automáticamente tras un breve periodo. La calibración y la lista de contactos sólo existen durante la sesión actual de P.R.S. v1.0.
 
-#### Sonidos de SONAR
+#### Sonidos de P.R.S. v1.0
 
 - **Pulso de barrido:** suena al comenzar cada vuelta del radar.
 - **Aviso BACKGROUND:** pitido breve y discreto cuando el barrido atraviesa un contacto conocido.
 - **Aviso NEW:** pitido más fuerte y perceptible cuando atraviesa un contacto nuevo.
 
-Cada contacto genera como máximo un aviso en cada pasada. El sonido se detiene al salir de SONAR o enviar la aplicación a segundo plano.
+Cada contacto genera como máximo un aviso en cada pasada. El sonido se detiene al salir de P.R.S. v1.0 o enviar la aplicación a segundo plano.
 
-SONAR no muestra nombres de dispositivos, direcciones MAC ni información personal. Detectar una señal electrónica no significa detectar o localizar a una persona.
+P.R.S. v1.0 no muestra nombres de dispositivos, direcciones MAC ni información personal. Detectar una señal electrónica no significa detectar o localizar a una persona.
 
-### SONAR-TESTING
+### P.R.S. v2.0
 
-SONAR-TESTING es una herramienta experimental para recoger datos de calibración BLE; no modifica automáticamente el SONAR estable ni sus umbrales.
+P.R.S. v2.0 es un cribado de indicios de dispositivos BLE pensado para comprobar una puerta antes de acceder a una estancia sin visibilidad. Se abre desde **TOOLS > PROXIMITY RADIO SCANNER > P.R.S. v2.0** y requiere Bluetooth activo, ubicación activada y los permisos de Bluetooth/ubicación solicitados por Android.
+
+El procedimiento compara dos posiciones consecutivas:
+
+1. Sitúese en el pasillo o zona de referencia, mantenga el teléfono quieto y pulse **START REFERENCE**. La referencia dura aproximadamente 8 segundos.
+2. Sin cambiar de sesión, sitúese junto a la puerta cerrada, mantenga el teléfono en una posición estable y pulse **START DOOR SCAN**. El escaneo dura aproximadamente 12 segundos.
+3. Consulte `NEW SIGNALS`, `STABLE SIGNALS`, `STRONGEST RSSI` y `SIGNAL INDEX` junto al resultado final. Si el Watch 2 esta activo, `WATCH` y `MATCHED` muestran el estado de la segunda lectura y el punto azul identifica el nodo de enlace, no una coordenada.
+
+Los resultados se expresan deliberadamente como evidencia radioeléctrica:
+
+- **NO DEVICE SIGNAL:** no aparecieron señales nuevas respecto a la referencia.
+- **POSSIBLE SIGNAL:** apareció al menos una señal nueva, pero con poca estabilidad.
+- **PROBABLE SIGNAL:** aparecieron señales nuevas estables o una señal nueva estable con intensidad alta.
+
+`SIGNAL INDEX` es un índice heurístico de apoyo, no una probabilidad estadística. P.R.S. v2.0 **no detecta personas, no confirma que una señal esté al otro lado de la puerta y no debe utilizarse como único criterio para entrar**. Un resultado `NO DEVICE SIGNAL` no demuestra que la estancia esté vacía.
+
+### P.R.S. TESTING
+
+#### Revision de campo
+
+En la pantalla de preparacion se pueden describir las condiciones de una prueba para facilitar la calibracion posterior: objetivo, posicion NORTH/SOUTH/EAST/WEST, entorno (`OPEN FIELD`, `WALL / DOOR`, `PERSON BLOCKING`, `BAG / POCKET` o `CUSTOM`), colocacion, orientacion y notas libres. Se puede elegir `A56 ONLY / WITHOUT WATCH` como control o `A56 + WATCH 2 / DUAL NODE` para la lectura doble. Esa informacion se guarda en el CSV junto con los metadatos de la sonda.
+
+Para el grid de P.R.S. v2.0 use primero `START CLOSE SCAN` y despues `START WIDE SCAN`. El telefono aparece en el centro; los puntos verdes son lecturas de la pasada corta y los puntos ambar son lecturas nuevas de la pasada amplia.
+
+P.R.S. TESTING es una herramienta experimental para recoger datos de calibración BLE; no modifica automáticamente P.R.S. v1.0 ni sus umbrales. Se abre desde **TOOLS > PROXIMITY RADIO SCANNER > P.R.S. TESTING**.
 
 1. En `SET TEST`, seleccione TARGET, tipo de prueba, posición física NORTH/SOUTH/EAST/WEST y notas opcionales.
 2. En `IDENTIFY TARGET`, coloque temporalmente el objetivo junto a SURI-14 e inicie la identificación guiada. Confirme el candidato encontrado o elija entre los candidatos mostrados si existe ambigüedad.
@@ -344,7 +367,7 @@ SONAR-TESTING es una herramienta experimental para recoger datos de calibración
 
 `NEXT SAMPLE` conserva temporalmente el target identificado y permite cambiar la posición. `RE-IDENTIFY TARGET` repite la identificación cuando se pierde el contacto. `RESET TEST` limpia únicamente el estado temporal, sin borrar sesiones anteriores ni el contador `CAL-###`.
 
-`EXPORT CSV` genera un archivo UTF-8 y abre el Sharesheet de Android. El usuario decide dónde guardarlo o compartirlo. Las sesiones no almacenan permanentemente MAC, nombre BLE ni identificadores de hardware.
+`EXPORT CSV` de `P.R.S. TESTING` genera un archivo UTF-8 y abre el Sharesheet de Android. `P.R.S. v2.0` no ofrece exportacion CSV; guarda la sesion de forma interna. El usuario decide donde guardar o compartir el CSV de Testing. Las sesiones pueden conservar el identificador observado de BLE para correlacionar los nodos y no deben interpretarse como identidad permanente.
 
 ## 11. Controles
 
@@ -358,7 +381,10 @@ Los controles principales de PIP-SuriOS son:
 | **CLEAR** | Borra por completo la entrada actual. |
 | **DELETE** | Elimina el último carácter o símbolo introducido. |
 | **STOP** | Cancela una transmisión Morse y apaga la linterna. |
-| **CALIBRATE** | Registra como BACKGROUND el entorno BLE actual de SONAR. |
+| **CALIBRATE** | Registra como BACKGROUND el entorno BLE actual de P.R.S. v1.0. |
+| **START REFERENCE** | Captura durante unos segundos las señales del pasillo o posición de referencia de P.R.S. v2.0. |
+| **START DOOR SCAN** | Captura la posición junto a la puerta y compara las señales nuevas con la referencia. |
+| **RESET** | Borra la encuesta temporal de P.R.S. v2.0 y permite comenzar otra. |
 | **TRANSMIT // FLASH** | Reproduce un mensaje Morse mediante la linterna. |
 
 Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecutar la acción indicada.
@@ -367,16 +393,21 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 
 - Las skins SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN permanecen en construcción.
 - MAP TERRAIN está técnicamente aceptado, pero su alineación GPS, heading, ergonomía, Geiger y consumo requieren validación física exterior en NAVY7.
-- CURRENT GEAR, el Loadout Activo, el checklist y la calibración de SONAR no se guardan permanentemente. Se pierden al cerrar o reiniciar la aplicación.
+- CURRENT GEAR, el Loadout Activo, el checklist y la calibración de P.R.S. v1.0 no se guardan permanentemente. Se pierden al cerrar o reiniciar la aplicación.
 - STORAGE sí conserva PURCHASE y USED permanentemente; BBs y los formatos individuales de GAS todavía no tienen consumo automático.
 - INVENTORY es informativo: no descuenta consumibles ni actualiza cantidades automáticamente.
 - MAP OPERATION depende de que CivTAK o Google Maps estén instalados y correctamente configurados.
 - TRANSMIT // FLASH depende de que el dispositivo tenga una linterna compatible.
 - RADS es una simulación y no mide radiación.
-- SONAR es experimental y sólo detecta señales BLE que Android y los dispositivos cercanos permitan descubrir.
+- P.R.S. v1.0 es experimental y sólo detecta señales BLE que Android y los dispositivos cercanos permitan descubrir.
+- P.R.S. v2.0 sólo analiza anuncios Bluetooth Low Energy; no descubre todas las conexiones Bluetooth clásicas ni dispositivos que no anuncien en ese momento.
+- Al comparar posiciones físicas, Android puede exigir `ACCESS_FINE_LOCATION` y que el servicio de ubicación esté activo; P.R.S. v2.0 solicita ese permiso junto con los permisos Bluetooth.
+- La identificación por dirección BLE puede cambiar por aleatorización de direcciones, por lo que un mismo dispositivo puede aparecer como una señal nueva.
+- P.R.S. v2.0 no puede separar de forma fiable una señal del pasillo de otra situada dentro de la estancia: paredes, puertas, obstáculos, potencia, orientación e interferencias alteran RSSI.
+- P.R.S. v2.0 es un indicador de apoyo situacional y no un sistema de detección de ocupación ni un mecanismo de seguridad.
 - La intensidad BLE puede variar por paredes, obstáculos, orientación, interferencias, potencia de emisión o posición del teléfono.
-- Las categorías de SONAR indican proximidad aproximada; no representan metros ni dirección física.
-- SONAR necesita Bluetooth activo y permisos de escaneo.
+- Las categorías de P.R.S. v1.0 indican proximidad aproximada; no representan metros ni dirección física.
+- P.R.S. v1.0 necesita Bluetooth activo y permisos de escaneo.
 - Un emulador puede mostrar la interfaz y el audio, pero normalmente no reproduce un entorno BLE físico comparable al de un teléfono real.
 
 ## 13. Historial de versiones
@@ -389,9 +420,10 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v1.7** | Incorporación de TOOLS con el contador posteriormente denominado RADS y SONAR, junto con sus sonidos y refinamientos visuales. |
 | **v1.9** | Incorporación del historial DATA con alta, consulta, edición, borrado y estadísticas; UNIFORM en todo el flujo; RADS; nueva disposición de SONAR y refinamientos de arranque y DON'T FORGET. |
 | **v2.0** | RADS V2 con control progresivo y modo de inclinación; STORAGE persistente con PURCHASE, USED, CONSUMED y TOTAL dinámico enlazado al historial operativo. |
-| **v2.1** | SONAR-TESTING experimental, MAP TERRAIN offline NAVY7 y selección inicial de skins. |
+| **v2.1** | P.R.S. TESTING experimental, P.R.S. v1.0/v2.0, MAP TERRAIN offline NAVY7, selección inicial de skins y reorganización de TOOLS. |
+| **v2.2** | P.R.S. REMOTE PROBE experimental para Xiaomi Watch 2, recepción Wi-Fi local en A56, almacenamiento bruto y comparación conservadora entre nodos. |
 
-PIP-SuriOS v2.1 incorpora la evolución funcional consolidada durante Sprint 011.
+PIP-SuriOS v2.2 incorpora el modo experimental P.R.S. REMOTE PROBE y mantiene la funcionalidad consolidada de v2.1.
 
 ## 14. Consejos de uso
 
@@ -400,7 +432,7 @@ PIP-SuriOS v2.1 incorpora la evolución funcional consolidada durante Sprint 011
 Antes de comenzar:
 
 - Cargue completamente el teléfono.
-- Active Bluetooth y compruebe que PIP-SuriOS dispone de los permisos necesarios para SONAR.
+- Active Bluetooth y compruebe que PIP-SuriOS dispone de los permisos necesarios para P.R.S. v1.0 y P.R.S. v2.0.
 - Compruebe que la linterna funciona si piensa utilizar TRANSMIT // FLASH.
 - Revise y prepare su equipamiento en CURRENT GEAR.
 - Pulse **APPLY** para confirmar el Loadout Activo antes de empezar.
@@ -419,15 +451,17 @@ Use PMR Frequencies como referencia rápida para consultar los canales y sus fre
 
 MORSE TERMINAL puede resultar útil cuando necesite transmitir una señal visual silenciosa mediante la linterna. Antes de utilizarlo, asegúrese de que el destello no pueda confundirse con una señal de seguridad o emergencia establecida por la organización de la partida.
 
-### Uso de SONAR
+### Uso de P.R.S.
 
 Para obtener una referencia más útil del entorno:
 
 - Pulse **CALIBRATE** antes de comenzar la partida.
 - Vuelva a calibrar si cambia significativamente de zona o si el entorno electrónico es diferente.
 - Interprete VERY CLOSE, CLOSE, MEDIUM y FAR únicamente como categorías aproximadas de proximidad.
-- Recuerde que SONAR detecta señales de dispositivos Bluetooth Low Energy compatibles, no personas.
-- Utilice SONAR como apoyo situacional y nunca como única fuente de información antes de entrar en una zona.
+- Recuerde que P.R.S. v1.0 detecta señales de dispositivos Bluetooth Low Energy compatibles, no personas.
+- Utilice P.R.S. v1.0 como apoyo situacional y nunca como única fuente de información antes de entrar en una zona.
+- Para una puerta, use P.R.S. v2.0 con una referencia en el pasillo y una segunda lectura junto a la puerta, manteniendo el teléfono quieto durante ambas ventanas.
+- Trate `POSSIBLE SIGNAL` y `PROBABLE SIGNAL` como motivos para obtener más información por medios seguros, no como autorización automática de acceso.
 
 Paredes, obstáculos, interferencias y la posición del teléfono pueden cambiar la categoría mostrada aunque el dispositivo detectado no se haya movido.
 

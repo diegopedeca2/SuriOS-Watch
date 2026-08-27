@@ -26,3 +26,5 @@ rootProject.name = "PIP-SuriOS"
 include(":app")
 include(":watchface")
 project(":watchface").projectDir = file("watch/watchface")
+include(":remoteprobe")
+project(":remoteprobe").projectDir = file("watch/remoteprobe")

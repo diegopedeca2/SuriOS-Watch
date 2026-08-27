@@ -1,5 +1,6 @@
 package com.suri.pipsurios
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.content.Intent
 import android.view.KeyEvent
@@ -9,8 +10,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,6 +42,10 @@ import com.suri.pipsurios.ui.screens.HomeCivilianScreen
 import com.suri.pipsurios.ui.screens.HomeOperationScreen
 import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerGuideScreen
+import com.suri.pipsurios.ui.screens.ProximityPresenceV2Screen
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterScreen
 import com.suri.pipsurios.ui.screens.ProximitySonarScreen
@@ -97,6 +100,8 @@ import com.suri.pipsurios.ui.screens.HeadgearCatalog
 import com.suri.pipsurios.ui.screens.UniformCatalog
 import com.suri.pipsurios.ui.screens.CurrentGearLoadingScreen
 import com.suri.pipsurios.ui.screens.CurrentGearScreen
+import com.suri.pipsurios.ui.screens.SetUpScreen
+import com.suri.pipsurios.ui.screens.SetUpPlaceholderScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
 import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
 import com.suri.pipsurios.ui.screens.AccesoriesScreen
@@ -150,6 +155,7 @@ class MainActivity : ComponentActivity() {
         if (hasFocus) hideStatusBar()
     }
 
+    @SuppressLint("RestrictedApi")
     override fun dispatchKeyEvent(event: KeyEvent): Boolean =
         if (volumeKeyController.handle(event)) true else super.dispatchKeyEvent(event)
 
@@ -170,6 +176,10 @@ private enum class PIPSuriOSDestination {
     HomeOperation,
     ToolsLoading,
     Tools,
+    ProximityRadioScannerLoading,
+    ProximityRadioScanner,
+    ProximityRadioScannerGuide,
+    ProximityPresenceV2,
     GeigerCounterLoading,
     GeigerCounter,
     ProximitySonar,
@@ -224,6 +234,14 @@ private enum class PIPSuriOSDestination {
     CurrentGearHeadgear,
     CurrentGearFrontPanel,
     CurrentGearUniform,
+    SetUp,
+    SetUpOperator,
+    SetUpPrimaryWeapon,
+    SetUpSecondaryWeapon,
+    SetUpAccesories,
+    SetUpHeadgear,
+    SetUpFrontPanel,
+    SetUpUniform,
     StatusLoading,
     Status,
     StatusDontForget,
@@ -256,6 +274,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     var morseOutput by remember { mutableStateOf("") }
     var draftLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
     var activeLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
+    var setupLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
     var operationDraft by remember { mutableStateOf(OperationDraft()) }
     var operationSaveError by remember { mutableStateOf<String?>(null) }
     var operationSaving by remember { mutableStateOf(false) }
@@ -552,12 +571,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
         }
     }
 
-    Crossfade(
-        targetState = destination,
-        animationSpec = tween(durationMillis = 300),
-        label = "PIPSuriOSNavigation"
-    ) { currentDestination ->
-        when (currentDestination) {
+    when (destination) {
             PIPSuriOSDestination.Splash -> PIPSuriOSScreen(
                 onFinished = { destination = PIPSuriOSDestination.Loading }
             )
@@ -584,10 +598,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             PIPSuriOSDestination.HomeOperation -> HomeOperationScreen(
                 onBack = { destination = PIPSuriOSDestination.ModeSelection },
                 onInventorySelected = { destination = PIPSuriOSDestination.InventoryLoading },
-                onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
-                onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
                 onDataSelected = { destination = PIPSuriOSDestination.DataLoading },
                 onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
+                onSetUpSelected = { destination = PIPSuriOSDestination.SetUp },
                 onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading },
                 onToolsSelected = { destination = PIPSuriOSDestination.ToolsLoading }
             )
@@ -597,16 +610,34 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             )
 
             PIPSuriOSDestination.Tools -> ToolsScreen(
+                onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
+                onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
                 onGeigerCounterSelected = {
                     destination = PIPSuriOSDestination.GeigerCounterLoading
                 },
-                onProximitySonarSelected = {
-                    destination = PIPSuriOSDestination.ProximitySonar
-                },
-                onSonarTestingSelected = {
-                    destination = PIPSuriOSDestination.SonarTesting
+                onProximityRadioScannerSelected = {
+                    destination = PIPSuriOSDestination.ProximityRadioScannerLoading
                 },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.ProximityRadioScannerLoading -> ProximityRadioScannerLoadingScreen(
+                onFinished = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.ProximityRadioScanner -> ProximityRadioScannerScreen(
+                onV2Selected = { destination = PIPSuriOSDestination.ProximityPresenceV2 },
+                onVersionSelected = { destination = PIPSuriOSDestination.ProximitySonar },
+                onTestingSelected = { destination = PIPSuriOSDestination.SonarTesting },
+                onGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerGuide },
+                onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+            PIPSuriOSDestination.ProximityRadioScannerGuide -> ProximityRadioScannerGuideScreen(
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.ProximityPresenceV2 -> ProximityPresenceV2Screen(
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
 
             PIPSuriOSDestination.GeigerCounterLoading -> GeigerCounterLoadingScreen(
@@ -623,7 +654,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             )
 
             PIPSuriOSDestination.SonarTesting -> SonarTestingScreen(
-                onBack = { destination = PIPSuriOSDestination.Tools }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
 
             PIPSuriOSDestination.DataLoading -> DataLoadingScreen(
@@ -1022,7 +1053,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
 
             PIPSuriOSDestination.InventoryHeadgearBrotherhood -> InventoryVisualMenuScreen(
                 title = "HEADGEAR - BROTHERHOOD",
-                entries = listOf("> HELMET", "> NVG", "> GAS MASK", "> SECURITY GOGLES"),
+                entries = listOf("> HELMET", "> NVG", "> GAS MASK", "> SECURITY GOGGLES"),
                 onBack = { destination = PIPSuriOSDestination.InventoryLoadoutsHeadgear }
             )
 
@@ -1085,6 +1116,58 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
+            PIPSuriOSDestination.SetUp -> SetUpScreen(
+                onOperatorSelected = { destination = PIPSuriOSDestination.SetUpOperator },
+                onPrimaryWeaponSelected = { destination = PIPSuriOSDestination.SetUpPrimaryWeapon },
+                onSecondaryWeaponSelected = { destination = PIPSuriOSDestination.SetUpSecondaryWeapon },
+                onAccesoriesSelected = { destination = PIPSuriOSDestination.SetUpAccesories },
+                onHeadgearSelected = { destination = PIPSuriOSDestination.SetUpHeadgear },
+                onFrontPanelSelected = { destination = PIPSuriOSDestination.SetUpFrontPanel },
+                onUniformSelected = { destination = PIPSuriOSDestination.SetUpUniform },
+                onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.SetUpOperator -> SetUpPlaceholderScreen(
+                title = "SET-UP - OPERATOR",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+            PIPSuriOSDestination.SetUpPrimaryWeapon -> PrimaryWeaponScreen(
+                configuration = setupLoadout,
+                onConfigurationChanged = { setupLoadout = it },
+                titlePrefix = "SET-UP",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+            PIPSuriOSDestination.SetUpSecondaryWeapon -> SecondaryWeaponScreen(
+                configuration = setupLoadout,
+                onConfigurationChanged = { setupLoadout = it },
+                titlePrefix = "SET-UP",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+            PIPSuriOSDestination.SetUpAccesories -> AccesoriesScreen(
+                configuration = setupLoadout,
+                onConfigurationChanged = { setupLoadout = it },
+                titlePrefix = "SET-UP",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+            PIPSuriOSDestination.SetUpHeadgear -> HeadgearScreen(
+                configuration = setupLoadout,
+                onConfigurationChanged = { setupLoadout = it },
+                titlePrefix = "SET-UP",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+            PIPSuriOSDestination.SetUpFrontPanel -> FrontPanelScreen(
+                configuration = setupLoadout,
+                onConfigurationChanged = { setupLoadout = it },
+                titlePrefix = "SET-UP",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+            PIPSuriOSDestination.SetUpUniform -> UniformScreen(
+                configuration = setupLoadout,
+                onConfigurationChanged = { setupLoadout = it },
+                titlePrefix = "SET-UP",
+                onBack = { destination = PIPSuriOSDestination.SetUp }
+            )
+
             PIPSuriOSDestination.CurrentGearSecondaryWeapon -> SecondaryWeaponScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
@@ -1137,7 +1220,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             PIPSuriOSDestination.CommsModeSelection -> CommsModeSelectionScreen(
                 onFrequenciesSelected = { destination = PIPSuriOSDestination.CommsFrequencies },
                 onMorseSelected = { destination = PIPSuriOSDestination.MorseModeSelection },
-                onBack = { destination = PIPSuriOSDestination.HomeOperation }
+                onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
             PIPSuriOSDestination.CommsFrequencies -> CommsScreen(
@@ -1181,7 +1264,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             PIPSuriOSDestination.MapModeSelection -> MapModeSelectionScreen(
                 onTerrainSelected = { destination = PIPSuriOSDestination.MapTerrain },
                 onOperationSelected = { destination = PIPSuriOSDestination.MapOperation },
-                onBack = { destination = PIPSuriOSDestination.HomeOperation }
+                onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
             PIPSuriOSDestination.MapTerrain -> MapTerrainScreen(
@@ -1202,7 +1285,6 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onExternalLaunch = { destination = PIPSuriOSDestination.MapModeSelection }
             )
         }
-    }
 }
 
 @Composable
@@ -1240,7 +1322,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v2.1",
+                text = "PIP-SuriOS v2.2",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

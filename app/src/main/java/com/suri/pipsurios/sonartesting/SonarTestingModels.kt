@@ -9,7 +9,32 @@ object SonarTestingTuning {
 
 enum class CalibrationTarget(val label: String, val optional: Boolean = false) {
     FLIP_6("FLIP 6"), HONOR_8("HONOR 8"), MOTOROLA("MOTOROLA"), WATCH_2("WATCH 2"),
-    CHECHU("CHECHU", optional = true)
+    WATCH_ULTRA("EXTRA 1"),
+    CHECHU("EXTRA 2", optional = true)
+}
+
+/** Plain-language labels used to describe a field measurement. */
+enum class FieldEnvironment(val label: String) {
+    OPEN_FIELD("OPEN FIELD"),
+    WALL_OR_DOOR("WALL / DOOR"),
+    PERSON_BLOCKING("PERSON BLOCKING"),
+    BAG_OR_POCKET("BAG / POCKET"),
+    CUSTOM("CUSTOM")
+}
+
+enum class DevicePlacement(val label: String) {
+    IN_HAND("IN HAND"),
+    POCKET("POCKET"),
+    BACKPACK("BACKPACK"),
+    WRIST("WRIST"),
+    OTHER("OTHER")
+}
+
+enum class DeviceOrientation(val label: String) {
+    FACING_PHONE("FACING PHONE"),
+    SIDEWAYS("SIDEWAYS"),
+    BACK_TO_PHONE("BACK TO PHONE"),
+    UNKNOWN("UNKNOWN")
 }
 
 data class CalibrationPosition(
@@ -95,12 +120,19 @@ object SonarTargetIdentifier {
 }
 
 enum class CalibrationTestType { STATIC, MOVEMENT }
+
+/** Which physical detection nodes participate in a calibration sample. */
+enum class TestingNodeMode(val label: String, val usesRemoteProbe: Boolean) {
+    A56_ONLY("A56 ONLY / WITHOUT WATCH", false),
+    A56_AND_WATCH("A56 + WATCH 2 / DUAL NODE", true)
+}
+
 enum class CalibrationEvent { OBSERVATION, CONTACT_LOST, CONTACT_RECOVERED, SAMPLE_COMPLETE }
 
 data class CalibrationSession(
     val sessionId: String,
     val createdAtEpochMillis: Long,
-    val receiver: String = "Samsung Galaxy A56 — SONAR"
+    val receiver: String = "Samsung Galaxy A56 — P.R.S. TESTING"
 )
 
 data class CalibrationSample(
@@ -111,7 +143,9 @@ data class CalibrationSample(
     val position: CalibrationPosition?,
     val temporaryContactId: String,
     val startedAtEpochMillis: Long,
-    val notes: String
+    val notes: String,
+    val nodeMode: TestingNodeMode = TestingNodeMode.A56_ONLY,
+    val probeSessionId: String? = null
 )
 
 data class CalibrationRecord(
@@ -132,5 +166,10 @@ data class CalibrationRecord(
     val contactAgeMillis: Long?,
     val scanCount: Int,
     val event: CalibrationEvent,
-    val notes: String
+    val notes: String,
+    val nodeMode: TestingNodeMode = TestingNodeMode.A56_ONLY,
+    val probeSessionId: String? = null,
+    val probeLink: String? = null,
+    val probeRssi: Int? = null,
+    val probeSampleCount: Int = 0
 )

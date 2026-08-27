@@ -211,7 +211,7 @@ private fun ProximitySonarContent(
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
-            text = "SONAR",
+            text = "P.R.S. v1.0",
             color = PipGreen,
             fontSize = 30.sp,
             fontFamily = FontFamily.Monospace,
@@ -255,7 +255,7 @@ private fun ProximitySonarContent(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.1",
+            text = "PIP-SuriOS v2.2",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -445,5 +445,6 @@ private fun angleWasCrossed(previous: Float, current: Float, target: Float): Boo
 
 private val REQUIRED_BLUETOOTH_PERMISSIONS = arrayOf(
     Manifest.permission.BLUETOOTH_SCAN,
-    Manifest.permission.BLUETOOTH_CONNECT
+    Manifest.permission.BLUETOOTH_CONNECT,
+    Manifest.permission.ACCESS_FINE_LOCATION
 )

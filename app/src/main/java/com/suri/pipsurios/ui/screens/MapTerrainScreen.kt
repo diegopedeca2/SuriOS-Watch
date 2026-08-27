@@ -5,15 +5,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -56,11 +59,15 @@ import kotlin.math.roundToInt
 import java.util.UUID
 
 private enum class TerrainEditMode { NONE, ADD_RESPAWN, ADD_RAD_ZONE }
+private enum class TerrainCompassMode { GYRO, NORTH_UP }
 
 @Composable
 fun MapTerrainScreen(onBack: () -> Unit) {
     val context = LocalContext.current
-    val definition = OfflineMapCatalog.NAVY7
+    val mapOptions = OfflineMapCatalog.maps
+    var selectedMapId by remember { mutableStateOf(OfflineMapCatalog.NAVY7.mapId) }
+    var fieldMenuExpanded by remember { mutableStateOf(false) }
+    val definition = mapOptions.firstOrNull { it.mapId == selectedMapId } ?: mapOptions.first()
     val overlayRepository = remember { TerrainOverlayRepository.from(context.applicationContext) }
     val locationSource = remember { TerrainLocation(context.applicationContext) }
     val headingSource = remember { TerrainHeading(context.applicationContext) }
@@ -68,6 +75,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     var mapData by remember { mutableStateOf<MbTilesData?>(null) }
     var loadError by remember { mutableStateOf<String?>(null) }
     var overlays by remember { mutableStateOf(overlayRepository.load(definition.mapId)) }
+    var overlaysMapId by remember { mutableStateOf(definition.mapId) }
     var selection by remember { mutableStateOf<MapSelection>(MapSelection.None) }
     var editMode by remember { mutableStateOf(TerrainEditMode.NONE) }
     var draftZone by remember { mutableStateOf(emptyList<GeoPoint>()) }
@@ -79,15 +87,27 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     var geigerLevel by remember { mutableFloatStateOf(0f) }
     var heading by remember { mutableFloatStateOf(0f) }
     var headingStatus by remember { mutableStateOf("HEADING WAIT") }
+    var compassMode by remember { mutableStateOf(TerrainCompassMode.GYRO) }
     val radiation = remember { TerrainRadiationController() }
     val currentGeigerLevel by rememberUpdatedState(geigerLevel)
-    val currentHeading by rememberUpdatedState(heading)
+    val effectiveHeading = if (compassMode == TerrainCompassMode.GYRO) heading else 0f
+    val currentHeading by rememberUpdatedState(effectiveHeading)
     val currentCenter by rememberUpdatedState(center)
     val currentZoom by rememberUpdatedState(zoom)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(selectedMapId) {
+        mapData = null
+        loadError = null
+        selection = MapSelection.None
+        editMode = TerrainEditMode.NONE
+        draftZone = emptyList()
+        center = definition.bounds.center
+        zoom = 17.5f
+        overlays = withContext(Dispatchers.IO) { overlayRepository.load(definition.mapId) }
+        overlaysMapId = definition.mapId
         runCatching { withContext(Dispatchers.IO) { MbTilesRepository(context.applicationContext).load(definition) } }
-            .onSuccess { mapData = it }.onFailure { loadError = it.message ?: "MAP LOAD FAILED" }
+            .onSuccess { mapData = it }
+            .onFailure { loadError = it.message ?: "MAP LOAD FAILED" }
     }
     val tileCoverage = remember(mapData) {
         mapData?.let { TerrainTileCoverage.from(it.tiles.keys, definition.maxNativeZoom) }
@@ -100,7 +120,9 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         zoom = maxOf(zoom, minimumCoverageZoom)
         center = coverage.clampCenterForFullRotation(center, zoom, canvasSize.width, canvasSize.height)
     }
-    LaunchedEffect(overlays) { withContext(Dispatchers.IO) { overlayRepository.save(definition.mapId, overlays) } }
+    LaunchedEffect(overlaysMapId, overlays) {
+        withContext(Dispatchers.IO) { overlayRepository.save(overlaysMapId, overlays) }
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         if (locationSource.hasPermission()) {
@@ -112,8 +134,15 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         else permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
         onDispose { locationSource.stop(); clickScheduler.release() }
     }
-    DisposableEffect(headingSource) {
-        headingSource.start({ heading = it; headingStatus = "HDG ${it.roundToInt()}" }, { headingStatus = "HEADING UNAVAILABLE" })
+    DisposableEffect(headingSource, compassMode) {
+        if (compassMode == TerrainCompassMode.GYRO) {
+            headingSource.start(
+                { heading = it; headingStatus = "HDG ${it.roundToInt()}" },
+                { headingStatus = "HEADING UNAVAILABLE" }
+            )
+        } else {
+            headingStatus = "NORTH UP"
+        }
         onDispose { headingSource.stop() }
     }
 
@@ -148,111 +177,170 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         ?.takeIf { (geoToScreen(it.point) - offset).getDistance() <= 30f }
     fun hitZone(point: GeoPoint) = overlays.radZones.lastOrNull { TerrainGeometry.isInside(point, it.vertices) }
 
-    Box(Modifier.fillMaxSize().background(Color(0xFF050805))) {
-        val navigationModifier = if (editMode == TerrainEditMode.NONE) Modifier.pointerInput(tileCoverage, canvasSize) {
-            detectTransformGestures { centroid, pan, zoomChange, _ ->
-                val updated = viewportTransform().applyGesture(
-                    centroid.x, centroid.y, pan.x, pan.y, zoomChange,
-                    minimumCoverageZoom, definition.maxDisplayZoom.toFloat()
-                )
-                center = tileCoverage?.constrainCenterMovement(
-                    currentCenter, updated.center, updated.zoom, canvasSize.width, canvasSize.height
-                ) ?: clamp(updated.center, updated.zoom)
-                zoom = updated.zoom
-                selection = MapSelection.None
-            }
-        } else Modifier
-        Canvas(
-            Modifier.matchParentSize()
-                .onSizeChanged { canvasSize = it }
-                .then(navigationModifier)
-                .pointerInput(editMode, overlays, center, zoom) {
-                    detectTapGestures(
-                        onTap = { offset ->
-                            val point = screenToGeo(offset)
-                            val respawn = hitRespawn(offset); val zone = if (respawn == null) hitZone(point) else null
-                            when {
-                                respawn != null -> selection = MapSelection.RespawnSelected(respawn.id)
-                                zone != null -> selection = MapSelection.ZoneSelected(zone.id)
-                                editMode == TerrainEditMode.ADD_RESPAWN -> {
-                                    overlays = overlays.copy(respawns = overlays.respawns + Respawn(UUID.randomUUID().toString(), point)); editMode = TerrainEditMode.NONE
-                                }
-                                editMode == TerrainEditMode.ADD_RAD_ZONE -> draftZone = draftZone + point
-                                else -> selection = MapSelection.None
-                            }
-                        },
-                        onDoubleTap = { offset ->
-                            val point = screenToGeo(offset)
-                            if (hitRespawn(offset) == null && hitZone(point) == null && editMode == TerrainEditMode.NONE) selection = MapSelection.EmptyOffered
-                        }
-                    )
-                }
+    Row(Modifier.fillMaxSize().background(Color(0xFF050805))) {
+        Box(
+            Modifier
+                .weight(0.75f)
+                .fillMaxHeight()
+                .border(1.dp, PipGreenDim)
         ) {
-            drawRect(Color(0xFF050805))
-            val transform = viewportTransform()
-            clipRect {
-              rotate(-heading, Offset(transform.pivotX, transform.pivotY)) {
-            val data = mapData
-            if (data != null) {
-                val tileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
-                val scale = 2.0.pow(zoom.toDouble() - tileZoom).toFloat()
-                val centerPixel = WebMercator.toWorldPixel(center, tileZoom)
-                data.tiles.filterKeys { it.zoom == tileZoom }.forEach { (key, image) ->
-                    val x = (size.width / 2 + (key.x * 256.0 - centerPixel.x) * scale).roundToInt()
-                    val y = (size.height / 2 + (key.xyzY * 256.0 - centerPixel.y) * scale).roundToInt()
-                    drawImage(image, dstOffset = IntOffset(x, y), dstSize = IntSize(ceil(256 * scale).toInt(), ceil(256 * scale).toInt()))
+            val navigationModifier = if (editMode == TerrainEditMode.NONE) Modifier.pointerInput(tileCoverage, canvasSize) {
+                detectTransformGestures { centroid, pan, zoomChange, _ ->
+                    val updated = viewportTransform().applyGesture(
+                        centroid.x, centroid.y, pan.x, pan.y, zoomChange,
+                        minimumCoverageZoom, definition.maxDisplayZoom.toFloat()
+                    )
+                    center = tileCoverage?.constrainCenterMovement(
+                        currentCenter, updated.center, updated.zoom, canvasSize.width, canvasSize.height
+                    ) ?: clamp(updated.center, updated.zoom)
+                    zoom = updated.zoom
+                    selection = MapSelection.None
+                }
+            } else Modifier
+            Canvas(
+                Modifier.matchParentSize()
+                    .onSizeChanged { canvasSize = it }
+                    .then(navigationModifier)
+                    .pointerInput(editMode, overlays, center, zoom) {
+                        detectTapGestures(
+                            onTap = { offset ->
+                                val point = screenToGeo(offset)
+                                val respawn = hitRespawn(offset); val zone = if (respawn == null) hitZone(point) else null
+                                when {
+                                    respawn != null -> selection = MapSelection.RespawnSelected(respawn.id)
+                                    zone != null -> selection = MapSelection.ZoneSelected(zone.id)
+                                    editMode == TerrainEditMode.ADD_RESPAWN -> {
+                                        overlays = overlays.copy(respawns = overlays.respawns + Respawn(UUID.randomUUID().toString(), point)); editMode = TerrainEditMode.NONE
+                                    }
+                                    editMode == TerrainEditMode.ADD_RAD_ZONE -> draftZone = draftZone + point
+                                    else -> selection = MapSelection.None
+                                }
+                            },
+                            onDoubleTap = { offset ->
+                                val point = screenToGeo(offset)
+                                if (hitRespawn(offset) == null && hitZone(point) == null && editMode == TerrainEditMode.NONE) selection = MapSelection.EmptyOffered
+                            }
+                        )
+                    }
+            ) {
+                drawRect(Color(0xFF050805))
+                val transform = viewportTransform()
+                clipRect {
+                    rotate(-currentHeading, Offset(transform.pivotX, transform.pivotY)) {
+                        val data = mapData
+                        if (data != null) {
+                            val tileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
+                            val scale = 2.0.pow(zoom.toDouble() - tileZoom).toFloat()
+                            val centerPixel = WebMercator.toWorldPixel(center, tileZoom)
+                            data.tiles.filterKeys { it.zoom == tileZoom }.forEach { (key, image) ->
+                                val x = (size.width / 2 + (key.x * 256.0 - centerPixel.x) * scale).roundToInt()
+                                val y = (size.height / 2 + (key.xyzY * 256.0 - centerPixel.y) * scale).roundToInt()
+                                drawImage(image, dstOffset = IntOffset(x, y), dstSize = IntSize(ceil(256 * scale).toInt(), ceil(256 * scale).toInt()))
+                            }
+                        }
+                        overlays.radZones.forEach { zone ->
+                            val path = Path(); zone.vertices.map(::geoToMapScreen).forEachIndexed { i, p -> if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y) }; path.close()
+                            drawPath(path, PipRed.copy(alpha = 0.24f)); drawPath(path, PipRed, style = Stroke(3f))
+                        }
+                        if (draftZone.isNotEmpty()) {
+                            val path = Path(); draftZone.map(::geoToMapScreen).forEachIndexed { i, p -> if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y) }
+                            drawPath(path, PipAmber, style = Stroke(3f)); draftZone.forEach { drawCircle(PipAmber, 6f, geoToMapScreen(it)) }
+                        }
+                        overlays.respawns.forEach { respawn ->
+                            val p = geoToMapScreen(respawn.point)
+                            drawCircle(PipGreen, 11f, p, style = Stroke(3f))
+                            drawLine(PipGreen, p - Offset(16f,0f), p + Offset(16f,0f), 2f)
+                            drawLine(PipGreen, p - Offset(0f,16f), p + Offset(0f,16f), 2f)
+                        }
+                        fix?.let { drawCircle(if (definition.bounds.contains(it.point)) PipAmber else PipRed, 9f, geoToMapScreen(it.point)); drawCircle(PipAmber.copy(alpha=.5f), 18f, geoToMapScreen(it.point), style=Stroke(2f)) }
+                    }
                 }
             }
-            overlays.radZones.forEach { zone ->
-                val path = Path(); zone.vertices.map(::geoToMapScreen).forEachIndexed { i, p -> if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y) }; path.close()
-                drawPath(path, PipRed.copy(alpha = 0.24f)); drawPath(path, PipRed, style = Stroke(3f))
-            }
-            if (draftZone.isNotEmpty()) {
-                val path = Path(); draftZone.map(::geoToMapScreen).forEachIndexed { i, p -> if (i == 0) path.moveTo(p.x, p.y) else path.lineTo(p.x, p.y) }
-                drawPath(path, PipAmber, style = Stroke(3f)); draftZone.forEach { drawCircle(PipAmber, 6f, geoToMapScreen(it)) }
-            }
-            overlays.respawns.forEach { respawn -> val p = geoToMapScreen(respawn.point); drawCircle(PipGreen, 11f, p, style = Stroke(3f)); drawLine(PipGreen, p - Offset(16f,0f), p + Offset(16f,0f), 2f); drawLine(PipGreen, p - Offset(0f,16f), p + Offset(0f,16f), 2f) }
-            fix?.let { drawCircle(if (definition.bounds.contains(it.point)) PipAmber else PipRed, 9f, geoToMapScreen(it.point)); drawCircle(PipAmber.copy(alpha=.5f), 18f, geoToMapScreen(it.point), style=Stroke(2f)) }
-              }
-            }
         }
 
-        Text("MAP - TERRAIN / NAVY7", color=PipGreen, fontSize=20.sp, fontFamily=FontFamily.Monospace,
-            modifier=Modifier.align(Alignment.TopStart).background(PipBlack.copy(alpha=.84f)).padding(12.dp))
-        Column(Modifier.align(Alignment.CenterEnd).background(PipBlack.copy(alpha=.88f)).padding(10.dp), verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp)) {
-            TerrainAction("ADD RESPAWN", editMode == TerrainEditMode.NONE) { editMode = TerrainEditMode.ADD_RESPAWN; selection = MapSelection.None }
-            TerrainAction("ADD RAD ZONE", editMode == TerrainEditMode.NONE) { editMode = TerrainEditMode.ADD_RAD_ZONE; draftZone = emptyList(); selection = MapSelection.None }
-            if (editMode == TerrainEditMode.ADD_RAD_ZONE) TerrainAction("FINISH", draftZone.size >= 3) { overlays = overlays.copy(radZones = overlays.radZones + RadZone(UUID.randomUUID().toString(), draftZone)); draftZone=emptyList(); editMode=TerrainEditMode.NONE }
-            if (editMode != TerrainEditMode.NONE) TerrainAction("CANCEL") { editMode=TerrainEditMode.NONE; draftZone=emptyList() }
-        }
-
-        when (val current = selection) {
-            is MapSelection.RespawnSelected -> TerrainAction("DELETE", modifier = Modifier.offsetFor(geoToScreen(overlays.respawns.first { it.id == current.id }.point))) { selection = MapSelection.DeleteRespawnConfirm(current.id) }
-            is MapSelection.ZoneSelected -> {
-                val zone = overlays.radZones.first { it.id == current.id }; val centerPoint = zone.vertices.reduce { a,b -> GeoPoint(a.latitude+b.latitude,a.longitude+b.longitude) }.let { GeoPoint(it.latitude/zone.vertices.size,it.longitude/zone.vertices.size) }
-                TerrainAction("CLEAR", modifier = Modifier.offsetFor(geoToScreen(centerPoint))) { selection = MapSelection.ClearZoneConfirm(current.id) }
+        Column(
+            Modifier
+                .weight(0.25f)
+                .fillMaxHeight()
+                .background(PipBlack)
+                .border(1.dp, PipGreenDim)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text("MAP - TERRAIN", color=PipGreen, fontSize=18.sp, fontFamily=FontFamily.Monospace)
+                Text("FIELD", color=PipGreenDim, fontSize=12.sp, fontFamily=FontFamily.Monospace)
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, PipGreen)
+                        .clickable { fieldMenuExpanded = !fieldMenuExpanded }
+                        .padding(horizontal = 8.dp, vertical = 7.dp)
+                ) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(definition.name, color=PipGreen, fontSize=14.sp, fontFamily=FontFamily.Monospace)
+                        Text(if (fieldMenuExpanded) "^" else "v", color=PipGreen, fontSize=14.sp, fontFamily=FontFamily.Monospace)
+                    }
+                }
+                if (fieldMenuExpanded) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .border(1.dp, PipGreenDim)
+                            .padding(vertical = 2.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        mapOptions.forEach { option ->
+                            TerrainAction(
+                                text = "> ${option.name}",
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    selectedMapId = option.mapId
+                                    fieldMenuExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+                TerrainAction(
+                    text = "COMPASS: ${if (compassMode == TerrainCompassMode.GYRO) "GYRO" else "NORTH UP"}",
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    compassMode = if (compassMode == TerrainCompassMode.GYRO) {
+                        TerrainCompassMode.NORTH_UP
+                    } else {
+                        TerrainCompassMode.GYRO
+                    }
+                }
+                TerrainAction("ADD RESPAWN", editMode == TerrainEditMode.NONE, Modifier.fillMaxWidth()) { editMode = TerrainEditMode.ADD_RESPAWN; selection = MapSelection.None }
+                TerrainAction("ADD RAD ZONE", editMode == TerrainEditMode.NONE, Modifier.fillMaxWidth()) { editMode = TerrainEditMode.ADD_RAD_ZONE; draftZone = emptyList(); selection = MapSelection.None }
+                if (editMode == TerrainEditMode.ADD_RAD_ZONE) TerrainAction("FINISH", draftZone.size >= 3, Modifier.fillMaxWidth()) { overlays = overlays.copy(radZones = overlays.radZones + RadZone(UUID.randomUUID().toString(), draftZone)); draftZone=emptyList(); editMode=TerrainEditMode.NONE }
+                if (editMode != TerrainEditMode.NONE) TerrainAction("CANCEL", modifier = Modifier.fillMaxWidth()) { editMode=TerrainEditMode.NONE; draftZone=emptyList() }
+                when (val current = selection) {
+                    is MapSelection.RespawnSelected -> TerrainAction("DELETE", modifier = Modifier.fillMaxWidth()) { selection = MapSelection.DeleteRespawnConfirm(current.id) }
+                    is MapSelection.ZoneSelected -> TerrainAction("CLEAR", modifier = Modifier.fillMaxWidth()) { selection = MapSelection.ClearZoneConfirm(current.id) }
+                    MapSelection.EmptyOffered -> TerrainAction("EMPTY MAP", modifier = Modifier.fillMaxWidth()) { selection = MapSelection.EmptyConfirm }
+                    else -> Unit
+                }
+                if (selection is MapSelection.DeleteRespawnConfirm || selection is MapSelection.ClearZoneConfirm || selection == MapSelection.EmptyConfirm) {
+                    TerrainAction("CONFIRM", modifier=Modifier.fillMaxWidth()) {
+                        overlays = when (val current=selection) {
+                            is MapSelection.DeleteRespawnConfirm -> overlays.copy(respawns=overlays.respawns.filterNot { it.id==current.id })
+                            is MapSelection.ClearZoneConfirm -> overlays.copy(radZones=overlays.radZones.filterNot { it.id==current.id })
+                            MapSelection.EmptyConfirm -> MapOverlays()
+                            else -> overlays
+                        }
+                        selection=MapSelection.None
+                    }
+                }
             }
-            MapSelection.EmptyOffered -> TerrainAction("EMPTY MAP", modifier=Modifier.align(Alignment.Center)) { selection = MapSelection.EmptyConfirm }
-            else -> Unit
-        }
-        if (selection is MapSelection.DeleteRespawnConfirm || selection is MapSelection.ClearZoneConfirm || selection == MapSelection.EmptyConfirm) {
-            TerrainAction("CONFIRM", modifier=Modifier.align(Alignment.BottomEnd).padding(22.dp)) {
-                overlays = when (val current=selection) {
-                    is MapSelection.DeleteRespawnConfirm -> overlays.copy(respawns=overlays.respawns.filterNot { it.id==current.id })
-                    is MapSelection.ClearZoneConfirm -> overlays.copy(radZones=overlays.radZones.filterNot { it.id==current.id })
-                    MapSelection.EmptyConfirm -> MapOverlays()
-                    else -> overlays
-                }; selection=MapSelection.None
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(loadError ?: "$locationStatus  $headingStatus  Z${"%.1f".format(zoom)}", color=if(loadError==null) PipGreenDim else PipRed, fontSize=11.sp, fontFamily=FontFamily.Monospace)
+                TerrainAction("< BACK", editMode == TerrainEditMode.NONE, Modifier.fillMaxWidth(), onBack)
             }
         }
-        Text(loadError ?: "$locationStatus  $headingStatus  Z${"%.1f".format(zoom)}", color=if(loadError==null) PipGreenDim else PipRed, fontSize=12.sp, fontFamily=FontFamily.Monospace, modifier=Modifier.align(Alignment.BottomCenter).background(PipBlack.copy(alpha=.84f)).padding(10.dp))
-        TerrainAction("< BACK", editMode == TerrainEditMode.NONE, Modifier.align(Alignment.BottomStart).padding(18.dp), onBack)
     }
 }
-
-private fun Modifier.offsetFor(position: Offset) = this.then(
-    Modifier.offset { IntOffset(position.x.roundToInt() + 18, position.y.roundToInt() + 18) }
-)
 
 @Composable
 private fun TerrainAction(text: String, enabled: Boolean=true, modifier: Modifier=Modifier, onClick:()->Unit) {

@@ -15,7 +15,14 @@ enum class ContactState {
 data class BleObservation(
     val temporaryId: String,
     val rssi: Int,
-    val observedAt: Long
+    val observedAt: Long,
+    /** The best identifier exposed by Android for cross-node correlation. */
+    val deviceIdentifier: String = temporaryId,
+    val deviceName: String? = null,
+    val advertisingDataHex: String? = null,
+    val deviceType: Int? = null,
+    /** Wall-clock timestamp used when observations are persisted or transmitted. */
+    val observedAtEpochMillis: Long = System.currentTimeMillis()
 )
 
 data class SonarContact(

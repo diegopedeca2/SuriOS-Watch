@@ -4,7 +4,8 @@ object CalibrationCsv {
     val columns = listOf(
         "session_id", "sample_id", "test_type", "target", "position_id", "north_m",
         "east_m", "condition", "timestamp_epoch_ms", "elapsed_ms", "rssi_raw",
-        "rssi_smoothed", "category", "state", "contact_age_ms", "scan_count", "event", "notes"
+        "rssi_smoothed", "category", "state", "contact_age_ms", "scan_count", "event", "notes",
+        "node_mode", "probe_session_id", "probe_link", "probe_rssi", "probe_sample_count"
     )
 
     fun encode(records: Iterable<CalibrationRecord>): String = buildString {
@@ -16,7 +17,9 @@ object CalibrationCsv {
                     record.positionId, record.northMeters, record.eastMeters, record.condition,
                     record.timestampEpochMillis, record.elapsedMillis, record.rawRssi,
                     record.smoothedRssi, record.category?.name?.replace('_', ' '), record.state?.name,
-                    record.contactAgeMillis, record.scanCount, record.event.name, record.notes
+                    record.contactAgeMillis, record.scanCount, record.event.name, record.notes,
+                    record.nodeMode.name, record.probeSessionId, record.probeLink,
+                    record.probeRssi, record.probeSampleCount
                 ).joinToString(",") { escape(it?.toString().orEmpty()) }
             )
         }

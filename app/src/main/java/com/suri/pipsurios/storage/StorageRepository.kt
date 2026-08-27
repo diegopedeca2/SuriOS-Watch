@@ -3,7 +3,6 @@ package com.suri.pipsurios.storage
 import android.content.Context
 import java.io.File
 import java.math.BigDecimal
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.nio.file.AtomicMoveNotSupportedException
@@ -50,7 +49,7 @@ class StorageRepository(private val file: File) {
         val directory = requireNotNull(file.parentFile) { "STORAGE DIRECTORY UNAVAILABLE" }
         directory.mkdirs()
         val temporary = Files.createTempFile(directory.toPath(), ".storage-", ".tmp")
-        Files.writeString(temporary, encode(ledger), StandardCharsets.UTF_8)
+        temporary.toFile().writeText(encode(ledger), Charsets.UTF_8)
         try {
             Files.move(temporary, file.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
         } catch (_: AtomicMoveNotSupportedException) {

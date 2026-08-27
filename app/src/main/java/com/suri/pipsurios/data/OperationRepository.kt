@@ -6,7 +6,6 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
-import java.nio.file.StandardOpenOption
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.StandardCopyOption
 import java.nio.file.Path
@@ -43,13 +42,7 @@ data class OperationLogCollection(
 class OperationRepository(
     private val operationsDirectory: File,
     private val updateWriter: (Path, String) -> Unit = { path, content ->
-        Files.writeString(
-            path,
-            content,
-            StandardCharsets.UTF_8,
-            StandardOpenOption.TRUNCATE_EXISTING,
-            StandardOpenOption.WRITE
-        )
+        path.toFile().writeText(content, StandardCharsets.UTF_8)
     }
 ) {
     private val validFilename = Regex("^\\d{8}\\.json$")
@@ -62,13 +55,10 @@ class OperationRepository(
         }
         val file = File(operationsDirectory, "$filenameBase.json")
         return try {
-            Files.writeString(
-                file.toPath(),
-                OperationJsonCodec.serialize(log),
-                StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE_NEW,
-                StandardOpenOption.WRITE
-            )
+            if (!file.createNewFile()) {
+                throw FileAlreadyExistsException(file.toPath().toString())
+            }
+            file.writeText(OperationJsonCodec.serialize(log), StandardCharsets.UTF_8)
             SaveOperationResult.Saved(file)
         } catch (_: FileAlreadyExistsException) {
             SaveOperationResult.AlreadyExists(file)

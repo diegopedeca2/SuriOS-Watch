@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
+import com.suri.pipsurios.ui.theme.PipRed
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import kotlinx.coroutines.delay
 
@@ -91,15 +92,81 @@ fun CurrentGearScreen(
 }
 
 @Composable
+fun SetUpScreen(
+    onOperatorSelected: () -> Unit,
+    onPrimaryWeaponSelected: () -> Unit,
+    onSecondaryWeaponSelected: () -> Unit,
+    onAccesoriesSelected: () -> Unit,
+    onHeadgearSelected: () -> Unit,
+    onFrontPanelSelected: () -> Unit,
+    onUniformSelected: () -> Unit,
+    onBack: () -> Unit
+) {
+    CurrentGearLayout(title = "SET-UP", onBack = onBack) {
+        Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+            listOf(
+                "> OPERATOR", "> PRIMARY WEAPON", "> SECONDARY WEAPON", "> ACCESORIES",
+                "> HEADGEAR", "> FRONT PANEL", "> UNIFORM"
+            ).forEach { entry ->
+                Text(
+                    text = entry,
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable(
+                        onClick = when (entry) {
+                            "> OPERATOR" -> onOperatorSelected
+                            "> PRIMARY WEAPON" -> onPrimaryWeaponSelected
+                            "> SECONDARY WEAPON" -> onSecondaryWeaponSelected
+                            "> ACCESORIES" -> onAccesoriesSelected
+                            "> HEADGEAR" -> onHeadgearSelected
+                            "> FRONT PANEL" -> onFrontPanelSelected
+                            else -> onUniformSelected
+                        }
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SetUpPlaceholderScreen(title: String, onBack: () -> Unit) {
+    CurrentGearLayout(title = title, onBack = onBack) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(title.removePrefix("SET-UP - "), color = PipGreen, fontSize = 24.sp, fontFamily = FontFamily.Monospace)
+            Text("UNDER CONSTRUCTION", color = PipRed, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
+        }
+    }
+}
+
+@Composable
+fun OperatorScreen(onBack: () -> Unit) {
+    CurrentGearLayout(title = "CURRENT GEAR - OPERATOR", onBack = onBack) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text("OPERATOR", color = PipGreen, fontSize = 24.sp, fontFamily = FontFamily.Monospace)
+            Text("UNDER CONSTRUCTION", color = PipRed, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
+        }
+    }
+}
+
+@Composable
 fun PrimaryWeaponScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    titlePrefix: String = "CURRENT GEAR"
 ) {
     var roleExpanded by remember { mutableStateOf(false) }
     var weaponExpanded by remember { mutableStateOf(false) }
 
-    CurrentGearLayout(title = "CURRENT GEAR - PRIMARY WEAPON", onBack = onBack) {
+    CurrentGearLayout(title = "$titlePrefix - PRIMARY WEAPON", onBack = onBack) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(48.dp),
             verticalAlignment = Alignment.Top
@@ -145,14 +212,15 @@ fun PrimaryWeaponScreen(
 fun SecondaryWeaponScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    titlePrefix: String = "CURRENT GEAR"
 ) {
     val handgunWeapons = SecondaryWeaponCatalog.handgun
     val demolitionWeapons = SecondaryWeaponCatalog.demolition
     var typeExpanded by remember { mutableStateOf(false) }
     var weaponExpanded by remember { mutableStateOf(false) }
 
-    CurrentGearLayout(title = "CURRENT GEAR - SECONDARY WEAPON", onBack = onBack) {
+    CurrentGearLayout(title = "$titlePrefix - SECONDARY WEAPON", onBack = onBack) {
         Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
             TerminalDropdown(
                 label = "TYPE",
@@ -199,7 +267,8 @@ fun SecondaryWeaponScreen(
 fun AccesoriesScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    titlePrefix: String = "CURRENT GEAR"
 ) {
     val accesories = listOf(
         InventoryItem.DETON_A,
@@ -210,7 +279,7 @@ fun AccesoriesScreen(
     )
     var expanded by remember { mutableStateOf(false) }
 
-    CurrentGearLayout(title = "CURRENT GEAR - ACCESORIES", onBack = onBack) {
+    CurrentGearLayout(title = "$titlePrefix - ACCESORIES", onBack = onBack) {
         Box(modifier = Modifier.offset(y = (-12).dp)) {
             TerminalMultiSelect(
                 label = "ACCESORIES",
@@ -239,7 +308,7 @@ fun AccesoriesScreen(
 
 enum class HeadgearProfile(val displayName: String, val items: List<String>) {
     SURI_14("SURI-14", listOf("VYPER", "DYE MASK")),
-    BROTHERHOOD("BROTHERHOOD", listOf("HELMET", "NVG", "GAS MASK", "SECURITY GOGLES"))
+    BROTHERHOOD("BROTHERHOOD", listOf("HELMET", "NVG", "GAS MASK", "SECURITY GOGGLES"))
 }
 
 object HeadgearCatalog {
@@ -254,14 +323,15 @@ object UniformCatalog {
 fun HeadgearScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    titlePrefix: String = "CURRENT GEAR"
 ) {
     val selectedProfile = HeadgearProfile.entries.find {
         it.displayName == configuration.headgearProfile
     }
     var profileExpanded by remember { mutableStateOf(false) }
 
-    CurrentGearLayout(title = "CURRENT GEAR - HEADGEAR", onBack = onBack) {
+    CurrentGearLayout(title = "$titlePrefix - HEADGEAR", onBack = onBack) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(48.dp),
             verticalAlignment = Alignment.Top
@@ -298,14 +368,15 @@ enum class FrontPanelRole(val displayName: String, val panels: List<InventoryIte
 fun FrontPanelScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    titlePrefix: String = "CURRENT GEAR"
 ) {
     val selectedRole = FrontPanelRole.entries.find {
         it.displayName == configuration.frontPanelRole
     }
     var roleExpanded by remember { mutableStateOf(false) }
 
-    CurrentGearLayout(title = "CURRENT GEAR - FRONT PANEL", onBack = onBack) {
+    CurrentGearLayout(title = "$titlePrefix - FRONT PANEL", onBack = onBack) {
         Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
             TerminalDropdown(
                 label = "ROLE",
@@ -333,11 +404,12 @@ fun FrontPanelScreen(
 fun UniformScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    titlePrefix: String = "CURRENT GEAR"
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    CurrentGearLayout(title = "CURRENT GEAR - UNIFORM", onBack = onBack) {
+    CurrentGearLayout(title = "$titlePrefix - UNIFORM", onBack = onBack) {
         TerminalDropdown(
             label = "UNIFORM",
             value = configuration.uniform ?: "SELECT UNIFORM",
@@ -495,7 +567,7 @@ private fun CurrentGearLayout(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.1",
+            text = "PIP-SuriOS v2.2",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

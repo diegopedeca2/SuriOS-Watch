@@ -41,10 +41,101 @@ fun ToolsLoadingScreen(onFinished: () -> Unit) {
 }
 
 @Composable
+fun ProximityRadioScannerLoadingScreen(onFinished: () -> Unit) {
+    LaunchedEffect(Unit) {
+        delay(1_500)
+        onFinished()
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize().background(PipBlack),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "LOADING...",
+            color = PipGreen,
+            fontSize = 30.sp,
+            fontFamily = FontFamily.Monospace
+        )
+    }
+}
+
+@Composable
+fun ProximityRadioScannerScreen(
+    onV2Selected: () -> Unit,
+    onVersionSelected: () -> Unit,
+    onTestingSelected: () -> Unit,
+    onGuideSelected: () -> Unit,
+    onBack: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+        Text(
+            text = "P.R.S.",
+            color = PipGreen,
+            fontSize = 30.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+        )
+
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "> P.R.S. v2.0",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onV2Selected)
+            )
+            Text(
+                text = "> P.R.S. v1.0",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onVersionSelected)
+            )
+            Text(
+                text = "> P.R.S. TESTING",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onTestingSelected)
+            )
+            Text(
+                text = "> OPERATION GUIDE",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onGuideSelected)
+            )
+        }
+
+        Text(
+            text = "< BACK",
+            color = PipGreenDim,
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
+        )
+
+        Text(
+            text = "PIP-SuriOS v2.2",
+            color = PipGreenDim,
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
+        )
+    }
+}
+
+@Composable
 fun ToolsScreen(
+    onMapSelected: () -> Unit,
+    onCommsSelected: () -> Unit,
     onGeigerCounterSelected: () -> Unit,
-    onProximitySonarSelected: () -> Unit,
-    onSonarTestingSelected: () -> Unit,
+    onProximityRadioScannerSelected: () -> Unit,
     onBack: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
@@ -62,25 +153,32 @@ fun ToolsScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
+                text = "> COMMS",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onCommsSelected)
+            )
+            Text(
+                text = "> MAP",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onMapSelected)
+            )
+            Text(
+                text = "> PROXIMITY RADIO SCANNER",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onProximityRadioScannerSelected)
+            )
+            Text(
                 text = "> RADS",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onGeigerCounterSelected)
-            )
-            Text(
-                text = "> SONAR",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onProximitySonarSelected)
-            )
-            Text(
-                text = "> SONAR-TESTING",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onSonarTestingSelected)
             )
         }
 
@@ -93,7 +191,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.1",
+            text = "PIP-SuriOS v2.2",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -2,10 +2,8 @@ package com.suri.pipsurios.sonartesting
 
 import android.content.Context
 import java.io.File
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.nio.file.StandardOpenOption
 import java.util.Properties
 
 class SonarTestingRepository(private val root: File) {
@@ -46,10 +44,10 @@ class SonarTestingRepository(private val root: File) {
     fun append(record: CalibrationRecord) {
         val file = File(requireSessionDirectory(record.sessionId), "observations.csv")
         if (!file.exists()) {
-            Files.writeString(file.toPath(), CalibrationCsv.columns.joinToString(",") + "\n", StandardCharsets.UTF_8)
+            file.writeText(CalibrationCsv.columns.joinToString(",") + "\n", Charsets.UTF_8)
         }
         val row = CalibrationCsv.encode(listOf(record)).lineSequence().drop(1).first() + "\n"
-        Files.writeString(file.toPath(), row, StandardCharsets.UTF_8, StandardOpenOption.APPEND)
+        file.appendText(row, Charsets.UTF_8)
     }
 
     fun exportFile(sessionId: String): File? =
