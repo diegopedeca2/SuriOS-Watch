@@ -1,7 +1,7 @@
 # Análisis de vulnerabilidades — PIP-SuriOS v2.2
 
-**Fecha:** 2026-08-27  
-**Commit auditado:** `fcc4bb9`  
+**Fecha:** 2026-08-27
+**Commit auditado:** `fcc4bb9`
 **Alcance:** `:app` en Galaxy A56, P.R.S. v1.0/v2.0, P.R.S. TESTING, `:remoteprobe` en Xiaomi Watch 2 y `:watchface`.
 
 ## Resultado ejecutivo
@@ -23,7 +23,7 @@ El sistema no debe considerarse seguro para una red no confiable. El enlace expe
 
 ### SEC-01 — Gateway local sin autenticación y HTTP en claro
 
-**Severidad:** Alta para una red no confiable; media para el hotspot privado del ensayo.  
+**Severidad:** Alta para una red no confiable; media para el hotspot privado del ensayo.
 **Estado:** Abierto, aceptado temporalmente para el prototipo.
 
 **Evidencia:**
@@ -43,7 +43,7 @@ Introducir autenticación por sesión con secreto aleatorio, vincular el secreto
 
 ### SEC-02 — Falta de límites robustos de entrada y recursos en el gateway
 
-**Severidad:** Media.  
+**Severidad:** Media.
 **Estado:** Abierto.
 
 **Evidencia:**
@@ -63,7 +63,7 @@ Limitar tamaño de línea/cabeceras/cuerpo, número de observaciones por lote, l
 
 ### SEC-03 — Backup de datos internos de la app móvil
 
-**Severidad:** Media de privacidad.  
+**Severidad:** Media de privacidad.
 **Estado:** Abierto.
 
 **Evidencia:**
@@ -82,7 +82,7 @@ Excluir `remote-probe/`, `sonar-testing/` y cualquier registro sensible de Auto 
 
 ### SEC-04 — Telemetría BLE identificable conservada y exportable
 
-**Severidad:** Baja-media de privacidad.  
+**Severidad:** Baja-media de privacidad.
 **Estado:** Abierto.
 
 **Evidencia:**
@@ -99,7 +99,7 @@ Aplicar retención limitada, consentimiento explícito y exportación bajo acci�
 
 ### SEC-05 — Posible inyección de fórmulas en CSV compartido
 
-**Severidad:** Baja.  
+**Severidad:** Baja.
 **Estado:** Abierto.
 
 **Evidencia:**
