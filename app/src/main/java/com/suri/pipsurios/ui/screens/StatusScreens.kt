@@ -66,7 +66,7 @@ fun StatusScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            StatusEntry("PRIMARY WEAPON", activeLoadout.primaryWeapon?.displayName)
+            StatusEntry("PRIMARY WEAPON", activeLoadout.primaryWeaponDisplayName())
             StatusEntry("SECONDARY WEAPON", activeLoadout.secondaryWeapon?.displayName)
             StatusEntry(
                 "ACCESORIES",
@@ -98,7 +98,7 @@ fun StatusScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.2",
+            text = "PIP-SuriOS v2.3",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -165,7 +165,7 @@ fun DontForgetScreen(activeLoadout: LoadoutConfiguration, onBack: () -> Unit) {
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.2",
+            text = "PIP-SuriOS v2.3",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

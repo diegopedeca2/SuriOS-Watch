@@ -13,8 +13,8 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 35
         targetSdk = 37
-        versionCode = 2
-        versionName = "2.2"
+        versionCode = 3
+        versionName = "2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

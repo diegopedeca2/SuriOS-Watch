@@ -107,7 +107,8 @@ enum class InventoryItem(val displayName: String) {
     DETON_A("DETON-A"),
     THUNDER_B("THUNDER B"),
     TANTO("TANTO"),
-    MINI_KNIFE("MINI KNIFE")
+    MINI_KNIFE("MINI KNIFE"),
+    WATCH_2("WATCH 2")
 }
 
 enum class PrimaryWeaponRole(
@@ -317,6 +318,11 @@ private fun inventoryItemDetails(item: InventoryItem): InventoryItemDetails = wh
         title = "ACCESORIES - MINI KNIFE",
         underConstruction = true
     )
+
+    InventoryItem.WATCH_2 -> InventoryItemDetails(
+        title = "ACCESORIES - WATCH 2",
+        underConstruction = true
+    )
 }
 
 private fun section(
@@ -367,7 +373,7 @@ private fun InventoryLayout(
         )
 
         Text(
-            text = "PIP-SuriOS v2.2",
+            text = "PIP-SuriOS v2.3",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -8,5 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pip_black">#FF000000</color>
-    <color name="pip_green">#FF00FF66</color>
+    <color name="pip_green">#FF66FF66</color>
 </resources>

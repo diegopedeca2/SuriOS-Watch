@@ -17,7 +17,7 @@ data class OperationLoadoutSnapshot(
     companion object {
         fun from(loadout: LoadoutConfiguration): OperationLoadoutSnapshot =
             OperationLoadoutSnapshot(
-                primaryWeapon = loadout.primaryWeapon?.displayName,
+                primaryWeapon = loadout.primaryWeaponDisplayName(),
                 secondaryWeapon = loadout.secondaryWeapon?.displayName,
                 accesories = loadout.accesories.map { it.displayName }.sorted(),
                 headgear = loadout.headgearProfile,

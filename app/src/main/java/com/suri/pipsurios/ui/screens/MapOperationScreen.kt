@@ -66,7 +66,7 @@ fun MapOperationScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.2",
+            text = "PIP-SuriOS v2.3",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

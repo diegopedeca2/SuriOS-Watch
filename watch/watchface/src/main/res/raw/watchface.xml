@@ -299,6 +299,32 @@
                 </PartText>
 
                 <PartDraw
+                    name="surios_probe_outline"
+                    height="30"
+                    width="96"
+                    x="177"
+                    y="205">
+                    <Rectangle height="30" width="96" x="0" y="0">
+                        <Stroke color="#FF66FF66" thickness="1" />
+                    </Rectangle>
+                </PartDraw>
+
+                <PartText
+                    name="surios_probe"
+                    height="30"
+                    width="96"
+                    x="177"
+                    y="205">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF66FF66"
+                            family="SYNC_TO_DEVICE"
+                            size="20">PROBE</Font>
+                    </Text>
+                    <Launch target="com.suri.surioswatch.remoteprobe/com.suri.surioswatch.remoteprobe.RemoteProbeActivity" />
+                </PartText>
+
+                <PartDraw
                     name="surios_status_reference_outline"
                     height="30"
                     width="96"

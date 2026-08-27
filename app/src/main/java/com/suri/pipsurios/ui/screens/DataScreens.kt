@@ -390,7 +390,7 @@ fun OperationEditLoadoutScreen(
 ) {
     val primaryOptions = PrimaryWeaponRole.entries.flatMap { it.weapons }.map { it.displayName }
     val secondaryOptions = SecondaryWeaponCatalog.weapons.map { it.displayName }
-    val accessoryOptions = listOf("DETON-A", "THUNDER B", "TANTO", "MINI KNIFE", "VOLCANO")
+    val accessoryOptions = listOf("DETON-A", "THUNDER B", "TANTO", "MINI KNIFE", "VOLCANO", "WATCH 2")
     val headgearOptions = HeadgearCatalog.profiles
     val frontPanelOptions = FrontPanelRole.entries.map { it.displayName }
     val uniformOptions = UniformCatalog.options
@@ -532,7 +532,7 @@ fun OperationLoadoutScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DataValue("PRIMARY WEAPON", activeLoadout.primaryWeapon?.displayName)
+            DataValue("PRIMARY WEAPON", activeLoadout.primaryWeaponDisplayName())
             DataValue("SECONDARY WEAPON", activeLoadout.secondaryWeapon?.displayName)
             DataValue(
                 "ACCESORIES",
@@ -636,7 +636,7 @@ private fun DataFrame(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.2",
+            text = "PIP-SuriOS v2.3",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -34,7 +34,8 @@ enum class ComplementRole(
             InventoryItem.THUNDER_B,
             InventoryItem.TANTO,
             InventoryItem.MINI_KNIFE,
-            InventoryItem.VOLCANO
+            InventoryItem.VOLCANO,
+            InventoryItem.WATCH_2
         )
     )
 }

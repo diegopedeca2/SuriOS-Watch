@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,13 +26,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipRed
+import com.suri.pipsurios.data.OperatorField
+import com.suri.pipsurios.data.OperatorProfile
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import kotlinx.coroutines.delay
 
@@ -93,6 +106,30 @@ fun CurrentGearScreen(
 
 @Composable
 fun SetUpScreen(
+    onInputSelected: () -> Unit,
+    onDataSelected: () -> Unit,
+    onBack: () -> Unit
+) {
+    CurrentGearLayout(title = "SET-UP", onBack = onBack) {
+        Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+            listOf(
+                "> INPUT" to onInputSelected,
+                "> DATA" to onDataSelected
+            ).forEach { (entry, action) ->
+                Text(
+                    text = entry,
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable(onClick = action)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SetUpInputScreen(
     onOperatorSelected: () -> Unit,
     onPrimaryWeaponSelected: () -> Unit,
     onSecondaryWeaponSelected: () -> Unit,
@@ -102,7 +139,7 @@ fun SetUpScreen(
     onUniformSelected: () -> Unit,
     onBack: () -> Unit
 ) {
-    CurrentGearLayout(title = "SET-UP", onBack = onBack) {
+    CurrentGearLayout(title = "SET-UP - INPUT", onBack = onBack) {
         Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
             listOf(
                 "> OPERATOR", "> PRIMARY WEAPON", "> SECONDARY WEAPON", "> ACCESORIES",
@@ -128,6 +165,107 @@ fun SetUpScreen(
             }
         }
     }
+}
+
+@Composable
+fun SetUpDataScreen(
+    operatorProfile: OperatorProfile,
+    setupLoadout: LoadoutConfiguration,
+    onEditOperatorField: (OperatorField) -> Unit,
+    onDeleteOperatorField: (OperatorField) -> Unit,
+    onEditPrimaryWeapon: () -> Unit,
+    onDeletePrimaryRole: () -> Unit,
+    onDeletePrimaryWeapon: () -> Unit,
+    onBack: () -> Unit
+) {
+    val operatorFields = listOf(
+        OperatorField.ID,
+        OperatorField.NAME,
+        OperatorField.CALLSIGN,
+        OperatorField.NUMBER,
+        OperatorField.COUNTRY,
+        OperatorField.TEAM
+    )
+
+    CurrentGearLayout(title = "SET-UP - DATA", onBack = onBack) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 560.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text("OPERATOR", color = PipGreen, fontSize = 22.sp, fontFamily = FontFamily.Monospace)
+            operatorFields.forEach { field ->
+                SetupDataRow(
+                    label = field.name,
+                    value = operatorProfile.valueFor(field).ifBlank { "NOT SET" },
+                    onEdit = { onEditOperatorField(field) },
+                    onDelete = { onDeleteOperatorField(field) }
+                )
+            }
+
+            Text(
+                "PRIMARY WEAPON",
+                color = PipGreen,
+                fontSize = 22.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.padding(top = 10.dp)
+            )
+            SetupDataRow(
+                label = "ROLE",
+                value = setupLoadout.primaryRole?.displayName ?: "NOT SET",
+                onEdit = onEditPrimaryWeapon,
+                onDelete = onDeletePrimaryRole
+            )
+            SetupDataRow(
+                label = "REPLICA",
+                value = setupLoadout.primaryWeaponDisplayName() ?: "NOT SET",
+                onEdit = onEditPrimaryWeapon,
+                onDelete = onDeletePrimaryWeapon
+            )
+        }
+    }
+}
+
+@Composable
+private fun SetupDataRow(
+    label: String,
+    value: String,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Text(
+            text = "$label: $value",
+            color = PipGreen,
+            fontSize = 19.sp,
+            fontFamily = FontFamily.Monospace,
+            maxLines = 1,
+            modifier = Modifier.weight(1f)
+        )
+        SetupDataAction("EDIT", PipGreen, onEdit)
+        SetupDataAction("DELETE", PipRed, onDelete)
+    }
+}
+
+@Composable
+private fun SetupDataAction(label: String, color: androidx.compose.ui.graphics.Color, onClick: () -> Unit) {
+    Text(
+        text = label,
+        color = color,
+        fontSize = 16.sp,
+        fontFamily = FontFamily.Monospace,
+        modifier = Modifier
+            .border(1.dp, color)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 7.dp)
+    )
 }
 
 @Composable
@@ -161,16 +299,14 @@ fun PrimaryWeaponScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
     onBack: () -> Unit,
-    titlePrefix: String = "CURRENT GEAR"
+    titlePrefix: String = "CURRENT GEAR",
+    customWeaponInput: Boolean = false
 ) {
     var roleExpanded by remember { mutableStateOf(false) }
     var weaponExpanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "$titlePrefix - PRIMARY WEAPON", onBack = onBack) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(48.dp),
-            verticalAlignment = Alignment.Top
-        ) {
+        val roleSelector: @Composable () -> Unit = {
             TerminalDropdown(
                 label = "ROLE",
                 value = configuration.primaryRole?.displayName ?: "SELECT ROLE",
@@ -183,27 +319,69 @@ fun PrimaryWeaponScreen(
                 },
                 onSelected = { role ->
                     onConfigurationChanged(
-                        configuration.copy(primaryRole = role, primaryWeapon = null)
+                        configuration.copy(
+                            primaryRole = role,
+                            primaryWeapon = null,
+                            primaryWeaponText = null
+                        )
                     )
                     roleExpanded = false
                 }
             )
-            TerminalDropdown(
-                label = "WEAPON",
-                value = configuration.primaryWeapon?.displayName ?: "SELECT WEAPON",
-                options = configuration.primaryRole?.weapons.orEmpty(),
-                optionText = { it.displayName },
-                enabled = configuration.primaryRole != null,
-                expanded = weaponExpanded,
-                onExpandedChange = {
-                    weaponExpanded = it
-                    if (it) roleExpanded = false
-                },
-                onSelected = { weapon ->
-                    onConfigurationChanged(configuration.copy(primaryWeapon = weapon))
-                    weaponExpanded = false
-                }
-            )
+        }
+        val weaponSelector: @Composable () -> Unit = {
+            if (customWeaponInput) {
+                TerminalTextInput(
+                    label = "WEAPON",
+                    value = configuration.primaryWeaponText
+                        ?: configuration.primaryWeapon?.displayName.orEmpty(),
+                    placeholder = "ENTER REPLICA",
+                    onValueChange = { value ->
+                        onConfigurationChanged(
+                            configuration.copy(
+                                primaryWeapon = null,
+                                primaryWeaponText = value.take(MAX_PRIMARY_WEAPON_LENGTH)
+                            )
+                        )
+                    }
+                )
+            } else {
+                TerminalDropdown(
+                    label = "WEAPON",
+                    value = configuration.primaryWeaponDisplayName() ?: "SELECT WEAPON",
+                    options = configuration.primaryRole?.weapons.orEmpty(),
+                    optionText = { it.displayName },
+                    enabled = configuration.primaryRole != null,
+                    expanded = weaponExpanded,
+                    onExpandedChange = {
+                        weaponExpanded = it
+                        if (it) roleExpanded = false
+                    },
+                    onSelected = { weapon ->
+                        onConfigurationChanged(
+                            configuration.copy(primaryWeapon = weapon, primaryWeaponText = null)
+                        )
+                        weaponExpanded = false
+                    }
+                )
+            }
+        }
+        if (customWeaponInput) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                roleSelector()
+                weaponSelector()
+            }
+        } else {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(48.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                roleSelector()
+                weaponSelector()
+            }
         }
     }
 }
@@ -213,7 +391,8 @@ fun SecondaryWeaponScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
     onBack: () -> Unit,
-    titlePrefix: String = "CURRENT GEAR"
+    titlePrefix: String = "CURRENT GEAR",
+    verticalLayout: Boolean = false
 ) {
     val handgunWeapons = SecondaryWeaponCatalog.handgun
     val demolitionWeapons = SecondaryWeaponCatalog.demolition
@@ -221,7 +400,7 @@ fun SecondaryWeaponScreen(
     var weaponExpanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "$titlePrefix - SECONDARY WEAPON", onBack = onBack) {
-        Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
+        val content: @Composable () -> Unit = {
             TerminalDropdown(
                 label = "TYPE",
                 value = configuration.secondaryType ?: "SELECT TYPE",
@@ -260,6 +439,15 @@ fun SecondaryWeaponScreen(
                 }
             )
         }
+        if (verticalLayout) {
+            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                content()
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
+                content()
+            }
+        }
     }
 }
 
@@ -268,14 +456,16 @@ fun AccesoriesScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
     onBack: () -> Unit,
-    titlePrefix: String = "CURRENT GEAR"
+    titlePrefix: String = "CURRENT GEAR",
+    verticalLayout: Boolean = false
 ) {
     val accesories = listOf(
         InventoryItem.DETON_A,
         InventoryItem.THUNDER_B,
         InventoryItem.TANTO,
         InventoryItem.MINI_KNIFE,
-        InventoryItem.VOLCANO
+        InventoryItem.VOLCANO,
+        InventoryItem.WATCH_2
     )
     var expanded by remember { mutableStateOf(false) }
 
@@ -300,7 +490,8 @@ fun AccesoriesScreen(
                         configuration.accesories + item
                     }
                     onConfigurationChanged(configuration.copy(accesories = updated))
-                }
+                },
+                compactLayout = verticalLayout
             )
         }
     }
@@ -324,7 +515,8 @@ fun HeadgearScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
     onBack: () -> Unit,
-    titlePrefix: String = "CURRENT GEAR"
+    titlePrefix: String = "CURRENT GEAR",
+    verticalLayout: Boolean = false
 ) {
     val selectedProfile = HeadgearProfile.entries.find {
         it.displayName == configuration.headgearProfile
@@ -332,10 +524,7 @@ fun HeadgearScreen(
     var profileExpanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "$titlePrefix - HEADGEAR", onBack = onBack) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(48.dp),
-            verticalAlignment = Alignment.Top
-        ) {
+        val content: @Composable () -> Unit = {
             TerminalDropdown(
                 label = "PROFILE",
                 value = selectedProfile?.displayName ?: "SELECT PROFILE",
@@ -350,6 +539,18 @@ fun HeadgearScreen(
             )
             selectedProfile?.let { profile ->
                 TerminalVisualList(label = "ITEM", entries = profile.items)
+            }
+        }
+        if (verticalLayout) {
+            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                content()
+            }
+        } else {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(48.dp),
+                verticalAlignment = Alignment.Top
+            ) {
+                content()
             }
         }
     }
@@ -369,7 +570,8 @@ fun FrontPanelScreen(
     configuration: LoadoutConfiguration,
     onConfigurationChanged: (LoadoutConfiguration) -> Unit,
     onBack: () -> Unit,
-    titlePrefix: String = "CURRENT GEAR"
+    titlePrefix: String = "CURRENT GEAR",
+    verticalLayout: Boolean = false
 ) {
     val selectedRole = FrontPanelRole.entries.find {
         it.displayName == configuration.frontPanelRole
@@ -377,7 +579,7 @@ fun FrontPanelScreen(
     var roleExpanded by remember { mutableStateOf(false) }
 
     CurrentGearLayout(title = "$titlePrefix - FRONT PANEL", onBack = onBack) {
-        Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
+        val content: @Composable () -> Unit = {
             TerminalDropdown(
                 label = "ROLE",
                 value = selectedRole?.displayName ?: "SELECT ROLE",
@@ -395,6 +597,15 @@ fun FrontPanelScreen(
                     label = "PANEL",
                     entries = role.panels.map { it.displayName }
                 )
+            }
+        }
+        if (verticalLayout) {
+            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                content()
+            }
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(48.dp), verticalAlignment = Alignment.Top) {
+                content()
             }
         }
     }
@@ -489,6 +700,46 @@ internal fun <T> TerminalDropdown(
 }
 
 @Composable
+private fun TerminalTextInput(
+    label: String,
+    value: String,
+    placeholder: String,
+    onValueChange: (String) -> Unit
+) {
+    val keyboard = LocalSoftwareKeyboardController.current
+    Column(modifier = Modifier.width(270.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(label, color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier.width(270.dp).border(1.dp, PipGreen),
+            textStyle = TextStyle(
+                color = PipGreen,
+                fontSize = 22.sp,
+                fontFamily = FontFamily.Monospace
+            ),
+            placeholder = {
+                Text(placeholder, color = PipGreenDim, fontFamily = FontFamily.Monospace)
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Characters,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = { keyboard?.hide() }),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = PipBlack,
+                unfocusedContainerColor = PipBlack,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                cursorColor = PipGreen
+            )
+        )
+    }
+}
+
+@Composable
 private fun <T> TerminalMultiSelect(
     label: String,
     value: String,
@@ -497,9 +748,11 @@ private fun <T> TerminalMultiSelect(
     selected: Set<T>,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    onToggle: (T) -> Unit
+    onToggle: (T) -> Unit,
+    compactLayout: Boolean = false
 ) {
-    Column(modifier = Modifier.width(560.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    val width = if (compactLayout) 320.dp else 560.dp
+    Column(modifier = Modifier.width(width), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(label, color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
         Text(
             text = value,
@@ -508,7 +761,7 @@ private fun <T> TerminalMultiSelect(
             fontFamily = FontFamily.Monospace,
             maxLines = 2,
             modifier = Modifier
-                .width(560.dp)
+                .width(width)
                 .border(1.dp, PipGreen)
                 .clickable { onExpandedChange(!expanded) }
                 .padding(horizontal = 14.dp, vertical = 10.dp)
@@ -516,7 +769,7 @@ private fun <T> TerminalMultiSelect(
         if (expanded) {
             Column(
                 modifier = Modifier
-                    .width(560.dp)
+                    .width(width)
                     .heightIn(max = 150.dp)
                     .border(1.dp, PipGreen)
                     .verticalScroll(rememberScrollState())
@@ -532,7 +785,7 @@ private fun <T> TerminalMultiSelect(
                         fontSize = 20.sp,
                         fontFamily = FontFamily.Monospace,
                         modifier = Modifier
-                            .width(560.dp)
+                            .width(width)
                             .clickable { onToggle(option) }
                             .padding(horizontal = 14.dp, vertical = 6.dp)
                     )
@@ -567,7 +820,7 @@ private fun CurrentGearLayout(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.2",
+            text = "PIP-SuriOS v2.3",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -594,3 +847,5 @@ private fun CurrentGearLayout(
         }
     }
 }
+
+private const val MAX_PRIMARY_WEAPON_LENGTH = 80

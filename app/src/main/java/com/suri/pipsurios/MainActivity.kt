@@ -79,6 +79,7 @@ import com.suri.pipsurios.data.DeleteOperationResult
 import com.suri.pipsurios.data.UpdateOperationResult
 import com.suri.pipsurios.data.PercentageDistribution
 import com.suri.pipsurios.data.SaveOperationResult
+import com.suri.pipsurios.data.LoadoutConfigurationRepository
 import com.suri.pipsurios.data.StatisticsCalculator
 import com.suri.pipsurios.geiger.VolumeKeyController
 import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
@@ -100,8 +101,6 @@ import com.suri.pipsurios.ui.screens.HeadgearCatalog
 import com.suri.pipsurios.ui.screens.UniformCatalog
 import com.suri.pipsurios.ui.screens.CurrentGearLoadingScreen
 import com.suri.pipsurios.ui.screens.CurrentGearScreen
-import com.suri.pipsurios.ui.screens.SetUpScreen
-import com.suri.pipsurios.ui.screens.SetUpPlaceholderScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
 import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
 import com.suri.pipsurios.ui.screens.AccesoriesScreen
@@ -234,14 +233,6 @@ private enum class PIPSuriOSDestination {
     CurrentGearHeadgear,
     CurrentGearFrontPanel,
     CurrentGearUniform,
-    SetUp,
-    SetUpOperator,
-    SetUpPrimaryWeapon,
-    SetUpSecondaryWeapon,
-    SetUpAccesories,
-    SetUpHeadgear,
-    SetUpFrontPanel,
-    SetUpUniform,
     StatusLoading,
     Status,
     StatusDontForget,
@@ -272,9 +263,15 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
     var morseInput by remember { mutableStateOf("") }
     var morseOutput by remember { mutableStateOf("") }
-    var draftLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
-    var activeLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
-    var setupLoadout by remember { mutableStateOf(LoadoutConfiguration()) }
+    val loadoutConfigurationRepository = remember(context) {
+        LoadoutConfigurationRepository.from(context.applicationContext)
+    }
+    val initialSetupLoadout = remember(loadoutConfigurationRepository) {
+        loadoutConfigurationRepository.load()
+    }
+    var draftLoadout by remember { mutableStateOf(initialSetupLoadout) }
+    var activeLoadout by remember { mutableStateOf(initialSetupLoadout) }
+    var setupLoadout by remember { mutableStateOf(initialSetupLoadout) }
     var operationDraft by remember { mutableStateOf(OperationDraft()) }
     var operationSaveError by remember { mutableStateOf<String?>(null) }
     var operationSaving by remember { mutableStateOf(false) }
@@ -381,6 +378,20 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             null -> Unit
         }
         pendingVerticalStep = null
+    }
+
+    val setUpLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val previous = setupLoadout
+        val updated = loadoutConfigurationRepository.load()
+        setupLoadout = updated
+        if (draftLoadout == previous) draftLoadout = updated
+        if (activeLoadout == previous) activeLoadout = updated
+    }
+
+    fun launchSetUp() {
+        setUpLauncher.launch(Intent(context, SetUpActivity::class.java))
     }
 
     fun launchDateLocation() {
@@ -600,7 +611,7 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onInventorySelected = { destination = PIPSuriOSDestination.InventoryLoading },
                 onDataSelected = { destination = PIPSuriOSDestination.DataLoading },
                 onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
-                onSetUpSelected = { destination = PIPSuriOSDestination.SetUp },
+                onSetUpSelected = ::launchSetUp,
                 onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading },
                 onToolsSelected = { destination = PIPSuriOSDestination.ToolsLoading }
             )
@@ -914,7 +925,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
 
             PIPSuriOSDestination.InventoryAccesories -> InventoryCategoryScreen(
                 title = "INVENTORY - ACCESORIES",
-                entries = listOf("> DETON-A", "> THUNDER B", "> TANTO", "> MINI KNIFE", "> VOLCANO"),
+                entries = listOf(
+                    "> DETON-A", "> THUNDER B", "> TANTO", "> MINI KNIFE", "> VOLCANO", "> WATCH 2"
+                ),
                 entryActions = mapOf(
                     "> DETON-A" to {
                         selectedInventoryItem = InventoryItem.DETON_A
@@ -930,6 +943,10 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                     },
                     "> MINI KNIFE" to {
                         selectedInventoryItem = InventoryItem.MINI_KNIFE
+                        destination = PIPSuriOSDestination.InventoryDetails
+                    },
+                    "> WATCH 2" to {
+                        selectedInventoryItem = InventoryItem.WATCH_2
                         destination = PIPSuriOSDestination.InventoryDetails
                     }
                 ),
@@ -955,7 +972,8 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                         InventoryItem.DETON_A,
                         InventoryItem.THUNDER_B,
                         InventoryItem.TANTO,
-                        InventoryItem.MINI_KNIFE ->
+                        InventoryItem.MINI_KNIFE,
+                        InventoryItem.WATCH_2 ->
                             PIPSuriOSDestination.InventoryAccesories
                     }
                 }
@@ -1116,58 +1134,6 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
-            PIPSuriOSDestination.SetUp -> SetUpScreen(
-                onOperatorSelected = { destination = PIPSuriOSDestination.SetUpOperator },
-                onPrimaryWeaponSelected = { destination = PIPSuriOSDestination.SetUpPrimaryWeapon },
-                onSecondaryWeaponSelected = { destination = PIPSuriOSDestination.SetUpSecondaryWeapon },
-                onAccesoriesSelected = { destination = PIPSuriOSDestination.SetUpAccesories },
-                onHeadgearSelected = { destination = PIPSuriOSDestination.SetUpHeadgear },
-                onFrontPanelSelected = { destination = PIPSuriOSDestination.SetUpFrontPanel },
-                onUniformSelected = { destination = PIPSuriOSDestination.SetUpUniform },
-                onBack = { destination = PIPSuriOSDestination.HomeOperation }
-            )
-
-            PIPSuriOSDestination.SetUpOperator -> SetUpPlaceholderScreen(
-                title = "SET-UP - OPERATOR",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-            PIPSuriOSDestination.SetUpPrimaryWeapon -> PrimaryWeaponScreen(
-                configuration = setupLoadout,
-                onConfigurationChanged = { setupLoadout = it },
-                titlePrefix = "SET-UP",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-            PIPSuriOSDestination.SetUpSecondaryWeapon -> SecondaryWeaponScreen(
-                configuration = setupLoadout,
-                onConfigurationChanged = { setupLoadout = it },
-                titlePrefix = "SET-UP",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-            PIPSuriOSDestination.SetUpAccesories -> AccesoriesScreen(
-                configuration = setupLoadout,
-                onConfigurationChanged = { setupLoadout = it },
-                titlePrefix = "SET-UP",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-            PIPSuriOSDestination.SetUpHeadgear -> HeadgearScreen(
-                configuration = setupLoadout,
-                onConfigurationChanged = { setupLoadout = it },
-                titlePrefix = "SET-UP",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-            PIPSuriOSDestination.SetUpFrontPanel -> FrontPanelScreen(
-                configuration = setupLoadout,
-                onConfigurationChanged = { setupLoadout = it },
-                titlePrefix = "SET-UP",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-            PIPSuriOSDestination.SetUpUniform -> UniformScreen(
-                configuration = setupLoadout,
-                onConfigurationChanged = { setupLoadout = it },
-                titlePrefix = "SET-UP",
-                onBack = { destination = PIPSuriOSDestination.SetUp }
-            )
-
             PIPSuriOSDestination.CurrentGearSecondaryWeapon -> SecondaryWeaponScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
@@ -1322,7 +1288,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v2.2",
+                text = "PIP-SuriOS v2.3",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace
