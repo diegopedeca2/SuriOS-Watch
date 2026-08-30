@@ -1,3 +1,71 @@
+## Sprint 022 — Agradecimientos en SET-UP — 2026-08-31
+
+### Añadido
+
+- Entrada `SET-UP > ACKNOWLEDGEMENTS` y pantalla de consulta de solo lectura.
+- Seis agradecimientos iniciales con nombre y aportación concreta.
+- Desplazamiento vertical para mantener la legibilidad de la lista.
+
+### Validación y cierre
+
+- La lista no es editable ni persistente; las ampliaciones se realizan mediante
+  cambios de código.
+- La regresión posterior a la incidencia del SPRINT 21 terminó con tests JVM,
+  lint, ensamblados, 2/2 tests instrumentados en el Samsung A56 y comprobación
+  manual de `HOME > SET-UP > ACKNOWLEDGEMENTS`.
+- SPRINT 22 queda cerrado técnica, funcional y documentalmente.
+
+## Sprint 021 — INDIVIDUAL TRACKER — 2026-08-30
+
+### Añadido
+
+- Menú experimental `TOOLS > PROXIMITY RADIO SCANNER > INDIVIDUAL TRACKER`,
+  con los submenús `TARGET` y `TRACKER`.
+- `TARGET` selecciona primero un campo TERRAIN y después un único dispositivo
+  detectado por `LOCAL SCAN` del A56, reutilizando las reglas de `DEVICES`.
+- `TRACKER` combina el mapa TERRAIN con el GRID P.R.S. centrado en el GPS del
+  A56 y muestra exclusivamente la señal del objetivo seleccionado.
+- `DEVICES > MAC ADDRESS GUIDE` explica cómo verificar y guardar direcciones
+  BLE, incluidas las direcciones privadas o rotatorias mediante nombre BLE.
+
+### Límites, regresión y cierre
+
+- La herramienta está aislada como dependencia de P.R.S. y TERRAIN; no añade
+  dependencia inversa ni compatibilidad con `PROBE` o `SCAN + PROBE`.
+- No se representa una posición, rumbo o distancia del objetivo, ni se aplica
+  conversión RSSI → metros. El modelo de recorte de incertidumbre queda para
+  después de las pruebas físicas.
+- Sprint 020 se ha revalidado sin regresiones: el hash de NAVY7 coincide con su
+  cierre, el catálogo TERRAIN mantiene `CHOOSE LOCATION` y las pruebas de mapa
+  siguen correctas.
+- La regresión completa posterior a la incidencia intermedia terminó con
+  compilación, tests JVM, lint, ensamblado y 2/2 tests instrumentados en el
+  Samsung A56 (`SM-A566B`). La ruta UI hasta `TARGET` y la selección de `NAVY7`
+  también fueron comprobadas en el dispositivo; `TRACKER` abrió el campo con
+  `GRID: TARGET ONLY`, `CENTER: A56 // GPS FOLLOW` y `SOURCE: A56`.
+- Sprint 021 queda cerrado técnica, funcional y documentalmente, manteniendo
+  la prueba física RSSI y el futuro modelo estadístico fuera del cierre.
+
+## Sprint 020 — Corrección de TERRAIN y regeneración de NAVY7 — 2026-08-30
+
+### Modificado
+
+- NAVY7 regenerado con QGIS LTR 3.44.13 como MBTiles PNG offline, centrado en
+  `40.35297419412242, -3.4237021485063486`.
+- El selector de `MAP - TERRAIN` comienza en `CHOOSE LOCATION` y no carga un
+  mapa por defecto.
+- HOME y NAVY7 se muestran en orden alfabético después de `CHOOSE LOCATION`.
+- HOME conserva su configuración MBTiles validada; solo se actualiza la huella
+  y el asset de NAVY7.
+
+### Validación
+
+- MBTiles NAVY7 con `PRAGMA integrity_check = ok`, formato PNG y zoom 16–19.
+- Capas QGIS activas: `highway`, `contours_2m` y `building`; MDT y
+  OpenStreetMap permanecen desactivados para mantener el mapa offline.
+- AGP configurado para conservar la aplicación y los APKs de tests tras
+  `connectedFullDebugAndroidTest`, evitando desinstalaciones implícitas.
+
 ## Sprint 019 — Auditoría, seguridad y PIP-SuriOS v2.5 — 2026-08-30
 
 ### Añadido y modificado

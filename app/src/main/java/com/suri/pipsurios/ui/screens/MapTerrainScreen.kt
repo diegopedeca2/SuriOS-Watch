@@ -68,10 +68,10 @@ private enum class TerrainCompassMode { GYRO, NORTH_UP }
 fun MapTerrainScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val mapOptions = OfflineMapCatalog.maps
-    var selectedMapId by remember { mutableStateOf(OfflineMapCatalog.NAVY7.mapId) }
+    var selectedMapId by remember { mutableStateOf(TerrainFieldSelection.CHOOSE_LOCATION_ID) }
     var fieldMenuExpanded by remember { mutableStateOf(false) }
     val selectedDefinition = mapOptions.firstOrNull { it.mapId == selectedMapId }
-    val definition = selectedDefinition ?: mapOptions.first()
+    val definition = selectedDefinition ?: OfflineMapCatalog.NAVY7
     val hasSelectedMap = selectedDefinition != null
     val overlayRepository = remember { TerrainOverlayRepository.from(context.applicationContext) }
     val locationSource = remember { TerrainLocation(context.applicationContext) }
@@ -80,8 +80,8 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     var mapData by remember { mutableStateOf<MbTilesData?>(null) }
     var loadedTiles by remember { mutableStateOf<Map<TileKey, ImageBitmap>>(emptyMap()) }
     var loadError by remember { mutableStateOf<String?>(null) }
-    var overlays by remember { mutableStateOf(overlayRepository.load(definition.mapId)) }
-    var overlaysMapId by remember { mutableStateOf<String?>(definition.mapId) }
+    var overlays by remember { mutableStateOf(MapOverlays()) }
+    var overlaysMapId by remember { mutableStateOf<String?>(null) }
     var selection by remember { mutableStateOf<MapSelection>(MapSelection.None) }
     var editMode by remember { mutableStateOf(TerrainEditMode.NONE) }
     var draftZone by remember { mutableStateOf(emptyList<GeoPoint>()) }

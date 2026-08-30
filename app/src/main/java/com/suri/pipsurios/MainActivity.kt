@@ -47,6 +47,10 @@ import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerGuideScreen
 import com.suri.pipsurios.ui.screens.PrsDevicesScreen
 import com.suri.pipsurios.ui.screens.PrsTrackingScreen
+import com.suri.pipsurios.ui.screens.IndividualTrackingMenuScreen
+import com.suri.pipsurios.ui.screens.IndividualTrackingTargetScreen
+import com.suri.pipsurios.ui.screens.IndividualTrackingTrackerScreen
+import com.suri.pipsurios.individualtracking.IndividualTrackingSelection
 import com.suri.pipsurios.ui.screens.PrsOnlyApp
 import com.suri.pipsurios.prs.PrsOperatingMode
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
@@ -195,6 +199,9 @@ private enum class PIPSuriOSDestination {
     PrsDevices,
     PrsLocalScan,
     PrsScanProbe,
+    IndividualTracker,
+    IndividualTrackerTarget,
+    IndividualTrackerTracker,
     GeigerCounterLoading,
     GeigerCounter,
     DataLoading,
@@ -280,6 +287,7 @@ private fun PIPSuriOSApp(
     }
     var destination by remember { mutableStateOf(initialDestination) }
     var pendingSkin by remember { mutableStateOf<SkinId?>(null) }
+    var individualTrackingSelection by remember { mutableStateOf<IndividualTrackingSelection?>(null) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
     var morseInput by remember { mutableStateOf("") }
@@ -664,6 +672,7 @@ private fun PIPSuriOSApp(
                 onLocalScanSelected = { destination = PIPSuriOSDestination.PrsLocalScan },
                 onScanProbeSelected = { destination = PIPSuriOSDestination.PrsScanProbe },
                 onDevicesSelected = { destination = PIPSuriOSDestination.PrsDevices },
+                onIndividualTrackerSelected = { destination = PIPSuriOSDestination.IndividualTracker },
                 onGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerGuide },
                 onBack = { destination = PIPSuriOSDestination.Tools }
             )
@@ -683,6 +692,27 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.PrsScanProbe -> PrsTrackingScreen(
                 mode = PrsOperatingMode.SCAN_PROBE,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.IndividualTracker -> IndividualTrackingMenuScreen(
+                selection = individualTrackingSelection,
+                onTargetSelected = { destination = PIPSuriOSDestination.IndividualTrackerTarget },
+                onTrackerSelected = { destination = PIPSuriOSDestination.IndividualTrackerTracker },
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.IndividualTrackerTarget -> IndividualTrackingTargetScreen(
+                onTargetSelected = {
+                    individualTrackingSelection = it
+                    destination = PIPSuriOSDestination.IndividualTracker
+                },
+                onBack = { destination = PIPSuriOSDestination.IndividualTracker }
+            )
+
+            PIPSuriOSDestination.IndividualTrackerTracker -> IndividualTrackingTrackerScreen(
+                selection = individualTrackingSelection,
+                onSelectTarget = { destination = PIPSuriOSDestination.IndividualTrackerTarget },
+                onBack = { destination = PIPSuriOSDestination.IndividualTracker }
             )
 
             PIPSuriOSDestination.GeigerCounterLoading -> GeigerCounterLoadingScreen(

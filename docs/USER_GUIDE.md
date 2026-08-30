@@ -73,6 +73,7 @@ SET-UP se abre en orientación vertical y se divide en dos submenús:
 
 - **INPUT:** introducción de OPERATOR, PRIMARY WEAPON, SECONDARY WEAPON, ACCESORIES, HEADGEAR, FRONT PANEL y UNIFORM.
 - **DATA:** consulta de los datos guardados, con `EDIT` y `DELETE` para cada campo disponible.
+- **ACKNOWLEDGEMENTS:** visualizador de solo lectura con la lista de personas y equipos que han prestado apoyo concreto al proyecto. Las ampliaciones se realizan mediante código.
 
 En **OPERATOR** se pueden introducir ID, NAME, CALLSIGN, NUMBER, COUNTRY y TEAM. En **PRIMARY WEAPON**, ROLE continúa siendo un selector desplegable y WEAPON es un campo de texto libre para escribir cualquier réplica o combinación personalizada. Los cambios se guardan al introducirlos y se reutilizan como base de CURRENT GEAR.
 
@@ -84,7 +85,11 @@ Desde HOMESCREEN, pulse **TOOLS > MAP** y elija uno de sus dos modos.
 
 ### MAP TERRAIN
 
-Abre el mapa topográfico **NAVY7**, incluido completamente offline en la aplicación. El mapa no necesita conexión a Internet.
+Al entrar muestra **CHOOSE LOCATION** y no carga ningún mapa automáticamente.
+Dentro del selector, **CHOOSE LOCATION** permanece como primera opción; después
+se muestran los mapas disponibles en orden alfabético: `HOME` y `NAVY7`.
+NAVY7 es un mapa topográfico incluido completamente offline en la aplicación y
+no necesita conexión a Internet.
 
 - Arrastre con un dedo para desplazarse.
 - Use pinch con dos dedos para ampliar o reducir. No hay botones de zoom.
@@ -299,7 +304,7 @@ Los valores vacíos o históricos que no correspondan a una opción válida no i
 
 ## 10. TOOLS
 
-Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de PROXIMITY RADIO SCANNER están `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `OPERATION GUIDE`.
+Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de PROXIMITY RADIO SCANNER están `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES`, `INDIVIDUAL TRACKER` y `OPERATION GUIDE`.
 
 Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen instrumentos de medición profesionales.
 
@@ -369,7 +374,7 @@ CONTACTS** borra la sesión temporal completa.
 
 #### DEVICES
 
-En `DEVICES` hay dos submenús:
+En `DEVICES` hay tres submenús:
 
 1. **IDENTIFY DEVICE:** muestra los anuncios BLE recibidos en directo. Pulse
    **SAVE DEVICE** en el contacto deseado. La dirección BLE se guarda como
@@ -378,11 +383,27 @@ En `DEVICES` hay dos submenús:
 2. **SAVED DEVICES:** muestra las reglas persistentes. **DISABLE** conserva la
    regla pero deja que el contacto aparezca; **ENABLE** vuelve a omitirlo del
    análisis; **REMOVE** elimina la regla.
+3. **MAC ADDRESS GUIDE:** explica cómo localizar y verificar la dirección BLE
+   observada antes de guardarla. Puede tener formato `AA:BB:CC:DD:EE:FF`; si el
+   dispositivo usa una dirección privada o rotatoria, se puede guardar su
+   nombre BLE exacto como alternativa, teniendo en cuenta que puede coincidir
+   con varios dispositivos. Desactive la regla en **SAVED DEVICES** antes de
+   seleccionarlo en **INDIVIDUAL TRACKER**.
 
 Las direcciones privadas o rotatorias pueden cambiar. En ese caso, una regla
 por nombre BLE exacto sirve como alternativa, aunque puede coincidir con más
 de un dispositivo. Las reglas habilitadas se aplican tanto a `LOCAL SCAN` como
 al flujo `SCAN + PROBE`.
+
+#### INDIVIDUAL TRACKER
+
+Esta herramienta experimental depende de P.R.S. y TERRAIN. En **TARGET** se
+elige primero el campo TERRAIN y después un único dispositivo detectado por
+**LOCAL SCAN** del A56. En **TRACKER** se muestra el mapa seleccionado con el
+GRID de P.R.S. centrado en la posición GPS actual del A56 y únicamente la señal
+del objetivo seleccionado. No usa PROBE, no calcula la posición del objetivo ni
+convierte RSSI en metros; cualquier recorte futuro de la circunferencia se
+definirá únicamente tras las pruebas físicas.
 
 #### Análisis temporal
 
@@ -508,6 +529,7 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v2.4** | Firma visible y versión técnica actualizadas; P.R.S. compacto para pantalla externa y categorías inferidas de dispositivo. |
 | **v2.5** | Auditoría de Sprint 019, backup local desactivado y correcciones de cierre de RAD ZONE/Geiger. |
 | **v3.0** | Reconstrucción de P.R.S.: LOCAL SCAN, SCAN + PROBE, histórico temporal RSSI, nubes de densidad, TRACK TARGET, DEVICES y categorías inferidas de dispositivo. |
+| **v3.1** | INDIVIDUAL TRACKER experimental, MAC ADDRESS GUIDE y visualizador de agradecimientos de solo lectura en SET-UP. |
 
 P.R.S. v3.0 incorpora el análisis temporal observable, la lista de contactos,
 el seguimiento dinámico, el filtrado persistente de DEVICES y el nodo operativo

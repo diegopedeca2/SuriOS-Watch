@@ -15,9 +15,10 @@ class MbTilesInstrumentedTest {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         val data = MbTilesRepository(context).load(OfflineMapCatalog.NAVY7)
         assertEquals("png", data.metadata["format"])
+        assertEquals("navy_7_terrain", data.metadata["name"])
         assertEquals("16", data.metadata["minzoom"])
         assertEquals("19", data.metadata["maxzoom"])
-        assertEquals(88, data.tiles.size)
-        assertTrue(data.tiles.keys.any { it.zoom == 19 })
+        assertEquals(102, data.tileKeys.size)
+        assertTrue(data.tileKeys.any { it.zoom == 19 })
     }
 }

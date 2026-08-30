@@ -23,6 +23,7 @@ import com.suri.pipsurios.ui.screens.FrontPanelScreen
 import com.suri.pipsurios.ui.screens.HeadgearScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
 import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
+import com.suri.pipsurios.ui.screens.SetUpAcknowledgementsScreen
 import com.suri.pipsurios.ui.screens.SetUpDataScreen
 import com.suri.pipsurios.ui.screens.SetUpInputScreen
 import com.suri.pipsurios.ui.screens.SetUpScreen
@@ -62,6 +63,7 @@ private enum class SetUpDestination {
     ROOT,
     INPUT,
     DATA,
+    ACKNOWLEDGEMENTS,
     PRIMARY_WEAPON,
     SECONDARY_WEAPON,
     ACCESORIES,
@@ -120,7 +122,8 @@ private fun SetUpApp(onExit: () -> Unit) {
         when (destination) {
             SetUpDestination.ROOT -> onExit()
             SetUpDestination.INPUT,
-            SetUpDestination.DATA -> destination = SetUpDestination.ROOT
+            SetUpDestination.DATA,
+            SetUpDestination.ACKNOWLEDGEMENTS -> destination = SetUpDestination.ROOT
             SetUpDestination.PRIMARY_WEAPON -> destination = primaryWeaponReturnDestination
             else -> destination = SetUpDestination.INPUT
         }
@@ -130,7 +133,12 @@ private fun SetUpApp(onExit: () -> Unit) {
         SetUpDestination.ROOT -> SetUpScreen(
             onInputSelected = { destination = SetUpDestination.INPUT },
             onDataSelected = { destination = SetUpDestination.DATA },
+            onAcknowledgementsSelected = { destination = SetUpDestination.ACKNOWLEDGEMENTS },
             onBack = onExit
+        )
+
+        SetUpDestination.ACKNOWLEDGEMENTS -> SetUpAcknowledgementsScreen(
+            onBack = { destination = SetUpDestination.ROOT }
         )
 
         SetUpDestination.INPUT -> SetUpInputScreen(

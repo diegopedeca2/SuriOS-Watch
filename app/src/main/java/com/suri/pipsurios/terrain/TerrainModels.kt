@@ -35,7 +35,14 @@ object OfflineMapCatalog {
         mapId = "navy7",
         name = "NAVY7",
         assetPath = "maps/navy_7_terrain.mbtiles",
-        bounds = MapBounds(-3.42602, 40.3513, -3.4201, 40.3542),
+        // Sprint 020 field center: 40.35297419412242, -3.4237021485063486.
+        // The footprint remains equivalent to the previous NAVY7 field.
+        bounds = MapBounds(
+            west = -3.4266621485063486,
+            south = 40.35152419412242,
+            east = -3.4207421485063486,
+            north = 40.35442419412242
+        ),
         minZoom = 16,
         maxNativeZoom = 19,
         maxDisplayZoom = 20
@@ -49,7 +56,8 @@ object OfflineMapCatalog {
         maxNativeZoom = 19,
         maxDisplayZoom = 20
     )
-    val maps = listOf(NAVY7, HOME)
+    /** Map files are listed alphabetically; CHOOSE LOCATION is a UI-only exception before them. */
+    val maps = listOf(HOME, NAVY7).sortedBy { it.name }
 }
 
 object TerrainZoomTuning {

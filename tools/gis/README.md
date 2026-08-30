@@ -88,3 +88,16 @@ otra implementación.
 Hillshade queda fuera por defecto. El margen del área, el intervalo de curvas
 (referencia actual: 2 m), la resolución de salida y el estilo serán parámetros
 del futuro generador, no valores codificados para NAVY7.
+
+## Regeneración de NAVY7 en Sprint 020
+
+La regeneración de NAVY7 se realizó con QGIS LTR 3.44.13 y el proyecto piloto
+`C:\Users\diego\Desktop\GQUIS\MAP SuriOS.qgz`, usando las capas activas
+`highway`, `contours_2m` y `building`. El MDT y OpenStreetMap permanecieron
+desactivados para conservar una salida completamente offline.
+
+El centro solicitado es `40.35297419412242, -3.4237021485063486`. Se conservó
+la huella aproximada del mapa anterior, con la extensión WGS84
+`-3.4266621485063486,40.35152419412242,-3.4207421485063486,40.35442419412242`.
+La salida final es `app/src/main/assets/maps/navy_7_terrain.mbtiles`, PNG,
+overlay, zoom 16–19, compatible con `MbTilesRepository`.

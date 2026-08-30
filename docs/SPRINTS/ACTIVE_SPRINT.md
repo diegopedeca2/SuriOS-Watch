@@ -4,11 +4,16 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-08-30
+last_updated: 2026-08-31
 
 ---
 
 ## Sprint activo
+
+No hay un Sprint activo. [Sprint 022 v1.0](SPRINT_022_v1.0.md) — **CLOSED**
+
+Los SPRINT 20 y 21 se mantuvieron en procesos independientes. El SPRINT 21 ha
+sido confirmado como cerrado sin regresiones observables.
 
 Sprint 019 queda cerrado. [Sprint 019 v1.0](SPRINT_019_v1.0.md) — **CLOSED**
 
@@ -19,6 +24,13 @@ Sprint 016: **CLOSED**
 Sprint 017: **CLOSED**
 Sprint 018: **CLOSED**
 Sprint 019: **CLOSED**
+Sprint 020: **CLOSED**
+Sprint 021: **CLOSED**
+Sprint 022: **CLOSED**
+
+Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
+CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
+presentan alfabéticamente después de esa opción excepcional.
 
 Sprint 019 audita el monorepo, actualiza PIP-SuriOS a v2.5, desinstala P.R.S.
 //COVER del A56 y documenta el cierre de seguridad y validación.
@@ -47,8 +59,8 @@ la auditoría técnica y el despliegue validado; cualquier trabajo ajeno a su
 alcance requiere autorización expresa.
 
 Los mapas TERRAIN y la lógica RAD ZONE/Geiger quedan incluidos en la auditoría
-de Sprint 019; no se altera el contenido funcional validado de NAVY7/HOME fuera
-de las correcciones ya documentadas.
+de Sprint 019. Sprint 020 modificó únicamente la cobertura de NAVY7, el estado
+inicial y el orden del selector de mapas; HOME conserva su configuración.
 
 ## Cierre de Sprint 018 de SuriOS Ecosystem / PIP-SuriOS
 
@@ -91,6 +103,26 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
   saneamiento de estado.
 - Sprint 017 queda cerrado tras el refinamiento compacto de P.R.S. y la
   incorporación de categorías inferidas de dispositivo.
+- Sprint 018 queda cerrado tras la implementación y validación de la skin
+  NECRON.
+- Sprint 019 queda cerrado tras la auditoría, seguridad y consolidación v2.5.
+- Sprint 021 queda cerrado tras la implementación y regresión de la herramienta
+  experimental INDIVIDUAL TRACKING, combinando TERRAIN con P.R.S.; la prueba
+  física y la calibración estadística quedan como continuidad independiente.
+- Sprint 022 queda cerrado tras incorporar y validar el apartado de
+  agradecimientos de solo lectura dentro de SET-UP, manteniendo independientes
+  los procesos de los SPRINT 20 y 21.
+
+## Cierre de Sprint 022 de PIP-SuriOS
+
+[Sprint 022 v1.0](SPRINT_022_v1.0.md), abierto el 2026-08-30 y cerrado el
+2026-08-31.
+
+El visualizador `SET-UP > ACKNOWLEDGEMENTS` muestra los seis agradecimientos
+iniciales, admite desplazamiento vertical y no ofrece edición ni persistencia.
+La regresión de la aplicación posterior a la incidencia del SPRINT 21 quedó
+validada con tests JVM, lint, ensamblados, 2/2 tests instrumentados en el A56 y
+comprobación manual de la ruta en el dispositivo.
 
 ## Addendum histórico — 2026-08-29
 

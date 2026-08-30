@@ -66,6 +66,7 @@ fun ProximityRadioScannerScreen(
     onLocalScanSelected: () -> Unit,
     onScanProbeSelected: () -> Unit,
     onDevicesSelected: () -> Unit,
+    onIndividualTrackerSelected: () -> Unit,
     onGuideSelected: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -103,6 +104,13 @@ fun ProximityRadioScannerScreen(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onDevicesSelected)
+            )
+            Text(
+                text = "> INDIVIDUAL TRACKER",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onIndividualTrackerSelected)
             )
             Text(
                 text = "> OPERATION GUIDE",

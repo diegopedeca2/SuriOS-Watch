@@ -81,6 +81,19 @@ class MapTerrainTest {
         assertEquals(20, OfflineMapCatalog.NAVY7.maxDisplayZoom)
     }
 
+    @Test fun terrainCatalogKeepsChooseLocationFirstAndMapsAlphabetical() {
+        assertEquals(listOf("HOME", "NAVY7"), OfflineMapCatalog.maps.map { it.name })
+        assertEquals("choose-location", TerrainFieldSelection.CHOOSE_LOCATION_ID)
+        assertEquals("CHOOSE LOCATION", TerrainFieldSelection.CHOOSE_LOCATION_LABEL)
+    }
+
+    @Test fun sprint20Navy7CenterMatchesRequestedCoordinates() {
+        val center = OfflineMapCatalog.NAVY7.bounds.center
+        assertEquals(40.35297419412242, center.latitude, 1e-12)
+        assertEquals(-3.4237021485063486, center.longitude, 1e-12)
+        assertTrue(OfflineMapCatalog.NAVY7.bounds.contains(GeoPoint(40.35297419412242, -3.4237021485063486)))
+    }
+
     @Test fun headingRotatesAroundStableUserPivotWithoutChangingViewportOrCenter() {
         val center = OfflineMapCatalog.NAVY7.bounds.center
         val user = GeoPoint(center.latitude + 0.0002, center.longitude - 0.0002)

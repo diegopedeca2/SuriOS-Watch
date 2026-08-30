@@ -11,6 +11,8 @@ The P.R.S. menu exposes:
 - `LOCAL SCAN`: A56 BLE scanning only.
 - `SCAN + PROBE`: A56 scanning plus the executable Watch 2 PROBE node.
 - `DEVICES`: device identification and persistent omission rules.
+- `INDIVIDUAL TRACKER`: experimental A56-only tracking over a selected
+  TERRAIN field.
 - `OPERATION GUIDE`: deliberately empty; no physical field procedure is in the
   current scope.
 
@@ -118,7 +120,7 @@ best-effort inference for quick reading, not a definitive manufacturer/model
 identification. No confidence margin or question mark is shown. The same
 category suffix is used by the full PIP-SuriOS surface and by `prsOnlyDebug`.
 
-`DEVICES` is divided into two screens:
+`DEVICES` is divided into three screens:
 
 ### IDENTIFY DEVICE
 
@@ -131,6 +133,21 @@ Manual entry accepts either a normalized MAC address or an exact advertised
 BLE name. Name rules are useful when an address is private or rotating, but a
 name may match more than one physical device.
 
+### MAC ADDRESS GUIDE
+
+To identify a device for the known-device list, power it on, enable Bluetooth,
+keep it near the A56, open `IDENTIFY DEVICE`, and wait for an advertisement.
+Verify the announced name, RSSI, and technical identifier before using `SAVE
+DEVICE`. When Android exposes it, the identifier is the observed BLE address.
+An address can also be entered manually as twelve hexadecimal characters, for
+example `AA:BB:CC:DD:EE:FF`; colons and hyphens are accepted by the input.
+
+Some devices use private or rotating BLE addresses. In that case, save the
+exact advertised BLE name as a fallback, remembering that a name can match
+multiple devices. An enabled rule hides matching observations, so disable the
+rule in `SAVED DEVICES` before selecting that device as an `INDIVIDUAL TRACKER`
+target.
+
 ### SAVED DEVICES
 
 Each saved item has a persistent state:
@@ -139,6 +156,20 @@ Each saved item has a persistent state:
   `SCAN + PROBE` processing;
 - `DISABLED`: the rule remains saved but matching observations are visible;
 - `REMOVE`: deletes the saved rule.
+
+## INDIVIDUAL TRACKER
+
+`INDIVIDUAL TRACKER` is an experimental feature dependent on `P.R.S.` and
+`TERRAIN`, with no reverse dependency. It uses only the A56 `LOCAL SCAN`; it
+does not use `PROBE` or `SCAN + PROBE`.
+
+In `TARGET`, choose the TERRAIN field first and then one detected contact. The
+known-device rules from `DEVICES` are respected. In `TRACKER`, the selected
+TERRAIN map is shown with the P.R.S. GRID centered on the A56's current GPS
+position, and only the selected contact's signal is displayed. The GRID is not
+a target coordinate, bearing, distance, or RSSI-to-meters conversion. A future
+uncertainty-circle model will require physical test data and is intentionally
+not enabled yet.
 
 The registry stores rules independently from the contact display name and
 migrates the previous omission-rule storage once. It does not use a device

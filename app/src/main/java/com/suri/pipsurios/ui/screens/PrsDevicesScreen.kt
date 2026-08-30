@@ -53,7 +53,8 @@ import java.util.Locale
 private enum class PrsDevicesPage {
     ROOT,
     IDENTIFY,
-    SAVED
+    SAVED,
+    MAC_GUIDE
 }
 
 @Composable
@@ -69,6 +70,7 @@ fun PrsDevicesScreen(
         PrsDevicesPage.ROOT -> PrsDevicesRootScreen(
             onIdentifySelected = { page = PrsDevicesPage.IDENTIFY },
             onSavedSelected = { page = PrsDevicesPage.SAVED },
+            onMacGuideSelected = { page = PrsDevicesPage.MAC_GUIDE },
             onBack = onBack
         )
 
@@ -82,6 +84,10 @@ fun PrsDevicesScreen(
             compact = compact,
             onBack = { page = PrsDevicesPage.ROOT }
         )
+
+        PrsDevicesPage.MAC_GUIDE -> PrsMacAddressGuideScreen(
+            onBack = { page = PrsDevicesPage.ROOT }
+        )
     }
 }
 
@@ -89,6 +95,7 @@ fun PrsDevicesScreen(
 private fun PrsDevicesRootScreen(
     onIdentifySelected: () -> Unit,
     onSavedSelected: () -> Unit,
+    onMacGuideSelected: () -> Unit,
     onBack: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
@@ -129,8 +136,86 @@ private fun PrsDevicesRootScreen(
                 detail = "ENABLE, DISABLE OR REMOVE RULES",
                 onClick = onSavedSelected
             )
+            PrsDevicesMenuRow(
+                label = "> MAC ADDRESS GUIDE",
+                detail = "FIND, VERIFY AND SAVE A BLE ADDRESS",
+                onClick = onMacGuideSelected
+            )
         }
 
+        PrsBackButton(
+            onBack = onBack,
+            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+        )
+    }
+}
+
+@Composable
+private fun PrsMacAddressGuideScreen(onBack: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+        Text(
+            text = "P.R.S. / MAC ADDRESS GUIDE",
+            color = PipGreen,
+            fontSize = 24.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+        )
+        Column(
+            modifier = Modifier
+                .widthIn(max = 560.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .align(Alignment.Center)
+                .padding(vertical = 72.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Text("HOW TO IDENTIFY A DEVICE", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                "1. Keep the target device powered on, Bluetooth enabled and close to the A56.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "2. Open IDENTIFY DEVICE and wait for its BLE advertisement to appear.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "3. Verify the device name, RSSI and ID shown in the row. The ID is the observed BLE address when Android exposes one.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "4. Use SAVE DEVICE on that row. P.R.S. stores the address as the primary known-device rule.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text("MANUAL FORMAT", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                "A valid address has 12 hexadecimal digits, for example AA:BB:CC:DD:EE:FF. Colons or hyphens are accepted in IDENTIFY DEVICE.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text("PRIVATE / ROTATING ADDRESS", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                "Some phones, watches and BLE accessories do not expose a stable MAC. In that case save the exact advertised BLE name instead; a name can match more than one physical device.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "If a known rule is ENABLED, P.R.S. omits matching contacts. Set it to DISABLED in SAVED DEVICES before selecting it as an INDIVIDUAL TRACKER target.",
+                color = PipAmber,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+        }
         PrsBackButton(
             onBack = onBack,
             modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)

@@ -42,19 +42,24 @@ import kotlin.math.min
 fun PrsDensityGrid(
     contacts: List<PrsContactSnapshot>,
     selectedContactId: String?,
+    modifier: Modifier = Modifier,
     selectedDisplayName: String? = null,
     probeNodes: List<PrsGridProbe> = emptyList(),
-    modifier: Modifier = Modifier
+    surfaceColor: Color = PipPanel,
+    showEmblem: Boolean = true,
+    showTargetLabel: Boolean = true
 ) {
-    Box(modifier = modifier.border(1.dp, PipGreenDim).background(PipPanel)) {
-        Image(
-            painter = painterResource(SkinSession.emblemResource),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            alpha = 0.10f,
-            colorFilter = ColorFilter.tint(PipGreenDim),
-            modifier = Modifier.fillMaxSize().padding(48.dp)
-        )
+    Box(modifier = modifier.border(1.dp, PipGreenDim).background(surfaceColor)) {
+        if (showEmblem) {
+            Image(
+                painter = painterResource(SkinSession.emblemResource),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                alpha = 0.10f,
+                colorFilter = ColorFilter.tint(PipGreenDim),
+                modifier = Modifier.fillMaxSize().padding(48.dp)
+            )
+        }
         Canvas(modifier = Modifier.fillMaxSize().padding(12.dp)) {
             val gridColor = PipGreenDim.copy(alpha = 0.32f)
             val columns = 6
@@ -133,7 +138,7 @@ fun PrsDensityGrid(
             }
             drawCircle(PipGreen, radius = 6.dp.toPx(), center = centre)
         }
-        if (selectedDisplayName != null) {
+        if (showTargetLabel && selectedDisplayName != null) {
             Text(
                 text = "TRACK TARGET: $selectedDisplayName",
                 color = PipAmber,

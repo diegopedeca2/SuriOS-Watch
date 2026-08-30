@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-30
+last_updated: 2026-08-31
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | — | Sprint 018 | Sprint 018 cerrado; los trabajos paralelos de mapas quedan fuera de este cierre |
+| PIP-SuriOS | Ninguno | Sprint 022 | Sprint 022 cerrado; Sprint 021 cerrado e independiente |
 
 ---
 
@@ -63,6 +63,9 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 017 | SuriOS Ecosystem / PIP-SuriOS | P.R.S. compacto para Z Flip 6 y clasificación práctica de dispositivos | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 017 v1.0](SPRINT_017_v1.0.md) |
 | 018 | SuriOS Ecosystem / PIP-SuriOS | Skin NECRON, aplicación visual a P.R.S. y validación en Samsung A56 | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 018 v1.0](SPRINT_018_v1.0.md) |
 | 019 | SuriOS Ecosystem / PIP-SuriOS | Auditoría, seguridad, PIP-SuriOS v2.5 y cierre de despliegue | Cerrado | Completado con riesgos residuales explícitos | 2026-08-30 | 2026-08-30 | [Sprint 019 v1.0](SPRINT_019_v1.0.md) |
+| 020 | SuriOS Ecosystem / PIP-SuriOS | Regeneración de NAVY7, selección inicial CHOOSE LOCATION y orden alfabético de mapas TERRAIN | Cerrado | Completado | 2026-08-30 | 2026-08-30 | [Sprint 020 v1.0](SPRINT_020_v1.0.md) |
+| 021 | SuriOS Ecosystem / PIP-SuriOS | INDIVIDUAL TRACKING: integración experimental de TERRAIN con P.R.S. | Cerrado | Completado | 2026-08-30 | 2026-08-30 | [Sprint 021 v1.0](SPRINT_021_v1.0.md) |
+| 022 | PIP-SuriOS | Agradecimientos dentro de SET-UP | Cerrado | Completado | 2026-08-30 | 2026-08-31 | [Sprint 022 v1.0](SPRINT_022_v1.0.md) |
 
 ---
 
@@ -98,6 +101,10 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 13. Sprint 017 — Cerrado. Refinamiento compacto de P.R.S. y clasificación práctica de dispositivos.
 14. Sprint 018 — Cerrado. Skin NECRON para PIP-SuriOS, aplicación a P.R.S. y validación visual en Samsung A56.
 15. Sprint 019 — Cerrado. Auditoría completa, análisis de vulnerabilidades, PIP-SuriOS v2.5 y cierre de despliegue.
+16. Sprint 020 — Cerrado. Regeneración de NAVY7, CHOOSE LOCATION por defecto y orden alfabético del selector TERRAIN.
+17. Sprint 021 — Cerrado. INDIVIDUAL TRACKING: integración experimental de TERRAIN con P.R.S.; la prueba física y la calibración estadística quedan como continuidad.
+18. Sprint 022 — Cerrado. Apartado ampliable de agradecimientos de solo lectura
+    dentro de SET-UP, independiente de los procesos de los SPRINT 20 y 21.
 
 ---
 
