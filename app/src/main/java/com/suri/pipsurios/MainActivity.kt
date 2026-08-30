@@ -1314,7 +1314,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v2.4",
+                text = "PIP-SuriOS v2.5",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

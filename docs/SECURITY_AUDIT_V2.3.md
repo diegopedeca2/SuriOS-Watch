@@ -69,6 +69,16 @@ Mitigación recomendada: excluir estos datos en builds de campo, cifrarlos con A
 
 PIP-SuriOS v2.3 es apta para las pruebas experimentales previstas en una red local controlada. No debe considerarse una versión segura para redes compartidas, uso operativo o distribución pública hasta revisar el transporte vigente y cerrar o aceptar formalmente SEC-03, SEC-04, SEC-05 y SEC-06.
 
+## Addendum — Sprint 019
+
+La auditoría vigente se encuentra en [AUDIT_SPRINT_019](AUDIT_SPRINT_019.md).
+El riesgo SEC-06 de copias de seguridad queda mitigado en la aplicación móvil:
+`allowBackup=false` y exclusión explícita de los dominios locales en las reglas
+de backup y transferencia. La revisión también confirma que no hay avisos OSV
+para los principales artefactos resueltos ni secretos en el código rastreado.
+Permanece documentado como riesgo medio aceptado el canal Android Data Layer
+sin allowlist criptográfica de nodos.
+
 ## Addendum de revisión de alcance — 2026-08-30
 
 La revisión del Sprint 016 confirma que los hallazgos SEC-01 y SEC-02

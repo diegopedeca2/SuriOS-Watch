@@ -6,6 +6,7 @@ import android.media.SoundPool
 import com.suri.pipsurios.R
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlin.random.Random
 
@@ -37,7 +38,17 @@ class ClickScheduler(
     suspend fun run(levelProvider: () -> Float) {
         while (currentCoroutineContext().isActive) {
             val level = levelProvider().coerceIn(0f, 1f)
+            if (level <= STOP_LEVEL) {
+                stop()
+                return
+            }
             delay(intervalMillis(level, random.nextFloat()))
+            currentCoroutineContext().ensureActive()
+            val levelAtPlayback = levelProvider().coerceIn(0f, 1f)
+            if (levelAtPlayback <= STOP_LEVEL) {
+                stop()
+                return
+            }
             if (loaded) {
                 if (activeStreamId != 0) soundPool.stop(activeStreamId)
                 activeStreamId = soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
@@ -45,10 +56,14 @@ class ClickScheduler(
         }
     }
 
-    fun release() {
+    fun stop() {
         if (activeStreamId != 0) soundPool.stop(activeStreamId)
-        soundPool.release()
         activeStreamId = 0
+    }
+
+    fun release() {
+        stop()
+        soundPool.release()
         loaded = false
     }
 
@@ -63,5 +78,6 @@ class ClickScheduler(
         const val MAX_INTERVAL_MS = 1_600L
         const val MIN_INTERVAL_MS = 120L
         const val VARIATION_FRACTION = 0.12f
+        private const val STOP_LEVEL = 0.005f
     }
 }

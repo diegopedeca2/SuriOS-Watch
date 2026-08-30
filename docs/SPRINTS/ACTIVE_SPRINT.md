@@ -10,7 +10,7 @@ last_updated: 2026-08-30
 
 ## Sprint activo
 
-Sprint 018 queda cerrado. [Sprint 018 v1.0](SPRINT_018_v1.0.md) — **CLOSED**
+Sprint 019 queda cerrado. [Sprint 019 v1.0](SPRINT_019_v1.0.md) — **CLOSED**
 
 ## Estado
 
@@ -18,6 +18,10 @@ Sprint 015: **CLOSED**
 Sprint 016: **CLOSED**
 Sprint 017: **CLOSED**
 Sprint 018: **CLOSED**
+Sprint 019: **CLOSED**
+
+Sprint 019 audita el monorepo, actualiza PIP-SuriOS a v2.5, desinstala P.R.S.
+//COVER del A56 y documenta el cierre de seguridad y validación.
 
 Sprint 018 formaliza, implementa y valida la skin NECRON para PIP-SuriOS
 Android. La skin conserva la funcionalidad compartida, aplica tokens y
@@ -25,7 +29,7 @@ emblema vectorial propios del prototipo, y mantiene legibilidad en Home y
 P.R.S. sobre el Samsung A56. La selección es de sesión y vuelve a Brotherhood
 tras reiniciar el proceso.
 
-PIP-SuriOS v2.4 queda auditado y el Sprint 015 queda completado y cerrado
+PIP-SuriOS v2.5 queda auditado y el Sprint 015 queda completado y cerrado
 técnica, funcional y documentalmente a fecha 2026-08-30. El P.R.S. activo usa
 `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `TRACK TARGET`, con histórico RSSI,
 suavizado y nubes de densidad sin posicionamiento sintético. PIW-SuriOS Watch
@@ -42,8 +46,9 @@ Sprint 016 queda cerrado de forma independiente. Sprint 017 queda cerrado tras
 la auditoría técnica y el despliegue validado; cualquier trabajo ajeno a su
 alcance requiere autorización expresa.
 
-Los trabajos paralelos de mapas quedan fuera de este cierre y no se auditan ni
-modifican aquí.
+Los mapas TERRAIN y la lógica RAD ZONE/Geiger quedan incluidos en la auditoría
+de Sprint 019; no se altera el contenido funcional validado de NAVY7/HOME fuera
+de las correcciones ya documentadas.
 
 ## Cierre de Sprint 018 de SuriOS Ecosystem / PIP-SuriOS
 
@@ -79,7 +84,7 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
 ## Roadmap de PIP-SuriOS
 
 - Sprint 015 queda cerrado.
-- PIP-SuriOS v2.4 queda auditado y consolidado.
+- PIP-SuriOS v2.5 queda auditado y consolidado.
 - La guía imprimible del P.R.S. queda disponible en `output/pdf/PRS_CALIBRATION_GUIDE_SPRINT_015.pdf`.
 - Se entregan las variantes `fullDebug` y `prsOnlyDebug` de P.R.S.
 - Sprint 016 queda cerrado tras la revisión documentada de temas abiertos y el

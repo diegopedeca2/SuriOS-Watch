@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
@@ -54,6 +55,7 @@ import com.suri.pipsurios.ui.theme.PipMapBackground
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.ceil
+import kotlin.math.floor
 import kotlin.math.log2
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -76,6 +78,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     val headingSource = remember { TerrainHeading(context.applicationContext) }
     val clickScheduler = remember { ClickScheduler(context.applicationContext) }
     var mapData by remember { mutableStateOf<MbTilesData?>(null) }
+    var loadedTiles by remember { mutableStateOf<Map<TileKey, ImageBitmap>>(emptyMap()) }
     var loadError by remember { mutableStateOf<String?>(null) }
     var overlays by remember { mutableStateOf(overlayRepository.load(definition.mapId)) }
     var overlaysMapId by remember { mutableStateOf<String?>(definition.mapId) }
@@ -100,6 +103,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
 
     LaunchedEffect(selectedMapId) {
         mapData = null
+        loadedTiles = emptyMap()
         loadError = null
         selection = MapSelection.None
         editMode = TerrainEditMode.NONE
@@ -126,6 +130,30 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     }
     val tileCoverage = remember(mapData) {
         mapData?.let { TerrainTileCoverage.from(it.tileKeys, definition.maxNativeZoom) }
+    }
+    DisposableEffect(mapData) {
+        val current = mapData
+        onDispose { current?.close() }
+    }
+    LaunchedEffect(mapData, center, zoom, currentHeading, canvasSize) {
+        val data = mapData ?: return@LaunchedEffect
+        if (canvasSize.width <= 0 || canvasSize.height <= 0) return@LaunchedEffect
+        val tileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
+        val requested = visibleTileKeys(
+            data,
+            TerrainViewportTransform(center, zoom, canvasSize.width, canvasSize.height, currentHeading),
+            tileZoom,
+            canvasSize
+        )
+        val missing = requested.filterNot(loadedTiles::containsKey)
+        if (missing.isNotEmpty()) {
+            val loaded = withContext(Dispatchers.IO) {
+                missing.mapNotNull { key -> data.loadTile(key)?.let { key to it } }.toMap()
+            }
+            loadedTiles = loadedTiles.filterKeys { it in requested } + loaded
+        } else {
+            loadedTiles = loadedTiles.filterKeys { it in requested }
+        }
     }
     val minimumCoverageZoom = tileCoverage?.minimumDisplayZoom(
         canvasSize.width, canvasSize.height, definition.minZoom.toFloat(), definition.maxDisplayZoom.toFloat()
@@ -159,7 +187,10 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         } else {
             permissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
         }
-        onDispose { locationSource.stop(); clickScheduler.release() }
+        onDispose { locationSource.stop() }
+    }
+    DisposableEffect(clickScheduler) {
+        onDispose { clickScheduler.release() }
     }
     DisposableEffect(headingSource, compassMode, hasSelectedMap) {
         if (!hasSelectedMap) {
@@ -183,13 +214,18 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         }
         val current = fix
         val distance = current?.let { TerrainGeometry.nearestZoneDistanceMeters(it.point, overlays.radZones) }
-        geigerLevel = radiation.update(distance?.first, distance?.second == true, current?.accuracyMeters ?: Float.MAX_VALUE)
+        if (distance == null) {
+            radiation.reset()
+            geigerLevel = 0f
+        } else {
+            geigerLevel = radiation.update(distance.first, distance.second, current?.accuracyMeters ?: Float.MAX_VALUE)
+        }
     }
     LaunchedEffect(geigerLevel > 0.005f, hasSelectedMap) {
-        if (!hasSelectedMap) {
-            clickScheduler.release()
-        } else if (geigerLevel > 0.005f) {
+        if (hasSelectedMap && geigerLevel > 0.005f) {
             clickScheduler.run { currentGeigerLevel }
+        } else {
+            clickScheduler.stop()
         }
     }
 
@@ -274,12 +310,10 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                             val tileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
                             val scale = 2.0.pow(zoom.toDouble() - tileZoom).toFloat()
                             val centerPixel = WebMercator.toWorldPixel(center, tileZoom)
-                            data.tileKeys.filter { it.zoom == tileZoom }.forEach { key ->
-                                data.loadTile(key)?.let { image ->
-                                    val x = (size.width / 2 + (key.x * 256.0 - centerPixel.x) * scale).roundToInt()
-                                    val y = (size.height / 2 + (key.xyzY * 256.0 - centerPixel.y) * scale).roundToInt()
-                                    drawImage(image, dstOffset = IntOffset(x, y), dstSize = IntSize(ceil(256 * scale).toInt(), ceil(256 * scale).toInt()))
-                                }
+                            loadedTiles.filterKeys { it.zoom == tileZoom }.forEach { (key, image) ->
+                                val x = (size.width / 2 + (key.x * 256.0 - centerPixel.x) * scale).roundToInt()
+                                val y = (size.height / 2 + (key.xyzY * 256.0 - centerPixel.y) * scale).roundToInt()
+                                drawImage(image, dstOffset = IntOffset(x, y), dstSize = IntSize(ceil(256 * scale).toInt(), ceil(256 * scale).toInt()))
                             }
                         }
                         overlays.radZones.forEach { zone ->
@@ -404,4 +438,28 @@ fun MapTerrainScreen(onBack: () -> Unit) {
 private fun TerrainAction(text: String, enabled: Boolean=true, modifier: Modifier=Modifier, onClick:()->Unit) {
     Text(text, color=if(enabled) PipGreen else PipGreenDim, fontSize=14.sp, fontFamily=FontFamily.Monospace,
         modifier=if(enabled) modifier.background(PipBlack.copy(alpha=.82f)).clickable(onClick=onClick).padding(6.dp) else modifier.padding(6.dp))
+}
+
+private fun visibleTileKeys(
+    data: MbTilesData,
+    transform: TerrainViewportTransform,
+    tileZoom: Int,
+    canvasSize: IntSize
+): Set<TileKey> {
+    val corners = listOf(
+        Offset(0f, 0f),
+        Offset(canvasSize.width.toFloat(), 0f),
+        Offset(0f, canvasSize.height.toFloat()),
+        Offset(canvasSize.width.toFloat(), canvasSize.height.toFloat())
+    )
+    val world = corners.map { screen ->
+        WebMercator.toWorldPixel(transform.screenToGeo(screen.x, screen.y), tileZoom)
+    }
+    val minX = floor(world.minOf { it.x } / 256.0).toInt() - 1
+    val maxX = floor(world.maxOf { it.x } / 256.0).toInt() + 1
+    val minY = floor(world.minOf { it.y } / 256.0).toInt() - 1
+    val maxY = floor(world.maxOf { it.y } / 256.0).toInt() + 1
+    return data.tileKeys.filterTo(linkedSetOf()) { key ->
+        key.zoom == tileZoom && key.x in minX..maxX && key.xyzY in minY..maxY
+    }
 }

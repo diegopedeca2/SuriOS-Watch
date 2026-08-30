@@ -180,14 +180,28 @@ class MapTerrainTest {
         assertFalse(TerrainGeometry.isInside(GeoPoint(40.002, -3.0), zone.vertices))
     }
 
-    @Test fun geigerMappingFiltersBadFixesAndSmoothsBoundary() {
+    @Test fun geigerMappingUsesZoneGeometryEvenWithPoorGpsAccuracy() {
         val controller = TerrainRadiationController()
         assertEquals(0f, controller.update(20.0, false, 4f))
         val near = controller.update(2.0, false, 4f)
         assertTrue(near > 0f && near < 1f)
         assertTrue(controller.update(1.0, true, 4f) > near)
-        val badFix = TerrainRadiationController().update(0.0, true, 80f)
-        assertEquals(0f, badFix)
+        val poorAccuracyInside = TerrainRadiationController().update(0.0, true, 80f)
+        assertTrue(poorAccuracyInside > 0f)
+    }
+
+    @Test fun geigerMappingActivatesNearZoneWithPoorGpsAccuracy() {
+        val near = TerrainRadiationController().update(2.0, false, 80f)
+        assertTrue(near > 0f)
+    }
+
+    @Test fun geigerMappingStopsImmediatelyWhenZoneIsRemovedOrExited() {
+        val controller = TerrainRadiationController()
+        assertTrue(controller.update(0.0, true, 80f) > 0f)
+        assertEquals(0f, controller.update(null, false, 80f))
+
+        assertTrue(controller.update(0.0, true, 80f) > 0f)
+        assertEquals(0f, controller.update(20.0, false, 80f))
     }
 
     @Test fun overlaySerializationPreservesMultipleMapsGeometry() {

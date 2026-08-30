@@ -40,7 +40,16 @@ object OfflineMapCatalog {
         maxNativeZoom = 19,
         maxDisplayZoom = 20
     )
-    val maps = listOf(NAVY7)
+    val HOME = OfflineMapDefinition(
+        mapId = "home",
+        name = "HOME",
+        assetPath = "maps/home_terrain.mbtiles",
+        bounds = MapBounds(-3.89984, 40.4364, -3.84117, 40.4594),
+        minZoom = 16,
+        maxNativeZoom = 19,
+        maxDisplayZoom = 20
+    )
+    val maps = listOf(NAVY7, HOME)
 }
 
 object TerrainZoomTuning {

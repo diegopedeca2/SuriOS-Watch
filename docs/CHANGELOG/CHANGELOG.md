@@ -1,3 +1,27 @@
+## Sprint 019 — Auditoría, seguridad y PIP-SuriOS v2.5 — 2026-08-30
+
+### Añadido y modificado
+
+- Auditoría completa del monorepo, incluidos Android, Wear OS, TERRAIN,
+  RAD ZONE/Geiger, dependencias y superficie de seguridad.
+- Firma visible actualizada a `PIP-SuriOS v2.5`; `versionName=2.5` y
+  `versionCode=5`.
+- P.R.S. //COVER (`com.suri.pipsurios.prs`) desinstalado del Samsung A56.
+- Backup de la aplicación principal desactivado y reglas de transferencia
+  configuradas para no exportar datos locales.
+- Corregida la parada del audio del Geiger al eliminar una RAD ZONE.
+- Matriz de versiones protegida: SuriOS Watch `1.1`/code `5`, PROBE-SuriOS
+  watchface `2.2`/code `3` y P.R.S. PROBE // WATCH 2 `1.0`/code `1` se
+  conservan sin cambios.
+
+### Seguridad y validación
+
+- Sin secretos detectados y sin avisos OSV en los artefactos principales
+  resueltos a fecha 2026-08-30.
+- El riesgo residual del Android Data Layer queda documentado para una futura
+  allowlist/autenticación de nodos.
+- Detalle y dictamen en [AUDIT_SPRINT_019](../AUDIT_SPRINT_019.md).
+
 ## Sprint 018 — Skin NECRON para PIP-SuriOS — 2026-08-30
 
 ### Añadido

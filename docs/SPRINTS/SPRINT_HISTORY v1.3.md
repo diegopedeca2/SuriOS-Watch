@@ -62,6 +62,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 016 | SuriOS Ecosystem / PIP-SuriOS | Revisión de temas abiertos, saneamiento documental y validación de SuriOS Watch en AVD | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 016 v1.1](SPRINT_016_v1.1.md) |
 | 017 | SuriOS Ecosystem / PIP-SuriOS | P.R.S. compacto para Z Flip 6 y clasificación práctica de dispositivos | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 017 v1.0](SPRINT_017_v1.0.md) |
 | 018 | SuriOS Ecosystem / PIP-SuriOS | Skin NECRON, aplicación visual a P.R.S. y validación en Samsung A56 | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 018 v1.0](SPRINT_018_v1.0.md) |
+| 019 | SuriOS Ecosystem / PIP-SuriOS | Auditoría, seguridad, PIP-SuriOS v2.5 y cierre de despliegue | Cerrado | Completado con riesgos residuales explícitos | 2026-08-30 | 2026-08-30 | [Sprint 019 v1.0](SPRINT_019_v1.0.md) |
 
 ---
 
@@ -96,6 +97,7 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 12. Sprint 016 — Cerrado. Revisión de temas abiertos, saneamiento documental y validación de la esfera OFICIAL en AVD; la campaña física y el ajuste de `PrsTuning.DEFAULT` quedan cancelados.
 13. Sprint 017 — Cerrado. Refinamiento compacto de P.R.S. y clasificación práctica de dispositivos.
 14. Sprint 018 — Cerrado. Skin NECRON para PIP-SuriOS, aplicación a P.R.S. y validación visual en Samsung A56.
+15. Sprint 019 — Cerrado. Auditoría completa, análisis de vulnerabilidades, PIP-SuriOS v2.5 y cierre de despliegue.
 
 ---
 
@@ -761,3 +763,13 @@ Las pruebas físicas de aceptación en moto y la calibración de campo quedan
 registradas como continuidad posterior y deuda explícita. Sprint 017 queda
 cerrado técnica y documentalmente. Los trabajos paralelos de mapas y skins no
 forman parte de esta auditoría ni de este cierre.
+## Sprint 019 — Auditoría, seguridad y PIP-SuriOS v2.5
+
+Sprint 019 queda cerrado el 2026-08-30. Se auditó el monorepo, se incrementó la
+versión móvil a `2.5` (`versionCode 5`), se actualizaron las firmas visibles y
+se desinstaló P.R.S. //COVER del Samsung A56. La auditoría de seguridad no
+detectó vulnerabilidades críticas/altas ni secretos; el backup local quedó
+desactivado y el riesgo residual del Data Layer quedó registrado.
+
+Consulta: [SPRINT_019_v1.0](SPRINT_019_v1.0.md) y
+[AUDIT_SPRINT_019](../AUDIT_SPRINT_019.md).

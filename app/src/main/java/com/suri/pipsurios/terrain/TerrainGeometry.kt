@@ -51,8 +51,13 @@ class TerrainRadiationController {
     private var active = false
 
     fun update(distanceMeters: Double?, inside: Boolean, accuracyMeters: Float): Float {
-        if (distanceMeters == null || accuracyMeters > TerrainRadiationTuning.LOCATION_MAX_ACCURACY_METERS) {
-            return smoothToward(0f)
+        // Accuracy is useful information for the caller, but it must not be a
+        // hard gate: Wear GPS fixes commonly report >35 m even when the user
+        // is already inside a user-drawn zone. The zone geometry remains the
+        // source of truth for activation.
+        if (distanceMeters == null || !distanceMeters.isFinite()) {
+            reset()
+            return 0f
         }
         val threshold = TerrainRadiationTuning.RADIATION_TRIGGER_DISTANCE_METERS +
             if (active) TerrainRadiationTuning.EXIT_HYSTERESIS_METERS else 0.0
@@ -61,8 +66,17 @@ class TerrainRadiationController {
             distanceMeters >= threshold -> 0f
             else -> ((threshold - distanceMeters) / TerrainRadiationTuning.RADIATION_TRIGGER_DISTANCE_METERS).toFloat().coerceIn(0f, 1f)
         }
+        if (target <= 0f) {
+            reset()
+            return 0f
+        }
         active = target > 0f
         return smoothToward(target)
+    }
+
+    fun reset() {
+        level = 0f
+        active = false
     }
 
     private fun smoothToward(target: Float): Float {

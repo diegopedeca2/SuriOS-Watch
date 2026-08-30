@@ -8,7 +8,7 @@
 > The `prsOnlyDebug` edition is optimized for the Z Flip 6 external display:
 > centered `P.R.S.`, radar on the left and a names-only list on the right.
 
-Manual oficial de usuario — PIP-SuriOS v2.4
+Manual oficial de usuario — PIP-SuriOS v2.5
 
 ## Índice
 
@@ -506,6 +506,7 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v2.2** | P.R.S. REMOTE PROBE experimental para Xiaomi Watch 2, recepción Wi-Fi local en A56, almacenamiento bruto y comparación conservadora entre nodos. |
 | **v2.3** | SET-UP vertical con INPUT/DATA, perfil de operador persistente, réplicas primarias de texto libre y WATCH 2 en ACCESORIES. |
 | **v2.4** | Firma visible y versión técnica actualizadas; P.R.S. compacto para pantalla externa y categorías inferidas de dispositivo. |
+| **v2.5** | Auditoría de Sprint 019, backup local desactivado y correcciones de cierre de RAD ZONE/Geiger. |
 | **v3.0** | Reconstrucción de P.R.S.: LOCAL SCAN, SCAN + PROBE, histórico temporal RSSI, nubes de densidad, TRACK TARGET, DEVICES y categorías inferidas de dispositivo. |
 
 P.R.S. v3.0 incorpora el análisis temporal observable, la lista de contactos,
