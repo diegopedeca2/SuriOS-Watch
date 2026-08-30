@@ -10,13 +10,13 @@ last_updated: 2026-08-30
 
 ## Sprint activo
 
-Sprint 017 sigue en curso. [Sprint 017 v1.0](SPRINT_017_v1.0.md) — **IN PROGRESS**
+Sprint 017 queda cerrado. [Sprint 017 v1.0](SPRINT_017_v1.0.md) — **CLOSED**
 
 ## Estado
 
 Sprint 015: **CLOSED**
 Sprint 016: **CLOSED**
-Sprint 017: **IN PROGRESS**
+Sprint 017: **CLOSED**
 
 PIP-SuriOS v2.4 queda auditado y el Sprint 015 queda completado y cerrado
 técnica, funcional y documentalmente a fecha 2026-08-30. El P.R.S. activo usa
@@ -31,18 +31,21 @@ edición completa y la reducida pueden añadir al nombre una categoría inferida
 (`[PHONE]`, `[WATCH]`, `[TV]`, `[AUDIO]` o `[COMPUTER]`) cuando existe evidencia
 reconocible; los dispositivos no identificables no reciben sufijo.
 
-Sprint 016 queda cerrado de forma independiente. Sprint 017 continúa en curso;
-cualquier trabajo ajeno a su alcance requiere autorización expresa.
+Sprint 016 queda cerrado de forma independiente. Sprint 017 queda cerrado tras
+la auditoría técnica y el despliegue validado; cualquier trabajo ajeno a su
+alcance requiere autorización expresa.
 
-## Sprint activo de SuriOS Ecosystem / PIP-SuriOS
+Los trabajos paralelos de mapas y skins quedan fuera de este cierre y no se
+auditan ni modifican aquí.
 
-[Sprint 017 v1.0](SPRINT_017_v1.0.md), actualmente en curso desde el
-2026-08-30.
+## Cierre de Sprint 017 de SuriOS Ecosystem / PIP-SuriOS
+
+[Sprint 017 v1.0](SPRINT_017_v1.0.md), abierto y cerrado el 2026-08-30.
 
 La iteración incorpora la edición compacta de P.R.S. para la pantalla externa
 del Z Flip 6 y la inferencia de categorías de dispositivo en la edición reducida
-y en PIP-SuriOS. La aceptación física y el cierre documental de Sprint 017
-siguen pendientes.
+y en PIP-SuriOS. La aceptación física queda como continuidad posterior; el
+cierre técnico y documental de Sprint 017 está completado.
 
 ## Contexto del Sprint 015 de PIP-SuriOS
 
@@ -64,7 +67,7 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
 - Se entregan las variantes `fullDebug` y `prsOnlyDebug` de P.R.S.
 - Sprint 016 queda cerrado tras la revisión documentada de temas abiertos y el
   saneamiento de estado.
-- Sprint 017 permanece en curso tras el refinamiento compacto de P.R.S. y la
+- Sprint 017 queda cerrado tras el refinamiento compacto de P.R.S. y la
   incorporación de categorías inferidas de dispositivo.
 
 ## Addendum histórico — 2026-08-29
@@ -120,7 +123,7 @@ forman parte del cierre y quedan como continuidad.
 - [Sprint 014 v1.0](SPRINT_014_v1.0.md)
 - [Sprint 015 v1.0](SPRINT_015_v1.0.md)
 - [Sprint 016 v1.1](SPRINT_016_v1.1.md)
-- [Sprint 017 v1.0](SPRINT_017_v1.0.md) — en curso
+- [Sprint 017 v1.0](SPRINT_017_v1.0.md) — cerrado
 - [Auditoría Sprint 016](../AUDIT_SPRINT_016.md)
 - [Auditoría Sprint 017](../AUDIT_SPRINT_017.md)
 - [Auditoría Sprint 015](../AUDIT_SPRINT_015.md)

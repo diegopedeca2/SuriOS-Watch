@@ -1,8 +1,9 @@
-## Sprint 017 — PIP-SuriOS v2.4, iteración en curso de P.R.S. compacto y clasificación de dispositivos — 2026-08-30
+## Sprint 017 — PIP-SuriOS v2.4, cierre de P.R.S. compacto y clasificación de dispositivos — 2026-08-30
 
 ### Estado del corte
 
-- Iteración registrada por decisión del propietario como Sprint 017, todavía en curso.
+- Iteración registrada por decisión del propietario como Sprint 017 y cerrada
+  técnica y documentalmente.
 - Firma visible y versión técnica de PIP-SuriOS actualizadas a `v2.4` (`versionCode 4`).
 - `prsOnlyDebug` optimizada para la pantalla externa del Z Flip 6: `P.R.S.`
   centrado, radar a la izquierda y lista de nombres a la derecha.
@@ -14,11 +15,14 @@
 
 - Tests unitarios, lint y ensamblados de `fullDebug` y `prsOnlyDebug`:
   `BUILD SUCCESSFUL`.
-- Z Flip 6 (`SM-F741B`): `app-prsOnly-debug.apk` instalada y actividad
-  principal arrancada con `Status: ok`.
-- A56 (`SM_A566B`): `app-full-debug.apk` instalada y actividad principal
-  arrancada con `Status: ok`.
-- Pruebas físicas en moto, calibración y cierre del Sprint 017: pendientes.
+- Z Flip 6 (`SM-F741B`): la APK reducida `2.4-prs` instalada con `Success`
+  tras la reconexión y arrancada con `Status: ok`.
+- A56 (`SM_A566B`): `app-full-debug.apk` instalada con `Success` y arrancada
+  con `Status: ok`.
+- Pruebas físicas en moto y calibración: quedan como validación posterior; no
+  bloquean el cierre técnico.
+- Los trabajos paralelos de mapas y skins quedan fuera del alcance de este
+  cierre y no se modifican.
 - Auditoría: [AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
 
 ## Sprint 016 — saneamiento documental y validación Watch/AVD — 2026-08-30

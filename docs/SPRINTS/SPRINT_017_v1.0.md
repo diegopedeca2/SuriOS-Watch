@@ -6,17 +6,17 @@ document: SPRINT
 sprint: 017
 version: 1.0
 project: SuriOS Ecosystem / PIP-SuriOS
-document_status: En curso
-implementation_status: En curso
+document_status: Cerrado
+implementation_status: Completado con deudas explícitas
 priority: Media
 ---
 
 ## Estado
 
 - Apertura: 2026-08-30.
-- Cierre: pendiente.
-- Estado: en curso.
-- Sprint activo posterior: ninguno; este Sprint sigue activo.
+- Cierre: 2026-08-30.
+- Estado: cerrado técnica y documentalmente.
+- Sprint activo posterior: no se declara dentro de este cierre.
 - Aplicación móvil de referencia: PIP-SuriOS v2.4 (`versionCode 4`).
 
 ## Objetivo
@@ -50,9 +50,10 @@ o modelo. La incertidumbre propia de anuncios BLE incompletos queda aceptada.
 - Lint de `fullDebug` y `prsOnlyDebug`: `BUILD SUCCESSFUL`, sin errores.
 - Ensamblado de ambas APK: `BUILD SUCCESSFUL`.
 - `git diff --check`: salida correcta (`exit 0`).
-- Samsung Z Flip 6 (`SM-F741B`): `app-prsOnly-debug.apk` instalada con
-  `Success`; paquete `com.suri.pipsurios.prs`, `versionName=2.4-prs`;
-  actividad principal arrancada con `Status: ok`.
+- Samsung Z Flip 6 (`SM-F741B`): la instalación anterior de `prsOnlyDebug` y
+  su arranque quedaron confirmados en el dispositivo. La nueva APK
+  `versionName=2.4-prs` se instaló con `Success` tras la reconexión y arrancó
+  con `Status: ok`.
 - Samsung A56 (`SM_A566B`): `app-full-debug.apk` instalada con `Success`;
   paquete `com.suri.pipsurios`, `versionName=2.4`; actividad principal
   arrancada con `Status: ok`.
@@ -62,12 +63,16 @@ o modelo. La incertidumbre propia de anuncios BLE incompletos queda aceptada.
 ## Pendientes
 
 Las pruebas físicas en moto —legibilidad, reflejos, estabilidad y uso con
-señales reales— quedan como validación posterior. No se ha realizado
-calibración física ni se han modificado los valores de `PrsTuning.DEFAULT`.
+señales reales— quedan como validación posterior y deuda explícita. No se ha
+realizado calibración física ni se han modificado los valores de
+`PrsTuning.DEFAULT`; estas limitaciones no bloquean el cierre técnico y
+documental.
 
 ## Estado del corte
 
-Sprint 017 no queda cerrado en este cambio. La aceptación física y cualquier
-ajuste posterior permanecen dentro del Sprint en curso.
+Sprint 017 queda cerrado técnica y documentalmente. Las variantes `prsOnly`
+v2.4 y `fullDebug` v2.4 quedan instaladas y arrancadas correctamente en el Z
+Flip 6 y el A56, respectivamente. La validación física queda registrada como
+continuidad posterior.
 
 Auditoría: [AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
