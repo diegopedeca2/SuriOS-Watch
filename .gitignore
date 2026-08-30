@@ -14,3 +14,16 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Local build/cache state and generated validation output.
+/.gradle-user/
+/.kotlin/
+/output/
+/tmp/
+/symbology-style.db
+/Back-up docs/RELEASES/PIP-SuriOS_v2.3_SPRINT_014/apk/
+
+# Machine-local Android Studio state not required to build the project.
+/.idea/deviceManager.xml
+/.idea/dictionaries/
+/.idea/markdown.xml

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
+import com.suri.pipsurios.prs.PrsOperatingMode
 import kotlinx.coroutines.delay
 
 @Composable
@@ -62,9 +63,9 @@ fun ProximityRadioScannerLoadingScreen(onFinished: () -> Unit) {
 
 @Composable
 fun ProximityRadioScannerScreen(
-    onV2Selected: () -> Unit,
-    onVersionSelected: () -> Unit,
-    onTestingSelected: () -> Unit,
+    onLocalScanSelected: () -> Unit,
+    onScanProbeSelected: () -> Unit,
+    onDevicesSelected: () -> Unit,
     onGuideSelected: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -83,25 +84,25 @@ fun ProximityRadioScannerScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "> P.R.S. v2.0",
+                text = "> ${PrsOperatingMode.LOCAL_SCAN.displayName}",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onV2Selected)
+                modifier = Modifier.clickable(onClick = onLocalScanSelected)
             )
             Text(
-                text = "> P.R.S. v1.0",
+                text = "> ${PrsOperatingMode.SCAN_PROBE.displayName}",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onVersionSelected)
+                modifier = Modifier.clickable(onClick = onScanProbeSelected)
             )
             Text(
-                text = "> P.R.S. TESTING",
+                text = "> DEVICES",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onTestingSelected)
+                modifier = Modifier.clickable(onClick = onDevicesSelected)
             )
             Text(
                 text = "> OPERATION GUIDE",
@@ -112,16 +113,13 @@ fun ProximityRadioScannerScreen(
             )
         }
 
-        Text(
-            text = "< BACK",
-            color = PipGreenDim,
-            fontSize = 18.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
+        PrsBackButton(
+            onBack = onBack,
+            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
         )
 
         Text(
-            text = "PIP-SuriOS v2.3",
+            text = "PIP-SuriOS v2.4",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -191,7 +189,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.3",
+            text = "PIP-SuriOS v2.4",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

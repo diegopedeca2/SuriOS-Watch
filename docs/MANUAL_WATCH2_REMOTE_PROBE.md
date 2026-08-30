@@ -253,7 +253,8 @@ Repetir primero la toma con pantalla activa o Ambient Mode. Anotar el comportami
 - `BETWEEN`: diferencia de hasta 6 dB.
 - `UNCERTAIN`: cualquier caso intermedio o con evidencia insuficiente.
 
-Estos umbrales son provisionales y deben calibrarse con las muestras de `P.R.S. TESTING`. No representan metros, coordenadas ni una posición garantizada.
+Estos umbrales son provisionales y no están calibrados. No representan metros,
+coordenadas ni una posición garantizada.
 
 ## 11. Referencias
 

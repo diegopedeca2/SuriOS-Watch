@@ -9,32 +9,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.DelegatableNode
+import com.suri.pipsurios.ui.skin.SkinSession
 
-private val PIPSuriOSColorScheme = darkColorScheme(
-    primary = PipGreen,
-    secondary = PipGreenDim,
-    tertiary = PipAmber,
+private fun colorSchemeFor(palette: SkinPalette) = darkColorScheme(
+    primary = palette.primary,
+    secondary = palette.secondary,
+    tertiary = palette.amber,
 
-    background = PipBlack,
-    surface = PipBlack,
+    background = palette.background,
+    surface = palette.background,
 
-    onPrimary = PipBlack,
-    onSecondary = PipBlack,
-    onTertiary = PipBlack,
+    onPrimary = palette.background,
+    onSecondary = palette.background,
+    onTertiary = palette.background,
 
-    onBackground = PipGreen,
-    onSurface = PipGreen,
+    onBackground = palette.primary,
+    onSurface = palette.primary,
 
-    error = PipRed,
-    onError = PipBlack
+    error = palette.red,
+    onError = palette.background
 )
 
 @Composable
 fun PIPSuriOSTheme(
     content: @Composable () -> Unit
 ) {
+    val palette = SkinPalettes.forSkin(SkinSession.activeSkin)
     MaterialTheme(
-        colorScheme = PIPSuriOSColorScheme,
+        colorScheme = colorSchemeFor(palette),
         typography = Typography,
         content = {
             // The PIP interface is intentionally quiet: clicking a control must not

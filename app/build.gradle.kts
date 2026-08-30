@@ -11,12 +11,26 @@ android {
 
     defaultConfig {
         applicationId = "com.suri.pipsurios"
-        minSdk = 35
+        minSdk = 34
         targetSdk = 37
-        versionCode = 3
-        versionName = "2.3"
+        versionCode = 4
+        versionName = "2.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions += "edition"
+    productFlavors {
+        create("full") {
+            dimension = "edition"
+            buildConfigField("boolean", "PRS_ONLY", "false")
+        }
+        create("prsOnly") {
+            dimension = "edition"
+            applicationIdSuffix = ".prs"
+            versionNameSuffix = "-prs"
+            buildConfigField("boolean", "PRS_ONLY", "true")
+        }
     }
 
     buildTypes {
@@ -40,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":probeprotocol"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
@@ -48,6 +63,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.play.services.wearable)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

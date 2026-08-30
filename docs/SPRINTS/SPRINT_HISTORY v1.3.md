@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Activo; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-08-28
+last_updated: 2026-08-30
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 014 | Sprint 014 completado; PIP-SuriOS v2.3 estable para pruebas experimentales |
+| PIP-SuriOS | Sprint 017 | Sprint 016 | Sprint 017 en curso; PIP-SuriOS v2.4 estable para pruebas experimentales |
 
 ---
 
@@ -58,6 +58,9 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 012 | PIP-SuriOS | Reorganización de HOMESCREEN, TOOLS y menú P.R.S. | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 012 v1.0](SPRINT_012_v1.0.md) |
 | 013 | PIP-SuriOS | P.R.S. v2.0, P.R.S. REMOTE PROBE, doble lectura y P.R.S. TESTING | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 013 v1.0](SPRINT_013_v1.0.md) |
 | 014 | PIP-SuriOS | SET-UP vertical, datos persistentes, replica libre y WATCH 2 en ACCESORIES | Aprobado | Completado | 2026-08-28 | 2026-08-28 | [Sprint 014 v1.0](SPRINT_014_v1.0.md) |
+| 015 | PIP-SuriOS | Reconstrucción P.R.S. y cierre PIW/PROBE-SuriOS | Aprobado | Completado | 2026-08-28 | 2026-08-30 | [Sprint 015 v1.0](SPRINT_015_v1.0.md) |
+| 016 | SuriOS Ecosystem / PIP-SuriOS | Revisión de temas abiertos, saneamiento documental y validación de SuriOS Watch en AVD | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 016 v1.1](SPRINT_016_v1.1.md) |
+| 017 | SuriOS Ecosystem / PIP-SuriOS | P.R.S. compacto para Z Flip 6 y clasificación práctica de dispositivos | En curso | En curso | 2026-08-30 | — | [Sprint 017 v1.0](SPRINT_017_v1.0.md) |
 
 ---
 
@@ -88,6 +91,9 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 8. Sprint 012 — Cerrado. Reorganización de HOMESCREEN, TOOLS y P.R.S. PIP-SuriOS v2.1.
 9. Sprint 013 — Cerrado. P.R.S. v2.0, REMOTE PROBE, doble lectura y P.R.S. TESTING. PIP-SuriOS v2.2.
 10. Sprint 014 — Cerrado. SET-UP vertical, datos persistentes, replica libre y WATCH 2 en ACCESORIES. PIP-SuriOS v2.3.
+11. Sprint 015 — Cerrado. Reconstrucción P.R.S. y cierre PIW/PROBE-SuriOS.
+12. Sprint 016 — Cerrado. Revisión de temas abiertos, saneamiento documental y validación de la esfera OFICIAL en AVD; la campaña física y el ajuste de `PrsTuning.DEFAULT` quedan cancelados.
+13. Sprint 017 — En curso. Refinamiento compacto de P.R.S. y clasificación práctica de dispositivos.
 
 ---
 
@@ -542,9 +548,9 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### Ecosistema
 
-- Sprints registrados: 17.
-- Sprints completados: 17.
-- Sprints activos: 0.
+- Sprints registrados: 20.
+- Sprints completados: 19.
+- Sprints activos: 1.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
 
@@ -558,28 +564,31 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 014.
-- Versión vigente: PIP-SuriOS v2.3.
-- Sprints activos: 0.
+- Último Sprint completado: Sprint 016.
+- Versión vigente: PIP-SuriOS v2.4.
+- Sprints activos: 1 (Sprint 017).
 - Sprint 009: completado y cerrado.
 - Sprint 010: completado y cerrado.
 - Sprint 011: completado y cerrado.
 - Sprint 012: completado y cerrado.
 - Sprint 013: completado y cerrado.
 - Sprint 014: completado y cerrado.
+- Sprint 015: completado y cerrado.
+- Sprint 016: completado y cerrado; mantiene deudas explícitas y continuidad física pendiente.
+- Sprint 017: en curso; validación física de aceptación pendiente.
 ---
 
 ## 20. Estado operativo
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 014 de PIP-SuriOS está completado y que no existe ningún Sprint activo.
+Actualmente confirma que Sprint 015 y Sprint 016 de PIP-SuriOS están completados y que Sprint 017 continúa activo.
 
-Sprint 013 está cerrado y PIP-SuriOS v2.3 constituye la versión móvil consolidada vigente tras el cierre de Sprint 014.
+Sprint 015 está cerrado y PIP-SuriOS v2.4 constituye la versión móvil consolidada vigente. Sprint 016 revisa temas abiertos y sanea la documentación; Sprint 017 incorpora el refinamiento de P.R.S. y actualiza la firma de versión, y continúa en curso.
 
 PIW-SuriOS v2.0 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.3 con SET-UP persistente en vertical, DATA permanente, STORAGE, RADS v2, P.R.S. v1.0/v2.0, P.R.S. TESTING dual, REMOTE PROBE experimental, MAP TERRAIN NAVY7 offline, SELECT SKIN y TOOLS reorganizado constituye el estado móvil funcional vigente. Sprint 014 está cerrado.
+PIP-SuriOS v2.4 con SET-UP persistente en vertical, DATA permanente, STORAGE, RADS v2, P.R.S. v3.0, REMOTE PROBE opcional, MAP TERRAIN NAVY7 offline, SELECT SKIN y TOOLS reorganizado constituye el estado móvil funcional vigente. Sprint 015 y Sprint 016 están cerrados; Sprint 017 sigue en curso. La edición reducida de P.R.S. añade el layout para pantalla externa y las dos ediciones pueden mostrar categorías inferidas de dispositivo.
 
 ---
 
@@ -663,3 +672,86 @@ Se completaron compilación, tests unitarios, lint, validación manual en Galaxy
 Documento de cierre: [Sprint 014 v1.0](SPRINT_014_v1.0.md).
 
 Sprint 014 queda cerrado técnica, funcional y documentalmente. No existe ningún Sprint activo posterior.
+
+---
+
+## 25. Cierre de Sprint 015 de PIP-SuriOS
+
+Sprint 015 se abrió el 2026-08-28 y se cerró el 2026-08-30, consolidando la
+reconstrucción de P.R.S., la edición local `prsOnly` y la separación operativa
+del PROBE-SuriOS.
+
+Documento de cierre: [Sprint 015 v1.0](SPRINT_015_v1.0.md).
+
+La campaña física de P.R.S. y el ajuste de `PrsTuning.DEFAULT` quedaron
+registrados como trabajo posterior en el cierre inicial, pero fueron
+cancelados expresamente al abrir Sprint 016. No constituyen una actividad
+pendiente del Sprint 016.
+
+---
+
+## 26. Apertura histórica de Sprint 016 de SuriOS Ecosystem / PIP-SuriOS
+
+Sprint 016 se abre el 2026-08-30 con el objetivo de revisar temas abiertos,
+reconciliar la documentación canónica y clasificar las deudas heredadas.
+
+Documento del Sprint: [Sprint 016 v1.1](SPRINT_016_v1.1.md).
+
+La campaña física, el ajuste de `PrsTuning.DEFAULT`, la fusión de
+movimiento/orientación y la guía de campo asociada quedan fuera o cancelados.
+La revisión conserva abiertas las cuestiones de privacidad y seguridad que
+puedan seguir aplicando al código actual, y distingue los hallazgos del
+gateway HTTP antiguo que ya no corresponden al árbol vigente.
+
+---
+
+## 27. Cierre de Sprint 016 de SuriOS Ecosystem / PIP-SuriOS
+
+Sprint 016 se cierra el 2026-08-30. El informe completo de auditoría está en
+[AUDIT_SPRINT_016.md](../AUDIT_SPRINT_016.md).
+
+El cierre registra la cancelación de la campaña física de P.R.S., del ajuste de
+`PrsTuning.DEFAULT`, de la línea de movimiento/orientación y de la guía de
+campo asociada. Las cuestiones de privacidad, la deuda documental y los
+elementos pendientes del BACKLOG quedan mantenidos como continuidad explícita.
+
+Como addendum autorizado durante esta terminal, se preparó y validó la esfera
+OFICIAL `com.suri.surioswatch` `v1.1` en el AVD adicional
+`Galaxy_Watch_Ultra_2025` (Wear OS 5 / API 34, 480 x 480, 320 dpi, Play Store,
+`x86_64`). La esfera PROBE permanece separada y el Watch 2 no se modificó en
+esta iteración. Tests, ensamblados y lint terminaron correctamente.
+
+El refinamiento de `prsOnlyDebug` para la pantalla externa del Z Flip 6 y la
+clasificación de dispositivos se reatribuyen a Sprint 017; no forman parte
+del cierre funcional de Sprint 016. Su auditoría y evidencia están en
+[AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
+
+La instalación y validación en el Samsung Galaxy Watch Ultra físico, así como
+la integración Orca-QGIS, quedan fuera del cierre y requieren continuidad
+autorizada. Sprint 017 continúa en curso como iniciativa independiente.
+
+---
+
+## 28. Estado de Sprint 017 de SuriOS Ecosystem / PIP-SuriOS
+
+Sprint 017 se abre el 2026-08-30 y continúa en curso para completar el refinamiento de
+P.R.S. destinado a la pantalla externa del Samsung Z Flip 6 y la clasificación
+práctica de dispositivos en ambas ediciones.
+
+La edición `prsOnlyDebug` deja `P.R.S.` centrado, el radar en la mitad
+izquierda y el listado de nombres en la mitad derecha. Se eliminan estados,
+contadores y textos auxiliares de esa superficie. La edición reducida y la
+completa pueden añadir `[PHONE]`, `[WATCH]`, `[TV]`, `[AUDIO]` o `[COMPUTER]`;
+si no es identificable, no aparece ningún sufijo.
+
+Los tests unitarios aislados, lint y ensamblados de `fullDebug` y
+`prsOnlyDebug` terminaron correctamente en el corte actual. La APK reducida se instaló y arrancó
+en el Z Flip 6 (`SM-F741B`) y la APK completa se instaló y arrancó en el A56
+(`SM_A566B`), ambos con `Status: ok`.
+
+Documento del Sprint: [Sprint 017 v1.0](SPRINT_017_v1.0.md). Auditoría:
+[AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
+
+Las pruebas físicas de aceptación en moto y la calibración de campo quedan
+pendientes dentro de la continuidad de Sprint 017. No se declara el Sprint
+cerrado ni existe un Sprint posterior activo.

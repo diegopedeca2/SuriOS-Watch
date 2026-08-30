@@ -1,4 +1,8 @@
-# P.R.S. v2.0 — cribado de presencia en puerta
+# P.R.S. v2.0 — ARCHIVE
+
+> This document describes the retired two-position presence experiment. It is
+> no longer the active P.R.S. implementation. See `docs/PRS_v3.0.md` for the
+> current BLE contact-list, temporal RSSI and density-cloud architecture.
 
 ## Objetivo
 
@@ -8,8 +12,8 @@ El resultado es deliberadamente un **indicador de señales de dispositivos**, no
 
 ## Funcionamiento implementado
 
-1. `START REFERENCE` captura durante 8 segundos los identificadores BLE observados en el pasillo o zona de referencia.
-2. `START DOOR SCAN` captura durante 12 segundos la posición junto a la puerta.
+1. `START REFERENCE` captura durante 6 segundos los identificadores BLE observados en el pasillo o zona de referencia.
+2. `START DOOR SCAN` captura durante 10 segundos la posición junto a la puerta.
 3. Se consideran señales nuevas las observadas junto a la puerta que no estaban en la referencia.
 4. Una señal es estable cuando aparece al menos cuatro veces durante el escaneo de puerta.
 5. El resultado se presenta como:
@@ -64,6 +68,8 @@ La pantalla de P.R.S. v2.0 usa ahora un procedimiento mas directo:
 
 La pantalla se ha despejado: el encabezado visible es solo `P.R.S.`, el grid ocupa el area principal y el panel lateral muestra unicamente la fase, los controles, el estado y los contadores `CLOSE` y `NEW`. Se retiraron el subtitulo, la leyenda de colores, la guia de uso y el mensaje grande de resultado.
 
+Las ventanas de `CLOSE` y `WIDE` del código actual son de 6 y 10 segundos respectivamente. Esta duración prevalece sobre cualquier referencia anterior a 8 y 12 segundos.
+
 ## P.R.S. TESTING para pruebas de campo
 
 `P.R.S. TESTING` permite registrar cada muestra con mas contexto, sin cambiar automaticamente los umbrales de P.R.S. v1.0:
@@ -77,3 +83,13 @@ La pantalla se ha despejado: el encabezado visible es solo `P.R.S.`, el grid ocu
 - notas libres y exportacion CSV con RSSI RAW, RSSI suavizado, categoria, perdidas y recuperaciones.
 
 Para una sesion de campo se recomienda repetir cada punto al menos tres veces, mantener el telefono quieto durante las muestras estaticas y anotar cualquier cambio de orientacion, obstaculo o movimiento en `EXTRA NOTES`.
+
+El perfil actual de `P.R.S. TESTING` esta alineado con P.R.S. v2.0 y PROBE:
+
+- La pantalla inicia por defecto en `A56 + WATCH 2 / DUAL NODE`; `A56 ONLY / WITHOUT WATCH` queda disponible como control.
+- Tras abrir o reiniciar la prueba se captura una linea base de 30 segundos. `IDENTIFY TARGET` permanece bloqueado hasta que aparece `BASELINE: READY`.
+- Cada muestra registra el modo de evidencia de ubicacion: `GPS_RELATIVE_FILTERED`, `BLE_RANGE_ONLY`, `LINK_ONLY` o `A56_ONLY`.
+- `GPS_RELATIVE_FILTERED` solo se usa con fixes recientes y con precision maxima de 25 m en ambos nodos; la posicion relativa se suaviza antes de guardarse.
+- `BLE_RANGE_ONLY` indica cercania por BLE, pero no direccion ni metros fiables. `LINK_ONLY` confirma el enlace sin una lectura relativa utilizable.
+- El CSV actual tiene 30 columnas: anade calidad GPS, este/norte/distancia relativos y estado del fix del Watch, sin exportar coordenadas GPS en bruto.
+- El perfil de campo recomendado coincide con P.R.S. v2.0: `CLOSE 6s` y `WIDE 10s`.

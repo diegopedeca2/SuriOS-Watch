@@ -24,6 +24,12 @@ data class OfflineMapDefinition(
     val maxDisplayZoom: Int
 )
 
+/** UI-only choice used when no terrain field has been selected yet. */
+object TerrainFieldSelection {
+    const val CHOOSE_LOCATION_ID = "choose-location"
+    const val CHOOSE_LOCATION_LABEL = "CHOOSE LOCATION"
+}
+
 object OfflineMapCatalog {
     val NAVY7 = OfflineMapDefinition(
         mapId = "navy7",

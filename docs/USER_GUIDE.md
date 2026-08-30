@@ -1,6 +1,14 @@
 # PIP-SuriOS - User Guide
 
-Manual oficial de usuario — PIP-SuriOS v2.3
+> P.R.S. current implementation: v3.0 BLE contact tracking with the optional
+> Watch 2 PROBE node. The active flow is `LOCAL SCAN`, `SCAN + PROBE`,
+> `DEVICES` and `OPERATION GUIDE`. The in-app OPERATION GUIDE is intentionally
+> empty; no physical field procedure is part of the current scope.
+
+> The `prsOnlyDebug` edition is optimized for the Z Flip 6 external display:
+> centered `P.R.S.`, radar on the left and a names-only list on the right.
+
+Manual oficial de usuario — PIP-SuriOS v2.4
 
 ## Índice
 
@@ -25,7 +33,7 @@ PIP-SuriOS es una aplicación móvil de apoyo operativo con una estética inspir
 
 Está pensada principalmente para utilizarse en un Samsung Galaxy A56 en orientación horizontal. La pantalla TEXT > MORSE utiliza orientación vertical para facilitar la escritura con el teclado.
 
-La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y RADS funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y P.R.S. v1.0/P.R.S. v2.0 necesitan Bluetooth y sus permisos correspondientes. La guía de campo de P.R.S. está disponible en `TOOLS > PROXIMITY RADIO SCANNER > OPERATION GUIDE`.
+La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y RADS funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y P.R.S. v3.0 necesita Bluetooth; los modos con PROBE necesitan además un Watch 2 emparejado mediante Wear OS/Data Layer. La guía de campo de P.R.S. está reservada en `TOOLS > PROXIMITY RADIO SCANNER > OPERATION GUIDE` y permanece vacía porque no forma parte del alcance actual.
 
 ## 2. Inicio de la aplicación
 
@@ -291,7 +299,7 @@ Los valores vacíos o históricos que no correspondan a una opción válida no i
 
 ## 10. TOOLS
 
-Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de PROXIMITY RADIO SCANNER están P.R.S. v2.0, P.R.S. v1.0, P.R.S. TESTING y OPERATION GUIDE.
+Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de PROXIMITY RADIO SCANNER están `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `OPERATION GUIDE`.
 
 Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen instrumentos de medición profesionales.
 
@@ -309,76 +317,135 @@ Pulse **VOLUME DOWN** para alternar silenciosamente entre `RADS` y `RADS.`. El p
 
 RADS no mide radiación real. Su modo `RADS.` utiliza orientación únicamente como control inmersivo.
 
-### P.R.S. v1.0
+### P.R.S. v3.0
 
-P.R.S. v1.0 (Proximity Radio Scanner) busca señales Bluetooth Low Energy cercanas y utiliza su intensidad para ofrecer una estimación aproximada de proximidad. Entre en **TOOLS > PROXIMITY RADIO SCANNER > P.R.S. v1.0**, active Bluetooth y conceda el permiso solicitado por Android.
+P.R.S. v3.0 es un sistema de reconocimiento de proximidad basado en anuncios
+Bluetooth Low Energy. Su flujo actual es:
 
-`SURI-14` representa el dispositivo del usuario en el centro del radar. Cada señal activa aparece como un punto situado en uno de estos anillos:
+`BLE SCAN → CONTACT LIST → RSSI POR CONTACTO → HISTÓRICO TEMPORAL →
+SUAVIZADO → TENDENCIA → REPRESENTACIÓN EN GRID`
 
-- **VERY CLOSE:** señal muy intensa.
-- **CLOSE:** señal intensa.
-- **MEDIUM:** señal intermedia.
-- **FAR:** señal débil.
+Active Bluetooth y conceda los permisos que solicite Android. La aplicación
+mantiene varios contactos simultáneamente; una lectura aislada no cambia por
+sí sola de forma importante la representación ni la tendencia.
 
-La posición alrededor del círculo es únicamente una representación visual estable. **No indica la dirección física del dispositivo.** P.R.S. v1.0 tampoco calcula metros ni muestra una distancia exacta: sólo utiliza la intensidad de la señal BLE para estimar proximidad.
+#### Modos de operación
 
-El panel CONTACTS muestra los totales CURRENT y NEW, además del reparto activo entre VERY CLOSE, CLOSE, MEDIUM y FAR. El panel SCAN muestra el estado del escaneo, el baseline y el acceso a CALIBRATE.
+- **LOCAL SCAN:** el A56 realiza el escaneo BLE local.
+- **SCAN + PROBE:** el A56 escanea y coordina el nodo PROBE del Watch 2. Sus
+  observaciones llegan a la misma lista de contactos, identificadas por su
+  origen.
+- **DEVICES:** abre la gestión de dispositivos conocidos a omitir.
+- **OPERATION GUIDE:** reservado para un eventual procedimiento de campo y
+  actualmente vacío; no forma parte del alcance actual.
 
-#### CALIBRATE
+La variante `prsOnlyDebug`, destinada a la pantalla externa del Z Flip 6,
+arranca directamente en `SCAN`: `P.R.S.` queda centrado, el radar ocupa la
+mitad izquierda y la lista de nombres ocupa la mitad derecha. No expone
+`SCAN + PROBE`.
 
-Pulse **CALIBRATE** antes de realizar el barrido de una zona nueva. P.R.S. v1.0 observará durante unos segundos las señales que ya forman parte del entorno.
+#### CONTACT LIST y TRACK TARGET
 
-- **BACKGROUND:** contacto presente durante la calibración y considerado conocido.
-- **NEW:** contacto detectado después de la calibración que no formaba parte del entorno conocido.
+`CONTACT LIST` muestra los contactos BLE observados, su nombre anunciado cuando
+existe, el identificador técnico, RSSI RAW, RSSI suavizado, proximidad relativa
+y tendencia. Si no se anuncia un nombre utilizable, P.R.S. asigna una etiqueta
+de sesión como `UNKNOWN 01`; el nombre no se usa como identificador interno
+principal. Cuando la evidencia BLE permite inferir el tipo, el nombre añade
+`[PHONE]`, `[WATCH]`, `[TV]`, `[AUDIO]` o `[COMPUTER]`. Si no es identificable,
+no aparece ningún sufijo.
 
-Los contactos que dejan de recibirse desaparecen automáticamente tras un breve periodo. La calibración y la lista de contactos sólo existen durante la sesión actual de P.R.S. v1.0.
+Pulse una fila para entrar en **TRACK TARGET**. El contacto seleccionado queda
+resaltado en ámbar dentro del GRID y el panel muestra:
 
-#### Sonidos de P.R.S. v1.0
+- nombre o identificador mostrado;
+- RSSI actual y RSSI suavizado;
+- tendencia `APPROACHING`, `STABLE` o `MOVING AWAY`;
+- proximidad relativa `NEAR`, `MEDIUM` o `FAR`;
+- histórico RSSI reciente, variación y explicación de la decisión.
 
-- **Pulso de barrido:** suena al comenzar cada vuelta del radar.
-- **Aviso BACKGROUND:** pitido breve y discreto cuando el barrido atraviesa un contacto conocido.
-- **Aviso NEW:** pitido más fuerte y perceptible cuando atraviesa un contacto nuevo.
+Los demás contactos siguen siendo observados. Pulse **STOP TRACKING** o la fila
+activa para dejar de seguir el objetivo sin reiniciar el escaneo. **CLEAR
+CONTACTS** borra la sesión temporal completa.
 
-Cada contacto genera como máximo un aviso en cada pasada. El sonido se detiene al salir de P.R.S. v1.0 o enviar la aplicación a segundo plano.
+#### DEVICES
 
-P.R.S. v1.0 no muestra nombres de dispositivos, direcciones MAC ni información personal. Detectar una señal electrónica no significa detectar o localizar a una persona.
+En `DEVICES` hay dos submenús:
 
-### P.R.S. v2.0
+1. **IDENTIFY DEVICE:** muestra los anuncios BLE recibidos en directo. Pulse
+   **SAVE DEVICE** en el contacto deseado. La dirección BLE se guarda como
+   regla principal; también puede introducir manualmente una dirección MAC o
+   un nombre BLE exacto.
+2. **SAVED DEVICES:** muestra las reglas persistentes. **DISABLE** conserva la
+   regla pero deja que el contacto aparezca; **ENABLE** vuelve a omitirlo del
+   análisis; **REMOVE** elimina la regla.
 
-P.R.S. v2.0 es un cribado de indicios de dispositivos BLE pensado para comprobar una puerta antes de acceder a una estancia sin visibilidad. Se abre desde **TOOLS > PROXIMITY RADIO SCANNER > P.R.S. v2.0** y requiere Bluetooth activo, ubicación activada y los permisos de Bluetooth/ubicación solicitados por Android.
+Las direcciones privadas o rotatorias pueden cambiar. En ese caso, una regla
+por nombre BLE exacto sirve como alternativa, aunque puede coincidir con más
+de un dispositivo. Las reglas habilitadas se aplican tanto a `LOCAL SCAN` como
+al flujo `SCAN + PROBE`.
 
-El procedimiento compara dos posiciones consecutivas:
+#### Análisis temporal
 
-1. Sitúese en el pasillo o zona de referencia, mantenga el teléfono quieto y pulse **START REFERENCE**. La referencia dura aproximadamente 8 segundos.
-2. Sin cambiar de sesión, sitúese junto a la puerta cerrada, mantenga el teléfono en una posición estable y pulse **START DOOR SCAN**. El escaneo dura aproximadamente 12 segundos.
-3. Consulte `NEW SIGNALS`, `STABLE SIGNALS`, `STRONGEST RSSI` y `SIGNAL INDEX` junto al resultado final. Si el Watch 2 esta activo, `WATCH` y `MATCHED` muestran el estado de la segunda lectura y el punto azul identifica el nodo de enlace, no una coordenada.
+P.R.S. separa los datos medidos de los procesados y de las inferencias:
 
-Los resultados se expresan deliberadamente como evidencia radioeléctrica:
+- **Medidos:** identificador técnico, nombre anunciado, advertising data, RSSI
+  RAW y timestamp.
+- **Procesados:** histórico evaluado, RSSI suavizado, media y variación.
+- **Inferidos:** tendencia, banda de proximidad relativa y nube de densidad.
 
-- **NO DEVICE SIGNAL:** no aparecieron señales nuevas respecto a la referencia.
-- **POSSIBLE SIGNAL:** apareció al menos una señal nueva, pero con poca estabilidad.
-- **PROBABLE SIGNAL:** aparecieron señales nuevas estables o una señal nueva estable con intensidad alta.
+El tracker evalúa la señal con la cadencia configurada, aplica suavizado
+exponencial y compara la ventana reciente de la señal de más antigua a más
+nueva. Una intensidad que aumenta de forma sostenida puede producir
+`APPROACHING`; una que disminuye puede producir `MOVING AWAY`; una variación
+insuficiente produce `STABLE`. La ventana mínima, la confirmación temporal y
+la histéresis evitan alternancias causadas por pequeñas fluctuaciones. Antes
+de reunir suficiente evidencia se muestra `WAITING`.
 
-`SIGNAL INDEX` es un índice heurístico de apoyo, no una probabilidad estadística. P.R.S. v2.0 **no detecta personas, no confirma que una señal esté al otro lado de la puerta y no debe utilizarse como único criterio para entrar**. Un resultado `NO DEVICE SIGNAL` no demuestra que la estancia esté vacía.
+Los valores iniciales de calibración están centralizados en
+`PrsTuning.DEFAULT`: cadencia de evaluación, alpha de suavizado, tamaño de
+histórico, muestras y duración mínima, variación significativa, banda estable,
+histéresis, confirmaciones, expiración de contactos y umbrales de proximidad.
+Son valores provisionales de representación relativa, no una calibración física
+ni una conversión RSSI → metros.
 
-### P.R.S. TESTING
+#### Categoría del dispositivo
 
-#### Revision de campo
+P.R.S. intenta clasificar cada contacto como móvil/tableta (`[PHONE]`), reloj o
+dispositivo wearable (`[WATCH]`), televisión o receptor (`[TV]`), audio
+(`[AUDIO]`) o equipo informático (`[COMPUTER]`). La inferencia usa el nombre
+anunciado, la clase Bluetooth y BLE Appearance. Es una ayuda de lectura rápida,
+no una identificación definitiva de fabricante o modelo; no muestra margen de
+confianza ni signos de interrogación. La edición reducida y la completa usan
+el mismo criterio.
 
-En la pantalla de preparacion se pueden describir las condiciones de una prueba para facilitar la calibracion posterior: objetivo, posicion NORTH/SOUTH/EAST/WEST, entorno (`OPEN FIELD`, `WALL / DOOR`, `PERSON BLOCKING`, `BAG / POCKET` o `CUSTOM`), colocacion, orientacion y notas libres. Se puede elegir `A56 ONLY / WITHOUT WATCH` como control o `A56 + WATCH 2 / DUAL NODE` para la lectura doble. Esa informacion se guarda en el CSV junto con los metadatos de la sonda.
+#### GRID y nubes de densidad
 
-Para el grid de P.R.S. v2.0 use primero `START CLOSE SCAN` y despues `START WIDE SCAN`. El telefono aparece en el centro; los puntos verdes son lecturas de la pasada corta y los puntos ambar son lecturas nuevas de la pasada amplia.
+Se conserva la estética GRID de P.R.S. v2.0 como superficie gráfica: rejilla,
+líneas de escaneo, anillos, corchetes y emblema de fondo. La posición antigua
+de puntos y sus ángulos sintéticos ya no tienen interpretación física.
 
-P.R.S. TESTING es una herramienta experimental para recoger datos de calibración BLE; no modifica automáticamente P.R.S. v1.0 ni sus umbrales. Se abre desde **TOOLS > PROXIMITY RADIO SCANNER > P.R.S. TESTING**.
+Cada contacto se representa como una nube o área difusa anular. Una señal más
+intensa puede ocupar una banda radial relativa distinta de una señal débil,
+pero la nube cubre el azimut completo porque un único receptor BLE no mide la
+dirección. El GRID comunica evidencia e incertidumbre, no coordenadas X/Y,
+distancia exacta ni rumbo.
 
-1. En `SET TEST`, seleccione TARGET, tipo de prueba, posición física NORTH/SOUTH/EAST/WEST y notas opcionales.
-2. En `IDENTIFY TARGET`, coloque temporalmente el objetivo junto a SURI-14 e inicie la identificación guiada. Confirme el candidato encontrado o elija entre los candidatos mostrados si existe ambigüedad.
-3. Coloque el objetivo en la posición indicada y pulse `START SAMPLE`. Las muestras estáticas duran aproximadamente 30 segundos; MOVEMENT continúa hasta `STOP MOVEMENT`.
-4. `RESULT` resume observaciones, RSSI RAW y suavizado, categorías y pérdidas/recuperaciones.
+En `SCAN + PROBE`, el subgrid del Watch 2 representa la posición relativa de
+los nodos cuando hay fixes válidos. Es una referencia visual del A56 y del
+PROBE, no una dirección BLE ni una localización exacta del contacto.
 
-`NEXT SAMPLE` conserva temporalmente el target identificado y permite cambiar la posición. `RE-IDENTIFY TARGET` repite la identificación cuando se pierde el contacto. `RESET TEST` limpia únicamente el estado temporal, sin borrar sesiones anteriores ni el contador `CAL-###`.
+#### Diagnóstico y limitaciones de interpretación
 
-`EXPORT CSV` de `P.R.S. TESTING` genera un archivo UTF-8 y abre el Sharesheet de Android. `P.R.S. v2.0` no ofrece exportacion CSV; guarda la sesion de forma interna. El usuario decide donde guardar o compartir el CSV de Testing. Las sesiones pueden conservar el identificador observado de BLE para correlacionar los nodos y no deben interpretarse como identidad permanente.
+No existe un menú separado `DIAGNOSTICS`. La instrumentación está integrada en
+la lista y en `TRACK TARGET`, donde pueden comprobarse RSSI RAW, suavizado,
+histórico, timestamps, variación, tendencia y proximidad. El texto de
+explicación indica si la decisión procede de una ventana insuficiente, una
+variación estable o un cambio sostenido.
+
+RSSI depende del dispositivo, orientación, obstáculos, potencia e
+interferencias. P.R.S. no convierte RSSI en metros, no inventa un azimut y no
+detecta personas. `APPROACHING` y `MOVING AWAY` describen evolución de señal y
+son inferencias de proximidad, no una prueba aislada de movimiento físico.
 
 ## 11. Controles
 
@@ -392,10 +459,12 @@ Los controles principales de PIP-SuriOS son:
 | **CLEAR** | Borra por completo la entrada actual. |
 | **DELETE** | Elimina el último carácter o símbolo introducido. |
 | **STOP** | Cancela una transmisión Morse y apaga la linterna. |
-| **CALIBRATE** | Registra como BACKGROUND el entorno BLE actual de P.R.S. v1.0. |
-| **START REFERENCE** | Captura durante unos segundos las señales del pasillo o posición de referencia de P.R.S. v2.0. |
-| **START DOOR SCAN** | Captura la posición junto a la puerta y compara las señales nuevas con la referencia. |
-| **RESET** | Borra la encuesta temporal de P.R.S. v2.0 y permite comenzar otra. |
+| **CONTACT LIST** | Muestra los contactos BLE observados y permite seleccionar un objetivo. |
+| **STOP TRACKING** | Deja de seguir el contacto seleccionado sin reiniciar el escaneo. |
+| **CLEAR CONTACTS** | Borra los contactos y el histórico de la sesión actual. |
+| **IDENTIFY DEVICE** | Escanea contactos en directo y permite guardar uno. |
+| **ENABLE / DISABLE** | Activa o suspende una regla persistente de dispositivo guardado. |
+| **REMOVE** | Elimina una regla de dispositivo guardado. |
 | **TRANSMIT // FLASH** | Reproduce un mensaje Morse mediante la linterna. |
 
 Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecutar la acción indicada.
@@ -404,21 +473,23 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 
 - Las skins SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN permanecen en construcción.
 - MAP TERRAIN está técnicamente aceptado, pero su alineación GPS, heading, ergonomía, Geiger y consumo requieren validación física exterior en NAVY7.
-- Las modificaciones temporales de CURRENT GEAR, el Loadout Activo, el checklist y la calibración de P.R.S. v1.0 no se guardan permanentemente. La configuración base de SET-UP sí se conserva.
+- Las modificaciones temporales de CURRENT GEAR, el Loadout Activo y el checklist no se guardan permanentemente. La configuración base de SET-UP sí se conserva.
 - STORAGE sí conserva PURCHASE y USED permanentemente; BBs y los formatos individuales de GAS todavía no tienen consumo automático.
 - INVENTORY es informativo: no descuenta consumibles ni actualiza cantidades automáticamente.
 - MAP OPERATION depende de que CivTAK o Google Maps estén instalados y correctamente configurados.
 - TRANSMIT // FLASH depende de que el dispositivo tenga una linterna compatible.
 - RADS es una simulación y no mide radiación.
-- P.R.S. v1.0 es experimental y sólo detecta señales BLE que Android y los dispositivos cercanos permitan descubrir.
-- P.R.S. v2.0 sólo analiza anuncios Bluetooth Low Energy; no descubre todas las conexiones Bluetooth clásicas ni dispositivos que no anuncien en ese momento.
-- Al comparar posiciones físicas, Android puede exigir `ACCESS_FINE_LOCATION` y que el servicio de ubicación esté activo; P.R.S. v2.0 solicita ese permiso junto con los permisos Bluetooth.
+- P.R.S. sólo analiza anuncios Bluetooth Low Energy que Android y los dispositivos cercanos permitan descubrir; no descubre todas las conexiones Bluetooth clásicas.
+- La primera ejecución puede exigir permisos Bluetooth y ubicación, además de Bluetooth activado.
 - La identificación por dirección BLE puede cambiar por aleatorización de direcciones, por lo que un mismo dispositivo puede aparecer como una señal nueva.
-- P.R.S. v2.0 no puede separar de forma fiable una señal del pasillo de otra situada dentro de la estancia: paredes, puertas, obstáculos, potencia, orientación e interferencias alteran RSSI.
-- P.R.S. v2.0 es un indicador de apoyo situacional y no un sistema de detección de ocupación ni un mecanismo de seguridad.
+- Los nombres BLE pueden faltar o ser compartidos por varios dispositivos; la dirección es el identificador técnico preferente cuando permanece estable.
+- La categoría del dispositivo es una inferencia heurística y puede no aparecer
+  o ser incorrecta si el anuncio aporta datos incompletos o ambiguos.
+- Las nubes del GRID no proporcionan azimut, coordenadas X/Y ni distancia física.
 - La intensidad BLE puede variar por paredes, obstáculos, orientación, interferencias, potencia de emisión o posición del teléfono.
-- Las categorías de P.R.S. v1.0 indican proximidad aproximada; no representan metros ni dirección física.
-- P.R.S. v1.0 necesita Bluetooth activo y permisos de escaneo.
+- Las tendencias describen evolución de señal y no demuestran por sí solas que el contacto se haya movido.
+- Las reglas habilitadas de DEVICES omiten contactos del análisis; una regla deshabilitada no los omite.
+- Un contacto desaparece tras superar el tiempo de expiración configurado y puede reaparecer como una nueva observación.
 - Un emulador puede mostrar la interfaz y el audio, pero normalmente no reproduce un entorno BLE físico comparable al de un teléfono real.
 
 ## 13. Historial de versiones
@@ -434,8 +505,13 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v2.1** | P.R.S. TESTING experimental, P.R.S. v1.0/v2.0, MAP TERRAIN offline NAVY7, selección inicial de skins y reorganización de TOOLS. |
 | **v2.2** | P.R.S. REMOTE PROBE experimental para Xiaomi Watch 2, recepción Wi-Fi local en A56, almacenamiento bruto y comparación conservadora entre nodos. |
 | **v2.3** | SET-UP vertical con INPUT/DATA, perfil de operador persistente, réplicas primarias de texto libre y WATCH 2 en ACCESORIES. |
+| **v2.4** | Firma visible y versión técnica actualizadas; P.R.S. compacto para pantalla externa y categorías inferidas de dispositivo. |
+| **v3.0** | Reconstrucción de P.R.S.: LOCAL SCAN, SCAN + PROBE, histórico temporal RSSI, nubes de densidad, TRACK TARGET, DEVICES y categorías inferidas de dispositivo. |
 
-PIP-SuriOS v2.3 incorpora la configuración personal persistente de SET-UP y mantiene la funcionalidad experimental de P.R.S. REMOTE PROBE y P.R.S. TESTING.
+P.R.S. v3.0 incorpora el análisis temporal observable, la lista de contactos,
+el seguimiento dinámico, el filtrado persistente de DEVICES y el nodo operativo
+PROBE para Watch 2. Las implementaciones antiguas de posicionamiento se
+consideran retiradas del flujo activo.
 
 ## 14. Consejos de uso
 
@@ -444,7 +520,7 @@ PIP-SuriOS v2.3 incorpora la configuración personal persistente de SET-UP y man
 Antes de comenzar:
 
 - Cargue completamente el teléfono.
-- Active Bluetooth y compruebe que PIP-SuriOS dispone de los permisos necesarios para P.R.S. v1.0 y P.R.S. v2.0.
+- Active Bluetooth y compruebe que PIP-SuriOS dispone de los permisos necesarios para P.R.S.
 - Compruebe que la linterna funciona si piensa utilizar TRANSMIT // FLASH.
 - Revise y prepare su equipamiento en CURRENT GEAR.
 - Pulse **APPLY** para confirmar el Loadout Activo antes de empezar.
@@ -465,17 +541,20 @@ MORSE TERMINAL puede resultar útil cuando necesite transmitir una señal visual
 
 ### Uso de P.R.S.
 
-Para obtener una referencia más útil del entorno:
+1. Abra **TOOLS > PROXIMITY RADIO SCANNER** y seleccione `LOCAL SCAN` o
+   `SCAN + PROBE`.
+2. Espere a que aparezca `CONTACT LIST`. Consulte RAW, SMOOTHED, tendencia y
+   proximidad relativa de cada contacto.
+3. Pulse un contacto para activar `TRACK TARGET`. Observe la evolución del
+   histórico mientras mueve el A56; utilice **STOP TRACKING** para cancelar el
+   seguimiento sin reiniciar el escaneo.
+4. Use **DEVICES > IDENTIFY DEVICE** para guardar un dispositivo conocido y
+   **SAVED DEVICES** para activar, desactivar o eliminar su regla de omisión.
+5. Interprete `APPROACHING`, `STABLE` y `MOVING AWAY` como tendencias de señal,
+   no como una dirección o una medición física exacta.
 
-- Pulse **CALIBRATE** antes de comenzar la partida.
-- Vuelva a calibrar si cambia significativamente de zona o si el entorno electrónico es diferente.
-- Interprete VERY CLOSE, CLOSE, MEDIUM y FAR únicamente como categorías aproximadas de proximidad.
-- Recuerde que P.R.S. v1.0 detecta señales de dispositivos Bluetooth Low Energy compatibles, no personas.
-- Utilice P.R.S. v1.0 como apoyo situacional y nunca como única fuente de información antes de entrar en una zona.
-- Para una puerta, use P.R.S. v2.0 con una referencia en el pasillo y una segunda lectura junto a la puerta, manteniendo el teléfono quieto durante ambas ventanas.
-- Trate `POSSIBLE SIGNAL` y `PROBABLE SIGNAL` como motivos para obtener más información por medios seguros, no como autorización automática de acceso.
-
-Paredes, obstáculos, interferencias y la posición del teléfono pueden cambiar la categoría mostrada aunque el dispositivo detectado no se haya movido.
+Paredes, obstáculos, interferencias, orientación y la posición del teléfono
+pueden cambiar la señal aunque el dispositivo detectado no se haya movido.
 
 ### Uso de RADS
 

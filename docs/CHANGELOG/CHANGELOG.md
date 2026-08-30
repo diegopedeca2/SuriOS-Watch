@@ -1,3 +1,117 @@
+## Sprint 017 — PIP-SuriOS v2.4, iteración en curso de P.R.S. compacto y clasificación de dispositivos — 2026-08-30
+
+### Estado del corte
+
+- Iteración registrada por decisión del propietario como Sprint 017, todavía en curso.
+- Firma visible y versión técnica de PIP-SuriOS actualizadas a `v2.4` (`versionCode 4`).
+- `prsOnlyDebug` optimizada para la pantalla externa del Z Flip 6: `P.R.S.`
+  centrado, radar a la izquierda y lista de nombres a la derecha.
+- Categorías inferidas `[PHONE]`, `[WATCH]`, `[TV]`, `[AUDIO]` y `[COMPUTER]`
+  en la edición reducida y en PIP-SuriOS; los casos no identificables no
+  muestran sufijo.
+
+### Validación y despliegue
+
+- Tests unitarios, lint y ensamblados de `fullDebug` y `prsOnlyDebug`:
+  `BUILD SUCCESSFUL`.
+- Z Flip 6 (`SM-F741B`): `app-prsOnly-debug.apk` instalada y actividad
+  principal arrancada con `Status: ok`.
+- A56 (`SM_A566B`): `app-full-debug.apk` instalada y actividad principal
+  arrancada con `Status: ok`.
+- Pruebas físicas en moto, calibración y cierre del Sprint 017: pendientes.
+- Auditoría: [AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
+
+## Sprint 016 — saneamiento documental y validación Watch/AVD — 2026-08-30
+
+Los cambios de P.R.S. compacto y clasificación de dispositivos se reatribuyen
+a Sprint 017. Esta entrada conserva únicamente el registro histórico de la
+revisión documental y de SuriOS Watch/AVD.
+
+### SuriOS Watch OFICIAL y AVD adicional
+
+- Se prepara el AVD adicional `Galaxy_Watch_Ultra_2025` sobre `wearos_xl_round`,
+  Wear OS 5 / API 34, 480 x 480, 320 dpi, Play Store y `x86_64`, sin alterar
+  los AVD existentes.
+- La esfera OFICIAL `com.suri.surioswatch` queda en `v1.1` (`versionCode 5`),
+  validada en el emulador con progreso de pasos sin cifra, bateria sin
+  porcentaje, accesos CAPS/STATUS/RADIO y marco circular ajustado.
+- La instalacion en el Galaxy Watch Ultra fisico queda pendiente; el AVD no
+  se considera equivalente a sensores ni funciones propietarias de Samsung.
+
+### Validación y cierre
+
+- Tests unitarios aislados, lint y ensamblado de `fullDebug` y `prsOnlyDebug`:
+  `BUILD SUCCESSFUL`.
+- El despliegue de la iteración P.R.S. queda documentado en
+  [AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
+- Pruebas físicas de aceptación en moto y calibración de campo: pendientes y
+  fuera del cierre técnico.
+- Auditoría: [AUDIT_SPRINT_016](../AUDIT_SPRINT_016.md).
+
+## Sprint 015 — cierre P.R.S. y edición local — 2026-08-30
+
+### P.R.S.
+
+- P.R.S. queda reconstruido alrededor de `LOCAL SCAN`, `SCAN + PROBE`,
+  `CONTACT LIST`, `TRACK TARGET` y `DEVICES`.
+- El GRID visual se conserva como base estética, pero la representación pasa a
+  nubes de densidad e incertidumbre: no se presentan azimut, coordenadas X/Y ni
+  metros como si fueran mediciones BLE.
+- El análisis mantiene RSSI RAW, timestamp, RSSI suavizado, histórico, media,
+  variación y tendencia por contacto; el objetivo seleccionado se resalta y se
+  puede abandonar con `STOP TRACKING` sin reiniciar el escaneo.
+- `DEVICES` queda reorganizado en `IDENTIFY DEVICE` y `SAVED DEVICES`, con
+  identificación por dirección/nombre, persistencia y control independiente de
+  habilitación, deshabilitación y eliminación.
+- La instrumentación queda integrada en la lista y el seguimiento; se elimina
+  el menú independiente `DIAGNOSTICS` y `OPERATION GUIDE` queda vacío para
+  completarlo después de la calibración de campo.
+
+### Ediciones y validación
+
+- Se generan `app-full-debug.apk` y `app-prsOnly-debug.apk`.
+- La edición local arranca en `LOCAL SCAN`, no expone `SCAN + PROBE` ni registra
+  el servicio PROBE; la edición completa mantiene el flujo con PROBE y el P.R.S.
+  en horizontal.
+- Se verificó el ciclo `SAVE → DISABLE → ENABLE → REMOVE` en `DEVICES` sin
+  dejar reglas de prueba persistidas.
+- Tests, ensamblados y lint de `fullDebug` y `prsOnlyDebug`: `BUILD SUCCESSFUL`.
+- Auditoría final: [AUDIT_SPRINT_015.md](../AUDIT_SPRINT_015.md). Registro
+  canónico: [ACTIVE_SPRINT.md](../SPRINTS/ACTIVE_SPRINT.md).
+
+## Sprint 015 — addendum de auditoría y cierre final — 2026-08-29
+
+### Modificado
+
+- `P.R.S. TESTING` inicia en modo dual, exige línea base de 30 s y expone la calidad de ubicación relativa.
+- El CSV de calibración pasa a 30 columnas, con precisión, modo de ubicación, este/norte/distancia relativos y estado del fix, sin coordenadas GPS en bruto.
+- La documentación de Sprint 015, `ACTIVE_SPRINT` y P.R.S. queda reconciliada con el comportamiento actual.
+
+### Validación y estado
+
+- Build completa de `app`, `remoteprobe`, `watchface` y `probewatchface`, tests y Lint: `BUILD SUCCESSFUL`.
+- Watch 2 conectado por ADB inalámbrico y `RemoteProbeService` activo.
+- A56 pendiente de reconexión en el corte del 2026-08-29; emulador API 34 incompatible con el APK móvil que requiere API 35.
+
+## Sprint 015 - PIW/PROBE-SuriOS y cierre de calibración P.R.S. - 2026-08-28
+
+### Añadido
+
+- Nueva esfera independiente `PROBE-SuriOS` con un único botón `PROBE`.
+- Guía imprimible de calibración del P.R.S. con preparación, matriz D1-D10, pruebas A56 ONLY/DUAL NODE, exportación, criterios y hojas de campo.
+- Auditoría técnica y cierre documental de Sprint 015.
+
+### Modificado
+
+- PIW-SuriOS Watch mantiene el modo ambiente con sólo el emblema de la Hermandad girando sobre su eje vertical.
+- PROBE-SuriOS queda firmado como `v2.1` (`versionCode 2`) y desplegado en emulador y Watch 2.
+- La documentación del P.R.S. queda alineada con las ventanas reales CLOSE 6 s y WIDE 10 s.
+
+### Validación
+
+- Tests unitarios, compilación de `app`, `remoteprobe`, `watchface` y `probewatchface`, y lint correctos.
+- Watch 2 reconectado por ADB inalámbrico vía mDNS y PROBE-SuriOS seleccionado como esfera activa.
+
 ## v2.3 - SET-UP persistente y WATCH 2 en ACCESORIES - 2026-08-28
 
 ### Añadido

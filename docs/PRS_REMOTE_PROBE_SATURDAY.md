@@ -1,8 +1,12 @@
-# P.R.S. REMOTE PROBE — prueba de campo
+# P.R.S. REMOTE PROBE — ARCHIVE
+
+> The Remote Probe experiment has been retired. This file is kept as a
+> historical field record only; the active P.R.S. is A56-only and is described
+> in `docs/PRS_v3.0.md`.
 
 ## Implementación
 
-`watch/watchface` se conserva como esfera Watch Face Format y no se modifica. La prueba usa la app Wear OS independiente `:remoteprobe`, instalada con el nombre `P.R.S. REMOTE PROBE`.
+La esfera PIW y la esfera `PROBE-SuriOS` son módulos Watch Face Format independientes. La prueba usa la app Wear OS independiente `:remoteprobe`, instalada con el nombre `P.R.S. REMOTE PROBE`; ninguna de las esferas es el canal de datos del P.R.S.
 
 - `app`: el Galaxy A56 mantiene el escáner BLE actual como `OPERATOR`.
 - `app/remoteprobe`: el A56 inicia un gateway HTTP/TCP local en el puerto `28771`, anuncia `_pipprs._tcp` por NSD/mDNS y responde al descubrimiento UDP local en `28772` como respaldo.

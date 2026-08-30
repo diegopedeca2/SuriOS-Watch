@@ -25,6 +25,7 @@ import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.R
+import com.suri.pipsurios.ui.skin.SkinSession
 
 @Composable
 fun HomeOperationScreen(
@@ -42,7 +43,7 @@ fun HomeOperationScreen(
             .background(PipBlack),
     ) {
         Image(
-            painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
+            painter = painterResource(SkinSession.emblemResource),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
@@ -94,7 +95,7 @@ fun HomeOperationScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.3",
+            text = "PIP-SuriOS v2.4",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

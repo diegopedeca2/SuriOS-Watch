@@ -22,9 +22,12 @@ class SkinCatalogTest {
         )
     }
 
-    @Test fun onlyBrotherhoodUsesTheExistingApplicationExperience() {
+    @Test fun implementedSkinsUseTheExistingApplicationExperience() {
         assertTrue(SkinId.BROTHERHOOD_OF_STEEL.implemented)
-        SkinCatalog.all.filterNot { it == SkinId.BROTHERHOOD_OF_STEEL }
+        assertTrue(SkinId.NECRON.implemented)
+        SkinCatalog.all.filterNot {
+            it == SkinId.BROTHERHOOD_OF_STEEL || it == SkinId.NECRON
+        }
             .forEach { assertFalse(it.implemented) }
     }
 

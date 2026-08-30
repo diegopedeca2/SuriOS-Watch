@@ -1,0 +1,218 @@
+<WatchFace
+    clipShape="CIRCLE"
+    height="450"
+    width="450">
+
+    <Metadata
+        key="CLOCK_TYPE"
+        value="DIGITAL" />
+
+    <Scene>
+        <PartDraw
+            name="probe_black_field"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Rectangle
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <Fill color="#FF000000" />
+            </Rectangle>
+        </PartDraw>
+
+        <Group
+            name="probe_active"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
+
+            <PartDraw
+                name="probe_grid"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <Ellipse
+                    height="430"
+                    width="430"
+                    x="10"
+                    y="10">
+                    <Stroke
+                        color="#FF66FF66"
+                        thickness="2" />
+                </Ellipse>
+                <Ellipse
+                    height="406"
+                    width="406"
+                    x="22"
+                    y="22">
+                    <Stroke
+                        color="#FF3FAF5A"
+                        thickness="1" />
+                </Ellipse>
+
+                <!-- Retained GRID aesthetic; it carries no positioning meaning. -->
+                <Line startX="225" startY="12" endX="225" endY="29">
+                    <Stroke color="#FF66FF66" thickness="3" />
+                </Line>
+                <Line startX="225" startY="421" endX="225" endY="438">
+                    <Stroke color="#FF66FF66" thickness="3" />
+                </Line>
+                <Line startX="12" startY="225" endX="29" endY="225">
+                    <Stroke color="#FF66FF66" thickness="3" />
+                </Line>
+                <Line startX="421" startY="225" endX="438" endY="225">
+                    <Stroke color="#FF66FF66" thickness="3" />
+                </Line>
+
+                <Line startX="117" startY="39" endX="125" endY="53">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="333" startY="39" endX="325" endY="53">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="39" startY="117" endX="53" endY="125">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="411" startY="117" endX="397" endY="125">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="39" startY="333" endX="53" endY="325">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="411" startY="333" endX="397" endY="325">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="117" startY="411" endX="125" endY="397">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+                <Line startX="333" startY="411" endX="325" endY="397">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </Line>
+
+                <Line startX="170" startY="22" endX="173" endY="36">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="280" startY="22" endX="277" endY="36">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="22" startY="170" endX="36" endY="173">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="428" startY="170" endX="414" endY="173">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="22" startY="280" endX="36" endY="277">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="428" startY="280" endX="414" endY="277">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="170" startY="428" endX="173" endY="414">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+                <Line startX="280" startY="428" endX="277" endY="414">
+                    <Stroke color="#FF3FAF5A" thickness="1" />
+                </Line>
+            </PartDraw>
+
+            <PartImage
+                name="probe_brotherhood_emblem"
+                alpha="71"
+                height="286"
+                width="242"
+                x="104"
+                y="130">
+                <Image resource="brotherhood_emblem_pipgreen" />
+            </PartImage>
+
+            <!-- PROBE uses the former STATUS launch pattern, centered and 20% larger
+                 than the compact 90x64 STATUS box: 108x77. -->
+            <PartDraw
+                name="probe_button"
+                height="77"
+                width="108"
+                x="171"
+                y="187">
+                <RoundRectangle
+                    cornerRadiusX="10"
+                    cornerRadiusY="10"
+                    height="77"
+                    width="108"
+                    x="0"
+                    y="0">
+                    <Stroke color="#FF66FF66" thickness="2" />
+                </RoundRectangle>
+            </PartDraw>
+
+            <PartText
+                name="probe_label"
+                height="28"
+                width="108"
+                x="171"
+                y="211">
+                <Text align="CENTER">
+                    <Font
+                        color="#FF66FF66"
+                        family="SYNC_TO_DEVICE"
+                        size="22">PROBE</Font>
+                </Text>
+                <Launch target="com.suri.pipsurios/com.suri.surioswatch.probe.ProbeActivity" />
+            </PartText>
+
+            <PartText
+                name="probe_version_signature"
+                height="22"
+                width="160"
+                x="145"
+                y="393">
+                <Text align="CENTER">
+                    <Font
+                        color="#FF3FAF5A"
+                        family="SYNC_TO_DEVICE"
+                        size="20">v2.2</Font>
+                </Text>
+            </PartText>
+        </Group>
+
+        <Group
+            name="probe_ambient"
+            alpha="0"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="255" />
+
+            <PartImage
+                name="probe_brotherhood_emblem_ambient"
+                alpha="112"
+                height="286"
+                pivotX="0.5"
+                pivotY="0.5"
+                width="242"
+                x="104"
+                y="130">
+                <!-- Horizontal scale compression/expansion approximates a
+                     turn around the emblem's vertical axis. The animation
+                     uses the per-second expression only in AMBIENT, where
+                     this group is the sole visible content. -->
+                <Transform target="scaleX" value="[SECOND] % 2 == 0 ? 1 : -1">
+                    <Animation duration="1" interpolation="EASE_IN_OUT" />
+                </Transform>
+                <Image resource="brotherhood_emblem_pipgreen" />
+            </PartImage>
+        </Group>
+    </Scene>
+</WatchFace>

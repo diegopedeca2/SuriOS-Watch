@@ -45,11 +45,12 @@ import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerGuideScreen
-import com.suri.pipsurios.ui.screens.ProximityPresenceV2Screen
+import com.suri.pipsurios.ui.screens.PrsDevicesScreen
+import com.suri.pipsurios.ui.screens.PrsTrackingScreen
+import com.suri.pipsurios.ui.screens.PrsOnlyApp
+import com.suri.pipsurios.prs.PrsOperatingMode
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterScreen
-import com.suri.pipsurios.ui.screens.ProximitySonarScreen
-import com.suri.pipsurios.ui.screens.SonarTestingScreen
 import com.suri.pipsurios.ui.screens.DataLoadingScreen
 import com.suri.pipsurios.ui.screens.DataSavedScreen
 import com.suri.pipsurios.ui.screens.DataDeletedScreen
@@ -128,6 +129,7 @@ import com.suri.pipsurios.ui.screens.MapTerrainScreen
 import com.suri.pipsurios.ui.screens.SkinSelectionScreen
 import com.suri.pipsurios.ui.screens.PendingSkinScreen
 import com.suri.pipsurios.ui.skin.SkinId
+import com.suri.pipsurios.ui.skin.SkinSession
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
@@ -138,13 +140,25 @@ import kotlinx.coroutines.withContext
 class MainActivity : ComponentActivity() {
     private val volumeKeyController = VolumeKeyController()
 
+    companion object {
+        const val EXTRA_START_DESTINATION = "com.suri.pipsurios.extra.START_DESTINATION"
+        const val START_DESTINATION_STATISTICS = "statistics"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hideStatusBar()
+        val startDestination = if (
+            intent.getStringExtra(EXTRA_START_DESTINATION) == START_DESTINATION_STATISTICS
+        ) {
+            PIPSuriOSDestination.DataStatistics
+        } else {
+            PIPSuriOSDestination.Splash
+        }
 
         setContent {
             PIPSuriOSTheme {
-                PIPSuriOSApp(volumeKeyController)
+                PIPSuriOSApp(volumeKeyController, startDestination)
             }
         }
     }
@@ -178,11 +192,11 @@ private enum class PIPSuriOSDestination {
     ProximityRadioScannerLoading,
     ProximityRadioScanner,
     ProximityRadioScannerGuide,
-    ProximityPresenceV2,
+    PrsDevices,
+    PrsLocalScan,
+    PrsScanProbe,
     GeigerCounterLoading,
     GeigerCounter,
-    ProximitySonar,
-    SonarTesting,
     DataLoading,
     Data,
     DataLog,
@@ -255,9 +269,16 @@ private enum class VerticalOperationStep {
 }
 
 @Composable
-private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
+private fun PIPSuriOSApp(
+    volumeKeyController: VolumeKeyController,
+    initialDestination: PIPSuriOSDestination = PIPSuriOSDestination.Splash
+) {
     val context = LocalContext.current
-    var destination by remember { mutableStateOf(PIPSuriOSDestination.Splash) }
+    if (BuildConfig.PRS_ONLY) {
+        PrsOnlyApp()
+        return
+    }
+    var destination by remember { mutableStateOf(initialDestination) }
     var pendingSkin by remember { mutableStateOf<SkinId?>(null) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
@@ -592,7 +613,10 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             )
 
             PIPSuriOSDestination.ModeSelection -> SkinSelectionScreen { skin ->
-                if (skin.implemented) destination = PIPSuriOSDestination.HomeOperation
+                if (skin.implemented) {
+                    SkinSession.activeSkin = skin
+                    destination = PIPSuriOSDestination.HomeOperation
+                }
                 else {
                     pendingSkin = skin
                     destination = PIPSuriOSDestination.SkinUnderConstruction
@@ -637,9 +661,9 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             )
 
             PIPSuriOSDestination.ProximityRadioScanner -> ProximityRadioScannerScreen(
-                onV2Selected = { destination = PIPSuriOSDestination.ProximityPresenceV2 },
-                onVersionSelected = { destination = PIPSuriOSDestination.ProximitySonar },
-                onTestingSelected = { destination = PIPSuriOSDestination.SonarTesting },
+                onLocalScanSelected = { destination = PIPSuriOSDestination.PrsLocalScan },
+                onScanProbeSelected = { destination = PIPSuriOSDestination.PrsScanProbe },
+                onDevicesSelected = { destination = PIPSuriOSDestination.PrsDevices },
                 onGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerGuide },
                 onBack = { destination = PIPSuriOSDestination.Tools }
             )
@@ -647,7 +671,17 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
 
-            PIPSuriOSDestination.ProximityPresenceV2 -> ProximityPresenceV2Screen(
+            PIPSuriOSDestination.PrsDevices -> PrsDevicesScreen(
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.PrsLocalScan -> PrsTrackingScreen(
+                mode = PrsOperatingMode.LOCAL_SCAN,
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.PrsScanProbe -> PrsTrackingScreen(
+                mode = PrsOperatingMode.SCAN_PROBE,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
 
@@ -658,14 +692,6 @@ private fun PIPSuriOSApp(volumeKeyController: VolumeKeyController) {
             PIPSuriOSDestination.GeigerCounter -> GeigerCounterScreen(
                 volumeKeyController = volumeKeyController,
                 onBack = { destination = PIPSuriOSDestination.Tools }
-            )
-
-            PIPSuriOSDestination.ProximitySonar -> ProximitySonarScreen(
-                onBack = { destination = PIPSuriOSDestination.Tools }
-            )
-
-            PIPSuriOSDestination.SonarTesting -> SonarTestingScreen(
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
 
             PIPSuriOSDestination.DataLoading -> DataLoadingScreen(
@@ -1267,7 +1293,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
+            painter = painterResource(SkinSession.emblemResource),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxHeight(0.94f)
@@ -1288,7 +1314,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "PIP-SuriOS v2.3",
+                text = "PIP-SuriOS v2.4",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace
