@@ -1,3 +1,28 @@
+## Sprint 018 — Skin NECRON para PIP-SuriOS — 2026-08-30
+
+### Añadido
+
+- Skin NECRON como prototipo privado, con paleta blackstone/teal, acentos de
+  bronce y emblema vectorial nativo.
+- Especificación visual, referencias públicas clasificadas y política de uso
+  privado con variante independiente para cualquier publicación.
+- Auditoría técnica y cierre documental de Sprint 018.
+
+### Modificado
+
+- Home, MAP y P.R.S. resuelven los tokens visuales según la skin activa.
+- P.R.S. conserva NECRON tras la revisión visual en el Samsung A56; no se
+  activa el fallback a Brotherhood.
+- La selección de skin permanece de sesión y vuelve a Brotherhood después de
+  reiniciar el proceso.
+
+### Validación
+
+- Tests unitarios, lint y ensamblados de las variantes Android y módulos Watch:
+  `BUILD SUCCESSFUL`.
+- `app-full-debug.apk` instalada y validada en Samsung A56 (`SM_A566B`).
+- Auditoría: [AUDIT_SPRINT_018](../AUDIT_SPRINT_018.md).
+
 ## Sprint 017 — PIP-SuriOS v2.4, cierre de P.R.S. compacto y clasificación de dispositivos — 2026-08-30
 
 ### Estado del corte

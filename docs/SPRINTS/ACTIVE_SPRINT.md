@@ -10,13 +10,20 @@ last_updated: 2026-08-30
 
 ## Sprint activo
 
-Sprint 017 queda cerrado. [Sprint 017 v1.0](SPRINT_017_v1.0.md) — **CLOSED**
+Sprint 018 queda cerrado. [Sprint 018 v1.0](SPRINT_018_v1.0.md) — **CLOSED**
 
 ## Estado
 
 Sprint 015: **CLOSED**
 Sprint 016: **CLOSED**
 Sprint 017: **CLOSED**
+Sprint 018: **CLOSED**
+
+Sprint 018 formaliza, implementa y valida la skin NECRON para PIP-SuriOS
+Android. La skin conserva la funcionalidad compartida, aplica tokens y
+emblema vectorial propios del prototipo, y mantiene legibilidad en Home y
+P.R.S. sobre el Samsung A56. La selección es de sesión y vuelve a Brotherhood
+tras reiniciar el proceso.
 
 PIP-SuriOS v2.4 queda auditado y el Sprint 015 queda completado y cerrado
 técnica, funcional y documentalmente a fecha 2026-08-30. El P.R.S. activo usa
@@ -35,8 +42,18 @@ Sprint 016 queda cerrado de forma independiente. Sprint 017 queda cerrado tras
 la auditoría técnica y el despliegue validado; cualquier trabajo ajeno a su
 alcance requiere autorización expresa.
 
-Los trabajos paralelos de mapas y skins quedan fuera de este cierre y no se
-auditan ni modifican aquí.
+Los trabajos paralelos de mapas quedan fuera de este cierre y no se auditan ni
+modifican aquí.
+
+## Cierre de Sprint 018 de SuriOS Ecosystem / PIP-SuriOS
+
+[Sprint 018 v1.0](SPRINT_018_v1.0.md), abierto y cerrado el 2026-08-30.
+
+La skin NECRON queda documentada como prototipo privado, con referencias
+públicas clasificadas, política de publicación separada y validación visual en
+el A56. P.R.S. conserva el tratamiento NECRON porque no se observó distorsión
+ni pérdida apreciable de lectura. La auditoría completa está en
+[AUDIT_SPRINT_018](../AUDIT_SPRINT_018.md).
 
 ## Cierre de Sprint 017 de SuriOS Ecosystem / PIP-SuriOS
 

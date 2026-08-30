@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | — | Sprint 017 | Sprint 017 cerrado; los trabajos paralelos de mapas y skins quedan fuera de este cierre |
+| PIP-SuriOS | — | Sprint 018 | Sprint 018 cerrado; los trabajos paralelos de mapas quedan fuera de este cierre |
 
 ---
 
@@ -61,6 +61,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 015 | PIP-SuriOS | Reconstrucción P.R.S. y cierre PIW/PROBE-SuriOS | Aprobado | Completado | 2026-08-28 | 2026-08-30 | [Sprint 015 v1.0](SPRINT_015_v1.0.md) |
 | 016 | SuriOS Ecosystem / PIP-SuriOS | Revisión de temas abiertos, saneamiento documental y validación de SuriOS Watch en AVD | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 016 v1.1](SPRINT_016_v1.1.md) |
 | 017 | SuriOS Ecosystem / PIP-SuriOS | P.R.S. compacto para Z Flip 6 y clasificación práctica de dispositivos | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 017 v1.0](SPRINT_017_v1.0.md) |
+| 018 | SuriOS Ecosystem / PIP-SuriOS | Skin NECRON, aplicación visual a P.R.S. y validación en Samsung A56 | Cerrado | Completado con deudas explícitas | 2026-08-30 | 2026-08-30 | [Sprint 018 v1.0](SPRINT_018_v1.0.md) |
 
 ---
 
@@ -94,6 +95,7 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 11. Sprint 015 — Cerrado. Reconstrucción P.R.S. y cierre PIW/PROBE-SuriOS.
 12. Sprint 016 — Cerrado. Revisión de temas abiertos, saneamiento documental y validación de la esfera OFICIAL en AVD; la campaña física y el ajuste de `PrsTuning.DEFAULT` quedan cancelados.
 13. Sprint 017 — Cerrado. Refinamiento compacto de P.R.S. y clasificación práctica de dispositivos.
+14. Sprint 018 — Cerrado. Skin NECRON para PIP-SuriOS, aplicación a P.R.S. y validación visual en Samsung A56.
 
 ---
 
