@@ -35,13 +35,13 @@ object OfflineMapCatalog {
         mapId = "navy7",
         name = "NAVY7",
         assetPath = "maps/navy_7_terrain.mbtiles",
-        // Sprint 020 field center: 40.35297419412242, -3.4237021485063486.
-        // The footprint remains equivalent to the previous NAVY7 field.
+        // Sprint 023 target center: 40.352971232717216, -3.423711863510395.
+        // Use the HOME geographic footprint: 5 km x 2.5 km, zoom 16..19.
         bounds = MapBounds(
-            west = -3.4266621485063486,
-            south = 40.35152419412242,
-            east = -3.4207421485063486,
-            north = 40.35442419412242
+            west = -3.453046863510395,
+            south = 40.341471232717216,
+            east = -3.394376863510395,
+            north = 40.364471232717216
         ),
         minZoom = 16,
         maxNativeZoom = 19,

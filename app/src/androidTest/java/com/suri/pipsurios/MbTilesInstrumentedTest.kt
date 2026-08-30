@@ -18,7 +18,11 @@ class MbTilesInstrumentedTest {
         assertEquals("navy_7_terrain", data.metadata["name"])
         assertEquals("16", data.metadata["minzoom"])
         assertEquals("19", data.metadata["maxzoom"])
-        assertEquals(102, data.tileKeys.size)
+        assertEquals(
+            "-3.453046863510,40.341471232717,-3.394376863510,40.364471232717",
+            data.metadata["bounds"]
+        )
+        assertEquals(5242, data.tileKeys.size)
         assertTrue(data.tileKeys.any { it.zoom == 19 })
     }
 }

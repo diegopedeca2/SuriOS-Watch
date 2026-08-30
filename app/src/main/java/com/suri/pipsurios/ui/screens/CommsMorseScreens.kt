@@ -124,7 +124,7 @@ fun TerminalFooter(onBack: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
         Text("< BACK", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp))
-        Text("PIP-SuriOS v2.5", color = PipGreenDim, fontSize = 18.sp,
+        Text("PIP-SuriOS v2.6", color = PipGreenDim, fontSize = 18.sp,
             fontFamily = FontFamily.Monospace, modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp))
     }
 }

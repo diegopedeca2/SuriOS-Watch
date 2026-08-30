@@ -101,3 +101,38 @@ la huella aproximada del mapa anterior, con la extensión WGS84
 `-3.4266621485063486,40.35152419412242,-3.4207421485063486,40.35442419412242`.
 La salida final es `app/src/main/assets/maps/navy_7_terrain.mbtiles`, PNG,
 overlay, zoom 16–19, compatible con `MbTilesRepository`.
+
+## Modelo estándar HOME para NAVY7 y futuros mapas
+
+El generador `build_navy7_home_style.py` crea un proyecto QGIS nuevo y renderiza
+el MBTiles desde el GeoPackage local. No lee ni transforma el MBTiles anterior.
+El modelo deja fijos los parámetros de HOME; para repetirlo solo se suministra
+el centro geográfico:
+
+```powershell
+$env:QGIS_PREFIX_PATH = "C:\Program Files\QGIS 3.44.13\apps\qgis-ltr"
+& "C:\Program Files\QGIS 3.44.13\bin\python-qgis-ltr.bat" `
+  tools/gis/build_navy7_home_style.py `
+  --center-lat 40.352971232717216 `
+  --center-lon -3.423711863510395 `
+  --force
+```
+
+Los valores estándar fijados son:
+
+- dimensiones geográficas HOME: 0,05867° x 0,023° (aproximadamente 5 km x
+  2,5 km), centradas en las coordenadas suministradas;
+- tesela PNG RGBA opaca de 256 x 256, fondo `#050805`, overlay SQLite y zoom
+  16–19;
+- edificios `#606060` con borde `#050805` de 0,10 mm;
+- carreteras `#2f7ebe`, ancho 0,45 mm, extremos redondeados;
+- curvas menores `#4cb359`, ancho 0,55 mm, y curvas índice `#5bd66b`, ancho
+  0,90 mm;
+- jerarquía de capas: edificios, carreteras, curvas menores y curvas índice.
+
+El proyecto y la salida se escriben por defecto en GQUIS como
+`Navy7_HOME_STYLE.qgz` y `navy_7_terrain_HOME_STYLE.mbtiles`. La salida Sprint
+023 utiliza `highway`, `contours_2m` y `building`; MDT y OSM online permanecen
+desactivados. La matriz resultante para este centro es 84, 276, 1012 y 3870
+teselas por zoom, 5242 en total, con bounds WGS84
+`-3.453046863510,40.341471232717,-3.394376863510,40.364471232717`.

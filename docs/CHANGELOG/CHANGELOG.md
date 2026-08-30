@@ -1,3 +1,22 @@
+## Sprint 023 — PIP-SuriOS v2.6 y reconstrucción HOME-style de NAVY7 — 2026-08-31
+
+### Añadido y modificado
+
+- Versión móvil actualizada a `2.6` con `versionCode=6`.
+- Firmas visibles de PIP-SuriOS actualizadas a `PIP-SuriOS v2.6`.
+- NAVY7 reconstruido desde QGIS con el modelo estándar de HOME: huella de
+  5 km x 2,5 km, fondo opaco, edificios grises, carreteras azules y jerarquía
+  de curvas con grosores fijados.
+- Modelo reproducible en `tools/gis/build_navy7_home_style.py`, con proyecto
+  independiente creado en GQUIS y ejecución basada en las coordenadas de centro.
+
+### Validación y cierre
+
+- MBTiles íntegro, 5242 teselas PNG 256x256 en zoom 16–19.
+- El hash de NAVY7 se verificó en el repositorio, GQUIS y el Samsung A56.
+- Sprint 023 cerrado con los riesgos residuales de auditoría documentados como
+  backlog independiente.
+
 ## Sprint 022 — Agradecimientos en SET-UP — 2026-08-31
 
 ### Añadido

@@ -5,7 +5,7 @@
 document: SPRINT_HISTORY
 project: SuriOS Ecosystem
 version: 1.3
-status: Activo; registro operativo canónico
+status: Cerrado; registro operativo canónico
 owner: Diego Pérez de Camino
 last_updated: 2026-08-31
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
-| PIP-SuriOS | Ninguno | Sprint 022 | Sprint 022 cerrado; Sprint 021 cerrado e independiente |
+| PIP-SuriOS | Ninguno | Sprint 023 | Sprint 023 cerrado; sin Sprint activo |
 
 ---
 
@@ -66,6 +66,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 020 | SuriOS Ecosystem / PIP-SuriOS | Regeneración de NAVY7, selección inicial CHOOSE LOCATION y orden alfabético de mapas TERRAIN | Cerrado | Completado | 2026-08-30 | 2026-08-30 | [Sprint 020 v1.0](SPRINT_020_v1.0.md) |
 | 021 | SuriOS Ecosystem / PIP-SuriOS | INDIVIDUAL TRACKING: integración experimental de TERRAIN con P.R.S. | Cerrado | Completado | 2026-08-30 | 2026-08-30 | [Sprint 021 v1.0](SPRINT_021_v1.0.md) |
 | 022 | PIP-SuriOS | Agradecimientos dentro de SET-UP | Cerrado | Completado | 2026-08-30 | 2026-08-31 | [Sprint 022 v1.0](SPRINT_022_v1.0.md) |
+| 023 | SuriOS Ecosystem / PIP-SuriOS | Auditoría completa y regeneración desde cero de TERRAIN NAVY7 centrada en las coordenadas solicitadas | Cerrado | Completado con deudas explícitas | 2026-08-31 | 2026-08-31 | [Sprint 023 v1.0](SPRINT_023_v1.0.md) |
 
 ---
 
@@ -105,6 +106,8 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 17. Sprint 021 — Cerrado. INDIVIDUAL TRACKING: integración experimental de TERRAIN con P.R.S.; la prueba física y la calibración estadística quedan como continuidad.
 18. Sprint 022 — Cerrado. Apartado ampliable de agradecimientos de solo lectura
     dentro de SET-UP, independiente de los procesos de los SPRINT 20 y 21.
+19. Sprint 023 — Cerrado. Auditoría completa del monorepo y regeneración desde
+    cero de TERRAIN NAVY7 con el centro geográfico solicitado.
 
 ---
 
@@ -575,8 +578,8 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### PIP-SuriOS
 
-- Último Sprint completado: Sprint 017.
-- Versión vigente: PIP-SuriOS v2.4.
+- Último Sprint completado: Sprint 023.
+- Versión vigente: PIP-SuriOS v2.6.
 - Sprints activos: 0 en el ámbito de este cierre.
 - Sprint 009: completado y cerrado.
 - Sprint 010: completado y cerrado.
@@ -594,14 +597,19 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 015, Sprint 016 y Sprint 017 de PIP-SuriOS están
-completados y que este cierre no audita los trabajos paralelos de mapas y skins.
+Actualmente confirma que Sprint 015, Sprint 016, Sprint 017, Sprint 018, Sprint
+019, Sprint 020, Sprint 021, Sprint 022 y Sprint 023 de PIP-SuriOS están
+completados y cerrados.
 
-Sprint 015 está cerrado y PIP-SuriOS v2.4 constituye la versión móvil consolidada vigente. Sprint 016 revisó temas abiertos y saneó la documentación; Sprint 017 incorporó el refinamiento de P.R.S., actualizó la firma de versión y queda cerrado con la validación física como continuidad posterior.
+Sprint 023 está cerrado y PIP-SuriOS v2.6 constituye la versión móvil consolidada vigente. La auditoría residual, la reconstrucción HOME-style de NAVY7 y la validación en A56 quedan registradas en su documento de Sprint.
 
 PIW-SuriOS v2.0 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.4 con SET-UP persistente en vertical, DATA permanente, STORAGE, RADS v2, P.R.S. v3.0, REMOTE PROBE opcional, MAP TERRAIN NAVY7 offline, SELECT SKIN y TOOLS reorganizado constituye el estado móvil funcional vigente. Sprint 015, Sprint 016 y Sprint 017 están cerrados. La edición reducida de P.R.S. añade el layout para pantalla externa y las dos ediciones pueden mostrar categorías inferidas de dispositivo.
+PIP-SuriOS v2.6 con SET-UP persistente en vertical, DATA permanente, STORAGE,
+RADS v2, P.R.S. v3.0, REMOTE PROBE opcional, MAP TERRAIN NAVY7 offline,
+SELECT SKIN y TOOLS reorganizado constituye el estado móvil funcional vigente.
+Todos los Sprints registrados están cerrados y la edición reducida de P.R.S.
+añade el layout para pantalla externa.
 
 ---
 

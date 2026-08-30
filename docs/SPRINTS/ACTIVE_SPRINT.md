@@ -10,7 +10,7 @@ last_updated: 2026-08-31
 
 ## Sprint activo
 
-No hay un Sprint activo. [Sprint 022 v1.0](SPRINT_022_v1.0.md) — **CLOSED**
+No hay un Sprint activo. [Sprint 023 v1.0](SPRINT_023_v1.0.md) — **CLOSED**
 
 Los SPRINT 20 y 21 se mantuvieron en procesos independientes. El SPRINT 21 ha
 sido confirmado como cerrado sin regresiones observables.
@@ -27,6 +27,7 @@ Sprint 019: **CLOSED**
 Sprint 020: **CLOSED**
 Sprint 021: **CLOSED**
 Sprint 022: **CLOSED**
+Sprint 023: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -41,8 +42,8 @@ emblema vectorial propios del prototipo, y mantiene legibilidad en Home y
 P.R.S. sobre el Samsung A56. La selección es de sesión y vuelve a Brotherhood
 tras reiniciar el proceso.
 
-PIP-SuriOS v2.5 queda auditado y el Sprint 015 queda completado y cerrado
-técnica, funcional y documentalmente a fecha 2026-08-30. El P.R.S. activo usa
+PIP-SuriOS v2.6 queda consolidado con el cierre del Sprint 023, completado y
+cerrado técnica, funcional y documentalmente a fecha 2026-08-31. El P.R.S. activo usa
 `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `TRACK TARGET`, con histórico RSSI,
 suavizado y nubes de densidad sin posicionamiento sintético. PIW-SuriOS Watch
 v2.0 conserva el modo ambiente con el emblema girando sobre su eje vertical y
@@ -96,7 +97,7 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
 ## Roadmap de PIP-SuriOS
 
 - Sprint 015 queda cerrado.
-- PIP-SuriOS v2.5 queda auditado y consolidado.
+- PIP-SuriOS v2.6 queda auditado y consolidado.
 - La guía imprimible del P.R.S. queda disponible en `output/pdf/PRS_CALIBRATION_GUIDE_SPRINT_015.pdf`.
 - Se entregan las variantes `fullDebug` y `prsOnlyDebug` de P.R.S.
 - Sprint 016 queda cerrado tras la revisión documentada de temas abiertos y el
@@ -112,6 +113,8 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
 - Sprint 022 queda cerrado tras incorporar y validar el apartado de
   agradecimientos de solo lectura dentro de SET-UP, manteniendo independientes
   los procesos de los SPRINT 20 y 21.
+- Sprint 023 queda cerrado tras la auditoría completa, la reconstrucción
+  HOME-style de NAVY7 y la validación instrumentada del asset offline en A56.
 
 ## Cierre de Sprint 022 de PIP-SuriOS
 

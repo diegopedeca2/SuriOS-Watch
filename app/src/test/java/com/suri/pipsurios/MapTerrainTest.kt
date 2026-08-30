@@ -87,11 +87,15 @@ class MapTerrainTest {
         assertEquals("CHOOSE LOCATION", TerrainFieldSelection.CHOOSE_LOCATION_LABEL)
     }
 
-    @Test fun sprint20Navy7CenterMatchesRequestedCoordinates() {
+    @Test fun sprint23Navy7CenterMatchesRequestedCoordinates() {
         val center = OfflineMapCatalog.NAVY7.bounds.center
-        assertEquals(40.35297419412242, center.latitude, 1e-12)
-        assertEquals(-3.4237021485063486, center.longitude, 1e-12)
-        assertTrue(OfflineMapCatalog.NAVY7.bounds.contains(GeoPoint(40.35297419412242, -3.4237021485063486)))
+        assertEquals(40.352971232717216, center.latitude, 1e-12)
+        assertEquals(-3.423711863510395, center.longitude, 1e-12)
+        assertTrue(OfflineMapCatalog.NAVY7.bounds.contains(GeoPoint(40.352971232717216, -3.423711863510395)))
+        assertEquals(-3.453046863510395, OfflineMapCatalog.NAVY7.bounds.west, 1e-12)
+        assertEquals(40.341471232717216, OfflineMapCatalog.NAVY7.bounds.south, 1e-12)
+        assertEquals(-3.394376863510395, OfflineMapCatalog.NAVY7.bounds.east, 1e-12)
+        assertEquals(40.364471232717216, OfflineMapCatalog.NAVY7.bounds.north, 1e-12)
     }
 
     @Test fun headingRotatesAroundStableUserPivotWithoutChangingViewportOrCenter() {
