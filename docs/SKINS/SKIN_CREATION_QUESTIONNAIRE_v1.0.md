@@ -57,7 +57,7 @@ Seleccionar hasta cinco rasgos principales:
 - [ ] Exploración
 - [ ] Médica
 - [ ] Científica
-- [ ] Civilian / discreta
+- [ ] Discreta / utilitaria
 - [ ] Operativa / táctica
 - [ ] Hostil / agresiva
 - [ ] Elegante / limpia

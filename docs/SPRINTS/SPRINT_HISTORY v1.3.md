@@ -68,6 +68,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 022 | PIP-SuriOS | Agradecimientos dentro de SET-UP | Cerrado | Completado | 2026-08-30 | 2026-08-31 | [Sprint 022 v1.0](SPRINT_022_v1.0.md) |
 | 023 | SuriOS Ecosystem / PIP-SuriOS | Auditoría completa y regeneración desde cero de TERRAIN NAVY7 centrada en las coordenadas solicitadas | Cerrado | Completado con deudas explícitas | 2026-08-31 | 2026-08-31 | [Sprint 023 v1.0](SPRINT_023_v1.0.md) |
 | 024 | SuriOS Ecosystem / PIP-SuriOS | Endurecimiento de la integración A56–Watch 2 de PROBE, permisos, protocolo, caché y reproducibilidad GIS | Cerrado | Completado con advisories de dependencias | 2026-08-31 | 2026-08-31 | [Sprint 024 v1.0](SPRINT_024_v1.0.md) |
+| 025 | SuriOS Ecosystem | Actualización controlada de dependencias, licencias y recolocación de agradecimientos | Planificado | No iniciado | — | — | [Sprint 025 v1.0](SPRINT_025_v1.0.md) |
 
 ---
 
@@ -109,6 +110,8 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
     dentro de SET-UP, independiente de los procesos de los SPRINT 20 y 21.
 19. Sprint 023 — Cerrado. Auditoría completa del monorepo y regeneración desde
     cero de TERRAIN NAVY7 con el centro geográfico solicitado.
+20. Sprint 025 — Planificado. Actualización controlada de dependencias,
+    documentación de licencias y recolocación del apartado de agradecimientos.
 
 ---
 

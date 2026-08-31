@@ -283,7 +283,8 @@ Solo si aportan información. Cortas, discretas y nunca decorativas.
 
 ## 9\. Lenguaje del ecosistema
 
-Terminología oficial: BROTHERHOOD OF STEEL, CIVILIAN, OPERATION, INITIALIZING, LOADING PROFILE.
+Terminología oficial: BROTHERHOOD OF STEEL, OPERATION, INITIALIZING, LOADING PROFILE.
+La denominación CIVILIAN queda retirada y no identifica ningún perfil activo.
 
 ## 10\. Recursos compartidos
 
@@ -328,7 +329,7 @@ v2.0 Biblioteca completa de componentes reutilizables.
 
 ## 13.2 Convención de nombres
 
-Todos los recursos seguirán una nomenclatura consistente (ej.: ICON_SPOTIFY_v1.svg, WF_CIVILIAN_REFERENCE_v1.png). Se evitarán nombres ambiguos.
+Todos los recursos seguirán una nomenclatura consistente (ej.: ICON_SPOTIFY_v1.svg, WF_SURIOS_WATCH_REFERENCE_v1.png). Se evitarán nombres ambiguos.
 
 ## 13.3 Recursos creados por IA
 
@@ -344,7 +345,7 @@ Listado vivo de activos oficiales: logotipo SuriOS (cuando exista), paleta, tipo
 
 ## 13.6 Wireframes oficiales
 
-Los wireframes aprobados pasarán a formar parte de la biblioteca oficial del ecosistema. La Figura 4.1 del WFRPD constituye la primera referencia visual oficial.
+Los wireframes aprobados pasarán a formar parte de la biblioteca oficial del ecosistema. La Figura 1 vigente del WFPRD constituye la referencia visual oficial.
 
 ## 13.7 Recursos pendientes
 

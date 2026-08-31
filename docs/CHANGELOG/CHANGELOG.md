@@ -1,3 +1,18 @@
+## Cierre administrativo posterior al Sprint 024 — 2026-08-31
+
+### Decisiones
+
+- Se aprueban Consolas, la política documental en Git, la estrategia de pruebas,
+  la política de `.idea`, `CHANGELOG.md`, la nomenclatura `Project` y la no
+  incorporación de doble pulsación.
+- `preview.png` y la Figura 4.1 quedan como material histórico.
+- Se eliminan las copias `ORCA-TO-DO` y el perfil CIVILIAN activo, incluida su
+  ruta huérfana en PIP-SuriOS; la documentación histórica no se reescribe.
+- La actualización de dependencias, la documentación de licencias y la
+  recolocación de agradecimientos quedan planificadas para Sprint 025.
+- BL-010 permanece abierto hasta decidir entre EDL v0.6 y la copia etiquetada
+  v0.7.
+
 ## Sprint 024 — Hardening SuriOS / PROBE companion — 2026-08-31
 
 ### Añadido y modificado

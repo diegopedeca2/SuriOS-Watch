@@ -15,7 +15,7 @@ date: 2026-08-06
 
 # 1. Autoridad y propósito
 
-Este documento constituye el anexo visual normativo de **WFPRD v1.4** y está subordinado a él.
+Este documento constituye el anexo visual normativo de **WFPRD v1.5** y está subordinado a él.
 
 Su finalidad es definir exclusivamente la composición visual, la geometría, la jerarquía y las relaciones espaciales de todos los componentes de la esfera SuriOS Watch.
 
@@ -180,7 +180,7 @@ Los componentes pendientes de implementación mantienen su posición en la jerar
       EMBLEMA INSTITUCIONAL
 
 
-       SURIOS WATCH · CIVILIAN
+             SURIOS WATCH
 ```
 
 La figura representa únicamente la composición conceptual.
@@ -384,19 +384,20 @@ El contenido incluirá el texto:
 
 ---
 
-## 8.10 Identificación CIVILIAN
+## 8.10 Identificación de perfil retirada
 
 Estado documental:
 
-Componente visual aprobado.
+Componente retirado por decisión del propietario.
 
 Implementación:
 
-Pendiente. Sprint por determinar.
+No aplica.
 
 Texto definitivo:
 
-Pendiente de aprobación.
+No se mostrará ninguna identificación de perfil. La identificación vigente es
+`SuriOS Watch`, definida en el apartado 8.9.
 
 Zona:
 
@@ -475,7 +476,7 @@ Los siguientes componentes no dispondrán de interacción:
 - pasos;
 - emblema oficial de la Hermandad del Acero;
 - identificación SuriOS Watch;
-- identificación CIVILIAN;
+- identificación de perfil;
 - separadores gráficos.
 
 Los únicos componentes interactivos previstos son:

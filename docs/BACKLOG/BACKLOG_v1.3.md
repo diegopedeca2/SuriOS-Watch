@@ -13,26 +13,30 @@ last_updated: 2026-08-31
 Esta versión incorpora al backlog los hallazgos AUD-023-01 a AUD-023-09 de la
 auditoría del Sprint 023. Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md) y no autoriza por sí misma desarrollo.
 
+Las decisiones del propietario registradas en el cierre administrativo del
+Sprint 024 se reflejan en los elementos heredados. BL-010 permanece abierto
+hasta resolver la versión canónica del EDL.
+
 ## Elementos heredados
 
 | ID | Estado | Prioridad | Origen | Elemento | Observaciones |
 |---|---|---|---|---|---|
-| BL-001 | Pendiente | Alta | Sprint 001 | Validar tipografía definitiva Consolas | Mantener `SYNC_TO_DEVICE` como deuda temporal aceptada. |
-| BL-002 | Pendiente | Media | Sprint 001 | Actualizar `preview.png` | Debe representar la esfera validada. |
-| BL-003 | En evaluación | Alta | Auditoría documental | Versionar documentación oficial en Git | Requiere staging y commit documental. |
-| BL-004 | Pendiente | Media | Organización | Definir política GitHub | Remoto, ramas y estrategia. |
-| BL-005 | Pendiente | Baja | Sprint 001 | Automatizar validaciones XML | Evaluar tras varios Sprints. |
-| BL-006 | Pendiente | Baja | Sprint 001 | Estrategia de pruebas automatizadas | No prioritaria en esta fase. |
-| BL-007 | Pendiente | Media | Organización | Política de archivos `.idea` | Determinar qué se versiona. |
-| BL-008 | Pendiente | Baja | Auditoría documental | Resolver futuro de CHANGELOG | Mantenerlo o sustituirlo formalmente. |
-| BL-009 | Implementado documentalmente | Media | Auditoría documental | Normalizar nomenclatura vigente | Aplicado a documentos nuevos. |
-| BL-010 | En evaluación | Alta | Auditoría documental | Determinar EDL vigente | Resolver EDL v0.6 frente a respaldo v0.7. |
-| BL-011 | Pendiente | Media | Recursos | Localizar y catalogar antigua Figura 4.1 | Histórica; no bloquea la Figura 1 vigente. |
-| BL-012 | Pendiente | Media | Organización | Archivar copias de `ORCA-TO-DO` | No eliminar sin autorización. |
-| BL-013 | Pendiente | Baja | Documentación | Normalizar MRPD “Product/Project” | Corrección terminológica futura. |
-| BL-014 | Pendiente | Media | Recursos | Definir licencia y recurso del emblema | Obligatorio antes de implementar el emblema. |
-| BL-015 | Pendiente | Media | Sprint futuro | Aprobar texto de lema o identificación CIVILIAN | No inventar durante implementación. |
-| BL-016 | Pendiente | Baja | Sprint futuro | Evaluar doble pulsación en pasos | Requiere ADR, WFPRD y Sprint propios. |
+| BL-001 | Cerrado | Alta | Sprint 001 | Validar tipografía definitiva Consolas | Consolas aprobada como tipografía definitiva; `SYNC_TO_DEVICE` continúa como deuda técnica independiente. |
+| BL-002 | Histórico | Media | Sprint 001 | Actualizar `preview.png` | No se actualiza; se conserva como recurso histórico. |
+| BL-003 | Cerrado | Alta | Auditoría documental | Versionar documentación oficial en Git | Política de documentación en Git aprobada y aplicada. |
+| BL-004 | Cerrado | Media | Organización | Definir política GitHub | `master` es la rama estable; commits funcionales y push tras validación. |
+| BL-005 | Planificado | Baja | Sprint 001 | Automatizar validaciones XML | Automatizar cuando exista CI estable. |
+| BL-006 | Cerrado | Baja | Sprint 001 | Estrategia de pruebas automatizadas | Unitarias, lint, builds y pruebas instrumentadas en A56 cuando afecten a Android. |
+| BL-007 | Cerrado | Media | Organización | Política de archivos `.idea` | Se ignora la configuración local y solo se conserva la configuración compartida imprescindible. |
+| BL-008 | Cerrado | Baja | Auditoría documental | Resolver futuro de CHANGELOG | `CHANGELOG.md` se conserva como resumen humano de cambios. |
+| BL-009 | Cerrado | Media | Auditoría documental | Normalizar nomenclatura vigente | Normalización documental aprobada. |
+| BL-010 | En evaluación | Alta | Auditoría documental | Determinar EDL vigente | Comparación v0.6/v0.7 pendiente de decisión; el respaldo etiquetado v0.7 contiene en realidad cabecera v0.6. |
+| BL-011 | Histórico | Media | Recursos | Localizar y catalogar antigua Figura 4.1 | Se conserva como material histórico y no entra en el producto. |
+| BL-012 | Eliminado | Media | Organización | Eliminar copias de `ORCA-TO-DO` | Directorio eliminado; los archivos estaban versionados y siguen recuperables desde Git. |
+| BL-013 | Cerrado | Baja | Documentación | Normalizar MRPD “Product/Project” | Se adopta oficialmente `Project`. |
+| BL-014 | Planificado Sprint 025 | Media | Recursos | Definir licencia y recurso del emblema | Se documentará junto con autoría/procedencia antes de cualquier distribución externa. |
+| BL-015 | Eliminado | Media | Sprint futuro | Retirar perfil CIVILIAN | El perfil y su ruta huérfana se eliminan; las menciones históricas no se reescriben. |
+| BL-016 | Cerrado | Baja | Sprint futuro | Evaluar doble pulsación en pasos | No se incorpora al producto actual. |
 
 ## Hallazgos del Sprint 023
 
@@ -45,7 +49,7 @@ auditoría del Sprint 023. Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJ
 | AUD-023-05 | Implementado | Media | TERRAIN | SHA-256 por asset, metadata de formato/zoom/bounds y tres teselas representativas; recreación segura. |
 | AUD-023-06 | Implementado | Baja-media | Persistencia | Escritura a temporal y renombrado; se conserva el conflicto `AlreadyExists` por fecha. |
 | AUD-023-07 | Implementado | Baja-media | Protocolo | Rangos semánticos, finitud, timestamps ±5 minutos y `PING` como `PONG` sin adquisición. |
-| AUD-023-08 | Implementado parcialmente | Baja | Compatibilidad / deuda | APIs y avisos de código corregidos. Versiones de dependencias permanecen fijadas hasta una matriz de regresión dedicada. |
+| AUD-023-08 | Planificado Sprint 025 | Baja | Compatibilidad / deuda | APIs y avisos de código corregidos. La actualización de dependencias requiere una matriz de regresión dedicada. |
 | AUD-023-09 | Implementado | Media | GIS / reproducibilidad | Generador con rutas obligatorias, QGIS LTR 3.44.13 y política explícita de fuentes externas/asset Android versionado. |
 
 ## Historial

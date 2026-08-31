@@ -28,7 +28,7 @@ El [MRPD v1.1.1](../MRPD/MRPD.md) es la fuente de verdad de PIP-SuriOS y de las 
 
 ### 2.3 WFPRD maestro
 
-El [WFPRD v1.4](../WFPRD/WFPRD_v1.4.md) es la fuente de verdad vigente de SuriOS Watch. Las versiones v1.2 y v1.3 se conservan como históricas.
+El [WFPRD v1.5](../WFPRD/WFPRD_v1.5.md) es la fuente de verdad vigente de SuriOS Watch. Las versiones anteriores se conservan como históricas.
 
 ### 2.4 ADR
 

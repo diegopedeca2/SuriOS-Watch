@@ -15,7 +15,7 @@ Aplicación Android principal del ecosistema.
 Proyecto de esfera para Wear OS.
 
 ## MRPD
-Master Requirements & Product Document.
+Master Requirements & Project Document.
 
 ## WFPRD
 Watch Face Product Requirements Document.
@@ -38,12 +38,6 @@ Documento que indica cuál es el Sprint vigente.
 ## Sprint History
 
 Registro cronológico del estado de todos los Sprints del proyecto.
-
----
-
-## CIVILIAN
-
-Perfil del ecosistema orientado al uso diario.
 
 ---
 

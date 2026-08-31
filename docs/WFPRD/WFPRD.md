@@ -4,6 +4,9 @@ Watch Face Requirements & Project Document
 Versión 1.2  
 Documento completo para implementación con Orca
 
+Estado: Histórico; sustituido por [WFPRD v1.5](WFPRD_v1.5.md). No utilizar
+como referencia normativa.
+
 ## 1\. Propósito
 
 Desarrollar una watch face para Xiaomi Watch 2 (Wear OS) integrada en el ecosistema SuriOS y alineada con el EDL.

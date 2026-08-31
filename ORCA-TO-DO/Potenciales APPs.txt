@@ -1,8 +1,0 @@
-Control y estado de la moto
- -Revisiones
- -Cambios de piezas
- -Posibles mejoras
-
-Gestión nutricional
- -Comida del día
- -Datos biométricos 

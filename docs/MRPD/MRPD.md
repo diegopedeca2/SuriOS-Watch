@@ -9,9 +9,8 @@ Documento maestro del proyecto
 
 PIP-SuriOS es un sistema personal inspirado en los PIP-Boy del universo Fallout.  
 No pretende reproducir un videojuego, sino ofrecer una herramienta útil con identidad propia inspirada en RobCo y la Hermandad del Acero.  
-El proyecto tendrá el mismo peso para dos escenarios:  
-• CIVILIAN (uso diario)  
-• OPERATION (airsoft).
+El proyecto se centra actualmente en el escenario operativo de airsoft. El
+perfil CIVILIAN queda retirado y no forma parte del producto.
 
 ### 2\. Filosofía
 
@@ -49,9 +48,7 @@ Todas las decisiones se tomarán pensando en un único usuario, aunque la arquit
 
 ### 6\. Casos de uso
 
-Caso CIVILIAN:  
-Estado: POR DETERMINAR.  
-<br/>Caso OPERATION:  
+Caso OPERATION:
 seleccionar perfil, revisar equipación, Mission Log, mapas y comunicaciones.
 
 ### 7\. Restricciones
@@ -60,7 +57,7 @@ Android únicamente.
 Orientación horizontal.  
 Uso personal.  
 Sin dependencia permanente de Internet.  
-Una única APK para ambos perfiles.
+Una única APK para el entorno operativo actual.
 
 ### 8\. Filosofía de desarrollo
 
@@ -128,8 +125,8 @@ DEC-002 APK única
 DEC-003 Mission Log sin estadísticas competitivas  
 DEC-004 Launcher independiente  
 DEC-005 MRPD como fuente de verdad  
-DEC-006 Perfiles 50/50  
-DEC-007 Selección de perfil en cada inicio  
+DEC-006 Perfil CIVILIAN retirado
+DEC-007 Selección de skin en cada inicio
 DEC-008 Interacción mediante botones  
 DEC-009 Lenguaje visual por colores  
 DEC-010 Cabecera estándar de módulos  

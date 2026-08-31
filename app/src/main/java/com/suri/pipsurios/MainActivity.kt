@@ -39,7 +39,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.unit.dp
 import com.suri.pipsurios.BuildConfig
 import com.suri.pipsurios.ui.theme.PipGreenDim
-import com.suri.pipsurios.ui.screens.HomeCivilianScreen
 import com.suri.pipsurios.ui.screens.HomeOperationScreen
 import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
@@ -222,7 +221,6 @@ private enum class PIPSuriOSDestination {
     DataSaved,
     DataDeleted,
     DataModified,
-    HomeCivilian,
     InventoryLoading,
     InventoryModeSelection,
     InventoryArmory,
@@ -901,10 +899,6 @@ private fun PIPSuriOSApp(
 
             PIPSuriOSDestination.DataModified -> DataModifiedScreen(
                 onFinished = ::openOperationLogs
-            )
-
-            PIPSuriOSDestination.HomeCivilian -> HomeCivilianScreen(
-                onBack = { destination = PIPSuriOSDestination.ModeSelection }
             )
 
             PIPSuriOSDestination.InventoryLoading -> InventoryLoadingScreen(

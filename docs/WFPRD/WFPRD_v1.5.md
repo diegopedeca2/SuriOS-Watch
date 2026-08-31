@@ -137,7 +137,7 @@ Cada Sprint deberá aportar una mejora claramente delimitada sin introducir regr
 
 Forma parte del alcance oficial:
 
-- Watch Face principal del perfil CIVILIAN;
+- Watch Face principal del ecosistema SuriOS Watch;
 - Ambient Mode;
 - hora;
 - fecha;
@@ -156,7 +156,7 @@ Forma parte del alcance oficial:
 
 Permanecen fuera del alcance:
 
-- perfil OPERATION;
+- perfiles de producto alternativos;
 - Tiles;
 - aplicación Wear OS independiente;
 - pantallas secundarias;
@@ -171,21 +171,8 @@ Permanecen fuera del alcance:
 
 ## 2.3 Perfiles
 
-Actualmente el proyecto contempla:
-
-### CIVILIAN
-
-Perfil oficial del proyecto.
-
-Desarrollo incremental.
-
-Prioridad alta.
-
-### OPERATION
-
-Pendiente de definición.
-
-Fuera del roadmap vigente.
+SuriOS Watch no mantiene perfiles CIVILIAN ni OPERATION. La esfera se define
+como un producto único del ecosistema SuriOS Watch.
 
 ---
 
@@ -605,21 +592,21 @@ Oculto.
 
 ---
 
-## 5.10 Identificación del perfil
+## 5.10 Identificación de producto
 
 **Estado documental**
 
-Aprobado.
+Retirado como identificación de perfil.
 
 **Estado de implementación**
 
-Pendiente.
+No aplica.
 
 **Contenido**
 
-Identificación del perfil CIVILIAN o el texto que apruebe expresamente el propietario.
-
-No podrá decidirse durante la implementación.
+No se muestra una identificación CIVILIAN ni otra identificación de perfil.
+La identificación vigente del producto es `SuriOS Watch`, definida en el
+apartado 5.9.
 
 **Sprint previsto**
 
@@ -728,7 +715,7 @@ En Ambient Mode permanecerán ocultos:
 - Spotify;
 - Google Wallet;
 - identificación SuriOS Watch;
-- identificación del perfil;
+- identificación de perfil;
 - separadores gráficos;
 - cualquier otro elemento no aprobado específicamente.
 

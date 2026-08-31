@@ -15,6 +15,14 @@ last_updated: 2026-08-31
 El alcance cerrado fue el endurecimiento de la integración A56–Watch 2 de
 PIP-SuriOS/PROBE y el cierre de las deudas AUD-023-01 a AUD-023-09.
 
+## Siguiente Sprint planificado
+
+[Sprint 025 v1.0](SPRINT_025_v1.0.md) — **PLANIFICADO; NO ACTIVO**
+
+Su alcance previsto es actualizar dependencias con regresión completa,
+documentar licencias y procedencia de recursos, y recolocar el apartado de
+agradecimientos. La activación requerirá autorización expresa.
+
 [Sprint 023 v1.0](SPRINT_023_v1.0.md) — **CLOSED**
 
 Los SPRINT 20 y 21 se mantuvieron en procesos independientes. El SPRINT 21 ha
