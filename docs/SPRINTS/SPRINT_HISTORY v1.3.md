@@ -31,7 +31,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 006 | Sprint 006 completado; sin Sprint activo |
+| SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
 | PIP-SuriOS | Ninguno | Sprint 025 | Sprint 025 cerrado |
 
 ---
@@ -69,6 +69,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 023 | SuriOS Ecosystem / PIP-SuriOS | Auditoría completa y regeneración desde cero de TERRAIN NAVY7 centrada en las coordenadas solicitadas | Cerrado | Completado con deudas explícitas | 2026-08-31 | 2026-08-31 | [Sprint 023 v1.0](SPRINT_023_v1.0.md) |
 | 024 | SuriOS Ecosystem / PIP-SuriOS | Endurecimiento de la integración A56–Watch 2 de PROBE, permisos, protocolo, caché y reproducibilidad GIS | Cerrado | Completado con advisories de dependencias | 2026-08-31 | 2026-08-31 | [Sprint 024 v1.0](SPRINT_024_v1.0.md) |
 | 025 | SuriOS Ecosystem | Actualización controlada de dependencias, licencias y recolocación de agradecimientos | Cerrado | Completado | 2026-08-31 | 2026-08-31 | [Sprint 025 v1.0](SPRINT_025_v1.0.md) |
+| 026 | SuriOS Watch | Esfera PIW-SuriOS no PROBE: STATUS y AMBIENT | Cerrado | Completado | 2026-08-31 | 2026-08-31 | [Sprint 026 v1.0](SPRINT_026_v1.0.md) |
 
 ---
 

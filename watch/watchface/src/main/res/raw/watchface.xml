@@ -502,7 +502,7 @@
                             family="SYNC_TO_DEVICE"
                             size="18">STATUS</Font>
                     </Text>
-                    <Launch target="com.suri.pipsurios/com.suri.pipsurios.StatisticsLaunchActivity" />
+                    <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.home.HomeActivity" />
                 </PartText>
 
                 <PartDraw

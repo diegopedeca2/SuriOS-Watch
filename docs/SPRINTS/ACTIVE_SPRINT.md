@@ -10,12 +10,17 @@ last_updated: 2026-08-31
 
 ## Sin Sprint activo
 
-El Sprint 025 se ha cerrado tras la validación física correcta en el Samsung
-A56. No queda ningún Sprint activo.
+El Sprint 026 se ha cerrado tras validar el acceso `STATUS` y conservar el
+comportamiento AMBIENT anterior en el Watch Ultra. No queda ningún Sprint
+activo.
 
 ## Último Sprint cerrado
 
+[Sprint 026 v1.0](SPRINT_026_v1.0.md) — **CLOSED**
+
 [Sprint 025 v1.0](SPRINT_025_v1.0.md) — **CLOSED**
+
+El Sprint 025 se cerró tras la validación física correcta en el Samsung A56.
 
 El alcance incluyó el nuevo menú `INFORMATION`, la recolocación de
 `ACKNOWLEDGEMENTS`, la incorporación de `DISCLAIMERS` y la actualización
