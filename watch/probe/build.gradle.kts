@@ -9,6 +9,8 @@ android {
     }
 
     defaultConfig {
+        // Wear PROBE is the companion application for the mobile PIP-SuriOS package.
+        // Keep this applicationId aligned with the phone app for Wear OS discovery.
         applicationId = "com.suri.pipsurios"
         minSdk = 33
         targetSdk = 37

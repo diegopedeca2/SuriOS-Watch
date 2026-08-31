@@ -1,13 +1,16 @@
 package com.suri.pipsurios.morse
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.delay
 
 const val MORSE_TIME_UNIT_MS = 200L
 
 class MorseTransmitter(context: Context) {
+    private val appContext = context.applicationContext
     private val cameraManager = context.getSystemService(CameraManager::class.java)
     private val cameraId = runCatching {
         cameraManager.cameraIdList.firstOrNull { id ->
@@ -16,10 +19,17 @@ class MorseTransmitter(context: Context) {
         }
     }.getOrNull()
 
-    val isAvailable: Boolean get() = cameraId != null
+    val hasFlash: Boolean get() = cameraId != null
+
+    val isAvailable: Boolean
+        get() = cameraId != null && ContextCompat.checkSelfPermission(
+            appContext,
+            android.Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
 
     suspend fun transmit(encodedMessage: String) {
-        val id = cameraId ?: return
+        val id = cameraId ?: throw IllegalStateException("FLASH_UNAVAILABLE")
+        check(isAvailable) { "CAMERA_PERMISSION_REQUIRED" }
         val words = encodedMessage.split("__")
         try {
             words.forEachIndexed { wordIndex, word ->

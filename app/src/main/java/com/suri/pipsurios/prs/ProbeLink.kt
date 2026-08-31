@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.android.gms.wearable.Wearable
 import com.suri.probeprotocol.ProbeProtocol
 
-/** Phone-side command link. PROBE telemetry itself is persisted through DataClient. */
+/** Phone-side command link. PROBE telemetry is accepted only for the active session/node. */
 class ProbeLink(context: Context) {
     private val appContext = context.applicationContext
     private val nodeClient = Wearable.getNodeClient(appContext)
@@ -23,10 +23,20 @@ class ProbeLink(context: Context) {
                             onResult(false, "NO PROBE NODE CONNECTED")
                             return@addOnSuccessListener
                         }
+                        if (command != ProbeProtocol.Command.STOP) {
+                            ProbeTelemetryStore.expectProbe(target.id, sessionId)
+                        }
                         val control = ProbeProtocol.Control(command, localNode.id, sessionId)
                         messageClient.sendMessage(target.id, ProbeProtocol.CONTROL_PATH, ProbeProtocol.encodeControl(control))
-                            .addOnSuccessListener { onResult(true, target.displayName) }
-                            .addOnFailureListener { onResult(false, formatFailure(it)) }
+                            .addOnSuccessListener {
+                                onResult(true, target.displayName)
+                            }
+                            .addOnFailureListener {
+                                if (command != ProbeProtocol.Command.STOP) {
+                                    ProbeTelemetryStore.clearExpectedProbe(target.id, sessionId)
+                                }
+                                onResult(false, formatFailure(it))
+                            }
                     }
                     .addOnFailureListener { onResult(false, formatFailure(it)) }
             }

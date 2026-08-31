@@ -81,7 +81,7 @@ Este documento se complementa con:
 - WATCHFACE_LAYOUT v1.3
 - ACTIVE_SPRINT
 - SPRINT_HISTORY
-- BACKLOG v1.2
+- BACKLOG v1.3
 
 Todos ellos forman parte del marco documental oficial del proyecto.
 

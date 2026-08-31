@@ -106,6 +106,8 @@ overlay, zoom 16–19, compatible con `MbTilesRepository`.
 
 El generador `build_navy7_home_style.py` crea un proyecto QGIS nuevo y renderiza
 el MBTiles desde el GeoPackage local. No lee ni transforma el MBTiles anterior.
+Todas las rutas de entrada y salida son argumentos obligatorios; así el pipeline
+no depende de una ruta de usuario concreta.
 El modelo deja fijos los parámetros de HOME; para repetirlo solo se suministra
 el centro geográfico:
 
@@ -113,6 +115,9 @@ el centro geográfico:
 $env:QGIS_PREFIX_PATH = "C:\Program Files\QGIS 3.44.13\apps\qgis-ltr"
 & "C:\Program Files\QGIS 3.44.13\bin\python-qgis-ltr.bat" `
   tools/gis/build_navy7_home_style.py `
+  --gpkg "C:\Users\diego\Desktop\GQUIS\Navy7.gpkg" `
+  --project-output "C:\Users\diego\Desktop\GQUIS\Navy7_HOME_STYLE.qgz" `
+  --output "C:\Users\diego\Desktop\GQUIS\navy_7_terrain_HOME_STYLE.mbtiles" `
   --center-lat 40.352971232717216 `
   --center-lon -3.423711863510395 `
   --force
@@ -136,3 +141,16 @@ El proyecto y la salida se escriben por defecto en GQUIS como
 desactivados. La matriz resultante para este centro es 84, 276, 1012 y 3870
 teselas por zoom, 5242 en total, con bounds WGS84
 `-3.453046863510,40.341471232717,-3.394376863510,40.364471232717`.
+
+## Política de fuentes y reproducibilidad
+
+El GeoPackage y los proyectos QGIS editables se mantienen fuera del repositorio:
+son fuentes de trabajo locales que pueden contener datos cartográficos pesados o
+de terceros. El repositorio conserva el generador, sus parámetros, la versión
+oficial de QGIS LTR (`3.44.13-Solothurn`) y el MBTiles final que consume Android.
+
+La salida Android se valida por SHA-256, metadata MBTiles (`format`, zoom y
+bounds) y tres teselas representativas antes de abrirse. Si el hash no coincide,
+la copia local se recrea automáticamente mediante un temporal y un reemplazo
+seguro. No se introduce Git LFS en esta fase: el GeoPackage no se versiona y el
+asset Android ya forma parte del artefacto de release.

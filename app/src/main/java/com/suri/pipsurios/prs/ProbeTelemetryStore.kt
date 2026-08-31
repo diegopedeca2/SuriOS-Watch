@@ -8,6 +8,26 @@ object ProbeTelemetryStore {
     private val snapshotListeners = CopyOnWriteArraySet<(PrsProbeNodeSnapshot) -> Unit>()
     private val observationListeners = CopyOnWriteArraySet<(ProbeProtocol.BleSample) -> Unit>()
     private var current = PrsProbeNodeSnapshot()
+    private var expectedProbeNodeId: String? = null
+    private var expectedSessionId: String? = null
+
+    @Synchronized
+    fun expectProbe(nodeId: String, sessionId: String) {
+        expectedProbeNodeId = nodeId
+        expectedSessionId = sessionId
+    }
+
+    @Synchronized
+    fun acceptsProbe(nodeId: String, sessionId: String): Boolean =
+        nodeId.isNotBlank() && nodeId == expectedProbeNodeId && sessionId == expectedSessionId
+
+    @Synchronized
+    fun clearExpectedProbe(nodeId: String, sessionId: String) {
+        if (nodeId == expectedProbeNodeId && sessionId == expectedSessionId) {
+            expectedProbeNodeId = null
+            expectedSessionId = null
+        }
+    }
 
     @Synchronized
     fun snapshot(): PrsProbeNodeSnapshot = current

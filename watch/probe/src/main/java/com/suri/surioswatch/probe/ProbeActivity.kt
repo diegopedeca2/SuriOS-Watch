@@ -7,10 +7,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.view.WindowManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 
@@ -41,15 +43,15 @@ class ProbeActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(WindowInsetsCompat.Type.systemBars())
+        }
         statusView = ProbeStatusView(this)
         setContentView(statusView)
         if (hasPermissions()) {
-            arm()
+            readyForPhoneControl()
         } else {
             ActivityCompat.requestPermissions(this, requiredPermissions(), PERMISSION_REQUEST)
         }
@@ -59,7 +61,7 @@ class ProbeActivity : Activity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode != PERMISSION_REQUEST) return
         if (hasPermissions()) {
-            arm()
+            readyForPhoneControl()
         } else {
             ProbeRuntimeState.update("ERROR", "PERMISSION_REQUIRED")
         }
@@ -87,17 +89,8 @@ class ProbeActivity : Activity() {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun arm() {
-        ProbeRuntimeState.update("STARTING", null)
-        runCatching {
-            ContextCompat.startForegroundService(
-                this,
-                Intent(this, ProbeLocationService::class.java).setAction(ProbeLocationService.ACTION_START)
-            )
-        }.onFailure {
-            ProbeRuntimeState.update("ERROR", it.javaClass.simpleName)
-        }
-    }
+    private fun readyForPhoneControl() =
+        ProbeRuntimeState.update("READY", "WAITING_FOR_PRS")
 
     private fun onConnectedNodes(nodes: List<Node>) {
         connectionKnown = true
@@ -122,7 +115,7 @@ class ProbeActivity : Activity() {
         add(Manifest.permission.ACCESS_COARSE_LOCATION)
         add(Manifest.permission.BLUETOOTH_SCAN)
         add(Manifest.permission.BLUETOOTH_CONNECT)
-        if (android.os.Build.VERSION.SDK_INT >= 33) add(Manifest.permission.POST_NOTIFICATIONS)
+        add(Manifest.permission.POST_NOTIFICATIONS)
     }.toTypedArray()
 
     private companion object {

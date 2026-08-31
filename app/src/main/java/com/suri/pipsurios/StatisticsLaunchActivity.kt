@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 
 /** Entry point used by the official SuriOS watchface STATUS button. */
+@Suppress("CustomSplashScreen")
 class StatisticsLaunchActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

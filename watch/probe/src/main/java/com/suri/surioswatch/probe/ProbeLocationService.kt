@@ -1,5 +1,6 @@
 package com.suri.surioswatch.probe
 
+import android.annotation.SuppressLint
 import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
@@ -14,7 +15,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.location.Location
 import android.os.BatteryManager
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.core.content.ContextCompat
@@ -24,21 +24,25 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.android.gms.wearable.DataClient
-import com.google.android.gms.wearable.PutDataRequest
+import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.Wearable
 import com.suri.probeprotocol.ProbeProtocol
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
-/** Headless PROBE node: location + BLE observations, buffered by Wear Data Layer while offline. */
+/** Headless PROBE node: location + BLE observations sent live to the controlling phone. */
 class ProbeLocationService : Service() {
     private lateinit var locationClient: FusedLocationProviderClient
-    private lateinit var dataClient: DataClient
+    private lateinit var messageClient: MessageClient
     private val handler = Handler(Looper.getMainLooper())
     private val pendingBle = linkedMapOf<String, ScanResult>()
     private var phoneNodeId: String? = null
+    private var sessionId: String? = null
     private var sequence = 0L
     private var running = false
+    private val telemetryInFlight = AtomicInteger(0)
+    private val transportFailed = AtomicBoolean(false)
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
@@ -48,7 +52,12 @@ class ProbeLocationService : Service() {
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            synchronized(pendingBle) { pendingBle[result.device.address] = result }
+            synchronized(pendingBle) {
+                if (!pendingBle.containsKey(result.device.address) && pendingBle.size >= MAX_PENDING_BLE) {
+                    pendingBle.remove(pendingBle.keys.first())
+                }
+                pendingBle[result.device.address] = result
+            }
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>) {
@@ -70,21 +79,29 @@ class ProbeLocationService : Service() {
     override fun onCreate() {
         super.onCreate()
         locationClient = LocationServices.getFusedLocationProviderClient(this)
-        dataClient = Wearable.getDataClient(this)
+        messageClient = Wearable.getMessageClient(this)
         createNotificationChannel()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        intent?.getStringExtra(EXTRA_PHONE_NODE_ID)?.let { phoneNodeId = it }
         return when (intent?.action) {
             ACTION_STOP -> {
+                val stopIntent = intent ?: return START_NOT_STICKY
+                val requestedPhone = stopIntent.getStringExtra(EXTRA_PHONE_NODE_ID)
+                val requestedSession = stopIntent.getStringExtra(EXTRA_SESSION_ID)
+                if (running && (requestedPhone != phoneNodeId || requestedSession != sessionId)) {
+                    return START_NOT_STICKY
+                }
                 stopTracking()
+                stopSelf()
                 START_NOT_STICKY
             }
             else -> {
+                intent?.getStringExtra(EXTRA_PHONE_NODE_ID)?.let { phoneNodeId = it }
+                intent?.getStringExtra(EXTRA_SESSION_ID)?.let { sessionId = it }
                 startForegroundCompat()
                 startTracking()
-                START_STICKY
+                START_NOT_STICKY
             }
         }
     }
@@ -96,13 +113,21 @@ class ProbeLocationService : Service() {
 
     override fun onBind(intent: Intent?) = null
 
+    @SuppressLint("MissingPermission")
     private fun startTracking() {
-        if (running) return
+        if (running) stopTracking()
+        if (phoneNodeId.isNullOrBlank() || sessionId.isNullOrBlank()) {
+            ProbeRuntimeState.update("ERROR", "PHONE_LINK_REQUIRED")
+            stopSelf()
+            return
+        }
         if (!hasLocationPermission() || !hasBluetoothPermission()) {
             publishStatus("ERROR", "PERMISSION_REQUIRED")
             stopSelf()
             return
         }
+        transportFailed.set(false)
+        sequence = 0L
         running = true
         publishStatus("ACTIVE", null)
         val request = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, LOCATION_INTERVAL_MILLIS)
@@ -125,6 +150,7 @@ class ProbeLocationService : Service() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun stopTracking() {
         if (!running) return
         running = false
@@ -138,6 +164,7 @@ class ProbeLocationService : Service() {
         if (!location.hasAccuracy() || !location.latitude.isFinite() || !location.longitude.isFinite()) return
         val sample = ProbeProtocol.LocationSample(
             probeId = PROBE_ID,
+            sessionId = sessionId!!,
             sequence = nextSequence(),
             timestampEpochMillis = location.time.takeIf { it > 0L } ?: System.currentTimeMillis(),
             latitude = location.latitude,
@@ -146,9 +173,10 @@ class ProbeLocationService : Service() {
             provider = location.provider,
             batteryPercent = batteryPercent()
         )
-        putData(ProbeProtocol.TELEMETRY_PATH_PREFIX + "location/" + sample.sequence, ProbeProtocol.encodeLocation(sample))
+        sendTelemetry(ProbeProtocol.LOCATION_PATH, ProbeProtocol.encodeLocation(sample))
     }
 
+    @SuppressLint("MissingPermission")
     private fun flushBle() {
         val results = synchronized(pendingBle) {
             val current = pendingBle.values.toList()
@@ -158,6 +186,7 @@ class ProbeLocationService : Service() {
         results.forEach { result ->
             val sample = ProbeProtocol.BleSample(
                 probeId = PROBE_ID,
+                sessionId = sessionId!!,
                 sequence = nextSequence(),
                 timestampEpochMillis = System.currentTimeMillis(),
                 temporaryId = "WATCH-${result.device.address}",
@@ -167,7 +196,7 @@ class ProbeLocationService : Service() {
                 advertisingDataHex = result.scanRecord?.bytes?.toHexString(),
                 deviceType = runCatching { result.device.type }.getOrNull()
             )
-            putData(ProbeProtocol.TELEMETRY_PATH_PREFIX + "ble/" + sample.sequence, ProbeProtocol.encodeBle(sample))
+            sendTelemetry(ProbeProtocol.BLE_PATH, ProbeProtocol.encodeBle(sample))
         }
     }
 
@@ -175,17 +204,41 @@ class ProbeLocationService : Service() {
         ProbeRuntimeState.update(state, message)
         val status = ProbeProtocol.Status(
             probeId = PROBE_ID,
+            sessionId = sessionId ?: return,
             state = state,
             timestampEpochMillis = System.currentTimeMillis(),
             batteryPercent = batteryPercent(),
             message = message
         )
-        putData(ProbeProtocol.TELEMETRY_PATH_PREFIX + "status/" + nextSequence(), ProbeProtocol.encodeStatus(status))
+        sendTelemetry(ProbeProtocol.STATUS_PATH, ProbeProtocol.encodeStatus(status))
     }
 
-    private fun putData(path: String, payload: ByteArray) {
-        if (!::dataClient.isInitialized) return
-        dataClient.putDataItem(PutDataRequest.create(path).setData(payload).setUrgent())
+    private fun sendTelemetry(path: String, payload: ByteArray) {
+        if (!::messageClient.isInitialized || transportFailed.get()) return
+        val targetNodeId = phoneNodeId ?: return
+        if (telemetryInFlight.incrementAndGet() > MAX_IN_FLIGHT_TELEMETRY) {
+            telemetryInFlight.decrementAndGet()
+            return
+        }
+        runCatching { messageClient.sendMessage(targetNodeId, path, payload) }
+            .onSuccess { task ->
+                task.addOnCompleteListener {
+                    telemetryInFlight.decrementAndGet()
+                    if (!it.isSuccessful) onTransportFailure()
+                }
+            }
+            .onFailure {
+                telemetryInFlight.decrementAndGet()
+                onTransportFailure()
+            }
+    }
+
+    private fun onTransportFailure() {
+        if (!transportFailed.compareAndSet(false, true)) return
+        if (running) {
+            stopTracking()
+            stopSelf()
+        }
     }
 
     @Suppress("MissingPermission")
@@ -210,15 +263,10 @@ class ProbeLocationService : Service() {
             .setContentIntent(PendingIntent.getActivity(this, 0, Intent(this, ProbeActivity::class.java), PendingIntent.FLAG_IMMUTABLE))
             .setOngoing(true)
             .build()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
-        } else {
-            startForeground(NOTIFICATION_ID, notification)
-        }
+        startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         getSystemService(NotificationManager::class.java).createNotificationChannel(
             NotificationChannel(NOTIFICATION_CHANNEL, "P.R.S. PROBE", NotificationManager.IMPORTANCE_LOW)
         )
@@ -230,10 +278,13 @@ class ProbeLocationService : Service() {
         const val ACTION_START = "com.suri.pipsurios.probe.START"
         const val ACTION_STOP = "com.suri.pipsurios.probe.STOP"
         const val EXTRA_PHONE_NODE_ID = "phone_node_id"
-        private const val PROBE_ID = "WATCH-2"
+        const val PROBE_ID = "WATCH-2"
+        const val EXTRA_SESSION_ID = "session_id"
         private const val LOCATION_INTERVAL_MILLIS = 10_000L
         private const val LOCATION_MIN_INTERVAL_MILLIS = 5_000L
         private const val BLE_SAMPLE_INTERVAL_MILLIS = 3_000L
+        private const val MAX_PENDING_BLE = 256
+        private const val MAX_IN_FLIGHT_TELEMETRY = 8
         private const val NOTIFICATION_CHANNEL = "prs_probe"
         private const val NOTIFICATION_ID = 1402
     }

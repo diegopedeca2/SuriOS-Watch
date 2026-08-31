@@ -1,6 +1,7 @@
 package com.suri.pipsurios.data
 
 import android.content.Context
+import androidx.core.content.edit
 
 /** Private, durable storage for the operator profile. */
 class OperatorProfileRepository private constructor(
@@ -17,14 +18,14 @@ class OperatorProfileRepository private constructor(
 
     fun save(profile: OperatorProfile) {
         val normalized = profile.normalized()
-        preferences.edit()
-            .putString(KEY_ID, normalized.id)
-            .putString(KEY_NAME, normalized.name)
-            .putString(KEY_CALLSIGN, normalized.callsign)
-            .putString(KEY_NUMBER, normalized.number)
-            .putString(KEY_COUNTRY, normalized.country)
-            .putString(KEY_TEAM, normalized.team)
-            .apply()
+        preferences.edit {
+            putString(KEY_ID, normalized.id)
+            putString(KEY_NAME, normalized.name)
+            putString(KEY_CALLSIGN, normalized.callsign)
+            putString(KEY_NUMBER, normalized.number)
+            putString(KEY_COUNTRY, normalized.country)
+            putString(KEY_TEAM, normalized.team)
+        }
     }
 
     companion object {

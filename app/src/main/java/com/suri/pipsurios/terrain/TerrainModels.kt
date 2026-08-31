@@ -18,6 +18,7 @@ data class OfflineMapDefinition(
     val mapId: String,
     val name: String,
     val assetPath: String,
+    val assetSha256: String,
     val bounds: MapBounds,
     val minZoom: Int,
     val maxNativeZoom: Int,
@@ -35,6 +36,7 @@ object OfflineMapCatalog {
         mapId = "navy7",
         name = "NAVY7",
         assetPath = "maps/navy_7_terrain.mbtiles",
+        assetSha256 = "885290661BA89E3FC2A60D61C135E623751D6911E06E35597A08EB8075C4F394",
         // Sprint 023 target center: 40.352971232717216, -3.423711863510395.
         // Use the HOME geographic footprint: 5 km x 2.5 km, zoom 16..19.
         bounds = MapBounds(
@@ -51,6 +53,7 @@ object OfflineMapCatalog {
         mapId = "home",
         name = "HOME",
         assetPath = "maps/home_terrain.mbtiles",
+        assetSha256 = "5BA9265B51C681075BA967E6DFB51DE546D51261DE51E915938F2D7A471CFFE5",
         bounds = MapBounds(-3.89984, 40.4364, -3.84117, 40.4594),
         minZoom = 16,
         maxNativeZoom = 19,

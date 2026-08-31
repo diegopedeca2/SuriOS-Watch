@@ -8,9 +8,14 @@ last_updated: 2026-08-31
 
 ---
 
-## Sprint activo
+## Último Sprint cerrado
 
-No hay un Sprint activo. [Sprint 023 v1.0](SPRINT_023_v1.0.md) — **CLOSED**
+[Sprint 024 v1.0](SPRINT_024_v1.0.md) — **CLOSED**
+
+El alcance cerrado fue el endurecimiento de la integración A56–Watch 2 de
+PIP-SuriOS/PROBE y el cierre de las deudas AUD-023-01 a AUD-023-09.
+
+[Sprint 023 v1.0](SPRINT_023_v1.0.md) — **CLOSED**
 
 Los SPRINT 20 y 21 se mantuvieron en procesos independientes. El SPRINT 21 ha
 sido confirmado como cerrado sin regresiones observables.
@@ -28,6 +33,7 @@ Sprint 020: **CLOSED**
 Sprint 021: **CLOSED**
 Sprint 022: **CLOSED**
 Sprint 023: **CLOSED**
+Sprint 024: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -42,7 +48,7 @@ emblema vectorial propios del prototipo, y mantiene legibilidad en Home y
 P.R.S. sobre el Samsung A56. La selección es de sesión y vuelve a Brotherhood
 tras reiniciar el proceso.
 
-PIP-SuriOS v2.6 queda consolidado con el cierre del Sprint 023, completado y
+PIP-SuriOS v2.6 queda consolidado con el cierre del Sprint 024, completado y
 cerrado técnica, funcional y documentalmente a fecha 2026-08-31. El P.R.S. activo usa
 `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `TRACK TARGET`, con histórico RSSI,
 suavizado y nubes de densidad sin posicionamiento sintético. PIW-SuriOS Watch

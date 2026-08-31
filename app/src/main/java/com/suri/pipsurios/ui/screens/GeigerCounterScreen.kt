@@ -24,6 +24,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -77,7 +78,7 @@ fun GeigerCounterScreen(
     var volumeUpPressed by remember { mutableStateOf(false) }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var mode by remember { mutableStateOf(RadsMode.MANUAL) }
-    var sensorLevel by remember { mutableStateOf(0f) }
+    var sensorLevel by remember { mutableFloatStateOf(0f) }
 
     DisposableEffect(volumeKeyController, mode) {
         volumeKeyController.activate(
@@ -123,7 +124,7 @@ fun GeigerCounterScreen(
         }
     }
 
-    val effectiveLevel by NeedleAnimation(snapshot.needleLevel)
+    val effectiveLevel by needleAnimation(snapshot.needleLevel)
     val currentEffectiveLevel = rememberUpdatedState(effectiveLevel)
     LaunchedEffect(clickScheduler) {
         clickScheduler.run { currentEffectiveLevel.value }
@@ -136,7 +137,7 @@ fun GeigerCounterScreen(
 }
 
 @Composable
-fun NeedleAnimation(targetLevel: Float): State<Float> = animateFloatAsState(
+fun needleAnimation(targetLevel: Float): State<Float> = animateFloatAsState(
     targetValue = targetLevel.coerceIn(0f, 1f),
     animationSpec = tween(durationMillis = 180, easing = LinearEasing),
     label = "GeigerNeedle"

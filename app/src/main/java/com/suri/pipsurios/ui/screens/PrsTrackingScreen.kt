@@ -119,22 +119,29 @@ fun PrsTrackingScreen(
             scanner.stop()
             BleScanStatus.IDLE
         }
+        if (mode.probeEnabled && phoneLocation.hasPermission()) {
+            phoneLocation.start(
+                onFix = { phoneFix = it },
+                onUnavailable = { phoneFix = null }
+            )
+        }
+        onDispose {
+            scanner.stop()
+            phoneLocation.stop()
+        }
+    }
+
+    DisposableEffect(mode) {
         if (mode.probeEnabled) {
             probeLinkStatus = "STARTING"
             probeLink.send(mode.command!!, sessionId) { success, detail ->
                 probeLinkStatus = if (success) "COMMAND SENT // $detail" else "ERROR // $detail"
             }
-            if (phoneLocation.hasPermission()) {
-                phoneLocation.start(
-                    onFix = { phoneFix = it },
-                    onUnavailable = { phoneFix = null }
-                )
-            }
         }
         onDispose {
-            scanner.stop()
-            phoneLocation.stop()
-            if (mode.probeEnabled) probeLink.send(com.suri.probeprotocol.ProbeProtocol.Command.STOP, sessionId) { _, _ -> }
+            if (mode.probeEnabled) {
+                probeLink.send(com.suri.probeprotocol.ProbeProtocol.Command.STOP, sessionId) { _, _ -> }
+            }
         }
     }
 

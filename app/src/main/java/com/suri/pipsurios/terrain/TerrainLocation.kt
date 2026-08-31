@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
 import android.os.Looper
@@ -35,9 +34,7 @@ class TerrainLocation(private val context: Context) {
         if (!hasPermission()) return
         val locationManager = manager ?: run { onUnavailable(); return }
         providers = buildList {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                locationManager.getProvider(LocationManager.FUSED_PROVIDER) != null
-            ) add(LocationManager.FUSED_PROVIDER)
+            if (LocationManager.FUSED_PROVIDER in locationManager.allProviders) add(LocationManager.FUSED_PROVIDER)
             add(LocationManager.GPS_PROVIDER)
             add(LocationManager.NETWORK_PROVIDER)
         }.filter { provider ->

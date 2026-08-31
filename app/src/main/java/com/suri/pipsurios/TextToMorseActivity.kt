@@ -1,6 +1,7 @@
 package com.suri.pipsurios
 
 import android.os.Bundle
+import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import android.view.WindowInsets
@@ -49,20 +50,34 @@ import kotlinx.coroutines.launch
 class TextToMorseActivity : ComponentActivity() {
     private lateinit var transmitter: MorseTransmitter
     private var transmissionJob: Job? = null
+    private var cameraPermissionGranted by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hideStatusBar()
         transmitter = MorseTransmitter(applicationContext)
+        cameraPermissionGranted = transmitter.isAvailable
+        if (!cameraPermissionGranted && transmitter.hasFlash) {
+            requestPermissions(arrayOf(android.Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST)
+        }
         setContent {
             PIPSuriOSTheme {
                 TextToMorseScreen(
                     transmitter = transmitter,
+                    flashAvailable = cameraPermissionGranted && transmitter.isAvailable,
                     currentJob = { transmissionJob },
                     setJob = { transmissionJob = it },
                     onBack = { finish() }
                 )
             }
+        }
+    }
+
+    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == CAMERA_PERMISSION_REQUEST) {
+            cameraPermissionGranted = grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -94,11 +109,16 @@ class TextToMorseActivity : ComponentActivity() {
             hide(WindowInsets.Type.statusBars())
         }
     }
+
+    private companion object {
+        const val CAMERA_PERMISSION_REQUEST = 52
+    }
 }
 
 @Composable
 private fun TextToMorseScreen(
     transmitter: MorseTransmitter,
+    flashAvailable: Boolean,
     currentJob: () -> Job?,
     setJob: (Job?) -> Unit,
     onBack: () -> Unit
@@ -187,9 +207,9 @@ private fun TextToMorseScreen(
                     TerminalAction("STOP", PipRed, onClick = ::stop)
                 } else {
                     TerminalAction(
-                        label = if (transmitter.isAvailable) "TRANSMIT // FLASH" else "FLASH UNAVAILABLE",
-                        color = if (transmitter.isAvailable) PipGreen else PipGreenDim,
-                        enabled = transmitter.isAvailable && encoded.isNotEmpty()
+                        label = if (flashAvailable) "TRANSMIT // FLASH" else "FLASH UNAVAILABLE",
+                        color = if (flashAvailable) PipGreen else PipGreenDim,
+                        enabled = flashAvailable && encoded.isNotEmpty()
                     ) {
                         if (currentJob()?.isActive == true) return@TerminalAction
                         status = "TRANSMITTING"

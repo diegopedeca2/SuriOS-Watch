@@ -1,3 +1,23 @@
+## Sprint 024 — Hardening SuriOS / PROBE companion — 2026-08-31
+
+### Añadido y modificado
+
+- PROBE queda definido como companion no standalone con `applicationId`
+  `com.suri.pipsurios`; la watchface conserva su paquete independiente.
+- La telemetría pasa a mensajes en vivo dirigidos al A56, con allowlist de nodo,
+  sesión, validación semántica y sin persistencia en Watch 2.
+- MORSE solicita `CAMERA`, MBTiles valida SHA-256/metadata y operaciones usan
+  escritura atómica sin cambiar los conflictos por fecha.
+- Se sincroniza `BACKLOG_v1.3` y se parametrizan las rutas del generador GIS.
+
+### Validación
+
+- Tests JVM full/prsOnly y `probeprotocol`: OK.
+- Lint full/prsOnly y `:probe:lintVitalRelease`: OK sin errores.
+- Ensamblados app, PROBE y watchfaces: OK.
+- La comprobación física final A56–Watch 2 queda pendiente de reconexión ADB del
+  A56.
+
 ## Sprint 023 — PIP-SuriOS v2.6 y reconstrucción HOME-style de NAVY7 — 2026-08-31
 
 ### Añadido y modificado

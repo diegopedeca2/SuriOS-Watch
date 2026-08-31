@@ -2,13 +2,13 @@
 
 **Fecha:** 2026-08-31
 **Proyecto:** `D:\WristOS`
-**Estado:** cierre aprobado; riesgos residuales documentados
+**Estado:** cierre técnico superseded by Sprint 024; resultados y decisiones actualizados
 **Alcance:** monorepo Gradle, Android/Wear OS, P.R.S./PROBE, TERRAIN, persistencia,
 dependencias, configuración y reproducibilidad GIS.
 
 ## Dictamen ejecutivo
 
-El árbol actual compila y pasa las pruebas JVM, lint e instrumentadas sin errores bloqueantes.
+El árbol de Sprint 023 compilaba y pasaba las pruebas JVM, lint e instrumentadas sin errores bloqueantes.
 No aparece un bloqueo para integrar el nuevo asset NAVY7. Sí hay problemas
 previos que deben entrar en el backlog del siguiente sprint técnico, especialmente
 la identidad de paquete del módulo PROBE y el endurecimiento del canal Android
@@ -65,5 +65,25 @@ rejilla prevista.
 
 El Sprint 023 queda cerrado técnica y documentalmente. La selección NAVY7, la
 materialización del asset y la regresión instrumentada se verificaron en el A56.
-Mantener abiertos AUD-023-01 a AUD-023-09 como backlog priorizado; no mezclarlos
-con el asset hasta que el propietario apruebe un sprint de endurecimiento.
+Los hallazgos AUD-023-01 a AUD-023-09 fueron incorporados al [BACKLOG v1.3](BACKLOG/BACKLOG_v1.3.md) y se están cerrando en el Sprint 024.
+
+## Addendum de Sprint 024 — estado de implementación
+
+- PROBE conserva el modo companion `com.suri.pipsurios`, no es standalone y la
+  watchface `com.suri.surioswatch.probewatchface` permanece separada.
+- El transporte PROBE usa mensajes dirigidos al nodo del A56. Cada muestra lleva
+  sesión; se valida el nodo real y se descartan otras sesiones. No se persiste
+  telemetría en el Watch 2.
+- `PING` responde `PONG` sin iniciar adquisición. La cola persistente anterior se
+  elimina; solo existen buffers de memoria limitados para el funcionamiento en
+  vivo.
+- MORSE declara y solicita `CAMERA`; sin permiso o flash la acción queda no
+  disponible. MBTiles y operaciones tienen validación/hash y escritura atómica.
+- El lint de app queda sin errores; los únicos avisos restantes son advisories de
+  versiones fijadas y configuración de iconos heredada. Se mantienen así hasta
+  una matriz de actualización independiente.
+- La validación física A56–Watch 2 queda completada: el A56 recibe `ACTIVE`,
+  posición, batería y observaciones BLE del Watch 2; el servicio de adquisición
+  permanece vivo durante la sesión y se detiene al salir de P.R.S.
+- La prueba física de MORSE confirma la solicitud de `CAMERA` y el estado
+  `FLASH UNAVAILABLE` cuando el permiso es rechazado.

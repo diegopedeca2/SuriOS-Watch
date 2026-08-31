@@ -6,7 +6,12 @@ import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import java.io.File
+import java.io.FileInputStream
+import java.security.MessageDigest
 import java.util.LinkedHashMap
+import java.util.Locale
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 data class TileKey(val zoom: Int, val x: Int, val xyzY: Int)
 
@@ -68,6 +73,7 @@ class MbTilesRepository(private val context: Context) {
                 }
             }
             require(metadata["format"] == "png") { "Unsupported MBTiles format" }
+            validateMetadata(metadata, definition)
             val tileKeys = buildSet {
                 database.rawQuery("SELECT zoom_level,tile_column,tile_row FROM tiles", null).use { cursor ->
                     while (cursor.moveToNext()) {
@@ -78,7 +84,12 @@ class MbTilesRepository(private val context: Context) {
                     }
                 }
             }
-            MbTilesData(tileKeys, metadata, database)
+            require(tileKeys.isNotEmpty()) { "MBTiles contains no tiles" }
+            val data = MbTilesData(tileKeys, metadata, database)
+            require(tileKeys.take(SAMPLE_TILE_COUNT).all { data.loadTile(it) != null }) {
+                "MBTiles sample tile decode failed"
+            }
+            data
         } catch (error: Throwable) {
             database.close()
             throw error
@@ -88,12 +99,69 @@ class MbTilesRepository(private val context: Context) {
     private fun materialize(definition: OfflineMapDefinition): File {
         val directory = File(context.filesDir, "terrain/maps").apply { mkdirs() }
         val target = File(directory, "${definition.mapId}.mbtiles")
-        val expectedSize = context.assets.openFd(definition.assetPath).length
-        if (!target.isFile || target.length() != expectedSize) {
-            val temporary = File.createTempFile(".${definition.mapId}-", ".tmp", directory)
-            context.assets.open(definition.assetPath).use { input -> temporary.outputStream().use(input::copyTo) }
-            check(temporary.renameTo(target) || run { temporary.copyTo(target, overwrite = true); temporary.delete() })
+        val expectedHash = definition.assetSha256.uppercase(Locale.US)
+        require(expectedHash.matches(SHA256_PATTERN)) { "Invalid asset SHA-256 for ${definition.mapId}" }
+        if (target.isFile && sha256(target) == expectedHash) return target
+
+        val temporary = File.createTempFile(".${definition.mapId}-", ".tmp", directory)
+        try {
+            context.assets.open(definition.assetPath).use { input ->
+                temporary.outputStream().use(input::copyTo)
+            }
+            check(sha256(temporary) == expectedHash) { "Asset hash mismatch for ${definition.mapId}" }
+            moveIntoPlace(temporary, target)
+        } finally {
+            temporary.delete()
         }
         return target
+    }
+
+    private fun validateMetadata(metadata: Map<String, String>, definition: OfflineMapDefinition) {
+        require(metadata["minzoom"]?.toIntOrNull() == definition.minZoom) { "MBTiles minzoom mismatch" }
+        require(metadata["maxzoom"]?.toIntOrNull() == definition.maxNativeZoom) { "MBTiles maxzoom mismatch" }
+        val bounds = metadata["bounds"]?.split(',')?.mapNotNull(String::toDoubleOrNull)
+        require(bounds?.size == 4) { "MBTiles bounds missing" }
+        val parsedBounds = bounds ?: error("MBTiles bounds missing")
+        val expected = listOf(
+            definition.bounds.west,
+            definition.bounds.south,
+            definition.bounds.east,
+            definition.bounds.north
+        )
+        require(parsedBounds.zip(expected).all { (actual, wanted) -> kotlin.math.abs(actual - wanted) <= BOUNDS_TOLERANCE }) {
+            "MBTiles bounds mismatch"
+        }
+    }
+
+    private fun sha256(file: File): String = MessageDigest.getInstance("SHA-256").let { digest ->
+        FileInputStream(file).use { input ->
+            val buffer = ByteArray(HASH_BUFFER_SIZE)
+            while (true) {
+                val count = input.read(buffer)
+                if (count < 0) break
+                digest.update(buffer, 0, count)
+            }
+        }
+        digest.digest().joinToString("") { "%02X".format(Locale.US, it.toInt() and 0xFF) }
+    }
+
+    private fun moveIntoPlace(source: File, target: File) {
+        try {
+            Files.move(
+                source.toPath(),
+                target.toPath(),
+                StandardCopyOption.ATOMIC_MOVE,
+                StandardCopyOption.REPLACE_EXISTING
+            )
+        } catch (_: java.nio.file.AtomicMoveNotSupportedException) {
+            Files.move(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING)
+        }
+    }
+
+    private companion object {
+        const val SAMPLE_TILE_COUNT = 3
+        const val HASH_BUFFER_SIZE = 64 * 1024
+        const val BOUNDS_TOLERANCE = 0.000000001
+        val SHA256_PATTERN = Regex("[0-9A-F]{64}")
     }
 }

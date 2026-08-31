@@ -202,10 +202,13 @@ display limit.
 The executable Wear OS `:probe` module is a headless sensor node. Its visible
 surface reports operational state and does not render contact telemetry. It
 scans BLE and provides location/status packets through the shared
-`:probeprotocol` Data Layer contract.
+`:probeprotocol` message contract.
+The installed application is labelled `PIW-SuriOS PROBE // WATCH 2`; its
+companion package remains `com.suri.pipsurios` so Wear OS discovers it alongside
+the mobile PIP-SuriOS application.
 
 The phone-side `ProbeLink` sends control commands through Wearable, while
-`ProbeDataLayerService` receives persisted telemetry and forwards it to
+`ProbeDataLayerService` receives live telemetry messages and forwards them to
 `ProbeTelemetryStore`. The phone converts remote BLE samples into the same
 `BleObservation` model used by the A56, marks their source as `PROBE_WATCH_2`
 and sends them through the same tracker and device filters.

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -305,7 +306,7 @@ private fun PIPSuriOSApp(
     var operationSaveError by remember { mutableStateOf<String?>(null) }
     var operationSaving by remember { mutableStateOf(false) }
     var operationLogEntries by remember { mutableStateOf(emptyList<OperationLogEntry>()) }
-    var operationLogUnreadableCount by remember { mutableStateOf(0) }
+    var operationLogUnreadableCount by remember { mutableIntStateOf(0) }
     var operationLogsLoading by remember { mutableStateOf(false) }
     var primaryWeaponStatistics by remember {
         mutableStateOf<PercentageDistribution<String>?>(null)

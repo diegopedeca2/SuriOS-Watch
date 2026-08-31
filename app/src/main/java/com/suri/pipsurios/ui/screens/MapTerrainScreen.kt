@@ -435,6 +435,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
 }
 
 @Composable
+@Suppress("ModifierParameter")
 private fun TerrainAction(text: String, enabled: Boolean=true, modifier: Modifier=Modifier, onClick:()->Unit) {
     Text(text, color=if(enabled) PipGreen else PipGreenDim, fontSize=14.sp, fontFamily=FontFamily.Monospace,
         modifier=if(enabled) modifier.background(PipBlack.copy(alpha=.82f)).clickable(onClick=onClick).padding(6.dp) else modifier.padding(6.dp))

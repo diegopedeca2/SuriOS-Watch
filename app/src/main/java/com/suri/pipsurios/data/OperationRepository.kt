@@ -41,6 +41,9 @@ data class OperationLogCollection(
 
 class OperationRepository(
     private val operationsDirectory: File,
+    private val saveWriter: (Path, String) -> Unit = { path, content ->
+        path.toFile().writeText(content, StandardCharsets.UTF_8)
+    },
     private val updateWriter: (Path, String) -> Unit = { path, content ->
         path.toFile().writeText(content, StandardCharsets.UTF_8)
     }
@@ -54,16 +57,27 @@ class OperationRepository(
             return SaveOperationResult.Failure("STORAGE UNAVAILABLE")
         }
         val file = File(operationsDirectory, "$filenameBase.json")
+        if (file.exists()) return SaveOperationResult.AlreadyExists(file)
+        val temporaryFile = runCatching {
+            Files.createTempFile(operationsDirectory.toPath(), ".operation-save-", ".tmp")
+        }.getOrElse { error ->
+            return SaveOperationResult.Failure(error.message ?: "SAVE FAILED")
+        }
         return try {
-            if (!file.createNewFile()) {
-                throw FileAlreadyExistsException(file.toPath().toString())
-            }
-            file.writeText(OperationJsonCodec.serialize(log), StandardCharsets.UTF_8)
+            saveWriter(temporaryFile, OperationJsonCodec.serialize(log))
+            // The temporary file is in the same directory, so the filesystem rename
+            // keeps the destination from ever being observed as a partial JSON file.
+            // Do not use REPLACE_EXISTING: same-date saves are an intentional conflict.
+            Files.move(temporaryFile, file.toPath())
             SaveOperationResult.Saved(file)
         } catch (_: FileAlreadyExistsException) {
             SaveOperationResult.AlreadyExists(file)
         } catch (error: IOException) {
             SaveOperationResult.Failure(error.message ?: "SAVE FAILED")
+        } catch (error: SecurityException) {
+            SaveOperationResult.Failure(error.message ?: "SAVE FAILED")
+        } finally {
+            Files.deleteIfExists(temporaryFile)
         }
     }
 

@@ -1,5 +1,7 @@
 package com.suri.pipsurios.prs
 
+import androidx.core.content.edit
+
 import android.content.Context
 import android.util.Base64
 import java.nio.charset.StandardCharsets
@@ -102,19 +104,19 @@ class PrsDeviceRegistry private constructor(
             .mapNotNull(::decodeLegacyRule)
         val merged = (current + legacy).distinctBy { it.type to it.value }
         if (legacy.isNotEmpty()) {
-            preferences.edit()
-                .putStringSet(KEY_SAVED_DEVICES, merged.map(::encodeDevice).toSet())
-                .remove(KEY_IGNORED_RULES)
-                .apply()
+            preferences.edit {
+                putStringSet(KEY_SAVED_DEVICES, merged.map(::encodeDevice).toSet())
+                remove(KEY_IGNORED_RULES)
+            }
         }
         return merged
     }
 
     private fun persist() {
-        preferences.edit()
-            .putStringSet(KEY_SAVED_DEVICES, savedDevices.map(::encodeDevice).toSet())
-            .remove(KEY_IGNORED_RULES)
-            .apply()
+        preferences.edit {
+            putStringSet(KEY_SAVED_DEVICES, savedDevices.map(::encodeDevice).toSet())
+            remove(KEY_IGNORED_RULES)
+        }
     }
 
     private fun decodeDevice(encoded: String): PrsSavedDevice? {

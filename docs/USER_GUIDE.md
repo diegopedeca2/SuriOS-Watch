@@ -31,7 +31,7 @@ Manual oficial de usuario — PIP-SuriOS v2.6
 
 PIP-SuriOS es una aplicación móvil de apoyo operativo con una estética inspirada en terminales retrofuturistas. Reúne en una sola interfaz el inventario, la preparación del equipo, las comunicaciones, los accesos cartográficos, el estado del loadout y varias herramientas inmersivas.
 
-Está pensada principalmente para utilizarse en un Samsung Galaxy A56 en orientación horizontal. La pantalla TEXT > MORSE utiliza orientación vertical para facilitar la escritura con el teclado.
+Está pensada principalmente para utilizarse en un Samsung Galaxy A56 en orientación horizontal. La pantalla TEXT > MORSE utiliza orientación vertical para facilitar la escritura con el teclado. `SCAN + PROBE` requiere el Watch 2 emparejado y conectado; PROBE no guarda muestras si el enlace se pierde.
 
 La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Morse y RADS funcionan sin conexión. Algunas acciones dependen de funciones del sistema Android: MAP puede abrir aplicaciones externas, MORSE puede usar la linterna y P.R.S. v3.0 necesita Bluetooth; los modos con PROBE necesitan además un Watch 2 emparejado mediante Wear OS/Data Layer. La guía de campo de P.R.S. está reservada en `TOOLS > PROXIMITY RADIO SCANNER > OPERATION GUIDE` y permanece vacía porque no forma parte del alcance actual.
 

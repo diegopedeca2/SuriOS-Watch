@@ -72,7 +72,7 @@ Un Sprint aprobado define el trabajo que podrá activarse mediante autorización
 
 ### 2.8 BACKLOG
 
-El [BACKLOG v1.2](../BACKLOG/BACKLOG_v1.2.md) registra trabajo potencial, deudas e ideas. Ningún elemento del BACKLOG autoriza desarrollo.
+El [BACKLOG v1.3](../BACKLOG/BACKLOG_v1.3.md) registra trabajo potencial, deudas e ideas. Ningún elemento del BACKLOG autoriza desarrollo.
 
 ### 2.9 RELEASE_NOTES
 

@@ -102,6 +102,18 @@ class OperationDataTest {
     }
 
     @Test
+    fun repositoryWriteFailureLeavesNoPartialSaveFile() {
+        val directory = temporaryFolder.newFolder("save-write-failure")
+        val repository = OperationRepository(directory, saveWriter = { _, _ -> throw IOException("CONTROLLED") })
+
+        val result = repository.save(sampleLog(location = "FAILURE TEST"))
+
+        assertTrue(result is SaveOperationResult.Failure)
+        assertTrue(repository.listLogs().isEmpty())
+        assertTrue(directory.listFiles().orEmpty().none { it.name.startsWith(".operation-save-") })
+    }
+
+    @Test
     fun repositoryEnumeratesAndLoadsLogsNewestFirst() {
         val directory = temporaryFolder.newFolder("ordered", "operations")
         val repository = OperationRepository(directory)

@@ -670,6 +670,7 @@ private fun DataValue(label: String, value: String?) {
 }
 
 @Composable
+@Suppress("ModifierParameter")
 private fun DataButton(
     label: String,
     onClick: () -> Unit,

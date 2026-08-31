@@ -1,6 +1,7 @@
 package com.suri.pipsurios.data
 
 import android.content.Context
+import androidx.core.content.edit
 import com.suri.pipsurios.ui.screens.InventoryItem
 import com.suri.pipsurios.ui.screens.PrimaryWeaponRole
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
@@ -27,17 +28,17 @@ class LoadoutConfigurationRepository private constructor(
     )
 
     fun save(configuration: LoadoutConfiguration) {
-        preferences.edit()
-            .putString(KEY_PRIMARY_ROLE, configuration.primaryRole?.name)
-            .putString(KEY_PRIMARY_WEAPON, configuration.primaryWeapon?.name)
-            .putString(KEY_PRIMARY_WEAPON_TEXT, configuration.primaryWeaponText?.trim())
-            .putString(KEY_SECONDARY_TYPE, configuration.secondaryType)
-            .putString(KEY_SECONDARY_WEAPON, configuration.secondaryWeapon?.name)
-            .putStringSet(KEY_ACCESORIES, configuration.accesories.map { it.name }.toSet())
-            .putString(KEY_HEADGEAR_PROFILE, configuration.headgearProfile)
-            .putString(KEY_FRONT_PANEL_ROLE, configuration.frontPanelRole)
-            .putString(KEY_UNIFORM, configuration.uniform)
-            .apply()
+        preferences.edit {
+            putString(KEY_PRIMARY_ROLE, configuration.primaryRole?.name)
+            putString(KEY_PRIMARY_WEAPON, configuration.primaryWeapon?.name)
+            putString(KEY_PRIMARY_WEAPON_TEXT, configuration.primaryWeaponText?.trim())
+            putString(KEY_SECONDARY_TYPE, configuration.secondaryType)
+            putString(KEY_SECONDARY_WEAPON, configuration.secondaryWeapon?.name)
+            putStringSet(KEY_ACCESORIES, configuration.accesories.map { it.name }.toSet())
+            putString(KEY_HEADGEAR_PROFILE, configuration.headgearProfile)
+            putString(KEY_FRONT_PANEL_ROLE, configuration.frontPanelRole)
+            putString(KEY_UNIFORM, configuration.uniform)
+        }
     }
 
     private inline fun <reified T : Enum<T>> readEnum(key: String): T? =

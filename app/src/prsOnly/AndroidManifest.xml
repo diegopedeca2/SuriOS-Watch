@@ -11,7 +11,8 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            tools:replace="android:screenOrientation,android:windowSoftInputMode" />
+            tools:replace="android:screenOrientation,android:windowSoftInputMode"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
         <service
             android:name=".prs.ProbeDataLayerService"
             tools:node="remove" />

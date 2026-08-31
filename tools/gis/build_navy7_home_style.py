@@ -33,13 +33,6 @@ CONTOUR_MINOR = "#4cb359"
 CONTOUR_MAJOR = "#5bd66b"
 ROAD = "#2f7ebe"
 
-# Standard GQUIS workspace. The command line only needs the center coordinates;
-# these defaults are the editable source/project and the generated artifacts.
-DEFAULT_GPKG = Path(r"C:\Users\diego\Desktop\GQUIS\Navy7.gpkg")
-DEFAULT_PROJECT_OUTPUT = Path(r"C:\Users\diego\Desktop\GQUIS\Navy7_HOME_STYLE.qgz")
-DEFAULT_OUTPUT = Path(r"C:\Users\diego\Desktop\GQUIS\navy_7_terrain_HOME_STYLE.mbtiles")
-
-
 def lon_to_x(lon: float, zoom: int) -> float:
     return (lon + 180.0) / 360.0 * (TILE_SIZE * 2**zoom)
 
@@ -314,9 +307,9 @@ def build(args: argparse.Namespace) -> dict[str, object]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--gpkg", type=Path, default=DEFAULT_GPKG)
-    parser.add_argument("--project-output", type=Path, default=DEFAULT_PROJECT_OUTPUT)
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--gpkg", type=Path, required=True, help="Input GeoPackage")
+    parser.add_argument("--project-output", type=Path, required=True, help="QGIS project output")
+    parser.add_argument("--output", type=Path, required=True, help="MBTiles output")
     parser.add_argument("--center-lat", type=float, required=True)
     parser.add_argument("--center-lon", type=float, required=True)
     parser.add_argument("--min-zoom", type=int, default=16)
