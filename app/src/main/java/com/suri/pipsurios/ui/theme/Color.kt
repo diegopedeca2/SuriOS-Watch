@@ -1,17 +1,11 @@
 package com.suri.pipsurios.ui.theme
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import com.suri.pipsurios.ui.skin.SkinId
-import com.suri.pipsurios.ui.skin.SkinSession
 
 /**
- * Visual tokens shared by every screen. The values are process-scoped so a
- * selected skin also reaches screens hosted by separate activities.
+ * Visual tokens shared by every screen and hosted activity.
  */
-data class SkinPalette(
+data class ColorPalette(
     val background: Color,
     val primary: Color,
     val bright: Color,
@@ -27,8 +21,8 @@ data class SkinPalette(
     val actionBackground: Color
 )
 
-object SkinPalettes {
-    val brotherhoodOfSteel = SkinPalette(
+object ColorPalettes {
+    val original = ColorPalette(
         background = Color(0xFF000000),
         primary = Color(0xFF66FF66),
         bright = Color(0xFF66FF99),
@@ -44,46 +38,20 @@ object SkinPalettes {
         actionBackground = Color(0xFF303030)
     )
 
-    /**
-     * NECRON: blackstone background, ghost-teal energy, aged bronze control
-     * accents and the existing semantic amber/red warning channels.
-     */
-    val necron = SkinPalette(
-        background = Color(0xFF000000),
-        primary = Color(0xFF9DFFE9),
-        bright = Color(0xFFD4FFF6),
-        secondary = Color(0xFF48BFAF),
-        blue = Color(0xFF63D8F2),
-        gray = Color(0xFF657A76),
-        amber = Color(0xFFE7B86A),
-        red = Color(0xFFFF5F62),
-        neutral = Color(0xFFDCEBE7),
-        neutralDim = Color(0xFFA8BCB7),
-        panel = Color(0xFF071211),
-        mapBackground = Color(0xFF030A08),
-        actionBackground = Color(0xFF27332F)
-    )
-
-    fun forSkin(skin: SkinId): SkinPalette = when (skin) {
-        SkinId.NECRON -> necron
-        else -> brotherhoodOfSteel
-    }
 }
 
-private val activePalette: SkinPalette
-    get() = SkinPalettes.forSkin(SkinSession.activeSkin)
+private val palette: ColorPalette = ColorPalettes.original
 
-// Existing names remain source-compatible while resolving against the active skin.
-val PipBlack: Color get() = activePalette.background
-val PipGreen: Color get() = activePalette.primary
-val PipGreenBright: Color get() = activePalette.bright
-val PipGreenDim: Color get() = activePalette.secondary
-val PipBlue: Color get() = activePalette.blue
-val PipGray: Color get() = activePalette.gray
-val PipAmber: Color get() = activePalette.amber
-val PipRed: Color get() = activePalette.red
-val PipNeutral: Color get() = activePalette.neutral
-val PipNeutralDim: Color get() = activePalette.neutralDim
-val PipPanel: Color get() = activePalette.panel
-val PipMapBackground: Color get() = activePalette.mapBackground
-val PipActionBackground: Color get() = activePalette.actionBackground
+val PipBlack: Color get() = palette.background
+val PipGreen: Color get() = palette.primary
+val PipGreenBright: Color get() = palette.bright
+val PipGreenDim: Color get() = palette.secondary
+val PipBlue: Color get() = palette.blue
+val PipGray: Color get() = palette.gray
+val PipAmber: Color get() = palette.amber
+val PipRed: Color get() = palette.red
+val PipNeutral: Color get() = palette.neutral
+val PipNeutralDim: Color get() = palette.neutralDim
+val PipPanel: Color get() = palette.panel
+val PipMapBackground: Color get() = palette.mapBackground
+val PipActionBackground: Color get() = palette.actionBackground

@@ -54,7 +54,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 008 | PIP-SuriOS | TOOLS, GEIGER COUNTER, SONAR y consolidación visible v1.7 | Aprobado | Completado | 2026-08-10 | 2026-08-10 | [Sprint 008 v1.0](SPRINT_008_v1.0.md) |
 | 009 | PIP-SuriOS | DATA, Statistics, Log, UNIFORM y consolidación visible v1.9 | Aprobado | Completado | 2026-08-10 | 2026-08-12 | [Sprint 009 v1.0](SPRINT_009_v1.0.md) |
 | 010 | PIP-SuriOS | RADS v2, STORAGE y consolidación visible v2.0 | Aprobado | Completado | 2026-08-12 | 2026-08-12 | [Sprint 010 v1.0](SPRINT_010_v1.0.md) |
-| 011 | PIP-SuriOS | SONAR-TESTING, MAP TERRAIN NAVY7, SELECT SKIN y consolidación visible v2.1 | Aprobado | Completado | 2026-08-12 | 2026-08-26 | [Sprint 011 v1.0](SPRINT_011_v1.0.md) |
+| 011 | PIP-SuriOS | SONAR-TESTING, MAP TERRAIN NAVY7 y consolidación visible v2.1 | Aprobado | Completado | 2026-08-12 | 2026-08-26 | [Sprint 011 v1.0](SPRINT_011_v1.0.md) |
 | 012 | PIP-SuriOS | Reorganización de HOMESCREEN, TOOLS y menú P.R.S. | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 012 v1.0](SPRINT_012_v1.0.md) |
 | 013 | PIP-SuriOS | P.R.S. v2.0, P.R.S. REMOTE PROBE, doble lectura y P.R.S. TESTING | Aprobado | Completado | 2026-08-27 | 2026-08-27 | [Sprint 013 v1.0](SPRINT_013_v1.0.md) |
 | 014 | PIP-SuriOS | SET-UP vertical, datos persistentes, replica libre y WATCH 2 en ACCESORIES | Aprobado | Completado | 2026-08-28 | 2026-08-28 | [Sprint 014 v1.0](SPRINT_014_v1.0.md) |
@@ -84,7 +84,7 @@ A partir de Sprint 005, el desarrollo se organiza por capacidades funcionales:
 4. Sprint 008 — TOOLS, GEIGER COUNTER y SONAR. **Implementado y cerrado.**
 5. Sprint 009 — DATA, Statistics, Log, UNIFORM y consolidación visible v1.9. **Implementado y cerrado.**
 6. Sprint 010 — Cerrado. RADS v2 y STORAGE. PIP-SuriOS v2.0.
-7. Sprint 011 — Cerrado. SONAR-TESTING, MAP TERRAIN NAVY7 y SELECT SKIN. PIP-SuriOS v2.1.
+7. Sprint 011 — Cerrado. SONAR-TESTING, MAP TERRAIN NAVY7. PIP-SuriOS v2.1.
 8. Sprint 012 — Cerrado. Reorganización de HOMESCREEN, TOOLS y P.R.S. PIP-SuriOS v2.1.
 9. Sprint 013 — Cerrado. P.R.S. v2.0, REMOTE PROBE, doble lectura y P.R.S. TESTING. PIP-SuriOS v2.2.
 10. Sprint 014 — Cerrado. SET-UP vertical, datos persistentes, replica libre y WATCH 2 en ACCESORIES. PIP-SuriOS v2.3.
@@ -579,7 +579,7 @@ Sprint 013 está cerrado y PIP-SuriOS v2.3 constituye la versión móvil consoli
 
 PIW-SuriOS v2.0 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.3 con SET-UP persistente en vertical, DATA permanente, STORAGE, RADS v2, P.R.S. v1.0/v2.0, P.R.S. TESTING dual, REMOTE PROBE experimental, MAP TERRAIN NAVY7 offline, SELECT SKIN y TOOLS reorganizado constituye el estado móvil funcional vigente. Sprint 014 está cerrado.
+PIP-SuriOS v2.3 con SET-UP persistente en vertical, DATA permanente, STORAGE, RADS v2, P.R.S. v1.0/v2.0, P.R.S. TESTING dual, REMOTE PROBE experimental, MAP TERRAIN NAVY7 offline y TOOLS reorganizado constituye el estado móvil funcional vigente. Sprint 014 está cerrado.
 
 ---
 
@@ -611,13 +611,11 @@ El Sprint incorporó SONAR-TESTING como herramienta experimental de captura BLE 
 
 MAP TERRAIN incorporó NAVY7 completamente offline mediante MBTiles raster y SQLite directa, viewport fijo, clipping, pan 2D corregido, pinch, overzoom Z20, heading-up, GPS, overlays persistentes y proximidad Geiger al borde de RAD ZONES. MAP OPERATION conservó su comportamiento CivTAK/Google Maps.
 
-SELECT SKIN sustituyó la selección inicial anterior. Brotherhood of Steel representa la interfaz funcional vigente; SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN quedan identificadas como `UNDER CONSTRUCTION` sobre una arquitectura funcional compartida.
-
 Se completaron build, incremental, lint, suite unitaria, pruebas instrumentadas en Galaxy A56 y Pixel 8 Emulator, `git diff --check` y validación manual final disponible. La calibración SONAR y la evaluación exterior en NAVY7 permanecen registradas como FIELD VALIDATION posterior y no impiden el cierre técnico.
 
 | Commit | Papel |
 |---|---|
-| `92f4ccda44fc2024caa2124eb854b702d3bedfab` | SONAR-TESTING, MAP TERRAIN NAVY7, SELECT SKIN y consolidación visible PIP-SuriOS v2.1. |
+| `92f4ccda44fc2024caa2124eb854b702d3bedfab` | SONAR-TESTING, MAP TERRAIN NAVY7 y consolidación visible PIP-SuriOS v2.1. |
 
 Documento de cierre: [Sprint 011 v1.0](SPRINT_011_v1.0.md).
 

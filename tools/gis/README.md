@@ -105,7 +105,11 @@ overlay, zoom 16–19, compatible con `MbTilesRepository`.
 ## Modelo estándar HOME para NAVY7 y futuros mapas
 
 El generador `build_navy7_home_style.py` crea un proyecto QGIS nuevo y renderiza
-el MBTiles desde el GeoPackage local. No lee ni transforma el MBTiles anterior.
+el MBTiles desde el GeoPackage local. Aunque conserva ese nombre por
+compatibilidad, sus parametros permiten generar NAVY7, OFFICE u otros campos.
+El punto de entrada recomendado para nuevos mapas es
+`build_terrain_home_style.py`.
+No lee ni transforma el MBTiles anterior.
 Todas las rutas de entrada y salida son argumentos obligatorios; así el pipeline
 no depende de una ruta de usuario concreta.
 El modelo deja fijos los parámetros de HOME; para repetirlo solo se suministra
@@ -154,3 +158,24 @@ bounds) y tres teselas representativas antes de abrirse. Si el hash no coincide,
 la copia local se recrea automáticamente mediante un temporal y un reemplazo
 seguro. No se introduce Git LFS en esta fase: el GeoPackage no se versiona y el
 asset Android ya forma parte del artefacto de release.
+
+## OFFICE en Sprint 027
+
+OFFICE se genera con el mismo contrato visual y dimensional que NAVY7, centrado
+en `40.43717182620207, -3.620425636696507`. Su fuente local es un GeoPackage
+preparado desde OpenStreetMap mediante Overpass, con edificios y carreteras
+reales de la zona. No se generan curvas de nivel cuando la fuente urbana no las
+aporta.
+
+El flujo reproducible es:
+
+1. Consultar Overpass para el rectangulo de 5 km x 2,5 km alrededor del centro.
+2. Convertir el JSON con `prepare_overpass_gpkg.py` a capas `building` y
+   `highway` en un GeoPackage local.
+3. Ejecutar `build_terrain_home_style.py` con `--map-id office`, `--map-name
+   OFFICE` y `--no-contours`.
+4. Copiar el MBTiles resultante a `app/src/main/assets/maps/office_terrain.mbtiles`
+   y registrar su SHA-256 y sus bounds en `OfflineMapCatalog`.
+
+La salida generada contiene 5.275 teselas PNG en zoom 16-19 y sus bounds son
+`-3.649760636697,40.425671826202,-3.591090636697,40.448671826202`.

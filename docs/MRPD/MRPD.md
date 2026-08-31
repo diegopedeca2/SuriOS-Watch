@@ -126,7 +126,6 @@ DEC-003 Mission Log sin estadísticas competitivas
 DEC-004 Launcher independiente  
 DEC-005 MRPD como fuente de verdad  
 DEC-006 Perfil CIVILIAN retirado
-DEC-007 Selección de skin en cada inicio
 DEC-008 Interacción mediante botones  
 DEC-009 Lenguaje visual por colores  
 DEC-010 Cabecera estándar de módulos  

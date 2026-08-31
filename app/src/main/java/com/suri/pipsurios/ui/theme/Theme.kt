@@ -9,9 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.node.DelegatableNode
-import com.suri.pipsurios.ui.skin.SkinSession
 
-private fun colorSchemeFor(palette: SkinPalette) = darkColorScheme(
+private fun colorSchemeFor(palette: ColorPalette) = darkColorScheme(
     primary = palette.primary,
     secondary = palette.secondary,
     tertiary = palette.amber,
@@ -34,7 +33,7 @@ private fun colorSchemeFor(palette: SkinPalette) = darkColorScheme(
 fun PIPSuriOSTheme(
     content: @Composable () -> Unit
 ) {
-    val palette = SkinPalettes.forSkin(SkinSession.activeSkin)
+    val palette = ColorPalettes.original
     MaterialTheme(
         colorScheme = colorSchemeFor(palette),
         typography = Typography,

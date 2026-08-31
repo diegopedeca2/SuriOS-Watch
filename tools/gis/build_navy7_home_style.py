@@ -1,10 +1,11 @@
-"""Build NAVY7 in QGIS using the final HOME terrain visual contract.
+"""Build an offline terrain map in QGIS using the final HOME visual contract.
 
-The source data is the local Navy7 GeoPackage.  The project created by this
-script is intentionally independent from the older MAP SuriOS project: it
-contains only local, offline layers and applies the final HOME palette and
-line widths directly.  The HOME geographic footprint and zoom matrix are
-preserved while the footprint is centred on the requested NAVY7 coordinate.
+The default arguments reproduce NAVY7, while the same parameterized pipeline
+can build other fields such as OFFICE. The source GeoPackage must contain a
+building polygon layer and a highway line layer; contour lines are optional.
+The project created by this script is independent from older QGIS projects:
+it contains only local, offline layers and applies the final HOME palette and
+line widths directly.
 """
 
 from __future__ import annotations
@@ -77,7 +78,14 @@ def metadata_bounds(center_lat: float, center_lon: float) -> str:
     )
 
 
-def style_layers(project, gpkg: Path):
+def style_layers(
+    project,
+    gpkg: Path,
+    map_name: str,
+    building_layer_name: str,
+    road_layer_name: str,
+    contour_layer_name: str | None,
+):
     from qgis.core import QgsFillSymbol, QgsLineSymbol, QgsSingleSymbolRenderer, QgsVectorLayer
 
     def add(name: str, layer_name: str):
@@ -88,7 +96,7 @@ def style_layers(project, gpkg: Path):
         return layer
 
     # Buildings are the most visible HOME/NAVY7 distinction: solid neutral grey.
-    buildings = add("BUILDINGS · HOME STYLE", "building")
+    buildings = add(f"BUILDINGS · {map_name} STYLE", building_layer_name)
     buildings.setRenderer(
         QgsSingleSymbolRenderer(
             QgsFillSymbol.createSimple(
@@ -102,7 +110,7 @@ def style_layers(project, gpkg: Path):
     )
 
     # HOME's final road colour is the blue produced by its palette normalizer.
-    roads = add("ROADS · HOME STYLE", "highway")
+    roads = add(f"ROADS · {map_name} STYLE", road_layer_name)
     roads.setRenderer(
         QgsSingleSymbolRenderer(
             QgsLineSymbol.createSimple(
@@ -111,7 +119,10 @@ def style_layers(project, gpkg: Path):
         )
     )
 
-    contours_minor = add("ALTITUDE · 10 m", "contours_2m")
+    if contour_layer_name is None:
+        return [buildings, roads]
+
+    contours_minor = add("ALTITUDE · 10 m", contour_layer_name)
     contours_minor.setSubsetString('round("ELEV") % 10 <> 0')
     contours_minor.setRenderer(
         QgsSingleSymbolRenderer(
@@ -121,7 +132,7 @@ def style_layers(project, gpkg: Path):
         )
     )
 
-    contours_major = add("ALTITUDE · 20 m (index)", "contours_2m")
+    contours_major = add("ALTITUDE · 20 m (index)", contour_layer_name)
     contours_major.setSubsetString('round("ELEV") % 10 = 0')
     contours_major.setRenderer(
         QgsSingleSymbolRenderer(
@@ -197,15 +208,31 @@ def tile_ranges(center_lat: float, center_lon: float, min_zoom: int, max_zoom: i
     return ranges
 
 
-def create_project(project_path: Path, gpkg: Path, center_lat: float, center_lon: float):
+def create_project(
+    project_path: Path,
+    gpkg: Path,
+    center_lat: float,
+    center_lon: float,
+    map_name: str,
+    building_layer_name: str,
+    road_layer_name: str,
+    contour_layer_name: str | None,
+):
     from qgis.core import QgsCoordinateReferenceSystem, QgsProject
     from qgis.PyQt.QtGui import QColor
 
     project = QgsProject()
     project.setCrs(QgsCoordinateReferenceSystem("EPSG:3857"))
-    project.setTitle("SuriOS NAVY7 HOME-style terrain")
+    project.setTitle(f"SuriOS {map_name} HOME-style terrain")
     project.setBackgroundColor(QColor(*BACKGROUND))
-    layers = style_layers(project, gpkg)
+    layers = style_layers(
+        project,
+        gpkg,
+        map_name,
+        building_layer_name,
+        road_layer_name,
+        contour_layer_name,
+    )
     ranges = tile_ranges(center_lat, center_lon, 16, 19)
     root = project.layerTreeRoot()
     root.setHasCustomLayerOrder(True)
@@ -236,7 +263,14 @@ def build(args: argparse.Namespace) -> dict[str, object]:
             args.output.unlink()
 
         project, layers, ranges = create_project(
-            args.project_output, args.gpkg, args.center_lat, args.center_lon
+            args.project_output,
+            args.gpkg,
+            args.center_lat,
+            args.center_lon,
+            args.map_name,
+            args.building_layer,
+            args.road_layer,
+            None if args.no_contours else args.contour_layer,
         )
         print("ACTIVE_LAYERS=" + ",".join(layer.name() for layer in layers), flush=True)
         print(f"QGIS_PROJECT={args.project_output}", flush=True)
@@ -260,8 +294,9 @@ def build(args: argparse.Namespace) -> dict[str, object]:
             )
             metadata = {
                 "format": "png",
-                "name": "navy_7_terrain",
-                "description": "navy_7_terrain",
+                "map_id": args.map_id,
+                "name": args.metadata_name,
+                "description": args.map_name,
                 "version": "1.1",
                 "type": "overlay",
                 "minzoom": str(args.min_zoom),
@@ -294,15 +329,23 @@ def build(args: argparse.Namespace) -> dict[str, object]:
         finally:
             connection.close()
 
-        return {
+        result = {
             "output": args.output,
             "project": args.project_output,
             "bounds": metadata_bounds(args.center_lat, args.center_lon),
             "tile_count": total,
             "ranges": ranges,
         }
+        print(f"OUTPUT={result['output']}", flush=True)
+        print(f"BOUNDS={result['bounds']}", flush=True)
+        print(f"TILES={result['tile_count']}", flush=True)
+        print(f"RANGES={result['ranges']}", flush=True)
+        os._exit(0)
     finally:
-        qgis.exitQgis()
+        # QGIS 3.44 can crash while tearing down a headless provider on
+        # Windows. Successful runs terminate explicitly after all output has
+        # been flushed, matching the guarded smoke-test harness.
+        pass
 
 
 def main() -> int:
@@ -312,17 +355,20 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True, help="MBTiles output")
     parser.add_argument("--center-lat", type=float, required=True)
     parser.add_argument("--center-lon", type=float, required=True)
+    parser.add_argument("--map-id", default="navy7", help="Stable map identifier")
+    parser.add_argument("--map-name", default="NAVY7", help="Visible map name")
+    parser.add_argument("--metadata-name", default="navy_7_terrain")
+    parser.add_argument("--building-layer", default="building")
+    parser.add_argument("--road-layer", default="highway")
+    parser.add_argument("--contour-layer", default="contours_2m")
+    parser.add_argument("--no-contours", action="store_true")
     parser.add_argument("--min-zoom", type=int, default=16)
     parser.add_argument("--max-zoom", type=int, default=19)
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
     if args.min_zoom > args.max_zoom:
         parser.error("min zoom must not exceed max zoom")
-    result = build(args)
-    print(f"OUTPUT={result['output']}", flush=True)
-    print(f"BOUNDS={result['bounds']}", flush=True)
-    print(f"TILES={result['tile_count']}", flush=True)
-    print(f"RANGES={result['ranges']}", flush=True)
+    build(args)
     return 0
 
 

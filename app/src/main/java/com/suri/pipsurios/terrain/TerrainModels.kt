@@ -59,8 +59,25 @@ object OfflineMapCatalog {
         maxNativeZoom = 19,
         maxDisplayZoom = 20
     )
+    val OFFICE = OfflineMapDefinition(
+        mapId = "office",
+        name = "OFFICE",
+        assetPath = "maps/office_terrain.mbtiles",
+        assetSha256 = "112362A772C971BA34B31BF6DECF435E4F65053EE318F5F767CC389957BB91B9",
+        // Sprint 027 target center: 40.43717182620207, -3.620425636696507.
+        // Same HOME geographic footprint: 5 km x 2.5 km, zoom 16..19.
+        bounds = MapBounds(
+            west = -3.649760636696507,
+            south = 40.42567182620207,
+            east = -3.591090636696507,
+            north = 40.44867182620207
+        ),
+        minZoom = 16,
+        maxNativeZoom = 19,
+        maxDisplayZoom = 20
+    )
     /** Map files are listed alphabetically; CHOOSE LOCATION is a UI-only exception before them. */
-    val maps = listOf(HOME, NAVY7).sortedBy { it.name }
+    val maps = listOf(HOME, NAVY7, OFFICE).sortedBy { it.name }
 }
 
 object TerrainZoomTuning {

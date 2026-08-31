@@ -21,11 +21,11 @@ como versión canónica del ecosistema.
 
 | ID | Estado | Prioridad | Origen | Elemento | Observaciones |
 |---|---|---|---|---|---|
-| BL-001 | Cerrado | Alta | Sprint 001 | Validar tipografía definitiva Consolas | Consolas aprobada como tipografía definitiva; `SYNC_TO_DEVICE` continúa como deuda técnica independiente. |
+| BL-001 | Cerrado | Alta | Sprint 001 | Validar tipografía definitiva Consolas | Consolas es la fuente oficial. Las watchfaces usan temporalmente `SYNC_TO_DEVICE`, una fuente disponible en el dispositivo, porque Consolas no está empaquetada dentro de la esfera. Esta deuda no afecta al funcionamiento actual. |
 | BL-002 | Histórico | Media | Sprint 001 | Actualizar `preview.png` | No se actualiza; se conserva como recurso histórico. |
 | BL-003 | Cerrado | Alta | Auditoría documental | Versionar documentación oficial en Git | Política de documentación en Git aprobada y aplicada. |
 | BL-004 | Cerrado | Media | Organización | Definir política GitHub | `master` es la rama estable; commits funcionales y push tras validación. |
-| BL-005 | Planificado | Baja | Sprint 001 | Automatizar validaciones XML | Automatizar cuando exista CI estable. |
+| BL-005 | Planificado | Baja | Sprint 001 | Revisar automáticamente los XML de las watchfaces | Crear una comprobación que avise si un XML está mal formado. Se mantiene en espera hasta disponer de CI, es decir, una revisión automática en cada cambio. |
 | BL-006 | Cerrado | Baja | Sprint 001 | Estrategia de pruebas automatizadas | Unitarias, lint, builds y pruebas instrumentadas en A56 cuando afecten a Android. |
 | BL-007 | Cerrado | Media | Organización | Política de archivos `.idea` | Se ignora la configuración local y solo se conserva la configuración compartida imprescindible. |
 | BL-008 | Cerrado | Baja | Auditoría documental | Resolver futuro de CHANGELOG | `CHANGELOG.md` se conserva como resumen humano de cambios. |
@@ -34,7 +34,6 @@ como versión canónica del ecosistema.
 | BL-011 | Histórico | Media | Recursos | Localizar y catalogar antigua Figura 4.1 | Se conserva como material histórico y no entra en el producto. |
 | BL-012 | Eliminado | Media | Organización | Eliminar copias de `ORCA-TO-DO` | Directorio eliminado; los archivos estaban versionados y siguen recuperables desde Git. |
 | BL-013 | Cerrado | Baja | Documentación | Normalizar MRPD “Product/Project” | Se adopta oficialmente `Project`. |
-| BL-014 | Planificado Sprint 025 | Media | Recursos | Definir licencia y recurso del emblema | Se documentará junto con autoría/procedencia antes de cualquier distribución externa. |
 | BL-015 | Eliminado | Media | Sprint futuro | Retirar perfil CIVILIAN | El perfil y su ruta huérfana se eliminan; las menciones históricas no se reescriben. |
 | BL-016 | Cerrado | Baja | Sprint futuro | Evaluar doble pulsación en pasos | No se incorpora al producto actual. |
 
@@ -49,7 +48,7 @@ como versión canónica del ecosistema.
 | AUD-023-05 | Implementado | Media | TERRAIN | SHA-256 por asset, metadata de formato/zoom/bounds y tres teselas representativas; recreación segura. |
 | AUD-023-06 | Implementado | Baja-media | Persistencia | Escritura a temporal y renombrado; se conserva el conflicto `AlreadyExists` por fecha. |
 | AUD-023-07 | Implementado | Baja-media | Protocolo | Rangos semánticos, finitud, timestamps ±5 minutos y `PING` como `PONG` sin adquisición. |
-| AUD-023-08 | Planificado Sprint 025 | Baja | Compatibilidad / deuda | APIs y avisos de código corregidos. La actualización de dependencias requiere una matriz de regresión dedicada. |
+| AUD-023-08 | Implementado | Baja | Compatibilidad / deuda | Dependencias actualizadas en Sprint 025; tests, Lint y ensamblados completados. |
 | AUD-023-09 | Implementado | Media | GIS / reproducibilidad | Generador con rutas obligatorias, QGIS LTR 3.44.13 y política explícita de fuentes externas/asset Android versionado. |
 
 ## Historial

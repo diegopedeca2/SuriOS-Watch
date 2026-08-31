@@ -778,8 +778,8 @@ Toda modificación deberá quedar documentada antes de su implementación.
 | Sprint 002 | Completado | Base declarativa WFF v1 |
 | Sprint 003 | Completado | Ambient Mode |
 | Sprint 004 | Completado | Batería y pasos |
-| Sprint 005 | Previsto | Emblema oficial de la Hermandad del Acero |
-| Sprint 006 | Previsto | Spotify y Google Wallet |
+| Sprint 005 | Completado | Emblema oficial de la Hermandad del Acero |
+| Sprint 006 | Completado | Spotify y Google Wallet |
 
 La ejecución de cada Sprint requerirá autorización expresa.
 
@@ -963,7 +963,7 @@ Los componentes institucionales deberán cumplir además las especificaciones de
 | Roadmap | Reorganización oficial de Sprint 005 y Sprint 006. |
 | Emblema | Incorporación de BROTHERHOOD_EMBLEM_ASSET_SPEC v1.3 y WFPRD_BROTHERHOOD_EMBLEM v1.3. |
 | WATCHFACE_LAYOUT | Actualización a la referencia geométrica v1.3. |
-| Estado del proyecto | Sprint 001–004 completados; ningún Sprint activo. |
+| Estado del proyecto | Sprint 001–006 completados; el Sprint 027 activo es de limpieza documental del ecosistema y no introduce cambios funcionales en la watchface. |
 
 ---
 
@@ -976,13 +976,14 @@ Actualmente se consideran implementados y validados:
 - Ambient Mode;
 - batería;
 - pasos.
+- emblema oficial de la Hermandad del Acero;
+- Spotify;
+- Google Wallet.
 
 Pendientes:
 
-- emblema oficial;
-- Spotify;
-- Google Wallet;
-- resto de componentes previstos en el roadmap.
+- No hay componentes funcionales pendientes en la versión actual de SuriOS Watch.
+- Cualquier ampliación futura requerirá una nueva propuesta documental y un Sprint autorizado.
 
 ---
 
@@ -1008,10 +1009,11 @@ Situación actual del proyecto:
 - Sprint 002 completado.
 - Sprint 003 completado.
 - Sprint 004 completado.
-- Sprint 005 previsto para la implementación del emblema oficial de la Hermandad del Acero.
-- Sprint 006 previsto para la integración de Spotify y Google Wallet.
+- Sprint 005 completado: emblema oficial de la Hermandad del Acero.
+- Sprint 006 completado: accesos a Spotify y Google Wallet.
 
-Actualmente no existe ningún Sprint activo.
+El Sprint 027 está activo para limpieza documental del ecosistema. No contiene
+cambios funcionales de SuriOS Watch.
 
 La apertura de un nuevo Sprint requerirá autorización expresa y deberá quedar reflejada en:
 

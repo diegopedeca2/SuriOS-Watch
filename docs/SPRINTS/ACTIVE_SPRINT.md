@@ -4,17 +4,24 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-08-31
+last_updated: 2026-09-01
 
 ---
 
 ## Sin Sprint activo
 
 El Sprint 026 se ha cerrado tras validar el acceso `STATUS` y conservar el
-comportamiento AMBIENT anterior en el Watch Ultra. No queda ningún Sprint
-activo.
+comportamiento AMBIENT anterior en el Watch Ultra.
+
+El Sprint 027 se cerró el 2026-09-01 tras completar la limpieza del proyecto,
+los detalles documentales menores y el retorno al diseño original de
+PIP-SuriOS. No se ha abierto un Sprint 028.
+
+No hay un Sprint activo.
 
 ## Último Sprint cerrado
+
+[Sprint 027 v1.0](SPRINT_027_v1.0.md) — **CLOSED**
 
 [Sprint 026 v1.0](SPRINT_026_v1.0.md) — **CLOSED**
 
@@ -51,6 +58,8 @@ Sprint 022: **CLOSED**
 Sprint 023: **CLOSED**
 Sprint 024: **CLOSED**
 Sprint 025: **CLOSED**
+Sprint 026: **CLOSED**
+Sprint 027: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -58,12 +67,6 @@ presentan alfabéticamente después de esa opción excepcional.
 
 Sprint 019 audita el monorepo, actualiza PIP-SuriOS a v2.5, desinstala P.R.S.
 //COVER del A56 y documenta el cierre de seguridad y validación.
-
-Sprint 018 formaliza, implementa y valida la skin NECRON para PIP-SuriOS
-Android. La skin conserva la funcionalidad compartida, aplica tokens y
-emblema vectorial propios del prototipo, y mantiene legibilidad en Home y
-P.R.S. sobre el Samsung A56. La selección es de sesión y vuelve a Brotherhood
-tras reiniciar el proceso.
 
 PIP-SuriOS v2.6 queda consolidado con el cierre del Sprint 024, completado y
 cerrado técnica, funcional y documentalmente a fecha 2026-08-31. El P.R.S. activo usa
@@ -85,16 +88,6 @@ alcance requiere autorización expresa.
 Los mapas TERRAIN y la lógica RAD ZONE/Geiger quedan incluidos en la auditoría
 de Sprint 019. Sprint 020 modificó únicamente la cobertura de NAVY7, el estado
 inicial y el orden del selector de mapas; HOME conserva su configuración.
-
-## Cierre de Sprint 018 de SuriOS Ecosystem / PIP-SuriOS
-
-[Sprint 018 v1.0](SPRINT_018_v1.0.md), abierto y cerrado el 2026-08-30.
-
-La skin NECRON queda documentada como prototipo privado, con referencias
-públicas clasificadas, política de publicación separada y validación visual en
-el A56. P.R.S. conserva el tratamiento NECRON porque no se observó distorsión
-ni pérdida apreciable de lectura. La auditoría completa está en
-[AUDIT_SPRINT_018](../AUDIT_SPRINT_018.md).
 
 ## Cierre de Sprint 017 de SuriOS Ecosystem / PIP-SuriOS
 
@@ -127,8 +120,8 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
   saneamiento de estado.
 - Sprint 017 queda cerrado tras el refinamiento compacto de P.R.S. y la
   incorporación de categorías inferidas de dispositivo.
-- Sprint 018 queda cerrado tras la implementación y validación de la skin
-  NECRON.
+- Sprint 018 queda cerrado como registro histórico de una revisión visual
+  posteriormente retirada.
 - Sprint 019 queda cerrado tras la auditoría, seguridad y consolidación v2.5.
 - Sprint 021 queda cerrado tras la implementación y regresión de la herramienta
   experimental INDIVIDUAL TRACKING, combinando TERRAIN con P.R.S.; la prueba
@@ -156,7 +149,7 @@ La auditoría final incorpora la actualización de `P.R.S. TESTING`: modo dual p
 
 En el corte de esta fecha el Watch 2 permanece conectado por ADB inalámbrico en `192.168.1.56:5555` y `RemoteProbeService` está activo. El A56 no aparece actualmente en `adb devices`, por lo que queda como acción de continuidad reconectar el teléfono y repetir la validación de despliegue móvil. El emulador está conectado, pero la aplicación móvil requiere API 35 y el emulador actual usa API 34.
 
-El sprint queda cerrado documentalmente con esas limitaciones abiertas y explícitas; no se inicia un sprint posterior.
+El sprint quedó cerrado documentalmente con esas limitaciones abiertas y explícitas. Posteriormente se abrió el Sprint 027 para limpieza documental.
 
 ## Addendum de cierre — 2026-08-30
 
@@ -183,7 +176,8 @@ El cierre de hoy consolida el estado operativo real del repositorio:
 La campaña física de P.R.S. y el ajuste de `PrsTuning.DEFAULT` quedan
 cancelados por decisión expresa del propietario. La futura integración de
 movimiento/orientación tampoco forma parte del Sprint 016. El resto de temas
-abiertos queda trasladado a una futura autorización, sin Sprint activo.
+abiertos queda trasladado a una futura autorización. El Sprint 027 quedó
+cerrado el 2026-09-01 y no existe un Sprint activo posterior.
 
 ## Addendum de cierre de SuriOS Watch y del AVD — 2026-08-30
 
@@ -195,8 +189,8 @@ API 34, 480 x 480, 320 dpi, Play Store y x86_64.
 
 La esfera se dejó visible en `emulator-5554` con el marco circular, emblema,
 progreso de pasos, batería sin porcentaje, firma `v1.1` y accesos CAPS/STATUS/
-RADIO. La instalación en el Watch Ultra físico y la integración Orca-QGIS no
-forman parte del cierre y quedan como continuidad.
+RADIO. La instalación en el Watch Ultra físico quedó validada posteriormente
+en Sprint 026. La integración Orca-QGIS permanece como continuidad futura.
 
 ## Referencias
 

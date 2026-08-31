@@ -1,5 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
@@ -66,8 +69,13 @@ fun PrsDevicesScreen(
     val registry = remember(context) { PrsDeviceRegistry.from(context.applicationContext) }
     var page by remember { mutableStateOf(PrsDevicesPage.ROOT) }
 
+    BackHandler {
+        if (page == PrsDevicesPage.ROOT) onBack() else page = PrsDevicesPage.ROOT
+    }
+
     when (page) {
         PrsDevicesPage.ROOT -> PrsDevicesRootScreen(
+            compact = compact,
             onIdentifySelected = { page = PrsDevicesPage.IDENTIFY },
             onSavedSelected = { page = PrsDevicesPage.SAVED },
             onMacGuideSelected = { page = PrsDevicesPage.MAC_GUIDE },
@@ -76,6 +84,7 @@ fun PrsDevicesScreen(
 
         PrsDevicesPage.IDENTIFY -> PrsIdentifyDeviceScreen(
             registry = registry,
+            compact = compact,
             onBack = { page = PrsDevicesPage.ROOT }
         )
 
@@ -86,6 +95,7 @@ fun PrsDevicesScreen(
         )
 
         PrsDevicesPage.MAC_GUIDE -> PrsMacAddressGuideScreen(
+            compact = compact,
             onBack = { page = PrsDevicesPage.ROOT }
         )
     }
@@ -93,31 +103,38 @@ fun PrsDevicesScreen(
 
 @Composable
 private fun PrsDevicesRootScreen(
+    compact: Boolean,
     onIdentifySelected: () -> Unit,
     onSavedSelected: () -> Unit,
     onMacGuideSelected: () -> Unit,
     onBack: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+    val outerPadding = if (compact) 12.dp else 24.dp
+    val titleSize = if (compact) 18.sp else 26.sp
+    val rowSpacing = if (compact) 8.dp else 12.dp
+
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
         Text(
             text = "P.R.S. / DEVICES",
             color = PipGreen,
-            fontSize = 26.sp,
+            fontSize = titleSize,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.TopStart).padding(outerPadding)
         )
 
-            Column(
-                modifier = Modifier
+        Column(
+            modifier = Modifier
                 .widthIn(max = 470.dp)
                 .fillMaxWidth()
-                .align(Alignment.Center),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .align(Alignment.Center)
+                .padding(horizontal = if (compact) 12.dp else 0.dp)
+                .offset(y = if (compact) (-18).dp else 0.dp),
+            verticalArrangement = Arrangement.spacedBy(rowSpacing)
         ) {
             Text(
                 "DEVICE FILTERS",
                 color = PipAmber,
-                fontSize = 16.sp,
+                fontSize = if (compact) 13.sp else 16.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
@@ -129,36 +146,43 @@ private fun PrsDevicesRootScreen(
             PrsDevicesMenuRow(
                 label = "> IDENTIFY DEVICE",
                 detail = "LIVE BLE CONTACTS / SAVE ONE DEVICE",
-                onClick = onIdentifySelected
+                onClick = onIdentifySelected,
+                compact = compact
             )
             PrsDevicesMenuRow(
                 label = "> SAVED DEVICES",
                 detail = "ENABLE, DISABLE OR REMOVE RULES",
-                onClick = onSavedSelected
+                onClick = onSavedSelected,
+                compact = compact
             )
             PrsDevicesMenuRow(
                 label = "> MAC ADDRESS GUIDE",
                 detail = "FIND, VERIFY AND SAVE A BLE ADDRESS",
-                onClick = onMacGuideSelected
+                onClick = onMacGuideSelected,
+                compact = compact
             )
         }
 
         PrsBackButton(
             onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.BottomStart).padding(outerPadding)
         )
     }
 }
 
 @Composable
-private fun PrsMacAddressGuideScreen(onBack: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+private fun PrsMacAddressGuideScreen(
+    compact: Boolean,
+    onBack: () -> Unit
+) {
+    val outerPadding = if (compact) 12.dp else 24.dp
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
         Text(
             text = "P.R.S. / MAC ADDRESS GUIDE",
             color = PipGreen,
-            fontSize = 24.sp,
+            fontSize = if (compact) 18.sp else 24.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.TopStart).padding(outerPadding)
         )
         Column(
             modifier = Modifier
@@ -166,7 +190,7 @@ private fun PrsMacAddressGuideScreen(onBack: () -> Unit) {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .align(Alignment.Center)
-                .padding(vertical = 72.dp)
+                .padding(vertical = if (compact) 48.dp else 72.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -218,7 +242,7 @@ private fun PrsMacAddressGuideScreen(onBack: () -> Unit) {
         }
         PrsBackButton(
             onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.BottomStart).padding(outerPadding)
         )
     }
 }
@@ -227,23 +251,25 @@ private fun PrsMacAddressGuideScreen(onBack: () -> Unit) {
 private fun PrsDevicesMenuRow(
     label: String,
     detail: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    compact: Boolean = false
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, PipGreenDim.copy(alpha = 0.65f))
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 11.dp)
+            .padding(horizontal = if (compact) 10.dp else 14.dp, vertical = if (compact) 8.dp else 11.dp)
     ) {
-        Text(label, color = PipGreen, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
-        Text(detail, color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+        Text(label, color = PipGreen, fontSize = if (compact) 14.sp else 16.sp, fontFamily = FontFamily.Monospace)
+        Text(detail, color = PipGreenDim, fontSize = if (compact) 9.sp else 10.sp, fontFamily = FontFamily.Monospace)
     }
 }
 
 @Composable
 private fun PrsIdentifyDeviceScreen(
     registry: PrsDeviceRegistry,
+    compact: Boolean,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -313,13 +339,14 @@ private fun PrsIdentifyDeviceScreen(
         actionStatus = if (saved) "DEVICE SAVED" else "INVALID OR ALREADY SAVED"
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+    val outerPadding = if (compact) 12.dp else 24.dp
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
         Text(
             text = "P.R.S. / IDENTIFY DEVICE",
             color = PipGreen,
-            fontSize = 24.sp,
+            fontSize = if (compact) 18.sp else 24.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.TopStart).padding(outerPadding)
         )
 
         Column(
@@ -328,7 +355,7 @@ private fun PrsIdentifyDeviceScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .align(Alignment.Center)
-                .padding(vertical = 72.dp),
+                .padding(vertical = if (compact) 46.dp else 72.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -427,7 +454,7 @@ private fun PrsIdentifyDeviceScreen(
 
         PrsBackButton(
             onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.BottomStart).padding(outerPadding)
         )
     }
 }
@@ -444,13 +471,14 @@ private fun PrsSavedDevicesScreen(
         savedDevices = registry.snapshot()
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+    val outerPadding = if (compact) 12.dp else 24.dp
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
         Text(
             text = "P.R.S. / SAVED DEVICES",
             color = PipGreen,
-            fontSize = 24.sp,
+            fontSize = if (compact) 18.sp else 24.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.TopStart).padding(outerPadding)
         )
 
         Column(
@@ -459,7 +487,7 @@ private fun PrsSavedDevicesScreen(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .align(Alignment.Center)
-                .padding(vertical = 78.dp),
+                .padding(vertical = if (compact) 50.dp else 78.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -508,7 +536,7 @@ private fun PrsSavedDevicesScreen(
 
         PrsBackButton(
             onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+            modifier = Modifier.align(Alignment.BottomStart).padding(outerPadding)
         )
     }
 }
@@ -549,8 +577,8 @@ private fun ObservedDeviceRow(
         Text(
             when {
                 savedDevice == null -> "> SAVE DEVICE"
-                savedDevice.enabled -> "> SAVED / DISABLE IN LIST"
-                else -> "> SAVED / ENABLE IN LIST"
+                savedDevice.enabled -> "> SAVED / DISABLE IN SCAN"
+                else -> "> SAVED / ENABLE IN SCAN"
             },
             color = PipGreen,
             fontSize = 10.sp,

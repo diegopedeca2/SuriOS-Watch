@@ -55,7 +55,7 @@ Los WFPRD especializados concretan el comportamiento de un componente aprobado p
 
 ### 2.6 WATCHFACE_LAYOUT
 
-[WATCHFACE_LAYOUT v1.2](../WATCHFACE_LAYOUT/WATCHFACE_LAYOUT_v1.2.md) es un anexo visual normativo subordinado al WFPRD maestro. Define geometría, composición y relaciones espaciales, pero no puede:
+[WATCHFACE_LAYOUT v1.3](../WATCHFACE_LAYOUT/WATCHFACE_LAYOUT_v1.3.md) es un anexo visual normativo subordinado al WFPRD maestro. Define geometría, composición y relaciones espaciales, pero no puede:
 
 - añadir requisitos funcionales;
 - contradecir el WFPRD maestro;
@@ -67,8 +67,7 @@ Los WFPRD especializados concretan el comportamiento de un componente aprobado p
 Un Sprint aprobado define el trabajo que podrá activarse mediante autorización expresa. La aprobación documental y la activación son estados independientes.
 
 - [ACTIVE_SPRINT](../SPRINTS/ACTIVE_SPRINT.md) identifica el Sprint operativo vigente.
-- [SPRINT_HISTORY](../SPRINTS/SPRINT_HISTORY.md) mantiene el historial acumulativo.
-- [Sprint 002 v1.2](../SPRINTS/SPRINT_002_v1.2.md) y [Sprint 003 v1.1](../SPRINTS/SPRINT_003_v1.1.md) están aprobados documentalmente, pero pendientes de implementación.
+- [SPRINT_HISTORY v1.3](<../SPRINTS/SPRINT_HISTORY v1.3.md>) mantiene el historial acumulativo.
 
 ### 2.8 BACKLOG
 
@@ -141,7 +140,7 @@ ChatGPT, Codex, Orca y otros asistentes pueden analizar, documentar, implementar
 - Una versión aprobada no se sobrescribirá con cambios de contenido.
 - La nueva versión identificará expresamente qué versión sustituye.
 - Las versiones anteriores se conservarán como históricas o sustituidas.
-- Los documentos operativos `ACTIVE_SPRINT.md` y `SPRINT_HISTORY.md` son acumulativos y mutables; antes de cambios estructurales se conservará la versión anterior en `docs/SPRINTS/OLD/`.
+- Los documentos operativos `ACTIVE_SPRINT.md` y `SPRINT_HISTORY v1.3.md` son acumulativos y mutables; antes de cambios estructurales se conservará la versión anterior en `docs/SPRINTS/OLD/`.
 - El nombre canónico de un documento versionado incluirá `_v<major>.<minor>`.
 - Los identificadores de Sprint usarán tres dígitos: `SPRINT_002_v1.2.md`.
 

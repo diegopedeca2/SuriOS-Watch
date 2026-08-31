@@ -86,6 +86,8 @@ import com.suri.pipsurios.data.UpdateOperationResult
 import com.suri.pipsurios.data.PercentageDistribution
 import com.suri.pipsurios.data.SaveOperationResult
 import com.suri.pipsurios.data.LoadoutConfigurationRepository
+import com.suri.pipsurios.data.OperatorField
+import com.suri.pipsurios.data.OperatorProfileRepository
 import com.suri.pipsurios.data.StatisticsCalculator
 import com.suri.pipsurios.geiger.VolumeKeyController
 import com.suri.pipsurios.ui.screens.InventoryCategoryScreen
@@ -115,6 +117,7 @@ import com.suri.pipsurios.ui.screens.FrontPanelScreen
 import com.suri.pipsurios.ui.screens.UniformScreen
 import com.suri.pipsurios.ui.screens.StatusLoadingScreen
 import com.suri.pipsurios.ui.screens.StatusScreen
+import com.suri.pipsurios.ui.screens.StatusAccessoriesScreen
 import com.suri.pipsurios.ui.screens.ComplementsScreen
 import com.suri.pipsurios.ui.screens.DontForgetScreen
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
@@ -131,10 +134,7 @@ import com.suri.pipsurios.ui.screens.MapLoadingScreen
 import com.suri.pipsurios.ui.screens.MapModeSelectionScreen
 import com.suri.pipsurios.ui.screens.MapOperationScreen
 import com.suri.pipsurios.ui.screens.MapTerrainScreen
-import com.suri.pipsurios.ui.screens.SkinSelectionScreen
-import com.suri.pipsurios.ui.screens.PendingSkinScreen
-import com.suri.pipsurios.ui.skin.SkinId
-import com.suri.pipsurios.ui.skin.SkinSession
+import com.suri.pipsurios.ui.screens.IdentificationScreen
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
@@ -188,9 +188,8 @@ class MainActivity : ComponentActivity() {
 
 private enum class PIPSuriOSDestination {
     Splash,
+    Identification,
     Loading,
-    ModeSelection,
-    SkinUnderConstruction,
     HomeOperation,
     ToolsLoading,
     Tools,
@@ -256,6 +255,7 @@ private enum class PIPSuriOSDestination {
     CurrentGearUniform,
     StatusLoading,
     Status,
+    StatusAccessories,
     StatusDontForget,
     CommsLoading,
     CommsModeSelection,
@@ -286,7 +286,28 @@ private fun PIPSuriOSApp(
         return
     }
     var destination by remember { mutableStateOf(initialDestination) }
-    var pendingSkin by remember { mutableStateOf<SkinId?>(null) }
+    val operatorProfileRepository = remember(context) {
+        OperatorProfileRepository.from(context.applicationContext)
+    }
+    val operatorSetupLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val operatorConfigured = operatorProfileRepository.load().id.trim().isNotEmpty()
+        destination = if (result.resultCode == OperatorSetupActivity.RESULT_OK && operatorConfigured) {
+            PIPSuriOSDestination.HomeOperation
+        } else {
+            PIPSuriOSDestination.Splash
+        }
+    }
+
+    fun launchInitialOperatorSetup() {
+        operatorSetupLauncher.launch(
+            Intent(context, OperatorSetupActivity::class.java).apply {
+                putExtra(OperatorSetupActivity.EXTRA_FOCUS_FIELD, OperatorField.ID.name)
+            }
+        )
+    }
+
     var individualTrackingSelection by remember { mutableStateOf<IndividualTrackingSelection?>(null) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
@@ -617,33 +638,20 @@ private fun PIPSuriOSApp(
 
     when (destination) {
             PIPSuriOSDestination.Splash -> PIPSuriOSScreen(
-                onFinished = { destination = PIPSuriOSDestination.Loading }
+                onFinished = { destination = PIPSuriOSDestination.Identification }
+            )
+
+            PIPSuriOSDestination.Identification -> IdentificationScreen(
+                onAuthenticated = { destination = PIPSuriOSDestination.Loading }
             )
 
             PIPSuriOSDestination.Loading -> LoadingScreen(
-                onFinished = { destination = PIPSuriOSDestination.ModeSelection }
+                operatorId = operatorProfileRepository.load().id,
+                onFinished = { destination = PIPSuriOSDestination.HomeOperation },
+                onOperatorMissing = ::launchInitialOperatorSetup
             )
 
-            PIPSuriOSDestination.ModeSelection -> SkinSelectionScreen { skin ->
-                if (skin.implemented) {
-                    SkinSession.activeSkin = skin
-                    destination = PIPSuriOSDestination.HomeOperation
-                }
-                else {
-                    pendingSkin = skin
-                    destination = PIPSuriOSDestination.SkinUnderConstruction
-                }
-            }
-
-            PIPSuriOSDestination.SkinUnderConstruction -> pendingSkin?.let { skin ->
-                PendingSkinScreen(skin) {
-                    pendingSkin = null
-                    destination = PIPSuriOSDestination.ModeSelection
-                }
-            }
-
             PIPSuriOSDestination.HomeOperation -> HomeOperationScreen(
-                onBack = { destination = PIPSuriOSDestination.ModeSelection },
                 onInventorySelected = { destination = PIPSuriOSDestination.InventoryLoading },
                 onDataSelected = { destination = PIPSuriOSDestination.DataLoading },
                 onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
@@ -1228,7 +1236,13 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.Status -> StatusScreen(
                 activeLoadout = activeLoadout,
                 onDontForgetSelected = { destination = PIPSuriOSDestination.StatusDontForget },
+                onAccessoriesSelected = { destination = PIPSuriOSDestination.StatusAccessories },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.StatusAccessories -> StatusAccessoriesScreen(
+                activeLoadout = activeLoadout,
+                onBack = { destination = PIPSuriOSDestination.Status }
             )
 
             PIPSuriOSDestination.StatusDontForget -> DontForgetScreen(
@@ -1324,7 +1338,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(SkinSession.emblemResource),
+            painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxHeight(0.94f)
@@ -1352,7 +1366,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
             )
 
             Text(
-                text = "Brotherhood of Steel Skin",
+                text = "Brotherhood of Steel",
                 color = PipGreenDim,
                 fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace

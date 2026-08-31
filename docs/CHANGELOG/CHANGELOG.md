@@ -168,31 +168,6 @@
   allowlist/autenticación de nodos.
 - Detalle y dictamen en [AUDIT_SPRINT_019](../AUDIT_SPRINT_019.md).
 
-## Sprint 018 — Skin NECRON para PIP-SuriOS — 2026-08-30
-
-### Añadido
-
-- Skin NECRON como prototipo privado, con paleta blackstone/teal, acentos de
-  bronce y emblema vectorial nativo.
-- Especificación visual, referencias públicas clasificadas y política de uso
-  privado con variante independiente para cualquier publicación.
-- Auditoría técnica y cierre documental de Sprint 018.
-
-### Modificado
-
-- Home, MAP y P.R.S. resuelven los tokens visuales según la skin activa.
-- P.R.S. conserva NECRON tras la revisión visual en el Samsung A56; no se
-  activa el fallback a Brotherhood.
-- La selección de skin permanece de sesión y vuelve a Brotherhood después de
-  reiniciar el proceso.
-
-### Validación
-
-- Tests unitarios, lint y ensamblados de las variantes Android y módulos Watch:
-  `BUILD SUCCESSFUL`.
-- `app-full-debug.apk` instalada y validada en Samsung A56 (`SM_A566B`).
-- Auditoría: [AUDIT_SPRINT_018](../AUDIT_SPRINT_018.md).
-
 ## Sprint 017 — PIP-SuriOS v2.4, cierre de P.R.S. compacto y clasificación de dispositivos — 2026-08-30
 
 ### Estado del corte
@@ -216,7 +191,7 @@
   con `Status: ok`.
 - Pruebas físicas en moto y calibración: quedan como validación posterior; no
   bloquean el cierre técnico.
-- Los trabajos paralelos de mapas y skins quedan fuera del alcance de este
+- Los trabajos paralelos de mapas quedan fuera del alcance de este
   cierre y no se modifican.
 - Auditoría: [AUDIT_SPRINT_017](../AUDIT_SPRINT_017.md).
 
@@ -404,3 +379,31 @@ revisión documental y de SuriOS Watch/AVD.
 
 - La composicion final queda despejada: solo se conserva el titulo `P.R.S.`, se retiran subtitulos, leyendas, guia de uso y el mensaje superior, y se muestran los contadores `CLOSE` y `NEW`.
 - `:app:testDebugUnitTest`, `:app:lintAnalyzeDebug` y `:app:assembleDebug` correctos.
+
+## Sprint 027 - limpieza, STATUS y P.R.S. externo - 2026-09-01
+
+### Anadido y modificado
+
+- STATUS recupera su titulo y mantiene las piezas configuradas como valores
+  independientes; ACCESORIES queda como unico acceso textual al detalle.
+- La edicion `prsOnlyDebug` del Z Flip 6 se reorganiza en `SCAN`, `GRID` y
+  `DEVICES`.
+- `SCAN` muestra todos los dispositivos detectados; `GRID` muestra solo el
+  GRID a maxima escala y conserva la seleccion para el seguimiento individual;
+  `DEVICES` mantiene sus herramientas existentes.
+- El lector ficticio de `IDENTIFICATION` adopta una presentación PIP-BOY con
+  marco técnico, retícula, anillos y línea de escaneo animada.
+- La edición externa de P.R.S. pasa a un menú principal `SCAN`, `GRID` y
+  `DEVICES`; GRID queda sin marco, DEVICES adapta sus controles a la pantalla
+  exterior y BACK vuelve al menú anterior sin cerrar la aplicación.
+
+### Validacion
+
+- Z Flip 6 (`SM-F741B`) conectado, autorizado y con `prsOnlyDebug` instalada.
+- A56 (`SM-A566B`) con `fullDebug` instalada; STATUS comprobado con titulo,
+  valores `N/A` y ACCESORIES sin recuadro.
+- Tests unitarios, Lint y ensamblados `fullDebug`/`prsOnlyDebug`: correctos.
+- El propietario confirma físicamente en el Z Flip 6 el menú `SCAN`, `GRID` y
+  `DEVICES`, el GRID sin marco, los controles de `DEVICES` visibles y BACK
+  regresando al menú anterior sin cerrar la aplicación.
+- Sprint 027 cerrado documentalmente el 2026-09-01; no se abre Sprint 028.

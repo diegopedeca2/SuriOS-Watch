@@ -25,11 +25,9 @@ import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.R
-import com.suri.pipsurios.ui.skin.SkinSession
 
 @Composable
 fun HomeOperationScreen(
-    onBack: () -> Unit,
     onInventorySelected: () -> Unit,
     onDataSelected: () -> Unit,
     onCurrentGearSelected: () -> Unit,
@@ -44,7 +42,7 @@ fun HomeOperationScreen(
             .background(PipBlack),
     ) {
         Image(
-            painter = painterResource(SkinSession.emblemResource),
+            painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
@@ -84,17 +82,6 @@ fun HomeOperationScreen(
                 onInformationSelected = onInformationSelected
             )
         }
-
-        Text(
-            text = "< BACK",
-            color = PipGreenDim,
-            fontSize = 18.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .clickable(onClick = onBack)
-                .padding(24.dp)
-        )
 
         Text(
             text = "PIP-SuriOS v2.6",

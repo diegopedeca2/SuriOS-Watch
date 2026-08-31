@@ -29,7 +29,6 @@ import com.suri.pipsurios.ui.theme.PipBlue
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipPanel
-import com.suri.pipsurios.ui.skin.SkinSession
 import androidx.compose.ui.graphics.ColorFilter
 import kotlin.math.min
 
@@ -47,12 +46,17 @@ fun PrsDensityGrid(
     probeNodes: List<PrsGridProbe> = emptyList(),
     surfaceColor: Color = PipPanel,
     showEmblem: Boolean = true,
-    showTargetLabel: Boolean = true
+    showTargetLabel: Boolean = true,
+    showFrame: Boolean = true
 ) {
-    Box(modifier = modifier.border(1.dp, PipGreenDim).background(surfaceColor)) {
+    Box(
+        modifier = modifier
+            .then(if (showFrame) Modifier.border(1.dp, PipGreenDim) else Modifier)
+            .background(surfaceColor)
+    ) {
         if (showEmblem) {
             Image(
-                painter = painterResource(SkinSession.emblemResource),
+                painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 alpha = 0.10f,

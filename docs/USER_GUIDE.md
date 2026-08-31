@@ -6,7 +6,9 @@
 > empty; no physical field procedure is part of the current scope.
 
 > The `prsOnlyDebug` edition is optimized for the Z Flip 6 external display:
-> centered `P.R.S.`, radar on the left and a names-only list on the right.
+> the main menu offers `SCAN`, `GRID` and `DEVICES`; `SCAN` shows all detected
+> devices, `GRID` shows the density display and `DEVICES` keeps the
+> device-management tools.
 
 Manual oficial de usuario — PIP-SuriOS v2.6
 
@@ -39,18 +41,13 @@ La navegación interna, el inventario, CURRENT GEAR, STATUS, las conversiones Mo
 
 Al abrir PIP-SuriOS aparece una secuencia de arranque automática:
 
-1. `LOADING...`
-2. `LOG-IN ID: SURI-14 VERIFIED`
-3. Los módulos de HOME se inicializan en el orden SET-UP, CURRENT GEAR, INVENTORY, STATUS, DATA y TOOLS. Cada línea muestra primero `LOADING MÓDULO.....` y después `READY`.
-4. `SYSTEM READY`
-5. `SELECT SKIN`
+1. `IDENTIFICATION`: muestra un lector de huellas ficticio con una interfaz visual inspirada en PIP-BOY. Pulse el lector para continuar.
+2. `LOG-IN CONFIRMED > ID:<OPERATOR>` se escribe letra a letra.
+3. Los módulos de HOME se inicializan en el orden SET-UP, CURRENT GEAR, INVENTORY, STATUS, DATA y TOOLS. Cada línea se escribe letra a letra con el formato `> MÓDULO..... READY`.
+4. `SYSTEM BOOTING UP, WELCOME <OPERATOR>` se escribe letra a letra.
+5. `HOMESCREEN` queda disponible con el diseño original y sus módulos operativos.
 
-Después puede elegirse una skin visual:
-
-- **BROTHERHOOD OF STEEL:** skin funcional disponible; abre el HOME operativo y todas las funciones descritas en este manual.
-- **SALAMANDER**, **IRON HAND**, **ADEPTUS MECHANICUS**, **NECRON** y **MANDALORIAN:** aparecen como `UNDER CONSTRUCTION`. Pulse `< BACK` para regresar a `SELECT SKIN`.
-
-La selección no se recuerda al cerrar la aplicación. Las skins cambian únicamente la presentación; las funciones y los datos permanecen compartidos.
+El valor `<OPERATOR>` es el ID guardado en `SET-UP - OPERATOR`. Si no existe, LOADING muestra `PLEASE SET YOUR USER` y abre directamente `SET-UP - OPERATOR` para configurarlo.
 
 ## 3. HOME
 
@@ -94,9 +91,12 @@ Desde HOMESCREEN, pulse **TOOLS > MAP** y elija uno de sus dos modos.
 
 Al entrar muestra **CHOOSE LOCATION** y no carga ningún mapa automáticamente.
 Dentro del selector, **CHOOSE LOCATION** permanece como primera opción; después
-se muestran los mapas disponibles en orden alfabético: `HOME` y `NAVY7`.
+se muestran los mapas disponibles en orden alfabético: `HOME`, `NAVY7` y `OFFICE`.
 NAVY7 es un mapa topográfico incluido completamente offline en la aplicación y
 no necesita conexión a Internet.
+OFFICE es un mapa urbano incluido completamente offline, centrado en
+`40.43717182620207, -3.620425636696507` y generado con datos reales de
+OpenStreetMap. Su escala y estilo siguen el contrato visual de TERRAIN.
 
 - Arrastre con un dedo para desplazarse.
 - Use pinch con dos dedos para ampliar o reducir. No hay botones de zoom.
@@ -241,16 +241,29 @@ Si sale sin pulsar APPLY, STATUS continúa mostrando el último Loadout Activo c
 
 Desde HOMESCREEN, pulse **STATUS** para consultar el Loadout Activo confirmado mediante APPLY.
 
-STATUS muestra:
+STATUS muestra una silueta central provisional de la armadura T-45, con líneas
+que conectan cada zona con el valor correspondiente. En la pantalla principal
+se muestra únicamente la pieza seleccionada, por ejemplo `L96`, o `N/A` si no
+hay ninguna configurada. `ACCESORIES` es la única excepción: conserva su
+nombre como elemento pulsable y abre un submenú con el detalle de los
+accesorios.
 
-- PRIMARY WEAPON
-- SECONDARY WEAPON
-- ACCESORIES
-- HEADGEAR
-- FRONT PANEL
-- UNIFORM
+- HEADGEAR sale de la cabeza.
+- PRIMARY WEAPON sale del brazo derecho.
+- SECONDARY WEAPON sale del brazo izquierdo.
+- ACCESORIES sale de la cintura y abre un submenú con los accesorios marcados.
+- FRONT PANEL sale del pecho.
+- UNIFORM sale de la pierna derecha.
 
-Los apartados aún no configurados aparecen como `NOT CONFIGURED`. STATUS es una pantalla de consulta: los cambios de equipo se realizan desde CURRENT GEAR.
+Los elementos aún no configurados aparecen como `N/A`. La silueta actual es un
+recurso visual provisional preparado para sustituirse por el gráfico T-45 final.
+STATUS es una pantalla de consulta: los cambios de equipo se realizan desde
+CURRENT GEAR.
+
+### STATUS - ACCESORIES
+
+Pulse `ACCESORIES` para consultar el detalle de los accesorios seleccionados.
+Si no hay ninguno configurado, el submenú muestra `N/A`.
 
 ### DON'T FORGET
 
@@ -352,9 +365,19 @@ sí sola de forma importante la representación ni la tendencia.
   actualmente vacío; no forma parte del alcance actual.
 
 La variante `prsOnlyDebug`, destinada a la pantalla externa del Z Flip 6,
-arranca directamente en `SCAN`: `P.R.S.` queda centrado, el radar ocupa la
-mitad izquierda y la lista de nombres ocupa la mitad derecha. No expone
-`SCAN + PROBE`.
+arranca en un menú principal con tres opciones:
+
+- **SCAN:** muestra la lista completa de dispositivos detectados. Pulse una
+  fila para iniciar o detener el seguimiento individual.
+- **GRID:** muestra únicamente el GRID, ampliado para ocupar el máximo espacio
+  disponible y sin marco exterior. Si se ha seleccionado un dispositivo en
+  `SCAN`, el objetivo se resalta también dentro del GRID.
+- **DEVICES:** conserva la gestión actual de dispositivos, identificación,
+  reglas guardadas y guía de direcciones MAC.
+
+El botón de retroceso vuelve al menú anterior; no cierra la aplicación.
+
+No expone `SCAN + PROBE` en la edición externa.
 
 #### CONTACT LIST y TRACK TARGET
 
@@ -499,7 +522,6 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 
 ## 12. Limitaciones conocidas
 
-- Las skins SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN permanecen en construcción.
 - MAP TERRAIN está técnicamente aceptado, pero su alineación GPS, heading, ergonomía, Geiger y consumo requieren validación física exterior en NAVY7.
 - Las modificaciones temporales de CURRENT GEAR, el Loadout Activo y el checklist no se guardan permanentemente. La configuración base de SET-UP sí se conserva.
 - STORAGE sí conserva PURCHASE y USED permanentemente; BBs y los formatos individuales de GAS todavía no tienen consumo automático.
@@ -530,7 +552,7 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v1.7** | Incorporación de TOOLS con el contador posteriormente denominado RADS y SONAR, junto con sus sonidos y refinamientos visuales. |
 | **v1.9** | Incorporación del historial DATA con alta, consulta, edición, borrado y estadísticas; UNIFORM en todo el flujo; RADS; nueva disposición de SONAR y refinamientos de arranque y DON'T FORGET. |
 | **v2.0** | RADS V2 con control progresivo y modo de inclinación; STORAGE persistente con PURCHASE, USED, CONSUMED y TOTAL dinámico enlazado al historial operativo. |
-| **v2.1** | P.R.S. TESTING experimental, P.R.S. v1.0/v2.0, MAP TERRAIN offline NAVY7, selección inicial de skins y reorganización de TOOLS. |
+| **v2.1** | P.R.S. TESTING experimental, P.R.S. v1.0/v2.0, MAP TERRAIN offline NAVY7 y reorganización de TOOLS. |
 | **v2.2** | P.R.S. REMOTE PROBE experimental para Xiaomi Watch 2, recepción Wi-Fi local en A56, almacenamiento bruto y comparación conservadora entre nodos. |
 | **v2.3** | SET-UP vertical con INPUT/DATA, perfil de operador persistente, réplicas primarias de texto libre y WATCH 2 en ACCESORIES. |
 | **v2.4** | Firma visible y versión técnica actualizadas; P.R.S. compacto para pantalla externa y categorías inferidas de dispositivo. |

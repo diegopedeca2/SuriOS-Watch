@@ -66,6 +66,8 @@ private val INFORMATION_DISCLAIMERS = listOf(
     "DESARROLLO",
     "El código de esta aplicación se ha desarrollado con asistencia del agente de inteligencia artificial Codex. La revisión, integración, validación y responsabilidad final del código corresponden al desarrollador.",
     "El desarrollo de SuriOS se ha realizado desde cero. Los elementos externos utilizados se identifican en la documentación correspondiente, junto con el reconocimiento de sus titulares y las condiciones de uso conocidas.",
+    "PRIVACIDAD",
+    "El lector de huellas de la pantalla de inicio es ficticio. No se realiza ninguna lectura de huellas ni se almacenan datos personales.",
     "USO Y DISTRIBUCIÓN",
     "Esta aplicación se ha desarrollado sin fines comerciales. Cualquier uso lucrativo, distribución o explotación posterior será responsabilidad exclusiva de quien lo realice y deberá respetar la normativa aplicable y los derechos de terceros.",
     "La aplicación se distribuye para uso privado. Si se ha obtenido por un medio distinto del desarrollador, no se garantiza su autenticidad, integridad, seguridad, funcionamiento o compatibilidad. El usuario será responsable de verificar su procedencia, de los efectos de su instalación en el dispositivo y del cumplimiento de la normativa aplicable en materia de propiedad intelectual."

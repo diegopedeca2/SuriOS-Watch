@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -69,11 +70,19 @@ import com.suri.pipsurios.ui.theme.PipPanel
 import com.suri.pipsurios.ui.theme.PipActionBackground
 import kotlinx.coroutines.delay
 
+enum class PrsCompactPage {
+    SCAN,
+    GRID
+}
+
 @Composable
 fun PrsTrackingScreen(
     mode: PrsOperatingMode,
     onBack: () -> Unit,
-    compact: Boolean = false
+    compact: Boolean = false,
+    compactPage: PrsCompactPage = PrsCompactPage.SCAN,
+    onCompactPageSelected: (PrsCompactPage) -> Unit = {},
+    onCompactDevicesSelected: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scanner = remember(context) { BleScanner(context.applicationContext) }
@@ -197,6 +206,7 @@ fun PrsTrackingScreen(
     PrsTrackingContent(
         mode = mode,
         compact = compact,
+        compactPage = compactPage,
         snapshot = snapshot,
         scanStatus = scanStatus,
         probeNode = probeNode,
@@ -222,7 +232,9 @@ fun PrsTrackingScreen(
             snapshot = tracker.snapshot()
             selectedContactId = null
         },
-        onBack = onBack
+        onBack = onBack,
+        onCompactPageSelected = onCompactPageSelected,
+        onCompactDevicesSelected = onCompactDevicesSelected
     )
 }
 
@@ -230,6 +242,7 @@ fun PrsTrackingScreen(
 private fun PrsTrackingContent(
     mode: PrsOperatingMode,
     compact: Boolean,
+    compactPage: PrsCompactPage,
     snapshot: PrsSnapshot,
     scanStatus: BleScanStatus,
     probeNode: PrsProbeNodeSnapshot,
@@ -241,16 +254,16 @@ private fun PrsTrackingContent(
     onGrantPermission: () -> Unit,
     onRetry: () -> Unit,
     onClear: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCompactPageSelected: (PrsCompactPage) -> Unit,
+    onCompactDevicesSelected: () -> Unit
 ) {
     val selected = snapshot.contact(selectedContactId)
     if (compact) {
         PrsCompactTrackingContent(
-            mode = mode,
+            page = compactPage,
             snapshot = snapshot,
             scanStatus = scanStatus,
-            probeNode = probeNode,
-            probeLinkStatus = probeLinkStatus,
             gridProbe = gridProbe,
             selectedContactId = selectedContactId,
             onSelectContact = onSelectContact,
@@ -258,7 +271,9 @@ private fun PrsTrackingContent(
             onGrantPermission = onGrantPermission,
             onRetry = onRetry,
             onClear = onClear,
-            onBack = onBack
+            onBack = onBack,
+            onPageSelected = onCompactPageSelected,
+            onDevicesSelected = onCompactDevicesSelected
         )
         return
     }
@@ -444,11 +459,9 @@ private fun PrsTrackingContent(
 
 @Composable
 private fun PrsCompactTrackingContent(
-    mode: PrsOperatingMode,
+    page: PrsCompactPage,
     snapshot: PrsSnapshot,
     scanStatus: BleScanStatus,
-    probeNode: PrsProbeNodeSnapshot,
-    probeLinkStatus: String,
     gridProbe: PrsGridProbe?,
     selectedContactId: String?,
     onSelectContact: (String) -> Unit,
@@ -456,115 +469,224 @@ private fun PrsCompactTrackingContent(
     onGrantPermission: () -> Unit,
     onRetry: () -> Unit,
     onClear: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onPageSelected: (PrsCompactPage) -> Unit,
+    onDevicesSelected: () -> Unit
 ) {
     val selected = snapshot.contact(selectedContactId)
-    val panelScroll = rememberScrollState()
     val retryNeeded = scanStatus == BleScanStatus.PERMISSION_REQUIRED ||
         scanStatus == BleScanStatus.BLUETOOTH_OFF ||
         scanStatus == BleScanStatus.ERROR
 
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 56.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("P.R.S.", color = PipGreen, fontSize = 21.sp, fontFamily = FontFamily.Monospace)
-            }
-            if (mode.probeEnabled) {
-                Text(
-                    "PROBE: ${probeNode.state} // ${probeLinkStatus.take(28)}",
-                    color = probeStatusColor(probeNode.state),
-                    fontSize = 9.sp,
-                    fontFamily = FontFamily.Monospace,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
+        when (page) {
+            PrsCompactPage.SCAN -> PrsCompactScanPage(
+                snapshot = snapshot,
+                scanStatus = scanStatus,
+                selectedContactId = selectedContactId,
+                retryNeeded = retryNeeded,
+                onSelectContact = onSelectContact,
+                onGrantPermission = onGrantPermission,
+                onRetry = onRetry,
+                onClearTarget = onClearTarget,
+                onClear = onClear
+            )
 
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    PrsDensityGrid(
-                        contacts = snapshot.contacts,
-                        selectedContactId = selectedContactId,
-                        selectedDisplayName = selected?.displayNameWithCategory(),
-                        probeNodes = listOfNotNull(gridProbe),
-                        modifier = Modifier
-                            .fillMaxWidth(0.92f)
-                            .aspectRatio(1f)
-                        )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .border(1.dp, PipGreenDim.copy(alpha = 0.45f))
-                        .padding(6.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize().verticalScroll(panelScroll),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        snapshot.contacts.forEach { contact ->
-                            CompactContactListRow(
-                                contact = contact,
-                                selected = contact.contactId == selectedContactId,
-                                onClick = {
-                                    if (contact.contactId == selectedContactId) onClearTarget()
-                                    else onSelectContact(contact.contactId)
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                if (retryNeeded) {
-                    PrsButton(
-                        if (scanStatus == BleScanStatus.PERMISSION_REQUIRED) "> ALLOW" else "> RETRY",
-                        onClick = if (scanStatus == BleScanStatus.PERMISSION_REQUIRED) onGrantPermission else onRetry,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (selected != null) {
-                    PrsButton(
-                        "> STOP",
-                        onClick = onClearTarget,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                PrsButton(
-                    "> CLEAR",
-                    onClick = onClear,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            PrsCompactPage.GRID -> PrsCompactGridPage(
+                snapshot = snapshot,
+                scanStatus = scanStatus,
+                gridProbe = gridProbe,
+                selectedContactId = selectedContactId,
+                selectedDisplayName = selected?.displayNameWithCategory()
+            )
         }
 
+        PrsCompactNavigation(
+            page = page,
+            onPageSelected = onPageSelected,
+            onDevicesSelected = onDevicesSelected,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
         PrsBackButton(
             onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(6.dp)
+            modifier = Modifier.align(Alignment.BottomStart).padding(10.dp)
         )
     }
+}
+
+@Composable
+private fun PrsCompactScanPage(
+    snapshot: PrsSnapshot,
+    scanStatus: BleScanStatus,
+    selectedContactId: String?,
+    retryNeeded: Boolean,
+    onSelectContact: (String) -> Unit,
+    onGrantPermission: () -> Unit,
+    onRetry: () -> Unit,
+    onClearTarget: () -> Unit,
+    onClear: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 76.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Text("SCAN", color = PipGreen, fontSize = 21.sp, fontFamily = FontFamily.Monospace)
+            Text("${snapshot.contacts.size} NODES", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+        }
+        Text(
+            "A56: ${scanStatus.name.replace('_', ' ')}",
+            color = scanStatusColor(scanStatus),
+            fontSize = 9.sp,
+            fontFamily = FontFamily.Monospace
+        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .border(1.dp, PipGreenDim.copy(alpha = 0.45f))
+                .padding(6.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            if (snapshot.contacts.isEmpty()) {
+                Text(
+                    "WAITING FOR BLE ADVERTISEMENTS...",
+                    color = PipGreenDim,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace
+                )
+            } else {
+                snapshot.contacts.forEach { contact ->
+                    CompactContactListRow(
+                        contact = contact,
+                        selected = contact.contactId == selectedContactId,
+                        onClick = {
+                            if (contact.contactId == selectedContactId) onClearTarget()
+                            else onSelectContact(contact.contactId)
+                        }
+                    )
+                }
+            }
+        }
+        CompactActionRow(
+            retryNeeded = retryNeeded,
+            permissionRequired = scanStatus == BleScanStatus.PERMISSION_REQUIRED,
+            selected = selectedContactId != null,
+            onGrantPermission = onGrantPermission,
+            onRetry = onRetry,
+            onClearTarget = onClearTarget,
+            onClear = onClear
+        )
+    }
+}
+
+@Composable
+private fun PrsCompactGridPage(
+    snapshot: PrsSnapshot,
+    scanStatus: BleScanStatus,
+    gridProbe: PrsGridProbe?,
+    selectedContactId: String?,
+    selectedDisplayName: String?
+) {
+    Box(modifier = Modifier.fillMaxSize().padding(bottom = 52.dp)) {
+        PrsDensityGrid(
+            contacts = snapshot.contacts,
+            selectedContactId = selectedContactId,
+            selectedDisplayName = selectedDisplayName,
+            probeNodes = listOfNotNull(gridProbe),
+            showFrame = false,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        if (scanStatus != BleScanStatus.SCANNING) {
+            Text(
+                "A56: ${scanStatus.name.replace('_', ' ')}",
+                color = scanStatusColor(scanStatus),
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.align(Alignment.TopStart).padding(12.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CompactActionRow(
+    retryNeeded: Boolean,
+    permissionRequired: Boolean,
+    selected: Boolean,
+    onGrantPermission: () -> Unit,
+    onRetry: () -> Unit,
+    onClearTarget: () -> Unit,
+    onClear: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (retryNeeded) {
+            PrsButton(
+                if (permissionRequired) "> ALLOW" else "> RETRY",
+                onClick = if (permissionRequired) onGrantPermission else onRetry,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        if (selected) {
+            PrsButton(
+                "> STOP",
+                onClick = onClearTarget,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        PrsButton(
+            "> CLEAR",
+            onClick = onClear,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+private fun PrsCompactNavigation(
+    page: PrsCompactPage,
+    onPageSelected: (PrsCompactPage) -> Unit,
+    onDevicesSelected: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(PipBlack)
+            .padding(horizontal = 6.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        CompactNavigationItem("SCAN", page == PrsCompactPage.SCAN) {
+            onPageSelected(PrsCompactPage.SCAN)
+        }
+        CompactNavigationItem("GRID", page == PrsCompactPage.GRID) {
+            onPageSelected(PrsCompactPage.GRID)
+        }
+        CompactNavigationItem("DEVICES", selected = false, onClick = onDevicesSelected)
+    }
+}
+
+@Composable
+private fun CompactNavigationItem(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Text(
+        text = "> $label",
+        color = if (selected) PipAmber else PipGreenDim,
+        fontSize = 11.sp,
+        fontFamily = FontFamily.Monospace,
+        modifier = Modifier.clickable(onClick = onClick).padding(horizontal = 2.dp, vertical = 2.dp)
+    )
 }
 
 @Composable

@@ -35,14 +35,7 @@ Al abrir PIP-SuriOS aparece una secuencia de arranque automática:
 2. `LOG-IN ID: SURI-14 VERIFIED`
 3. Los módulos de HOME se inicializan en el orden SET-UP, CURRENT GEAR, INVENTORY, STATUS, DATA y TOOLS. Cada línea muestra primero `LOADING MÓDULO.....` y después `READY`.
 4. `SYSTEM READY`
-5. `SELECT SKIN`
-
-Después puede elegirse una skin visual:
-
-- **BROTHERHOOD OF STEEL:** skin funcional disponible; abre el HOME operativo y todas las funciones descritas en este manual.
-- **SALAMANDER**, **IRON HAND**, **ADEPTUS MECHANICUS**, **NECRON** y **MANDALORIAN:** aparecen como `UNDER CONSTRUCTION`. Pulse `< BACK` para regresar a `SELECT SKIN`.
-
-La selección no se recuerda al cerrar la aplicación. Las skins cambian únicamente la presentación; las funciones y los datos permanecen compartidos.
+5. `HOMESCREEN` queda disponible con el diseño original y sus módulos operativos.
 
 ## 3. HOME
 
@@ -402,7 +395,6 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 
 ## 12. Limitaciones conocidas
 
-- Las skins SALAMANDER, IRON HAND, ADEPTUS MECHANICUS, NECRON y MANDALORIAN permanecen en construcción.
 - MAP TERRAIN está técnicamente aceptado, pero su alineación GPS, heading, ergonomía, Geiger y consumo requieren validación física exterior en NAVY7.
 - Las modificaciones temporales de CURRENT GEAR, el Loadout Activo, el checklist y la calibración de P.R.S. v1.0 no se guardan permanentemente. La configuración base de SET-UP sí se conserva.
 - STORAGE sí conserva PURCHASE y USED permanentemente; BBs y los formatos individuales de GAS todavía no tienen consumo automático.
@@ -431,7 +423,7 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v1.7** | Incorporación de TOOLS con el contador posteriormente denominado RADS y SONAR, junto con sus sonidos y refinamientos visuales. |
 | **v1.9** | Incorporación del historial DATA con alta, consulta, edición, borrado y estadísticas; UNIFORM en todo el flujo; RADS; nueva disposición de SONAR y refinamientos de arranque y DON'T FORGET. |
 | **v2.0** | RADS V2 con control progresivo y modo de inclinación; STORAGE persistente con PURCHASE, USED, CONSUMED y TOTAL dinámico enlazado al historial operativo. |
-| **v2.1** | P.R.S. TESTING experimental, P.R.S. v1.0/v2.0, MAP TERRAIN offline NAVY7, selección inicial de skins y reorganización de TOOLS. |
+| **v2.1** | P.R.S. TESTING experimental, P.R.S. v1.0/v2.0, MAP TERRAIN offline NAVY7 y reorganización de TOOLS. |
 | **v2.2** | P.R.S. REMOTE PROBE experimental para Xiaomi Watch 2, recepción Wi-Fi local en A56, almacenamiento bruto y comparación conservadora entre nodos. |
 | **v2.3** | SET-UP vertical con INPUT/DATA, perfil de operador persistente, réplicas primarias de texto libre y WATCH 2 en ACCESORIES. |
 

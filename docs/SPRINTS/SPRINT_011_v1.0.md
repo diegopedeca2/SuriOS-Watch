@@ -12,7 +12,7 @@
 
 ## Alcance
 
-Sprint 011 se ejecutó en dos bloques funcionales aislados y añadió posteriormente los refinamientos de viewport, PAN 2D, SELECT SKIN e identidad visible v2.1.
+Sprint 011 se ejecutó en dos bloques funcionales aislados y añadió posteriormente los refinamientos de viewport, PAN 2D e identidad visible v2.1.
 
 ## PARTE 1 — SONAR-TESTING
 
@@ -67,21 +67,6 @@ El render dejó de tratar el mapa como una lámina transformada. El Canvas const
 
 El defecto de PAN vertical diagonal procedía del recorte independiente de los componentes del centro al alcanzar los límites de cobertura. La corrección convierte el vector completo entre pantalla y mundo, mantiene magnitud y ortogonalidad, y limita ambos ejes mediante un único factor escalar. No existe `panOffset` residual.
 
-## Refinamiento — SELECT SKIN y v2.1
-
-La pantalla inicial `SELECT MODE` pasa a `SELECT SKIN`. `SkinId` y `SkinCatalog` definen:
-
-- BROTHERHOOD OF STEEL — skin funcional actual;
-- SALAMANDER — UNDER CONSTRUCTION;
-- IRON HAND — UNDER CONSTRUCTION;
-- ADEPTUS MECHANICUS — UNDER CONSTRUCTION;
-- NECRON — UNDER CONSTRUCTION;
-- MANDALORIAN — UNDER CONSTRUCTION.
-
-Las skins pendientes no usan Brotherhood como fallback silencioso. La selección no se persiste todavía.
-
-Principio arquitectónico: las futuras skins pueden cambiar paleta, fondos, tipografía, imágenes, iconografía, emblemas y sonidos exclusivamente estéticos, manteniendo compartidos navegación, modelos, repositories, persistencia, BLE, GPS, DATA, STORAGE, MAP, SONAR y RADS. Una skin no constituye otra aplicación ni una bifurcación funcional.
-
 La firma visible consolidada es `PIP-SuriOS v2.1`. `app/src/main` contiene cero firmas visibles v2.0. El `versionName` técnico de Gradle permanece fuera de este versionado visual y no fue modificado por el Sprint.
 
 ## Validación completada
@@ -96,7 +81,7 @@ La firma visible consolidada es `PIP-SuriOS v2.1`. `app/src/main` contiene cero 
 - SONAR estable sin regresiones funcionales.
 - `SonarTuning` sin cambios.
 - MAP OPERATION, RADS, DATA, STORAGE y navegación principal sin regresiones funcionales.
-- SELECT SKIN, NAVY7 offline y entrada SONAR-TESTING comprobados.
+- NAVY7 offline y entrada SONAR-TESTING comprobados.
 
 ## FIELD VALIDATION posterior
 

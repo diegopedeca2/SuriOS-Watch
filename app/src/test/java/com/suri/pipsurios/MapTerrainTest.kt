@@ -82,9 +82,18 @@ class MapTerrainTest {
     }
 
     @Test fun terrainCatalogKeepsChooseLocationFirstAndMapsAlphabetical() {
-        assertEquals(listOf("HOME", "NAVY7"), OfflineMapCatalog.maps.map { it.name })
+        assertEquals(listOf("HOME", "NAVY7", "OFFICE"), OfflineMapCatalog.maps.map { it.name })
         assertEquals("choose-location", TerrainFieldSelection.CHOOSE_LOCATION_ID)
         assertEquals("CHOOSE LOCATION", TerrainFieldSelection.CHOOSE_LOCATION_LABEL)
+    }
+
+    @Test fun officeCenterMatchesSprint027RequestedCoordinates() {
+        val center = OfflineMapCatalog.OFFICE.bounds.center
+        assertEquals(40.43717182620207, center.latitude, 1e-12)
+        assertEquals(-3.620425636696507, center.longitude, 1e-12)
+        assertTrue(OfflineMapCatalog.OFFICE.bounds.contains(center))
+        assertEquals("maps/office_terrain.mbtiles", OfflineMapCatalog.OFFICE.assetPath)
+        assertEquals(19, OfflineMapCatalog.OFFICE.maxNativeZoom)
     }
 
     @Test fun sprint23Navy7CenterMatchesRequestedCoordinates() {

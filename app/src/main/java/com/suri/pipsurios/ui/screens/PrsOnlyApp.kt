@@ -1,6 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
-import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,16 +10,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,28 +29,41 @@ import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 
 private enum class PrsOnlyPage {
-    TRACKING,
     MENU,
+    SCAN,
+    GRID,
     DEVICES
 }
 
 /** Compact entry point for the cover-screen P.R.S. edition. */
 @Composable
 fun PrsOnlyApp() {
-    val context = LocalContext.current
-    var page by remember { mutableStateOf(PrsOnlyPage.TRACKING) }
+    var page by remember { mutableStateOf(PrsOnlyPage.MENU) }
+
+    BackHandler(enabled = page == PrsOnlyPage.SCAN || page == PrsOnlyPage.GRID) {
+        page = PrsOnlyPage.MENU
+    }
 
     when (page) {
-        PrsOnlyPage.TRACKING -> PrsTrackingScreen(
-            mode = PrsOperatingMode.LOCAL_SCAN,
-            compact = true,
-            onBack = { page = PrsOnlyPage.MENU }
+        PrsOnlyPage.MENU -> PrsOnlyMenuScreen(
+            onScanSelected = { page = PrsOnlyPage.SCAN },
+            onGridSelected = { page = PrsOnlyPage.GRID },
+            onDevicesSelected = { page = PrsOnlyPage.DEVICES }
         )
 
-        PrsOnlyPage.MENU -> PrsOnlyMenuScreen(
-            onLocalScanSelected = { page = PrsOnlyPage.TRACKING },
-            onDevicesSelected = { page = PrsOnlyPage.DEVICES },
-            onBack = { (context as? Activity)?.finish() }
+        PrsOnlyPage.SCAN,
+        PrsOnlyPage.GRID -> PrsTrackingScreen(
+            mode = PrsOperatingMode.LOCAL_SCAN,
+            compact = true,
+            compactPage = if (page == PrsOnlyPage.SCAN) PrsCompactPage.SCAN else PrsCompactPage.GRID,
+            onCompactPageSelected = { selectedPage ->
+                page = when (selectedPage) {
+                    PrsCompactPage.SCAN -> PrsOnlyPage.SCAN
+                    PrsCompactPage.GRID -> PrsOnlyPage.GRID
+                }
+            },
+            onCompactDevicesSelected = { page = PrsOnlyPage.DEVICES },
+            onBack = { page = PrsOnlyPage.MENU }
         )
 
         PrsOnlyPage.DEVICES -> PrsDevicesScreen(
@@ -63,42 +75,46 @@ fun PrsOnlyApp() {
 
 @Composable
 private fun PrsOnlyMenuScreen(
-    onLocalScanSelected: () -> Unit,
-    onDevicesSelected: () -> Unit,
-    onBack: () -> Unit
+    onScanSelected: () -> Unit,
+    onGridSelected: () -> Unit,
+    onDevicesSelected: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PipBlack)
+            .safeDrawingPadding()
+    ) {
+        Text(
+            text = "P.R.S.",
+            color = PipGreen,
+            fontSize = 22.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopStart).padding(16.dp)
+        )
+
         Column(
             modifier = Modifier
-                .widthIn(max = 410.dp)
-                .fillMaxWidth()
                 .align(Alignment.Center)
-            .padding(horizontal = 18.dp),
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text("P.R.S. / COVER", color = PipGreen, fontSize = 24.sp, fontFamily = FontFamily.Monospace)
-            Text("MOTORCYCLE PROFILE // LOCAL BLE ONLY", color = PipAmber, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
-            PrsOnlyMenuRow(
-                label = "> SCAN",
-                detail = "A56 BLE / RSSI DENSITY",
-                onClick = onLocalScanSelected
+            Text(
+                text = "SELECT MENU",
+                color = PipAmber,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Monospace
             )
-            PrsOnlyMenuRow(
-                label = "> DEVICES",
-                detail = "IDENTIFY / SAVED FILTERS",
-                onClick = onDevicesSelected
-            )
+            PrsOnlyMenuItem("> SCAN", "LIVE BLE CONTACTS", onScanSelected)
+            PrsOnlyMenuItem("> GRID", "DENSITY DISPLAY", onGridSelected)
+            PrsOnlyMenuItem("> DEVICES", "DEVICE RULES", onDevicesSelected)
         }
-
-        PrsBackButton(
-            onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(8.dp)
-        )
     }
 }
 
 @Composable
-private fun PrsOnlyMenuRow(
+private fun PrsOnlyMenuItem(
     label: String,
     detail: String,
     onClick: () -> Unit
@@ -106,11 +122,12 @@ private fun PrsOnlyMenuRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, PipGreenDim.copy(alpha = 0.7f))
+            .border(1.dp, PipGreenDim.copy(alpha = 0.72f))
             .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 10.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        Text(label, color = PipGreen, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
-        Text(detail, color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+        Text(label, color = PipGreen, fontSize = 15.sp, fontFamily = FontFamily.Monospace)
+        Text(detail, color = PipGreenDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
     }
 }

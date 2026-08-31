@@ -11,7 +11,7 @@ Z Flip 6 y la incorporación de categorías de dispositivo en `prsOnlyDebug` y
 en PIP-SuriOS `fullDebug`. Sprint 016 conserva su propio cierre histórico;
 esta iteración queda atribuida exclusivamente a Sprint 017.
 
-Los trabajos paralelos de mapas y skins quedan fuera de alcance: no se auditan,
+Los trabajos paralelos de mapas quedan fuera de alcance: no se auditan,
 no se modifican y no se incluyen en las conclusiones de este documento.
 
 ## Implementación revisada

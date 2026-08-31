@@ -44,7 +44,7 @@ Reorganizar SET-UP para que sea un flujo de configuracion vertical y reutilizabl
 
 - No se modifica la logica de escaneo, gateway, comparacion o persistencia de P.R.S. REMOTE PROBE.
 - No se cambia la version de PIW-SuriOS Watch ni del modulo independiente REMOTE PROBE.
-- No se implementan skins nuevas ni una refactorizacion general de navegacion.
+- No se realiza una refactorización general de navegación.
 
 ## Validacion
 

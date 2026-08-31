@@ -23,6 +23,10 @@ local.properties
 /symbology-style.db
 /Back-up docs/RELEASES/PIP-SuriOS_v2.3_SPRINT_014/apk/
 
+# Python GIS interpreter cache.
+**/__pycache__/
+*.pyc
+
 # Machine-local Android Studio state not required to build the project.
 /.idea/deviceManager.xml
 /.idea/dictionaries/
