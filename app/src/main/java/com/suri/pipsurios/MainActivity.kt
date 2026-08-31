@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import com.suri.pipsurios.BuildConfig
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.screens.HomeOperationScreen
+import com.suri.pipsurios.InformationActivity
 import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
@@ -422,6 +423,10 @@ private fun PIPSuriOSApp(
         setUpLauncher.launch(Intent(context, SetUpActivity::class.java))
     }
 
+    fun launchInformation() {
+        context.startActivity(Intent(context, InformationActivity::class.java))
+    }
+
     fun launchDateLocation() {
         pendingVerticalStep = VerticalOperationStep.DATE_LOCATION
         operationInputLauncher.launch(
@@ -644,7 +649,8 @@ private fun PIPSuriOSApp(
                 onCurrentGearSelected = { destination = PIPSuriOSDestination.CurrentGearLoading },
                 onSetUpSelected = ::launchSetUp,
                 onStatusSelected = { destination = PIPSuriOSDestination.StatusLoading },
-                onToolsSelected = { destination = PIPSuriOSDestination.ToolsLoading }
+                onToolsSelected = { destination = PIPSuriOSDestination.ToolsLoading },
+                onInformationSelected = ::launchInformation
             )
 
             PIPSuriOSDestination.ToolsLoading -> ToolsLoadingScreen(

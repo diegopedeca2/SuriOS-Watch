@@ -218,7 +218,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
             radiation.reset()
             geigerLevel = 0f
         } else {
-            geigerLevel = radiation.update(distance.first, distance.second, current?.accuracyMeters ?: Float.MAX_VALUE)
+            geigerLevel = radiation.update(distance.first, distance.second, current.accuracyMeters)
         }
     }
     LaunchedEffect(geigerLevel > 0.005f, hasSelectedMap) {

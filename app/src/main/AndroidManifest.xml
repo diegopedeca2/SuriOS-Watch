@@ -56,6 +56,13 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity,DiscouragedApi" />
         <activity
+            android:name=".InformationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
             android:name=".StatisticsLaunchActivity"
             android:exported="true"
             android:screenOrientation="landscape"

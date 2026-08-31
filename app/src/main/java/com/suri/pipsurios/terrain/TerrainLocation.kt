@@ -47,6 +47,7 @@ class TerrainLocation(private val context: Context) {
                 if (providers.all { it == provider || !locationManager.isProviderEnabled(it) }) onUnavailable()
             }
             override fun onProviderEnabled(provider: String) = Unit
+            @Deprecated("Deprecated by Android API 29; provider status is no longer reported.")
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) = Unit
         }
         listener = active

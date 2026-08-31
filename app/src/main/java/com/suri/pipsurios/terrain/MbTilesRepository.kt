@@ -121,7 +121,7 @@ class MbTilesRepository(private val context: Context) {
         require(metadata["maxzoom"]?.toIntOrNull() == definition.maxNativeZoom) { "MBTiles maxzoom mismatch" }
         val bounds = metadata["bounds"]?.split(',')?.mapNotNull(String::toDoubleOrNull)
         require(bounds?.size == 4) { "MBTiles bounds missing" }
-        val parsedBounds = bounds ?: error("MBTiles bounds missing")
+        val parsedBounds = bounds
         val expected = listOf(
             definition.bounds.west,
             definition.bounds.south,

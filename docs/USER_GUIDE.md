@@ -64,6 +64,7 @@ La pantalla `HOMESCREEN` es el punto principal de acceso. Contiene:
 - **STATUS:** consulta del Loadout Activo y checklist DON'T FORGET.
 - **DATA:** registro permanente, consulta, edición, borrado y estadísticas de operaciones.
 - **TOOLS:** acceso a COMMS, MAP, PROXIMITY RADIO SCANNER y RADS.
+- **INFORMATION:** acceso a ACKNOWLEDGEMENTS y DISCLAIMERS.
 
 MAP y COMMS se abren desde TOOLS. Algunos módulos muestran brevemente `LOADING...` antes de abrirse. Utilice `< BACK` para regresar al nivel anterior.
 
@@ -73,9 +74,15 @@ SET-UP se abre en orientación vertical y se divide en dos submenús:
 
 - **INPUT:** introducción de OPERATOR, PRIMARY WEAPON, SECONDARY WEAPON, ACCESORIES, HEADGEAR, FRONT PANEL y UNIFORM.
 - **DATA:** consulta de los datos guardados, con `EDIT` y `DELETE` para cada campo disponible.
-- **ACKNOWLEDGEMENTS:** visualizador de solo lectura con la lista de personas y equipos que han prestado apoyo concreto al proyecto. Las ampliaciones se realizan mediante código.
 
 En **OPERATOR** se pueden introducir ID, NAME, CALLSIGN, NUMBER, COUNTRY y TEAM. En **PRIMARY WEAPON**, ROLE continúa siendo un selector desplegable y WEAPON es un campo de texto libre para escribir cualquier réplica o combinación personalizada. Los cambios se guardan al introducirlos y se reutilizan como base de CURRENT GEAR.
+
+### INFORMATION
+
+`INFORMATION` se abre desde la columna derecha de `HOMESCREEN` y contiene:
+
+- **ACKNOWLEDGEMENTS:** listado de solo lectura de las personas y equipos que han prestado apoyo concreto al proyecto.
+- **DISCLAIMERS:** avisos de propiedad intelectual, procedencia, desarrollo, uso y distribución de la aplicación.
 
 ACCESORIES incluye `WATCH 2` junto a los accesorios existentes. Su ficha de INVENTORY permanece informativa y marcada como `UNDER CONSTRUCTION`.
 
@@ -530,7 +537,8 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v2.5** | Auditoría de Sprint 019, backup local desactivado y correcciones de cierre de RAD ZONE/Geiger. |
 | **v2.6** | Reconstrucción de TERRAIN NAVY7 con el modelo dimensional y visual estándar de HOME, y validación offline en el A56. |
 | **v3.0** | Reconstrucción de P.R.S.: LOCAL SCAN, SCAN + PROBE, histórico temporal RSSI, nubes de densidad, TRACK TARGET, DEVICES y categorías inferidas de dispositivo. |
-| **v3.1** | INDIVIDUAL TRACKER experimental, MAC ADDRESS GUIDE y visualizador de agradecimientos de solo lectura en SET-UP. |
+| **v3.1** | INDIVIDUAL TRACKER experimental y MAC ADDRESS GUIDE. |
+| **v3.2** | INFORMATION en HOMESCREEN con ACKNOWLEDGEMENTS y DISCLAIMERS. |
 
 P.R.S. v3.0 incorpora el análisis temporal observable, la lista de contactos,
 el seguimiento dinámico, el filtrado persistente de DEVICES y el nodo operativo

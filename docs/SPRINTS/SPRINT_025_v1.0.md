@@ -5,7 +5,7 @@
 document: SPRINT
 project: SuriOS Ecosystem
 version: 1.0
-status: Planificado; no activo
+status: Cerrado; completado y validado
 owner: Diego Pérez de Camino
 date: 2026-08-31
 predecessor: Sprint 024
@@ -14,9 +14,9 @@ predecessor: Sprint 024
 
 ## Estado
 
-Este documento prepara el siguiente Sprint, pero no autoriza su inicio. La
-activación requerirá autorización expresa y deberá reflejarse en
-`ACTIVE_SPRINT.md`.
+El Sprint 025 ha sido activado por autorización expresa del propietario y queda
+cerrado tras completar la implementación, los gates técnicos y la validación
+física de la nueva ruta `HOMESCREEN > INFORMATION` en el Samsung A56.
 
 ## Objetivo
 
@@ -46,18 +46,55 @@ funcionales no aprobados.
 - No inferir una licencia ni distribuir fuera del entorno privado mientras el
   registro no esté completo.
 
-### 3. Recolocación de agradecimientos
+### 3. INFORMATION: agradecimientos y disclaimers
 
-- Definir antes de implementar el destino funcional del apartado actual
-  `SET-UP > ACKNOWLEDGEMENTS`.
-- Mover la pantalla, la navegación y las referencias documentales al destino
-  aprobado, conservando el contenido y el carácter de solo lectura.
+- Crear `INFORMATION` en la columna derecha de `HOMESCREEN`, debajo de `TOOLS`.
+- Mover la pantalla actual desde `SET-UP > ACKNOWLEDGEMENTS` a
+  `INFORMATION > ACKNOWLEDGEMENTS`, conservando el contenido y el carácter de
+  solo lectura.
+- Incorporar `CAINSHARK` con su reconocimiento correspondiente.
+- Añadir `INFORMATION > DISCLAIMERS` con los avisos formales de propiedad
+  intelectual, desarrollo, uso y distribución.
+- Actualizar la documentación de usuario y la especificación de INFORMATION.
 - Validar el acceso y el retorno en el Samsung A56.
+
+## Registro de ejecución
+
+### Dependencias adoptadas
+
+| Componente | Antes | Adoptado | Decisión |
+|---|---:|---:|---|
+| Android Gradle Plugin | 9.3.2 | 9.3.2 | Se mantiene la versión estable compatible. |
+| Gradle Wrapper | 9.5.0 | 9.5.0 | Se mantiene la versión exigida por AGP 9.3.2. |
+| Kotlin | 2.2.10 | 2.4.10 | Actualización estable; se corrigió una firma de callback afectada. |
+| Compose BOM | 2026.02.01 | 2026.08.00 | Actualización coordinada del stack Compose. |
+| core-ktx | 1.10.1 | 1.19.0 | Actualización estable. |
+| lifecycle-runtime-ktx | 2.6.1 | 2.11.0 | Actualización estable. |
+| activity-compose | 1.8.0 | 1.13.0 | Actualización estable. |
+| AndroidX Test JUnit | 1.1.5 | 1.3.0 | Actualización estable. |
+| Espresso | 3.5.1 | 3.7.0 | Actualización estable. |
+| Play Services Location | 21.3.0 | 21.4.0 | Actualización estable. |
+| Play Services Wearable | 20.0.1 | 20.0.1 | Ya estaba en la versión estable objetivo. |
+| JUnit | 4.13.2 | 4.13.2 | Se mantiene. |
+
+`compileSdk` y `targetSdk` permanecen en 37. El código mantiene `minSdk 34`.
+
+### Resultado técnico
+
+- `test`: correcto para los módulos con pruebas y sin pruebas declaradas.
+- `lint`: correcto, 0 incidencias en `app` y sin incidencias en los módulos
+  revisados.
+- `assemble`: correcto para app completa, `prsOnly`, PROBE, protocolo y
+  watchfaces.
+- `git diff --check`: correcto.
+- Validación física: correcta en el Samsung A56. Se comprobó la entrada en
+  `HOMESCREEN`, el submenú `INFORMATION`, el desplazamiento de
+  `ACKNOWLEDGEMENTS` hasta `CAINSHARK`, el desplazamiento completo de
+  `DISCLAIMERS` y el retorno a `HOMESCREEN`.
 
 ## Fuera de alcance
 
-- Revisar la decisión ya cerrada de EDL v0.6, salvo que aparezca una nueva
-  propuesta formal.
+- Modificar el EDL v0.6, salvo que aparezca una nueva propuesta formal.
 - Reintroducir el perfil CIVILIAN.
 - Incorporar doble pulsación.
 - Actualizar `preview.png` o recuperar material histórico.
@@ -73,13 +110,12 @@ funcionales no aprobados.
   afectado.
 - Existe un registro verificable de licencias, autoría y procedencia del
   emblema y de los recursos externos revisados.
-- El nuevo destino de agradecimientos está aprobado, implementado, documentado
-  y validado físicamente.
+- `INFORMATION`, `ACKNOWLEDGEMENTS` y `DISCLAIMERS` están implementados,
+  documentados y validados físicamente.
 - El Sprint queda documentado y publicado solo tras el cierre técnico.
 
 ## Dependencias de decisión para activar
 
-Antes de activar este Sprint deberá aprobarse el destino exacto de
-`ACKNOWLEDGEMENTS` y confirmarse la matriz inicial de versiones objetivo. La
-licencia no se completará con datos inventados si la procedencia no puede
-acreditarse.
+La matriz inicial de versiones objetivo queda definida en el registro de
+dependencias del Sprint. La licencia no se completará con datos inventados si
+la procedencia no puede acreditarse.

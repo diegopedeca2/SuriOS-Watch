@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- minSdk 34 makes the v26 adaptive-icon qualifier mandatory only for resource typing. -->
+    <issue id="ObsoleteSdkInt" severity="ignore" />
+</lint>

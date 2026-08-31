@@ -98,6 +98,22 @@ assets/
 
 No deberán existir variantes oficiales fuera de este directorio.
 
+## 6. Derechos y atribución
+
+Las imágenes, emblemas y elementos identificativos asociados a la Hermandad del
+Acero y al universo FALLOUT no son propiedad de SuriOS. El proyecto reconoce a
+Bethesda Softworks LLC y/o a sus licenciantes como titulares de los derechos que
+correspondan.
+
+La inclusión del recurso en SuriOS no constituye una cesión, licencia, permiso
+de distribución ni autorización para usos comerciales. El recurso se utiliza
+actualmente en un entorno privado y no comercial. Cualquier distribución
+externa requerirá revisar previamente la autorización y las condiciones de uso
+aplicables.
+
+Como referencia general de las condiciones de uso de los servicios de Bethesda,
+consúltese [Bethesda Terms of Service](https://bethesda.net/data/tos/en.html).
+
 ---
 
 # 6. Formato maestro

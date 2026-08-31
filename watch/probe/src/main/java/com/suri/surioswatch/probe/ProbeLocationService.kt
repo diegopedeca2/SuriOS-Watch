@@ -86,9 +86,8 @@ class ProbeLocationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return when (intent?.action) {
             ACTION_STOP -> {
-                val stopIntent = intent ?: return START_NOT_STICKY
-                val requestedPhone = stopIntent.getStringExtra(EXTRA_PHONE_NODE_ID)
-                val requestedSession = stopIntent.getStringExtra(EXTRA_SESSION_ID)
+                val requestedPhone = intent.getStringExtra(EXTRA_PHONE_NODE_ID)
+                val requestedSession = intent.getStringExtra(EXTRA_SESSION_ID)
                 if (running && (requestedPhone != phoneNodeId || requestedSession != sessionId)) {
                     return START_NOT_STICKY
                 }

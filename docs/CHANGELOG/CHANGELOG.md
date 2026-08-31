@@ -1,3 +1,27 @@
+## Sprint 025 — INFORMATION, disclaimers y actualización de dependencias — 2026-08-31
+
+### Añadido y modificado
+
+- Se añade `INFORMATION` a la columna derecha de `HOMESCREEN`, debajo de
+  `TOOLS`.
+- `ACKNOWLEDGEMENTS` se mueve desde `SET-UP` a `INFORMATION` y se incorpora el
+  reconocimiento a `CAINSHARK`.
+- Se añade `DISCLAIMERS` con cláusulas formales sobre propiedad intelectual,
+  inspiración visual, asistencia de Codex, desarrollo propio, uso no comercial
+  y distribución privada.
+- Se actualizan las dependencias estables de Kotlin, Compose, AndroidX Test,
+  Lifecycle, Activity y Play Services Location; se mantienen AGP, Gradle,
+  Wearable y JUnit cuando ya estaban en la versión objetivo.
+- Se eliminan recursos bitmap de iconos incompatibles con `minSdk 34` y se
+  conserva el icono adaptativo.
+
+### Validación
+
+- `test`, `lint` y `assemble`: correctos en todas las variantes y módulos.
+- Lint de `app`: 0 incidencias.
+- La validación física de `HOMESCREEN > INFORMATION`, sus dos subapartados y
+  el retorno a `HOMESCREEN` queda completada en el Samsung A56.
+
 ## Cierre administrativo posterior al Sprint 024 — 2026-08-31
 
 ### Decisiones

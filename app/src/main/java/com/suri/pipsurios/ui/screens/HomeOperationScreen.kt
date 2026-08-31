@@ -35,7 +35,8 @@ fun HomeOperationScreen(
     onCurrentGearSelected: () -> Unit,
     onSetUpSelected: () -> Unit,
     onStatusSelected: () -> Unit,
-    onToolsSelected: () -> Unit
+    onToolsSelected: () -> Unit,
+    onInformationSelected: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -76,10 +77,11 @@ fun HomeOperationScreen(
                 onSetUpSelected = onSetUpSelected
             )
             ModuleColumn(
-                entries = listOf("> STATUS", "> DATA", "> TOOLS"),
+                entries = listOf("> STATUS", "> DATA", "> TOOLS", "> INFORMATION"),
                 onDataSelected = onDataSelected,
                 onStatusSelected = onStatusSelected,
-                onToolsSelected = onToolsSelected
+                onToolsSelected = onToolsSelected,
+                onInformationSelected = onInformationSelected
             )
         }
 
@@ -114,7 +116,8 @@ private fun ModuleColumn(
     onCurrentGearSelected: (() -> Unit)? = null,
     onSetUpSelected: (() -> Unit)? = null,
     onStatusSelected: (() -> Unit)? = null,
-    onToolsSelected: (() -> Unit)? = null
+    onToolsSelected: (() -> Unit)? = null,
+    onInformationSelected: (() -> Unit)? = null
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(18.dp),
@@ -139,6 +142,8 @@ private fun ModuleColumn(
                         Modifier.clickable(onClick = onStatusSelected)
                     entry == "> TOOLS" && onToolsSelected != null ->
                         Modifier.clickable(onClick = onToolsSelected)
+                    entry == "> INFORMATION" && onInformationSelected != null ->
+                        Modifier.clickable(onClick = onInformationSelected)
                     else -> Modifier
                 }
             )

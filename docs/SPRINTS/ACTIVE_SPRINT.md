@@ -8,20 +8,23 @@ last_updated: 2026-08-31
 
 ---
 
+## Sin Sprint activo
+
+El Sprint 025 se ha cerrado tras la validación física correcta en el Samsung
+A56. No queda ningún Sprint activo.
+
 ## Último Sprint cerrado
+
+[Sprint 025 v1.0](SPRINT_025_v1.0.md) — **CLOSED**
+
+El alcance incluyó el nuevo menú `INFORMATION`, la recolocación de
+`ACKNOWLEDGEMENTS`, la incorporación de `DISCLAIMERS` y la actualización
+controlada de dependencias.
 
 [Sprint 024 v1.0](SPRINT_024_v1.0.md) — **CLOSED**
 
 El alcance cerrado fue el endurecimiento de la integración A56–Watch 2 de
 PIP-SuriOS/PROBE y el cierre de las deudas AUD-023-01 a AUD-023-09.
-
-## Siguiente Sprint planificado
-
-[Sprint 025 v1.0](SPRINT_025_v1.0.md) — **PLANIFICADO; NO ACTIVO**
-
-Su alcance previsto es actualizar dependencias con regresión completa,
-documentar licencias y procedencia de recursos, y recolocar el apartado de
-agradecimientos. La activación requerirá autorización expresa.
 
 [Sprint 023 v1.0](SPRINT_023_v1.0.md) — **CLOSED**
 
@@ -42,6 +45,7 @@ Sprint 021: **CLOSED**
 Sprint 022: **CLOSED**
 Sprint 023: **CLOSED**
 Sprint 024: **CLOSED**
+Sprint 025: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se

@@ -5,8 +5,9 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.hardware.display.DisplayManager
 import android.view.Surface
-import android.view.WindowManager
+import android.view.Display
 import kotlin.math.PI
 
 class CircularHeadingSmoother(
@@ -38,7 +39,10 @@ class TerrainHeading(private val context: Context) {
             override fun onSensorChanged(event: SensorEvent) {
                 val raw = FloatArray(9); val adjusted = FloatArray(9)
                 SensorManager.getRotationMatrixFromVector(raw, event.values)
-                val rotation = context.getSystemService(WindowManager::class.java).defaultDisplay.rotation
+                val rotation = context.getSystemService(DisplayManager::class.java)
+                    ?.getDisplay(Display.DEFAULT_DISPLAY)
+                    ?.rotation
+                    ?: Surface.ROTATION_0
                 val axes = when (rotation) {
                     Surface.ROTATION_90 -> SensorManager.AXIS_Y to SensorManager.AXIS_MINUS_X
                     Surface.ROTATION_180 -> SensorManager.AXIS_MINUS_X to SensorManager.AXIS_MINUS_Y

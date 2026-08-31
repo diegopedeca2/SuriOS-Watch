@@ -108,15 +108,13 @@ fun CurrentGearScreen(
 fun SetUpScreen(
     onInputSelected: () -> Unit,
     onDataSelected: () -> Unit,
-    onAcknowledgementsSelected: () -> Unit,
     onBack: () -> Unit
 ) {
     CurrentGearLayout(title = "SET-UP", onBack = onBack) {
         Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
             listOf(
                 "> INPUT" to onInputSelected,
-                "> DATA" to onDataSelected,
-                "> ACKNOWLEDGEMENTS" to onAcknowledgementsSelected
+                "> DATA" to onDataSelected
             ).forEach { (entry, action) ->
                 Text(
                     text = entry,
@@ -125,69 +123,6 @@ fun SetUpScreen(
                     fontFamily = FontFamily.Monospace,
                     modifier = Modifier.clickable(onClick = action)
                 )
-            }
-        }
-    }
-}
-
-private data class SetUpAcknowledgement(
-    val person: String,
-    val contribution: String
-)
-
-private val SET_UP_ACKNOWLEDGEMENTS = listOf(
-    SetUpAcknowledgement(
-        person = "FENRIR",
-        contribution = "Por darme la idea de crear la app gracias a la partida FALLOUT_SOFT."
-    ),
-    SetUpAcknowledgement(
-        person = "JESÚS",
-        contribution = "Por enseñarme el funcionamiento de los agentes de IA, Orca y Android Studio."
-    ),
-    SetUpAcknowledgement(
-        person = "LUIS",
-        contribution = "Por ayudarme con algunos elementos estéticos."
-    ),
-    SetUpAcknowledgement(
-        person = "JAIME",
-        contribution = "Por la idea inicial del sónar."
-    ),
-    SetUpAcknowledgement(
-        person = "EQUIPO DE NAVY7",
-        contribution = "Por dejarme ir a probar y aportarme ideas de nuevos modos de uso."
-    ),
-    SetUpAcknowledgement(
-        person = "MI PADRE",
-        contribution = "Por regalarme el Watch 2, que me dio las ideas para la baliza remota del sónar y que estoy utilizando para ello."
-    )
-)
-
-@Composable
-fun SetUpAcknowledgementsScreen(onBack: () -> Unit) {
-    CurrentGearLayout(title = "SET-UP - ACKNOWLEDGEMENTS", onBack = onBack) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 560.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            SET_UP_ACKNOWLEDGEMENTS.forEach { acknowledgement ->
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = acknowledgement.person,
-                        color = PipGreen,
-                        fontSize = 22.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
-                    Text(
-                        text = acknowledgement.contribution,
-                        color = PipGreen,
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
             }
         }
     }
