@@ -20,7 +20,7 @@ La versión 1.1 sustituye a `PROJECT_GUIDE v1.0`, que permanece como versión hi
 
 ### 2.1 EDL
 
-El [EDL v0.6](../EDL/EDL.md) gobierna la identidad visual, los componentes comunes, la interacción y las reglas compartidas del ecosistema. La revisión de la copia de respaldo v0.7 permanece pendiente y no modifica por sí sola la versión vigente.
+El [EDL v0.6](../EDL/EDL.md) gobierna la identidad visual, los componentes comunes, la interacción y las reglas compartidas del ecosistema. La copia de respaldo anteriormente etiquetada v0.7 se conserva como material histórico de v0.6 y no es normativa.
 
 ### 2.2 MRPD
 

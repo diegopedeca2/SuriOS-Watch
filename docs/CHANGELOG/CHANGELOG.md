@@ -10,8 +10,8 @@
   ruta huérfana en PIP-SuriOS; la documentación histórica no se reescribe.
 - La actualización de dependencias, la documentación de licencias y la
   recolocación de agradecimientos quedan planificadas para Sprint 025.
-- BL-010 permanece abierto hasta decidir entre EDL v0.6 y la copia etiquetada
-  v0.7.
+- BL-010 queda cerrado: EDL v0.6 es la versión canónica y la copia histórica
+  se ha renombrado para reflejarlo.
 
 ## Sprint 024 — Hardening SuriOS / PROBE companion — 2026-08-31
 

@@ -56,7 +56,8 @@ funcionales no aprobados.
 
 ## Fuera de alcance
 
-- Resolver BL-010 sobre EDL v0.6 frente a la copia etiquetada v0.7.
+- Revisar la decisión ya cerrada de EDL v0.6, salvo que aparezca una nueva
+  propuesta formal.
 - Reintroducir el perfil CIVILIAN.
 - Incorporar doble pulsación.
 - Actualizar `preview.png` o recuperar material histórico.

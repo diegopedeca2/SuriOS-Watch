@@ -14,8 +14,8 @@ Esta versión incorpora al backlog los hallazgos AUD-023-01 a AUD-023-09 de la
 auditoría del Sprint 023. Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md) y no autoriza por sí misma desarrollo.
 
 Las decisiones del propietario registradas en el cierre administrativo del
-Sprint 024 se reflejan en los elementos heredados. BL-010 permanece abierto
-hasta resolver la versión canónica del EDL.
+Sprint 024 se reflejan en los elementos heredados. EDL v0.6 queda confirmado
+como versión canónica del ecosistema.
 
 ## Elementos heredados
 
@@ -30,7 +30,7 @@ hasta resolver la versión canónica del EDL.
 | BL-007 | Cerrado | Media | Organización | Política de archivos `.idea` | Se ignora la configuración local y solo se conserva la configuración compartida imprescindible. |
 | BL-008 | Cerrado | Baja | Auditoría documental | Resolver futuro de CHANGELOG | `CHANGELOG.md` se conserva como resumen humano de cambios. |
 | BL-009 | Cerrado | Media | Auditoría documental | Normalizar nomenclatura vigente | Normalización documental aprobada. |
-| BL-010 | En evaluación | Alta | Auditoría documental | Determinar EDL vigente | Comparación v0.6/v0.7 pendiente de decisión; el respaldo etiquetado v0.7 contiene en realidad cabecera v0.6. |
+| BL-010 | Cerrado | Alta | Auditoría documental | Determinar EDL vigente | EDL v0.6 confirmado como versión canónica; el respaldo anteriormente etiquetado v0.7 queda como copia histórica de v0.6. |
 | BL-011 | Histórico | Media | Recursos | Localizar y catalogar antigua Figura 4.1 | Se conserva como material histórico y no entra en el producto. |
 | BL-012 | Eliminado | Media | Organización | Eliminar copias de `ORCA-TO-DO` | Directorio eliminado; los archivos estaban versionados y siguen recuperables desde Git. |
 | BL-013 | Cerrado | Baja | Documentación | Normalizar MRPD “Product/Project” | Se adopta oficialmente `Project`. |
