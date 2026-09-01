@@ -13,7 +13,6 @@ import android.view.WindowInsetsController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,14 +24,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
-import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
@@ -135,6 +129,9 @@ import com.suri.pipsurios.ui.screens.MapModeSelectionScreen
 import com.suri.pipsurios.ui.screens.MapOperationScreen
 import com.suri.pipsurios.ui.screens.MapTerrainScreen
 import com.suri.pipsurios.ui.screens.IdentificationScreen
+import com.suri.pipsurios.ui.screens.TerminalPanel
+import com.suri.pipsurios.ui.screens.TerminalOverlay
+import com.suri.pipsurios.ui.screens.TerminalScreen
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import androidx.compose.foundation.Image
 import kotlinx.coroutines.delay
@@ -274,6 +271,27 @@ private enum class PIPSuriOSDestination {
 private enum class VerticalOperationStep {
     DATE_LOCATION, CONSUMABLES, EDIT_DATE_LOCATION, EDIT_CONSUMABLES
 }
+
+private fun destinationUsesTerminalOverlay(destination: PIPSuriOSDestination): Boolean =
+    when (destination) {
+        PIPSuriOSDestination.Splash,
+        PIPSuriOSDestination.Identification,
+        PIPSuriOSDestination.Loading,
+        PIPSuriOSDestination.HomeOperation,
+        PIPSuriOSDestination.ProximityRadioScannerLoading,
+        PIPSuriOSDestination.ProximityRadioScannerGuide,
+        PIPSuriOSDestination.PrsDevices,
+        PIPSuriOSDestination.PrsLocalScan,
+        PIPSuriOSDestination.PrsScanProbe,
+        PIPSuriOSDestination.IndividualTracker,
+        PIPSuriOSDestination.IndividualTrackerTarget,
+        PIPSuriOSDestination.IndividualTrackerTracker,
+        PIPSuriOSDestination.MapLoading,
+        PIPSuriOSDestination.MapTerrain,
+        PIPSuriOSDestination.CivTakLoading,
+        PIPSuriOSDestination.GoogleMapsLoading -> false
+        else -> true
+    }
 
 @Composable
 private fun PIPSuriOSApp(
@@ -636,7 +654,8 @@ private fun PIPSuriOSApp(
         }
     }
 
-    when (destination) {
+    val renderDestination: @Composable () -> Unit = {
+        when (destination) {
             PIPSuriOSDestination.Splash -> PIPSuriOSScreen(
                 onFinished = { destination = PIPSuriOSDestination.Identification }
             )
@@ -1322,6 +1341,13 @@ private fun PIPSuriOSApp(
                 onExternalLaunch = { destination = PIPSuriOSDestination.MapModeSelection }
             )
         }
+    }
+
+    if (destinationUsesTerminalOverlay(destination)) {
+        TerminalOverlay { renderDestination() }
+    } else {
+        renderDestination()
+    }
 }
 
 @Composable
@@ -1331,53 +1357,43 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxHeight(0.94f)
-                .alpha(0.30f),
-            contentScale = ContentScale.Fit,
-            colorFilter = ColorFilter.tint(PipGreenDim)
-        )
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalAlignment = Alignment.Start
+    TerminalScreen {
+        TerminalPanel(
+            modifier = Modifier.align(Alignment.Center)
         ) {
-            Text(
-                text = "PIP-BOY by RobCo",
-                color = PipGreen,
-                fontSize = 30.sp,
-                fontFamily = FontFamily.Monospace
-            )
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "PIP-BOY by RobCo",
+                    color = PipGreen,
+                    fontSize = 30.sp,
+                    fontFamily = FontFamily.Monospace
+                )
 
-            Text(
-                text = "PIP-SuriOS v2.6",
-                color = PipGreenDim,
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Monospace
-            )
+                Text(
+                    text = "PIP-SuriOS v2.7",
+                    color = PipGreenDim,
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.Monospace
+                )
 
-            Text(
-                text = "Brotherhood of Steel",
-                color = PipGreenDim,
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Monospace
-            )
+                Text(
+                    text = "Brotherhood of Steel",
+                    color = PipGreenDim,
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.Monospace
+                )
 
-            Text(
-                text = "INITIALIZING...",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace
-            )
+                Text(
+                    text = "INITIALIZING...",
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace
+                )
+            }
         }
     }
 }

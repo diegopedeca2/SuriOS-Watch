@@ -1,12 +1,11 @@
 package com.suri.pipsurios.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -22,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import kotlinx.coroutines.delay
 
@@ -77,29 +75,32 @@ fun LoadingScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.Start
+    TerminalScreen {
+        TerminalPanel(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth(0.90f)
         ) {
-            LoadingLine(id = "login", text = loginText)
-            homeModules.forEachIndexed { index, module ->
-                if (visibleModuleCount > index) {
-                    val readySuffix = if (readyModuleCount > index) " READY" else ""
-                    LoadingLine(
-                        id = "module-$module",
-                        text = "> $module.....$readySuffix"
-                    )
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                LoadingLine(id = "login", text = loginText)
+                homeModules.forEachIndexed { index, module ->
+                    if (visibleModuleCount > index) {
+                        val readySuffix = if (readyModuleCount > index) " READY" else ""
+                        LoadingLine(
+                            id = "module-$module",
+                            text = "> $module.....$readySuffix"
+                        )
+                    }
                 }
-            }
-            if (showSystemMessage) {
-                LoadingLine(id = "system", text = systemText)
+                if (showSystemMessage) {
+                    LoadingLine(id = "system", text = systemText)
+                }
             }
         }
     }

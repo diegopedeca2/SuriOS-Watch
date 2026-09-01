@@ -52,6 +52,7 @@ import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipRed
+import com.suri.pipsurios.ui.screens.TerminalOverlay
 
 class OperationInputActivity : ComponentActivity() {
     private val step: String by lazy { intent.getStringExtra(EXTRA_STEP) ?: STEP_DATE_LOCATION }
@@ -65,20 +66,22 @@ class OperationInputActivity : ComponentActivity() {
         })
         setContent {
             PIPSuriOSTheme {
-                when (step) {
-                    STEP_CONSUMABLES -> ConsumablesInputScreen(
-                        title = if (editMode) "EDIT OPERATION - CONSUMABLES" else "INPUT OPERATION - CONSUMABLES",
-                        initialValues = CONSUMABLE_KEYS.map { intent.getStringExtra(it).orEmpty() },
-                        onNext = ::finishConsumables,
-                        onBack = ::finishWithBack
-                    )
-                    else -> DateLocationInputScreen(
-                        title = if (editMode) "EDIT OPERATION - DATE & LOCATION" else "INPUT OPERATION - DATE & LOCATION",
-                        initialDate = intent.getStringExtra(EXTRA_DATE).orEmpty(),
-                        initialLocation = intent.getStringExtra(EXTRA_LOCATION).orEmpty(),
-                        onNext = ::finishDateLocation,
-                        onBack = ::finishWithBack
-                    )
+                TerminalOverlay {
+                    when (step) {
+                        STEP_CONSUMABLES -> ConsumablesInputScreen(
+                            title = if (editMode) "EDIT OPERATION - CONSUMABLES" else "INPUT OPERATION - CONSUMABLES",
+                            initialValues = CONSUMABLE_KEYS.map { intent.getStringExtra(it).orEmpty() },
+                            onNext = ::finishConsumables,
+                            onBack = ::finishWithBack
+                        )
+                        else -> DateLocationInputScreen(
+                            title = if (editMode) "EDIT OPERATION - DATE & LOCATION" else "INPUT OPERATION - DATE & LOCATION",
+                            initialDate = intent.getStringExtra(EXTRA_DATE).orEmpty(),
+                            initialLocation = intent.getStringExtra(EXTRA_LOCATION).orEmpty(),
+                            onNext = ::finishDateLocation,
+                            onBack = ::finishWithBack
+                        )
+                    }
                 }
             }
         }
@@ -273,7 +276,7 @@ private fun VerticalInputFrame(
             VerticalAction("NEXT", if (nextEnabled) PipGreen else PipGreenDim, onNext, nextEnabled)
         }
         Text(
-            "PIP-SuriOS v2.6",
+            "PIP-SuriOS v2.7",
             color = PipGreenDim,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,

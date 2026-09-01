@@ -33,7 +33,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
 | PIP-SuriOS | Ninguno | Sprint 025 | Sprint 025 cerrado |
-| SuriOS Ecosystem | Ninguno | Sprint 027 | Sprint 027 cerrado |
+| SuriOS Ecosystem | Ninguno | Sprint 028 | Sprint 028 cerrado |
 
 ---
 
@@ -72,6 +72,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 025 | SuriOS Ecosystem | Actualización controlada de dependencias, licencias y recolocación de agradecimientos | Cerrado | Completado | 2026-08-31 | 2026-08-31 | [Sprint 025 v1.0](SPRINT_025_v1.0.md) |
 | 026 | SuriOS Watch | Esfera PIW-SuriOS no PROBE: STATUS y AMBIENT | Cerrado | Completado | 2026-08-31 | 2026-08-31 | [Sprint 026 v1.0](SPRINT_026_v1.0.md) |
 | 027 | SuriOS Ecosystem | Limpieza del proyecto y detalles documentales menores | Cerrado | Completado | 2026-08-31 | 2026-09-01 | [Sprint 027 v1.0](SPRINT_027_v1.0.md) |
+| 028 | SuriOS Ecosystem | Actualización de versión y estética común de terminal en inicio, identificación, LOADING y HOMESCREEN | Cerrado | Completado | 2026-09-01 | 2026-09-01 | [Sprint 028 v1.0](SPRINT_028_v1.0.md) |
 
 ---
 
@@ -570,10 +571,9 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 ### Ecosistema
 
-- Sprints registrados: 21.
-- Sprints completados: 21.
-- Sprint 027 fue el único Sprint activo en el periodo documentado y quedó
-  cerrado el 2026-09-01.
+- Sprints registrados: 23.
+- Sprints completados: 22.
+- Sprints activos: 0.
 - Sprints aprobados pendientes de implementación: 0.
 - Sprints pendientes de documento: 0.
 
@@ -588,7 +588,7 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 ### PIP-SuriOS
 
 - Último Sprint completado: Sprint 025.
-- Versión vigente: PIP-SuriOS v2.6.
+- Versión vigente: PIP-SuriOS v2.7.
 - Sprints activos: 0 en el ámbito de este cierre.
 - Sprint 009: completado y cerrado.
 - Sprint 010: completado y cerrado.
@@ -612,16 +612,19 @@ PIP-SuriOS, además del Sprint 026 de SuriOS Watch, están completados y
 cerrados.
 
 El Sprint 027 de SuriOS Ecosystem estuvo limitado a limpieza documental y
-detalles menores. Quedó cerrado el 2026-09-01 y no autoriza cambios funcionales
-posteriores.
+detalles menores. Quedó cerrado el 2026-09-01.
 
-Sprint 025 está cerrado y PIP-SuriOS v2.6 constituye la versión móvil consolidada
+El Sprint 028 de SuriOS Ecosystem queda cerrado tras completar la actualización
+de versión y las mejoras visuales de la interfaz. No se modificó la lógica
+funcional.
+
+Sprint 025 está cerrado y PIP-SuriOS v2.7 constituye la versión móvil consolidada
 vigente. La nueva superficie INFORMATION, la actualización de dependencias y la
 validación física quedan registradas en su documento de Sprint.
 
 PIW-SuriOS v2.0 constituye el estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.6 con SET-UP persistente en vertical, DATA permanente, STORAGE,
+PIP-SuriOS v2.7 con SET-UP persistente en vertical, DATA permanente, STORAGE,
 RADS v2, P.R.S. v3.0, REMOTE PROBE opcional, MAP TERRAIN NAVY7 offline,
 TOOLS reorganizado constituye el estado móvil funcional vigente.
 Todos los Sprints funcionales registrados están cerrados y la edición reducida de P.R.S.
@@ -836,4 +839,36 @@ correctamente.
 
 Documento del Sprint: [Sprint 027 v1.0](SPRINT_027_v1.0.md).
 
-No se abre un Sprint 028. No existe un Sprint activo posterior.
+En el momento de este cierre no se abrió un Sprint posterior. El Sprint 028 se
+abre posteriormente por autorización del propietario.
+
+---
+
+## 31. Apertura de Sprint 028 de SuriOS Ecosystem
+
+El Sprint 028 se abre el 2026-09-01 por autorización expresa del propietario.
+Su primer objetivo es actualizar la firma de versión a `PIP-SuriOS v2.7` y
+comenzar un rework visual común de terminal para la pantalla de inicio, el
+lector de identificación, `LOADING` y `HOMESCREEN`.
+
+La estética compartida debe mantener el funcionamiento existente de cada
+pantalla, incluyendo tiempos, navegación, identificación ficticia y selección
+de módulos.
+
+---
+
+## 32. Cierre de Sprint 028 de SuriOS Ecosystem
+
+El Sprint 028 se cierra el 2026-09-01 tras actualizar `PIP-SuriOS` a la
+versión `2.7` y aplicar la estética común de terminal a los menús autorizados.
+
+La validación física en el Samsung A56 confirma el flujo de arranque, la
+carcasa de terminal en los selectores de MAP y P.R.S. solicitados, y el giro
+del emblema en los menús verticales. Las pantallas excluidas de MAP y P.R.S.
+conservan su presentación anterior.
+
+Tests unitarios, lint y ensamblados `fullDebug`/`prsOnlyDebug` terminaron
+correctamente. Sprint 028 queda cerrado técnica y documentalmente y no se abre
+un Sprint posterior.
+
+Documento del Sprint: [Sprint 028 v1.0](SPRINT_028_v1.0.md).

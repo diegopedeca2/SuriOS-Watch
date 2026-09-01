@@ -8,18 +8,26 @@ last_updated: 2026-09-01
 
 ---
 
-## Sin Sprint activo
+## Sprint activo
 
 El Sprint 026 se ha cerrado tras validar el acceso `STATUS` y conservar el
 comportamiento AMBIENT anterior en el Watch Ultra.
 
 El Sprint 027 se cerró el 2026-09-01 tras completar la limpieza del proyecto,
 los detalles documentales menores y el retorno al diseño original de
-PIP-SuriOS. No se ha abierto un Sprint 028.
+PIP-SuriOS.
 
-No hay un Sprint activo.
+El Sprint 028 se ha cerrado el 2026-09-01 tras actualizar la versión y aplicar
+las mejoras visuales de terminal autorizadas, con validación física en el
+Samsung A56.
+
+[Sprint 028 v1.0](SPRINT_028_v1.0.md) — **CLOSED**
+
+No hay ningún Sprint abierto actualmente.
 
 ## Último Sprint cerrado
+
+[Sprint 028 v1.0](SPRINT_028_v1.0.md) — **CLOSED**
 
 [Sprint 027 v1.0](SPRINT_027_v1.0.md) — **CLOSED**
 
@@ -60,6 +68,7 @@ Sprint 024: **CLOSED**
 Sprint 025: **CLOSED**
 Sprint 026: **CLOSED**
 Sprint 027: **CLOSED**
+Sprint 028: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -68,8 +77,9 @@ presentan alfabéticamente después de esa opción excepcional.
 Sprint 019 audita el monorepo, actualiza PIP-SuriOS a v2.5, desinstala P.R.S.
 //COVER del A56 y documenta el cierre de seguridad y validación.
 
-PIP-SuriOS v2.6 queda consolidado con el cierre del Sprint 024, completado y
-cerrado técnica, funcional y documentalmente a fecha 2026-08-31. El P.R.S. activo usa
+PIP-SuriOS v2.7 es la versión resultante del Sprint 028, sobre la base
+completada y cerrada técnica, funcional y documentalmente a fecha 2026-09-01.
+El P.R.S. activo usa
 `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `TRACK TARGET`, con histórico RSSI,
 suavizado y nubes de densidad sin posicionamiento sintético. PIW-SuriOS Watch
 v2.0 conserva el modo ambiente con el emblema girando sobre su eje vertical y
@@ -113,7 +123,7 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
 ## Roadmap de PIP-SuriOS
 
 - Sprint 015 queda cerrado.
-- PIP-SuriOS v2.6 queda auditado y consolidado.
+- Sprint 028 queda cerrado tras actualizar la firma y la estética de terminal.
 - La guía imprimible del P.R.S. queda disponible en `output/pdf/PRS_CALIBRATION_GUIDE_SPRINT_015.pdf`.
 - Se entregan las variantes `fullDebug` y `prsOnlyDebug` de P.R.S.
 - Sprint 016 queda cerrado tras la revisión documentada de temas abiertos y el
@@ -177,7 +187,8 @@ La campaña física de P.R.S. y el ajuste de `PrsTuning.DEFAULT` quedan
 cancelados por decisión expresa del propietario. La futura integración de
 movimiento/orientación tampoco forma parte del Sprint 016. El resto de temas
 abiertos queda trasladado a una futura autorización. El Sprint 027 quedó
-cerrado el 2026-09-01 y no existe un Sprint activo posterior.
+cerrado el 2026-09-01 y el Sprint 028 queda registrado como último Sprint
+cerrado; actualmente no hay un Sprint activo.
 
 ## Addendum de cierre de SuriOS Watch y del AVD — 2026-08-30
 

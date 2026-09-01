@@ -52,6 +52,7 @@ import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
+import com.suri.pipsurios.ui.screens.TerminalOverlay
 
 class OperatorSetupActivity : ComponentActivity() {
     private val repository by lazy { OperatorProfileRepository.from(applicationContext) }
@@ -64,17 +65,19 @@ class OperatorSetupActivity : ComponentActivity() {
         })
         setContent {
             PIPSuriOSTheme {
-                OperatorSetupScreen(
-                    initialProfile = repository.load(),
-                    focusField = intent.getStringExtra(EXTRA_FOCUS_FIELD)
-                        ?.let { value -> OperatorField.entries.firstOrNull { it.name == value } },
-                    onSave = { profile ->
-                        repository.save(profile)
-                        setResult(RESULT_OK)
-                        finish()
-                    },
-                    onBack = ::finishWithBack
-                )
+                TerminalOverlay {
+                    OperatorSetupScreen(
+                        initialProfile = repository.load(),
+                        focusField = intent.getStringExtra(EXTRA_FOCUS_FIELD)
+                            ?.let { value -> OperatorField.entries.firstOrNull { it.name == value } },
+                        onSave = { profile ->
+                            repository.save(profile)
+                            setResult(RESULT_OK)
+                            finish()
+                        },
+                        onBack = ::finishWithBack
+                    )
+                }
             }
         }
     }
@@ -179,7 +182,7 @@ private fun OperatorInputFrame(
             OperatorAction("SAVE", PipGreen, onSave)
         }
         Text(
-            text = "PIP-SuriOS v2.6",
+            text = "PIP-SuriOS v2.7",
             color = PipGreenDim,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,

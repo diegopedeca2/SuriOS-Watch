@@ -406,4 +406,41 @@ revisión documental y de SuriOS Watch/AVD.
 - El propietario confirma físicamente en el Z Flip 6 el menú `SCAN`, `GRID` y
   `DEVICES`, el GRID sin marco, los controles de `DEVICES` visibles y BACK
   regresando al menú anterior sin cerrar la aplicación.
-- Sprint 027 cerrado documentalmente el 2026-09-01; no se abre Sprint 028.
+- Sprint 027 cerrado documentalmente el 2026-09-01; en ese momento no se abre
+  aún un Sprint posterior.
+
+## Sprint 028 - versión 2.7 y estética común de terminal - 2026-09-01
+
+### Estado
+
+- Sprint 028 cerrado el 2026-09-01 tras completar el alcance y validarlo en el
+  Samsung A56.
+- Alcance inicial: firma `PIP-SuriOS v2.7` y estética común de terminal para
+  inicio, identificación, `LOADING` y `HOMESCREEN`.
+
+### Implementado
+
+- Firma visible actualizada a `PIP-SuriOS v2.7`; `versionName=2.7` y
+  `versionCode=7`.
+- Base visual común con retícula, línea de exploración y marcos técnicos en
+  inicio, lector ficticio, `LOADING` y `HOMESCREEN`.
+- La estética y el emblema se extienden al resto de menús permitidos, además
+  de los selectores `MAP > SELECT MODE`, `MAP - OPERATION` y el selector
+  inicial de PROXIMITY RADIO SCANNER. Las pantallas operativas restantes de
+  MAP y P.R.S. quedan excluidas.
+- El emblema gira automáticamente en los menús verticales.
+
+### Validación
+
+- Tests unitarios, lint y ensamblados `fullDebug`/`prsOnlyDebug`: correctos.
+- APK `fullDebug` instalada y arrancada en el Samsung A56; flujo hasta
+  `HOMESCREEN` comprobado visualmente.
+- Menú `TOOLS` comprobado con la nueva carcasa; las pantallas de MAP que
+  permanecen fuera de alcance conservan su presentación anterior.
+- También se validaron `MAP > SELECT MODE`, `MAP - OPERATION`, el selector
+  inicial de P.R.S. y el giro del emblema en `SET-UP` vertical.
+
+### Cierre
+
+- Sprint 028 cerrado documentalmente el 2026-09-01; no se abre un Sprint
+  posterior.

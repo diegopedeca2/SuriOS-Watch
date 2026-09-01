@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import com.suri.pipsurios.ui.screens.InformationAcknowledgementsScreen
 import com.suri.pipsurios.ui.screens.InformationDisclaimersScreen
 import com.suri.pipsurios.ui.screens.InformationScreen
+import com.suri.pipsurios.ui.screens.TerminalOverlay
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 
 class InformationActivity : androidx.activity.ComponentActivity() {
@@ -22,7 +23,9 @@ class InformationActivity : androidx.activity.ComponentActivity() {
         hideStatusBar()
         setContent {
             PIPSuriOSTheme {
-                InformationApp(onExit = ::finishWithBack)
+                TerminalOverlay {
+                    InformationApp(onExit = ::finishWithBack)
+                }
             }
         }
     }

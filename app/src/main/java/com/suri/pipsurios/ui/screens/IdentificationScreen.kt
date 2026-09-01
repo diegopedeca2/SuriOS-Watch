@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +28,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import kotlin.math.cos
@@ -49,17 +47,9 @@ fun IdentificationScreen(onAuthenticated: () -> Unit) {
         label = "fingerprint_scan_progress"
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            drawPipBoyFrame()
-        }
-
+    TerminalScreen {
         Column(
+            modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
@@ -85,45 +75,6 @@ fun IdentificationScreen(onAuthenticated: () -> Unit) {
             }
         }
     }
-}
-
-private fun DrawScope.drawPipBoyFrame() {
-    val frameColor = PipGreenDim.copy(alpha = 0.26f)
-    val gridColor = PipGreenDim.copy(alpha = 0.07f)
-    val gridStep = 54.dp.toPx()
-    val margin = 25.dp.toPx()
-    val cornerLength = 34.dp.toPx()
-
-    var x = 0f
-    while (x <= size.width) {
-        drawLine(
-            color = gridColor,
-            start = Offset(x, 0f),
-            end = Offset(x, size.height),
-            strokeWidth = 1.dp.toPx()
-        )
-        x += gridStep
-    }
-
-    var y = 0f
-    while (y <= size.height) {
-        drawLine(
-            color = gridColor,
-            start = Offset(0f, y),
-            end = Offset(size.width, y),
-            strokeWidth = 1.dp.toPx()
-        )
-        y += gridStep
-    }
-
-    drawLine(frameColor, Offset(margin, margin), Offset(margin + cornerLength, margin), 2.dp.toPx())
-    drawLine(frameColor, Offset(margin, margin), Offset(margin, margin + cornerLength), 2.dp.toPx())
-    drawLine(frameColor, Offset(size.width - margin, margin), Offset(size.width - margin - cornerLength, margin), 2.dp.toPx())
-    drawLine(frameColor, Offset(size.width - margin, margin), Offset(size.width - margin, margin + cornerLength), 2.dp.toPx())
-    drawLine(frameColor, Offset(margin, size.height - margin), Offset(margin + cornerLength, size.height - margin), 2.dp.toPx())
-    drawLine(frameColor, Offset(margin, size.height - margin), Offset(margin, size.height - margin - cornerLength), 2.dp.toPx())
-    drawLine(frameColor, Offset(size.width - margin, size.height - margin), Offset(size.width - margin - cornerLength, size.height - margin), 2.dp.toPx())
-    drawLine(frameColor, Offset(size.width - margin, size.height - margin), Offset(size.width - margin, size.height - margin - cornerLength), 2.dp.toPx())
 }
 
 private fun DrawScope.drawFingerprintReader(

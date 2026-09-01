@@ -26,6 +26,7 @@ import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
 import com.suri.pipsurios.ui.screens.SetUpDataScreen
 import com.suri.pipsurios.ui.screens.SetUpInputScreen
 import com.suri.pipsurios.ui.screens.SetUpScreen
+import com.suri.pipsurios.ui.screens.TerminalOverlay
 import com.suri.pipsurios.ui.screens.UniformScreen
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 
@@ -35,7 +36,9 @@ class SetUpActivity : androidx.activity.ComponentActivity() {
         hideStatusBar()
         setContent {
             PIPSuriOSTheme {
-                SetUpApp(onExit = ::finishWithBack)
+                TerminalOverlay {
+                    SetUpApp(onExit = ::finishWithBack)
+                }
             }
         }
     }

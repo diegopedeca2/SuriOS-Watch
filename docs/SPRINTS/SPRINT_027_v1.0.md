@@ -141,4 +141,5 @@ BACK vuelve al menú anterior sin cerrar la aplicación.
 También quedan validados el lector ficticio de identificación con estética
 PIP-BOY, `LOADING`, el mapa `OFFICE`, la reorganización visual de `STATUS` y
 las correcciones documentales del Sprint. Las comprobaciones automatizadas de
-`prsOnlyDebug` terminaron correctamente y no se abre un Sprint nuevo.
+`prsOnlyDebug` terminaron correctamente. En el momento de este cierre no se
+abre un Sprint nuevo; posteriormente se autoriza la apertura del Sprint 028.

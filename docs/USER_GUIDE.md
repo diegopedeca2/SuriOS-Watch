@@ -10,7 +10,7 @@
 > devices, `GRID` shows the density display and `DEVICES` keeps the
 > device-management tools.
 
-Manual oficial de usuario — PIP-SuriOS v2.6
+Manual oficial de usuario — PIP-SuriOS v2.7
 
 ## Índice
 
@@ -558,6 +558,7 @@ Las opciones precedidas por `>` pueden pulsarse para abrir una pantalla o ejecut
 | **v2.4** | Firma visible y versión técnica actualizadas; P.R.S. compacto para pantalla externa y categorías inferidas de dispositivo. |
 | **v2.5** | Auditoría de Sprint 019, backup local desactivado y correcciones de cierre de RAD ZONE/Geiger. |
 | **v2.6** | Reconstrucción de TERRAIN NAVY7 con el modelo dimensional y visual estándar de HOME, y validación offline en el A56. |
+| **v2.7** | Actualización de la firma y estética común de terminal en las pantallas de arranque e inicio. |
 | **v3.0** | Reconstrucción de P.R.S.: LOCAL SCAN, SCAN + PROBE, histórico temporal RSSI, nubes de densidad, TRACK TARGET, DEVICES y categorías inferidas de dispositivo. |
 | **v3.1** | INDIVIDUAL TRACKER experimental y MAC ADDRESS GUIDE. |
 | **v3.2** | INFORMATION en HOMESCREEN con ACKNOWLEDGEMENTS y DISCLAIMERS. |

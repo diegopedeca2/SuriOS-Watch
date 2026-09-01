@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.morse.MorseCodec
 import com.suri.pipsurios.morse.MorseTransmitter
 import com.suri.pipsurios.ui.screens.TerminalFooter
+import com.suri.pipsurios.ui.screens.TerminalOverlay
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
@@ -62,13 +63,15 @@ class TextToMorseActivity : ComponentActivity() {
         }
         setContent {
             PIPSuriOSTheme {
-                TextToMorseScreen(
-                    transmitter = transmitter,
-                    flashAvailable = cameraPermissionGranted && transmitter.isAvailable,
-                    currentJob = { transmissionJob },
-                    setJob = { transmissionJob = it },
-                    onBack = { finish() }
-                )
+                TerminalOverlay {
+                    TextToMorseScreen(
+                        transmitter = transmitter,
+                        flashAvailable = cameraPermissionGranted && transmitter.isAvailable,
+                        currentJob = { transmissionJob },
+                        setJob = { transmissionJob = it },
+                        onBack = { finish() }
+                    )
+                }
             }
         }
     }
