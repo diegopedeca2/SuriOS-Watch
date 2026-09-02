@@ -32,12 +32,7 @@ fun ToolsLoadingScreen(onFinished: () -> Unit) {
         modifier = Modifier.fillMaxSize().background(PipBlack),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "LOADING...",
-            color = PipGreen,
-            fontSize = 30.sp,
-            fontFamily = FontFamily.Monospace
-        )
+        LoadingGlitchText()
     }
 }
 
@@ -52,17 +47,63 @@ fun ProximityRadioScannerLoadingScreen(onFinished: () -> Unit) {
         modifier = Modifier.fillMaxSize().background(PipBlack),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "LOADING...",
-            color = PipGreen,
-            fontSize = 30.sp,
-            fontFamily = FontFamily.Monospace
-        )
+        LoadingGlitchText()
     }
 }
 
 @Composable
 fun ProximityRadioScannerScreen(
+    onV3Selected: () -> Unit,
+    onV4Selected: () -> Unit,
+    onBack: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+        Text(
+            text = "P.R.S.",
+            color = PipGreen,
+            fontSize = 30.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+        )
+
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "> v3.0",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onV3Selected)
+            )
+            Text(
+                text = "> v4.0",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onV4Selected)
+            )
+        }
+
+        PrsBackButton(
+            onBack = onBack,
+            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+        )
+
+        Text(
+            text = "PIP-SuriOS v2.8",
+            color = PipGreenDim,
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
+        )
+    }
+}
+
+@Composable
+fun ProximityRadioScannerV3Screen(
     onLocalScanSelected: () -> Unit,
     onScanProbeSelected: () -> Unit,
     onDevicesSelected: () -> Unit,
@@ -72,7 +113,7 @@ fun ProximityRadioScannerScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
-            text = "P.R.S.",
+            text = "P.R.S. v3.0",
             color = PipGreen,
             fontSize = 30.sp,
             fontFamily = FontFamily.Monospace,
@@ -127,7 +168,66 @@ fun ProximityRadioScannerScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
+            color = PipGreenDim,
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
+        )
+    }
+}
+
+@Composable
+fun ProximityRadioScannerV4Screen(
+    onOnlyPipBoySelected: () -> Unit,
+    onPipBoyProbeSelected: () -> Unit,
+    onBack: () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+        Text(
+            text = "P.R.S. v4.0",
+            color = PipGreen,
+            fontSize = 30.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+        )
+
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "> ONLY PIP-BOY",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onOnlyPipBoySelected)
+            )
+            Text(
+                text = "> PIP-BOY + PROBE",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onPipBoyProbeSelected)
+            )
+        }
+
+        Text(
+            text = "STEP 1 // IDENTIFY TARGET + LOCATION",
+            color = PipGreenDim,
+            fontSize = 14.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.Center).padding(top = 150.dp)
+        )
+
+        PrsBackButton(
+            onBack = onBack,
+            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+        )
+
+        Text(
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -197,7 +297,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

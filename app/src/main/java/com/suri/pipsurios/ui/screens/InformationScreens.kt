@@ -77,13 +77,15 @@ private val INFORMATION_DISCLAIMERS = listOf(
 fun InformationScreen(
     onAcknowledgementsSelected: () -> Unit,
     onDisclaimersSelected: () -> Unit,
+    onTestersSelected: () -> Unit,
     onBack: () -> Unit
 ) {
     InformationLayout(title = "INFORMATION", onBack = onBack) {
         Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
             listOf(
                 "> ACKNOWLEDGEMENTS" to onAcknowledgementsSelected,
-                "> DISCLAIMERS" to onDisclaimersSelected
+                "> DISCLAIMERS" to onDisclaimersSelected,
+                "> TESTERS" to onTestersSelected
             ).forEach { (entry, action) ->
                 Text(
                     text = entry,
@@ -93,6 +95,26 @@ fun InformationScreen(
                     modifier = Modifier.clickable(onClick = action)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun InformationTestersScreen(onBack: () -> Unit) {
+    InformationLayout(title = "INFORMATION - TESTERS", onBack = onBack) {
+        Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+            Text(
+                text = "> ALPHA",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                text = "> BETA",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace
+            )
         }
     }
 }
@@ -174,7 +196,7 @@ private fun InformationLayout(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

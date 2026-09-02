@@ -36,14 +36,14 @@ object OfflineMapCatalog {
         mapId = "navy7",
         name = "NAVY7",
         assetPath = "maps/navy_7_terrain.mbtiles",
-        assetSha256 = "885290661BA89E3FC2A60D61C135E623751D6911E06E35597A08EB8075C4F394",
-        // Sprint 023 target center: 40.352971232717216, -3.423711863510395.
-        // Use the HOME geographic footprint: 5 km x 2.5 km, zoom 16..19.
+        assetSha256 = "4EF2FAF458C107EAC69E0F4627F298088B4B12223AAC3D907C1EB038C8F4E9EC",
+        // Target center preserved: 40.352971232717216, -3.423711863510395.
+        // Sprint 030 footprint: 2 km x 2 km, zoom 16..19, with altitude lines.
         bounds = MapBounds(
-            west = -3.453046863510395,
-            south = 40.341471232717216,
-            east = -3.394376863510395,
-            north = 40.364471232717216
+            west = -3.435483145327,
+            south = 40.343965582217,
+            east = -3.411940581694,
+            north = 40.361976883217
         ),
         minZoom = 16,
         maxNativeZoom = 19,
@@ -53,8 +53,15 @@ object OfflineMapCatalog {
         mapId = "home",
         name = "HOME",
         assetPath = "maps/home_terrain.mbtiles",
-        assetSha256 = "5BA9265B51C681075BA967E6DFB51DE546D51261DE51E915938F2D7A471CFFE5",
-        bounds = MapBounds(-3.89984, 40.4364, -3.84117, 40.4594),
+        assetSha256 = "25640AC28B4CAED81432F1081506C5C5A4B9ADF59565F1BA5B02BD5D3CB4AFE9",
+        // Target center preserved: 40.4479, -3.870505.
+        // Sprint 030 footprint: 2 km x 2 km, cropped from the validated HOME map.
+        bounds = MapBounds(
+            west = -3.882292827336,
+            south = 40.438894497808,
+            east = -3.858717172664,
+            north = 40.456905502192
+        ),
         minZoom = 16,
         maxNativeZoom = 19,
         maxDisplayZoom = 20
@@ -63,14 +70,14 @@ object OfflineMapCatalog {
         mapId = "office",
         name = "OFFICE",
         assetPath = "maps/office_terrain.mbtiles",
-        assetSha256 = "112362A772C971BA34B31BF6DECF435E4F65053EE318F5F767CC389957BB91B9",
+        assetSha256 = "FC8B3754C31C43DE0F4456007691B9BF56A11E1BD1F90D7A8BD8AF26E9A502E7",
         // Sprint 027 target center: 40.43717182620207, -3.620425636696507.
-        // Same HOME geographic footprint: 5 km x 2.5 km, zoom 16..19.
+        // Sprint 029 footprint: 2 km x 2 km, zoom 16..19.
         bounds = MapBounds(
-            west = -3.649760636696507,
-            south = 40.42567182620207,
-            east = -3.591090636696507,
-            north = 40.44867182620207
+            west = -3.632211590216,
+            south = 40.428166307246,
+            east = -3.608639683177,
+            north = 40.446177345158
         ),
         minZoom = 16,
         maxNativeZoom = 19,

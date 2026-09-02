@@ -1,16 +1,18 @@
 # PIP-SuriOS - User Guide
 
 > P.R.S. current implementation: v3.0 BLE contact tracking with the optional
-> Watch 2 PROBE node. The active flow is `LOCAL SCAN`, `SCAN + PROBE`,
-> `DEVICES` and `OPERATION GUIDE`. The in-app OPERATION GUIDE is intentionally
-> empty; no physical field procedure is part of the current scope.
+> Watch 2 PROBE node. The P.R.S. menu is organized into `v3.0` and `v4.0`;
+> `v3.0` contains the current flow and `v4.0` starts the map-based TARGET flow
+> with `ONLY PIP-BOY` and `PIP-BOY + PROBE` modes.
+> The in-app OPERATION GUIDE is intentionally empty; no physical field
+> procedure is part of the current scope.
 
 > The `prsOnlyDebug` edition is optimized for the Z Flip 6 external display:
 > the main menu offers `SCAN`, `GRID` and `DEVICES`; `SCAN` shows all detected
 > devices, `GRID` shows the density display and `DEVICES` keeps the
 > device-management tools.
 
-Manual oficial de usuario — PIP-SuriOS v2.7
+Manual oficial de usuario — PIP-SuriOS v2.8
 
 ## Índice
 
@@ -324,7 +326,9 @@ Los valores vacíos o históricos que no correspondan a una opción válida no i
 
 ## 10. TOOLS
 
-Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de PROXIMITY RADIO SCANNER están `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES`, `INDIVIDUAL TRACKER` y `OPERATION GUIDE`.
+Desde HOMESCREEN, pulse **TOOLS**. Tras `LOADING...` puede elegir **COMMS**, **MAP**, **PROXIMITY RADIO SCANNER** o **RADS** en orden alfabético. Dentro de **PROXIMITY RADIO SCANNER** encontrará las versiones `v3.0` y `v4.0`. `v3.0` contiene `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES`, `INDIVIDUAL TRACKER` y `OPERATION GUIDE`. En `v4.0`, elija `ONLY PIP-BOY` o `PIP-BOY + PROBE` para iniciar el paso de identificación de TARGET y ubicación; después se muestra el GRID sobre el mapa.
+
+En el `STEP 1` de `v4.0`, la lista de dispositivos aparece en la mitad derecha. Los dispositivos guardados se remarcan en ámbar con `SAVED DEVICE` y pueden seleccionarse cuando su regla está desactivada. Para identificarlos, compare el nombre BLE, el identificador o dirección observada, el RSSI como ayuda y el origen `A56` o `WATCH 2 PROBE`; no use el RSSI como única identificación. La guía completa está en `DEVICES` → `MAC ADDRESS GUIDE` y en `docs/PROPOSALS/PRS_V4_STATISTICAL_MODEL_AND_FIELD_TEST_PLAN.md`.
 
 Estas herramientas tienen una finalidad inmersiva o experimental. No sustituyen instrumentos de medición profesionales.
 

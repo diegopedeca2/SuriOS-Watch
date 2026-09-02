@@ -47,7 +47,7 @@ fun DataLoadingScreen(onFinished: () -> Unit) {
         delay(1_500)
         onFinished()
     }
-    DataCenterMessage("LOADING...")
+    LoadingGlitchText()
 }
 
 @Composable
@@ -197,11 +197,8 @@ private fun WeaponStatisticsScreen(
 ) {
     DataFrame(title = title, onBack = onBack) {
         if (loading) {
-            Text(
-                text = "LOADING...",
-                color = PipGreen,
+            LoadingGlitchText(
                 fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
                 modifier = Modifier.align(Alignment.Center)
             )
         } else if (distribution == null || distribution.validRecordCount == 0) {
@@ -255,11 +252,8 @@ fun DataLogScreen(
 ) {
     DataFrame(title = "DATA - LOG", onBack = onBack) {
         when {
-            loading -> Text(
-                text = "LOADING...",
-                color = PipGreen,
+            loading -> LoadingGlitchText(
                 fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
                 modifier = Modifier.align(Alignment.Center)
             )
             entries.isEmpty() -> Text(
@@ -636,7 +630,7 @@ private fun DataFrame(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

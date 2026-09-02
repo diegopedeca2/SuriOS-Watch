@@ -63,7 +63,7 @@ fun GeigerCounterLoadingScreen(onFinished: () -> Unit) {
         modifier = Modifier.fillMaxSize().background(PipBlack),
         contentAlignment = Alignment.Center
     ) {
-        Text("LOADING...", color = PipGreen, fontSize = 30.sp, fontFamily = FontFamily.Monospace)
+        LoadingGlitchText()
     }
 }
 
@@ -185,7 +185,7 @@ private fun GeigerCounterContent(
         )
 
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

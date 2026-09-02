@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.individualtracking.IndividualTrackingSelection
 import com.suri.pipsurios.individualtracking.IndividualTrackingTarget
+import com.suri.pipsurios.prs.PrsObservationSource
 import com.suri.pipsurios.prs.BleScanStatus
 import com.suri.pipsurios.prs.BleScanner
 import com.suri.pipsurios.prs.PrsContactSnapshot
@@ -56,11 +57,16 @@ import com.suri.pipsurios.prs.PrsProximityBand
 import com.suri.pipsurios.prs.PrsSavedDevice
 import com.suri.pipsurios.prs.PrsSnapshot
 import com.suri.pipsurios.prs.PrsTrend
+import com.suri.pipsurios.prs.PrsOperatingMode
+import com.suri.pipsurios.prs.PrsProbeNodeSnapshot
+import com.suri.pipsurios.prs.ProbeLink
+import com.suri.pipsurios.prs.ProbeTelemetryStore
 import com.suri.pipsurios.terrain.GeoPoint
 import com.suri.pipsurios.terrain.MapOverlays
 import com.suri.pipsurios.terrain.MbTilesData
 import com.suri.pipsurios.terrain.MbTilesRepository
 import com.suri.pipsurios.terrain.OfflineMapCatalog
+import com.suri.pipsurios.terrain.OfflineMapDefinition
 import com.suri.pipsurios.terrain.TerrainHeading
 import com.suri.pipsurios.terrain.TerrainLocation
 import com.suri.pipsurios.terrain.TerrainLocationFix
@@ -76,6 +82,7 @@ import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipMapBackground
 import com.suri.pipsurios.ui.theme.PipPanel
 import com.suri.pipsurios.ui.theme.PipRed
+import com.suri.probeprotocol.ProbeProtocol
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -121,7 +128,7 @@ fun IndividualTrackingMenuScreen(
             modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -133,17 +140,27 @@ fun IndividualTrackingMenuScreen(
 @Composable
 fun IndividualTrackingTargetScreen(
     onTargetSelected: (IndividualTrackingSelection) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    mode: PrsOperatingMode = PrsOperatingMode.LOCAL_SCAN,
+    modeLabel: String = mode.displayName,
+    title: String = "INDIVIDUAL TRACKER / TARGET",
+    locationStepLabel: String = "STEP 1 // SELECT TERRAIN FIELD",
+    targetStepLabel: String = "STEP 2 // SELECT DETECTED TARGET",
+    splitLayout: Boolean = false
 ) {
     val context = LocalContext.current
     val scanner = remember(context) { BleScanner(context.applicationContext) }
+    val probeLink = remember(context, mode) { ProbeLink(context.applicationContext) }
     val tracker = remember { PrsContactTracker() }
     val registry = remember(context) { PrsDeviceRegistry.from(context.applicationContext) }
     var snapshot by remember { mutableStateOf(PrsSnapshot()) }
     var scanStatus by remember { mutableStateOf(BleScanStatus.IDLE) }
+    var probeNode by remember { mutableStateOf(PrsProbeNodeSnapshot()) }
+    var probeLinkStatus by remember { mutableStateOf(if (mode.probeEnabled) "STARTING" else "NOT USED") }
     var selectedMapId by remember { mutableStateOf<String?>(null) }
     var permissionVersion by remember { mutableIntStateOf(0) }
     var retryVersion by remember { mutableIntStateOf(0) }
+    val sessionId = remember(mode) { "PRS-V4-TARGET-${System.currentTimeMillis()}" }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -156,17 +173,57 @@ fun IndividualTrackingTargetScreen(
         if (!scanner.hasRequiredPermissions()) permissionLauncher.launch(prsPermissions())
     }
 
-    DisposableEffect(permissionVersion, retryVersion) {
+    DisposableEffect(permissionVersion, retryVersion, mode) {
         scanStatus = scanner.start(
             onObservation = { observation ->
-                tracker.observe(observation)
-                snapshot = tracker.snapshot()
+                if (!registry.isIgnored(observation)) {
+                    tracker.observe(observation)
+                    snapshot = tracker.snapshot()
+                }
             },
             onStatusChanged = { scanStatus = it }
         )
+        if (mode.probeEnabled) {
+            probeLinkStatus = "STARTING"
+            probeLink.send(mode.command!!, sessionId) { success, detail ->
+                probeLinkStatus = if (success) "COMMAND SENT // $detail" else "ERROR // $detail"
+            }
+        }
         onDispose {
             scanner.releaseSession()
+            if (mode.probeEnabled) {
+                probeLink.send(ProbeProtocol.Command.STOP, sessionId) { _, _ -> }
+            }
             tracker.clear()
+        }
+    }
+
+    DisposableEffect(mode) {
+        if (mode.probeEnabled) {
+            val removeListener = ProbeTelemetryStore.observe(
+                onSnapshot = { probeNode = it },
+                onObservation = { sample ->
+                    val observation = com.suri.pipsurios.prs.BleObservation(
+                        temporaryId = sample.temporaryId,
+                        rssi = sample.rssi,
+                        observedAt = SystemClock.elapsedRealtime(),
+                        deviceIdentifier = sample.deviceIdentifier,
+                        deviceName = sample.deviceName,
+                        advertisingDataHex = sample.advertisingDataHex,
+                        deviceType = sample.deviceType,
+                        observedAtEpochMillis = sample.timestampEpochMillis,
+                        source = PrsObservationSource.PROBE_WATCH_2
+                    )
+                    if (!registry.isIgnored(observation)) {
+                        tracker.observe(observation)
+                        snapshot = tracker.snapshot()
+                    }
+                }
+            )
+            onDispose(removeListener)
+        } else {
+            probeNode = PrsProbeNodeSnapshot()
+            onDispose { }
         }
     }
 
@@ -179,17 +236,54 @@ fun IndividualTrackingTargetScreen(
     }
 
     val selectedMap = selectedMapId?.let { id -> OfflineMapCatalog.maps.firstOrNull { it.mapId == id } }
+    fun chooseTarget(contact: PrsContactSnapshot) {
+        val map = selectedMap ?: return
+        val knownRule = registry.savedDeviceFor(contact.measured)
+        onTargetSelected(
+            IndividualTrackingSelection(
+                mapId = map.mapId,
+                target = IndividualTrackingTarget(
+                    contactId = contact.contactId,
+                    deviceIdentifier = contact.measured.deviceIdentifier,
+                    displayName = knownRule?.displayName ?: contact.displayName,
+                    source = contact.source,
+                    knownRule = knownRule
+                )
+            )
+        )
+    }
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+        if (splitLayout) {
+            V4TargetSplitLayout(
+                title = title,
+                modeLabel = modeLabel,
+                locationStepLabel = locationStepLabel,
+                targetStepLabel = targetStepLabel,
+                selectedMap = selectedMap,
+                snapshot = snapshot,
+                scanStatus = scanStatus,
+                mode = mode,
+                registry = registry,
+                probeNode = probeNode,
+                probeLinkStatus = probeLinkStatus,
+                onMapSelected = { selectedMapId = it.mapId },
+                onChangeLocation = { selectedMapId = null },
+                onTargetSelected = ::chooseTarget,
+                onAllowBluetooth = { permissionLauncher.launch(prsPermissions()) },
+                onRetry = { retryVersion++ },
+                onBack = onBack
+            )
+        } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 24.dp, top = 20.dp, end = 24.dp, bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text("INDIVIDUAL TRACKER / TARGET", color = PipGreen, fontSize = 22.sp, fontFamily = FontFamily.Monospace)
+            Text(title, color = PipGreen, fontSize = 22.sp, fontFamily = FontFamily.Monospace)
             if (selectedMap == null) {
-                Text("STEP 1 // SELECT TERRAIN FIELD", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
-                Text("The field is selected before the BLE target.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                Text(locationStepLabel, color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                Text("Select the field before identifying the BLE target.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -203,7 +297,11 @@ fun IndividualTrackingTargetScreen(
                 }
             } else {
                 Text("FIELD: ${selectedMap.name}", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
-                Text("STEP 2 // SELECT DETECTED TARGET", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                Text(targetStepLabel, color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                Text("MODE: $modeLabel", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                if (mode.probeEnabled) {
+                    Text("PROBE: ${probeNode.state} // $probeLinkStatus", color = if (probeNode.state == "ACTIVE") PipGreen else PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
                 Text(
                     "KNOWN DEVICES: ${registry.snapshot().size}  //  P.R.S. RULES REUSED",
                     color = PipGreenDim,
@@ -232,21 +330,7 @@ fun IndividualTrackingTargetScreen(
                                 contact = contact,
                                 knownRule = knownRule,
                                 omittedByPrs = omitted,
-                                onClick = {
-                                    onTargetSelected(
-                                        IndividualTrackingSelection(
-                                            mapId = selectedMap.mapId,
-                                            target = IndividualTrackingTarget(
-                                                contactId = contact.contactId,
-                                                deviceIdentifier = contact.measured.deviceIdentifier,
-                                                displayName = knownRule?.displayName
-                                                    ?: contact.displayName,
-                                                source = contact.source,
-                                                knownRule = knownRule
-                                            )
-                                        )
-                                    )
-                                }
+                                onClick = { chooseTarget(contact) }
                             )
                         }
                     }
@@ -266,6 +350,125 @@ fun IndividualTrackingTargetScreen(
             onBack = onBack,
             modifier = Modifier.align(Alignment.BottomStart).padding(8.dp)
         )
+        }
+        if (splitLayout) {
+            TerminalOverlay { }
+        }
+    }
+}
+
+@Composable
+private fun V4TargetSplitLayout(
+    title: String,
+    modeLabel: String,
+    locationStepLabel: String,
+    targetStepLabel: String,
+    selectedMap: OfflineMapDefinition?,
+    snapshot: PrsSnapshot,
+    scanStatus: BleScanStatus,
+    mode: PrsOperatingMode,
+    registry: PrsDeviceRegistry,
+    probeNode: PrsProbeNodeSnapshot,
+    probeLinkStatus: String,
+    onMapSelected: (OfflineMapDefinition) -> Unit,
+    onChangeLocation: () -> Unit,
+    onTargetSelected: (PrsContactSnapshot) -> Unit,
+    onAllowBluetooth: () -> Unit,
+    onRetry: () -> Unit,
+    onBack: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 34.dp, top = 34.dp, end = 34.dp, bottom = 34.dp),
+        horizontalArrangement = Arrangement.spacedBy(18.dp)
+    ) {
+        TerminalPanel(modifier = Modifier.weight(1f).fillMaxHeight()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                Text(title, color = PipGreen, fontSize = 21.sp, fontFamily = FontFamily.Monospace)
+                Text("MODE: $modeLabel", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                Text(locationStepLabel, color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                if (selectedMap == null) {
+                    Text("SELECT THE TERRAIN LOCATION FOR THIS SESSION.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                    Column(
+                        modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(7.dp)
+                    ) {
+                        OfflineMapCatalog.maps.forEach { map ->
+                            IndividualMenuAction("> ${map.name}", { onMapSelected(map) })
+                        }
+                    }
+                } else {
+                    Text("LOCATION: ${selectedMap.name}", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                    Text(targetStepLabel, color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+                    Text("SELECT A TARGET FROM THE DEVICE LIST.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                    Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+                        Text("STEP 2 // GRID OVER MAP", color = PipGreen, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
+                        Text("The selected target opens the map GRID.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                        IndividualMenuAction("> CHANGE LOCATION", onChangeLocation)
+                    }
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                    val retryNeeded = scanStatus == BleScanStatus.PERMISSION_REQUIRED ||
+                        scanStatus == BleScanStatus.BLUETOOTH_OFF ||
+                        scanStatus == BleScanStatus.ERROR
+                    if (retryNeeded) {
+                        IndividualMenuAction(
+                            if (scanStatus == BleScanStatus.PERMISSION_REQUIRED) "> ALLOW BLUETOOTH" else "> TRY AGAIN",
+                            if (scanStatus == BleScanStatus.PERMISSION_REQUIRED) onAllowBluetooth else onRetry,
+                            Modifier.weight(1f)
+                        )
+                    }
+                    IndividualMenuAction("< BACK", onBack, Modifier.weight(1f))
+                }
+            }
+        }
+
+        TerminalPanel(modifier = Modifier.weight(1f).fillMaxHeight()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                Text("DETECTED DEVICES", color = PipGreen, fontSize = 21.sp, fontFamily = FontFamily.Monospace)
+                Text("A56 BLE: ${scanStatusLabel(scanStatus)}", color = individualScanStatusColor(scanStatus), fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                if (mode.probeEnabled) {
+                    Text("PROBE: ${probeNode.state} // $probeLinkStatus", color = if (probeNode.state == "ACTIVE") PipGreen else PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+                Text("${snapshot.contacts.size} CONTACTS // SELECT TARGET", color = PipAmber, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
+                Column(
+                    modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(7.dp)
+                ) {
+                    if (snapshot.contacts.isEmpty()) {
+                        Text(
+                            "${scanStatusLabel(scanStatus)} // WAITING FOR BLE ADVERTISEMENTS...",
+                            color = individualScanStatusColor(scanStatus),
+                            fontSize = 12.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    } else {
+                        snapshot.contacts.forEach { contact ->
+                            val knownRule = registry.savedDeviceFor(contact.measured)
+                            val omitted = registry.isIgnored(contact.measured)
+                            IndividualTargetRow(
+                                contact = contact,
+                                knownRule = knownRule,
+                                omittedByPrs = omitted,
+                                selectionEnabled = selectedMap != null,
+                                highlightSavedDevice = true,
+                                onClick = { onTargetSelected(contact) }
+                            )
+                        }
+                    }
+                    if (selectedMap == null) {
+                        Text("SELECT LOCATION FIRST TO ACTIVATE TARGET SELECTION.", color = PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -273,7 +476,10 @@ fun IndividualTrackingTargetScreen(
 fun IndividualTrackingTrackerScreen(
     selection: IndividualTrackingSelection?,
     onSelectTarget: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    mode: PrsOperatingMode = PrsOperatingMode.LOCAL_SCAN,
+    modeLabel: String = mode.displayName,
+    title: String = "INDIVIDUAL TRACKER"
 ) {
     if (selection == null) {
         Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
@@ -282,7 +488,7 @@ fun IndividualTrackingTrackerScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text("INDIVIDUAL TRACKER", color = PipGreen, fontSize = 22.sp, fontFamily = FontFamily.Monospace)
+                Text(title, color = PipGreen, fontSize = 22.sp, fontFamily = FontFamily.Monospace)
                 Text("TARGET NOT SELECTED", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
                 IndividualMenuAction("> OPEN TARGET", onSelectTarget)
             }
@@ -290,13 +496,22 @@ fun IndividualTrackingTrackerScreen(
         }
         return
     }
-    IndividualTrackerMapContent(selection = selection, onBack = onBack)
+    IndividualTrackerMapContent(
+        selection = selection,
+        onBack = onBack,
+        mode = mode,
+        modeLabel = modeLabel,
+        title = title
+    )
 }
 
 @Composable
 private fun IndividualTrackerMapContent(
     selection: IndividualTrackingSelection,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    mode: PrsOperatingMode,
+    modeLabel: String,
+    title: String
 ) {
     val context = LocalContext.current
     val definition = OfflineMapCatalog.maps.firstOrNull { it.mapId == selection.mapId }
@@ -308,13 +523,16 @@ private fun IndividualTrackerMapContent(
         return
     }
 
-    val scanner = remember(selection) { BleScanner(context.applicationContext) }
-    val tracker = remember(selection) { PrsContactTracker() }
-    val locationSource = remember(selection) { TerrainLocation(context.applicationContext) }
-    val headingSource = remember(selection) { TerrainHeading(context.applicationContext) }
-    val overlayRepository = remember(selection) { TerrainOverlayRepository.from(context.applicationContext) }
+    val scanner = remember(selection, mode) { BleScanner(context.applicationContext) }
+    val probeLink = remember(selection, mode) { ProbeLink(context.applicationContext) }
+    val tracker = remember(selection, mode) { PrsContactTracker() }
+    val locationSource = remember(selection, mode) { TerrainLocation(context.applicationContext) }
+    val headingSource = remember(selection, mode) { TerrainHeading(context.applicationContext) }
+    val overlayRepository = remember(selection, mode) { TerrainOverlayRepository.from(context.applicationContext) }
     var snapshot by remember(selection) { mutableStateOf(PrsSnapshot()) }
     var scanStatus by remember(selection) { mutableStateOf(BleScanStatus.IDLE) }
+    var probeNode by remember(selection, mode) { mutableStateOf(PrsProbeNodeSnapshot()) }
+    var probeLinkStatus by remember(selection, mode) { mutableStateOf(if (mode.probeEnabled) "STARTING" else "NOT USED") }
     var fix by remember(selection) { mutableStateOf<TerrainLocationFix?>(null) }
     var locationStatus by remember(selection) { mutableStateOf("WAITING GPS") }
     var heading by remember(selection) { mutableFloatStateOf(0f) }
@@ -328,6 +546,7 @@ private fun IndividualTrackerMapContent(
     var center by remember(selection) { mutableStateOf(definition.bounds.center) }
     var zoom by remember(selection) { mutableFloatStateOf(17.5f) }
     var canvasSize by remember(selection) { mutableStateOf(IntSize.Zero) }
+    val sessionId = remember(selection, mode) { "PRS-V4-${System.currentTimeMillis()}" }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -342,7 +561,7 @@ private fun IndividualTrackerMapContent(
         }
     }
 
-    DisposableEffect(permissionVersion, retryVersion) {
+    DisposableEffect(permissionVersion, retryVersion, selection, mode) {
         scanStatus = scanner.start(
             onObservation = { observation ->
                 if (selection.target.matches(observation)) {
@@ -371,11 +590,49 @@ private fun IndividualTrackerMapContent(
             },
             onUnavailable = { headingStatus = "HEADING UNAVAILABLE" }
         )
+        if (mode.probeEnabled) {
+            probeLinkStatus = "STARTING"
+            probeLink.send(mode.command!!, sessionId) { success, detail ->
+                probeLinkStatus = if (success) "COMMAND SENT // $detail" else "ERROR // $detail"
+            }
+        }
         onDispose {
             scanner.releaseSession()
             tracker.clear()
             locationSource.stop()
             headingSource.stop()
+            if (mode.probeEnabled) {
+                probeLink.send(ProbeProtocol.Command.STOP, sessionId) { _, _ -> }
+            }
+        }
+    }
+
+    DisposableEffect(selection, mode) {
+        if (mode.probeEnabled) {
+            val removeListener = ProbeTelemetryStore.observe(
+                onSnapshot = { probeNode = it },
+                onObservation = { sample ->
+                    val observation = com.suri.pipsurios.prs.BleObservation(
+                        temporaryId = sample.temporaryId,
+                        rssi = sample.rssi,
+                        observedAt = SystemClock.elapsedRealtime(),
+                        deviceIdentifier = sample.deviceIdentifier,
+                        deviceName = sample.deviceName,
+                        advertisingDataHex = sample.advertisingDataHex,
+                        deviceType = sample.deviceType,
+                        observedAtEpochMillis = sample.timestampEpochMillis,
+                        source = PrsObservationSource.PROBE_WATCH_2
+                    )
+                    if (selection.target.matches(observation)) {
+                        tracker.observe(observation)
+                        snapshot = tracker.snapshot()
+                    }
+                }
+            )
+            onDispose(removeListener)
+        } else {
+            probeNode = PrsProbeNodeSnapshot()
+            onDispose { }
         }
     }
 
@@ -442,6 +699,7 @@ private fun IndividualTrackerMapContent(
     }
 
     val selectedContact = snapshot.contacts.firstOrNull()
+    val gridProbe = probeGridPosition(fix, probeNode, mode)
     val panelScroll = rememberScrollState()
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Row(
@@ -501,6 +759,7 @@ private fun IndividualTrackerMapContent(
                     contacts = selectedContact?.let(::listOf) ?: emptyList(),
                     selectedContactId = selectedContact?.contactId,
                     selectedDisplayName = selection.target.displayName,
+                    probeNodes = listOfNotNull(gridProbe),
                     modifier = Modifier.fillMaxSize().padding(2.dp),
                     surfaceColor = Color.Transparent,
                     showEmblem = false,
@@ -517,8 +776,9 @@ private fun IndividualTrackerMapContent(
                     .padding(10.dp),
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                Text("INDIVIDUAL TRACKER", color = PipGreen, fontSize = 19.sp, fontFamily = FontFamily.Monospace)
+                Text(title, color = PipGreen, fontSize = 19.sp, fontFamily = FontFamily.Monospace)
                 Text("FIELD: ${definition.name}", color = PipAmber, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
+                Text("MODE: $modeLabel", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 Text("GRID: TARGET ONLY", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 Text("CENTER: A56 // GPS FOLLOW", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                 Text("AZIMUTH: UNAVAILABLE", color = PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -531,6 +791,13 @@ private fun IndividualTrackerMapContent(
                     Text("ID: ${selection.target.deviceIdentifier}", color = PipGreenDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text("SOURCE: ${selection.target.source.displayName}", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                     Text("P.R.S.: ${scanStatusLabel(scanStatus)}", color = individualScanStatusColor(scanStatus), fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    if (mode.probeEnabled) {
+                        Text("PROBE: ${probeNode.state}", color = if (probeNode.state == "ACTIVE") PipGreen else PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                        Text(probeLinkStatus, color = PipGreenDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        probeNode.location?.let { location ->
+                            Text("PROBE FIX: ±${formatSignal(location.accuracyMeters)} m  BAT ${location.batteryPercent?.toString() ?: "--"}%", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                        } ?: Text("PROBE FIX: WAITING FOR LOCATION", color = PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                    }
                     Text("GPS: $locationStatus", color = if (locationStatus.contains("ACTIVE")) PipGreen else PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                     Text("${headingStatus} // ${formatSignal(heading)}°", color = if (headingStatus.contains("ACTIVE")) PipGreenDim else PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                     if (selectedContact == null) {
@@ -563,10 +830,18 @@ private fun IndividualTargetRow(
     contact: PrsContactSnapshot,
     knownRule: PrsSavedDevice?,
     omittedByPrs: Boolean,
+    selectionEnabled: Boolean = true,
+    highlightSavedDevice: Boolean = false,
     onClick: () -> Unit
 ) {
-    val enabled = !omittedByPrs
-    val color = if (enabled) PipGreen else PipGreenDim
+    val enabled = selectionEnabled && !omittedByPrs
+    val savedDevice = highlightSavedDevice && knownRule != null
+    val color = when {
+        omittedByPrs -> PipGreenDim
+        savedDevice -> PipAmber
+        enabled -> PipGreen
+        else -> PipGreenDim
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -585,18 +860,28 @@ private fun IndividualTargetRow(
         )
         Text(
             text = if (knownRule != null) {
-                "KNOWN ${knownRule.type.label} // ${contact.source.displayName} // RSSI ${contact.measured.rssi}"
+                "${if (savedDevice) "SAVED DEVICE" else "KNOWN ${knownRule.type.label}"} // ${contact.source.displayName} // RSSI ${contact.measured.rssi}"
             } else {
                 "UNREGISTERED // ${contact.source.displayName} // RSSI ${contact.measured.rssi}"
             },
-            color = PipGreenDim,
+            color = if (savedDevice) PipAmber else PipGreenDim,
             fontSize = 9.sp,
             fontFamily = FontFamily.Monospace,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+        if (savedDevice && !omittedByPrs) {
+            Text(
+                "SAVED DEVICE // TARGET READY",
+                color = PipAmber,
+                fontSize = 9.sp,
+                fontFamily = FontFamily.Monospace
+            )
+        }
         if (omittedByPrs) {
             Text("OMITTED BY P.R.S. DEVICES // DISABLE RULE TO SELECT", color = PipAmber, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+        } else if (!selectionEnabled) {
+            Text("SELECT LOCATION BEFORE TARGET", color = PipAmber, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
         }
     }
 }

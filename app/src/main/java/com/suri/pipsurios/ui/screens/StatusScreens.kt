@@ -2,13 +2,19 @@ package com.suri.pipsurios.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,13 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.painterResource
+import com.suri.pipsurios.R
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import com.suri.pipsurios.ui.state.ComplementCatalog
 import com.suri.pipsurios.ui.theme.PipRed
@@ -35,7 +42,6 @@ import com.suri.pipsurios.ui.theme.PipBlack
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import kotlinx.coroutines.delay
-import kotlin.math.min
 
 @Composable
 fun StatusLoadingScreen(onFinished: () -> Unit) {
@@ -47,7 +53,7 @@ fun StatusLoadingScreen(onFinished: () -> Unit) {
         modifier = Modifier.fillMaxSize().background(PipBlack),
         contentAlignment = Alignment.Center
     ) {
-        Text("LOADING...", color = PipGreen, fontSize = 30.sp, fontFamily = FontFamily.Monospace)
+        LoadingGlitchText()
     }
 }
 
@@ -91,7 +97,7 @@ fun StatusScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -105,114 +111,260 @@ private fun StatusArmorDiagram(
     activeLoadout: LoadoutConfiguration,
     onAccessoriesSelected: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 60.dp, bottom = 76.dp)
-    ) {
-        Canvas(Modifier.fillMaxSize()) {
-            val designWidth = 780f
-            val designHeight = 224f
-            val scale = min(size.width / designWidth, size.height / designHeight)
-            val originX = (size.width - designWidth * scale) / 2f
-            val originY = (size.height - designHeight * scale) / 2f
-            fun point(x: Float, y: Float) = Offset(originX + x * scale, originY + y * scale)
-            fun connector(from: Offset, to: Offset) {
-                drawLine(PipGreenDim, from, to, strokeWidth = 2f * scale)
+    Box(modifier = Modifier.fillMaxSize()) {
+        // TERMINAL uses 18.dp for the frame and 12.dp for its content inset.
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(STATUS_GRID_CONTENT_INSET)
+        ) {
+            Image(
+                painter = painterResource(R.drawable.status_armor),
+                contentDescription = "STATUS ARMOR",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val divisions = STATUS_GRID_LINE_COUNT - 1
+
+                // STATUS line 01: from vertical 5.25 / horizontal 1 to 6.9 / 1.
+                drawLine(
+                    color = PipGreen,
+                    start = Offset(
+                        x = size.width * ((5.25f - 1f) / divisions),
+                        y = 0f
+                    ),
+                    end = Offset(
+                        x = size.width * ((6.9f - 1f) / divisions),
+                        y = 0f
+                    ),
+                    strokeWidth = 2.dp.toPx()
+                )
+
+                // STATUS line 02: from vertical 3.1 / horizontal 4 to 4 / 4.
+                drawLine(
+                    color = PipGreen,
+                    start = Offset(
+                        x = size.width * ((3.1f - 1f) / divisions),
+                        y = size.height * ((4f - 1f) / divisions)
+                    ),
+                    end = Offset(
+                        x = size.width * ((4f - 1f) / divisions),
+                        y = size.height * ((4f - 1f) / divisions)
+                    ),
+                    strokeWidth = 2.dp.toPx()
+                )
+
+                // STATUS line 03: from 6 / 5 to vertical 6.9 / horizontal 7.
+                drawLine(
+                    color = PipGreen,
+                    start = Offset(
+                        x = size.width * ((6f - 1f) / divisions),
+                        y = size.height * ((5f - 1f) / divisions)
+                    ),
+                    end = Offset(
+                        x = size.width * ((6.9f - 1f) / divisions),
+                        y = size.height * ((6f - 1f) / divisions)
+                    ),
+                    strokeWidth = 2.dp.toPx()
+                )
+
+                // STATUS line 04: from 6 / 3 to vertical 6.9 / horizontal 3.
+                drawLine(
+                    color = PipGreen,
+                    start = Offset(
+                        x = size.width * ((6f - 1f) / divisions),
+                        y = size.height * ((3f - 1f) / divisions)
+                    ),
+                    end = Offset(
+                        x = size.width * ((6.9f - 1f) / divisions),
+                        y = size.height * ((3f - 1f) / divisions)
+                    ),
+                    strokeWidth = 2.dp.toPx()
+                )
+
+                // STATUS line 05: from vertical 3.1 / horizontal 6 to 4 / 5.
+                drawLine(
+                    color = PipGreen,
+                    start = Offset(
+                        x = size.width * ((3.1f - 1f) / divisions),
+                        y = size.height * ((6f - 1f) / divisions)
+                    ),
+                    end = Offset(
+                        x = size.width * ((4f - 1f) / divisions),
+                        y = size.height * ((5f - 1f) / divisions)
+                    ),
+                    strokeWidth = 2.dp.toPx()
+                )
+
+                // STATUS line 06: from vertical 3.1 / horizontal 8 to 4 / 7.
+                drawLine(
+                    color = PipGreen,
+                    start = Offset(
+                        x = size.width * ((3.1f - 1f) / divisions),
+                        y = size.height * ((8f - 1f) / divisions)
+                    ),
+                    end = Offset(
+                        x = size.width * ((4.25f - 1f) / divisions),
+                        y = size.height * ((6.5f - 1f) / divisions)
+                    ),
+                    strokeWidth = 2.dp.toPx()
+                )
+
             }
 
-            val outline = PipGreenDim
-            val fill = PipGreenDim.copy(alpha = 0.18f)
-            connector(point(390f, 48f), point(390f, 37f))
-            connector(point(345f, 94f), point(250f, 72f))
-            connector(point(435f, 94f), point(530f, 72f))
-            connector(point(390f, 153f), point(250f, 138f))
-            connector(point(425f, 101f), point(530f, 138f))
-            connector(point(413f, 207f), point(530f, 190f))
-
-            drawCircle(fill, 24f * scale, point(390f, 58f))
-            drawCircle(outline, 24f * scale, point(390f, 58f), style = Stroke(2f * scale))
-            drawRoundRect(
-                color = fill,
-                topLeft = point(371f, 84f),
-                size = Size(38f * scale, 70f * scale),
-                cornerRadius = CornerRadius(8f * scale),
-            )
-            drawRoundRect(
-                color = outline,
-                topLeft = point(371f, 84f),
-                size = Size(38f * scale, 70f * scale),
-                cornerRadius = CornerRadius(8f * scale),
-                style = Stroke(2f * scale),
-            )
-            drawLine(outline, point(371f, 89f), point(345f, 96f), strokeWidth = 12f * scale)
-            drawLine(outline, point(409f, 89f), point(435f, 96f), strokeWidth = 12f * scale)
-            drawLine(outline, point(345f, 96f), point(326f, 125f), strokeWidth = 10f * scale)
-            drawLine(outline, point(435f, 96f), point(454f, 125f), strokeWidth = 10f * scale)
-            drawCircle(fill, 8f * scale, point(326f, 125f))
-            drawCircle(fill, 8f * scale, point(454f, 125f))
-            drawCircle(outline, 8f * scale, point(326f, 125f), style = Stroke(2f * scale))
-            drawCircle(outline, 8f * scale, point(454f, 125f), style = Stroke(2f * scale))
-            drawLine(outline, point(390f, 154f), point(390f, 163f), strokeWidth = 8f * scale)
-            drawLine(outline, point(371f, 145f), point(409f, 145f), strokeWidth = 3f * scale)
-            drawLine(outline, point(371f, 155f), point(409f, 155f), strokeWidth = 3f * scale)
-            drawLine(outline, point(379f, 157f), point(372f, 207f), strokeWidth = 14f * scale)
-            drawLine(outline, point(401f, 157f), point(408f, 207f), strokeWidth = 14f * scale)
-            drawCircle(fill, 7f * scale, point(372f, 207f))
-            drawCircle(fill, 7f * scale, point(408f, 207f))
-            drawCircle(outline, 7f * scale, point(372f, 207f), style = Stroke(2f * scale))
-            drawCircle(outline, 7f * scale, point(408f, 207f), style = Stroke(2f * scale))
-            drawLine(outline, point(365f, 214f), point(379f, 214f), strokeWidth = 4f * scale)
-            drawLine(outline, point(401f, 214f), point(415f, 214f), strokeWidth = 4f * scale)
         }
 
-        StatusDiagramLabel(
-            value = statusDisplayValue(activeLoadout.headgearProfile),
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
-        StatusDiagramLabel(
-            value = statusDisplayValue(activeLoadout.secondaryWeapon?.displayName),
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(start = 8.dp, top = 48.dp)
-        )
-        StatusDiagramLabel(
+        // Coordinates are vertical line first, horizontal line second.
+        StatusCoordinateLabel(
             value = statusDisplayValue(activeLoadout.primaryWeaponDisplayName()),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 8.dp, top = 48.dp)
+            verticalLine = 3,
+            horizontalLine = 6,
+            side = StatusLabelSide.Left
         )
-        StatusDiagramLabel(
-            value = statusDisplayValue(activeLoadout.frontPanelRole),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 8.dp, top = 116.dp)
+        StatusCoordinateLabel(
+            value = statusDisplayValue(activeLoadout.secondaryWeapon?.displayName),
+            verticalLine = 7,
+            horizontalLine = 6,
+            side = StatusLabelSide.Right
         )
-        StatusDiagramLabel(
-            value = statusDisplayValue(activeLoadout.uniform),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(end = 8.dp, top = 178.dp)
+        StatusCoordinateLabel(
+            value = statusDisplayValue(activeLoadout.headgearProfile),
+            verticalLine = 7,
+            horizontalLine = 1,
+            side = StatusLabelSide.Right
         )
-        StatusAccessoriesButton(
+        StatusCoordinateButton(
             onClick = onAccessoriesSelected,
+            verticalLine = 3,
+            horizontalLine = 4,
+            side = StatusLabelSide.Left
+        )
+        StatusCoordinateLabel(
+            value = statusDisplayValue(activeLoadout.frontPanelRole),
+            verticalLine = 7,
+            horizontalLine = 3,
+            side = StatusLabelSide.Right
+        )
+        StatusCoordinateLabel(
+            value = statusDisplayValue(activeLoadout.uniform),
+            verticalLine = 3,
+            horizontalLine = 8,
+            side = StatusLabelSide.Left
+        )
+
+    }
+}
+
+private val STATUS_GRID_CONTENT_INSET = 30.dp
+private const val STATUS_GRID_LINE_COUNT = 9
+
+private enum class StatusLabelSide {
+    Left,
+    Right
+}
+
+@Composable
+private fun StatusCoordinateLabel(
+    value: String,
+    verticalLine: Int,
+    horizontalLine: Int,
+    side: StatusLabelSide
+) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val labelWidth = 190.dp
+        val labelHeight = 32.dp
+        val gridWidth = (maxWidth - (STATUS_GRID_CONTENT_INSET * 2)).coerceAtLeast(0.dp)
+        val gridHeight = (maxHeight - (STATUS_GRID_CONTENT_INSET * 2)).coerceAtLeast(0.dp)
+        val lineX = STATUS_GRID_CONTENT_INSET +
+            (gridWidth * ((verticalLine - 1) / (STATUS_GRID_LINE_COUNT - 1).toFloat()))
+        val lineY = STATUS_GRID_CONTENT_INSET +
+            (gridHeight * ((horizontalLine - 1) / (STATUS_GRID_LINE_COUNT - 1).toFloat()))
+        val labelX = (if (side == StatusLabelSide.Left) lineX - labelWidth else lineX)
+            .coerceIn(0.dp, (maxWidth - labelWidth).coerceAtLeast(0.dp))
+        val labelY = (lineY - (labelHeight / 2)).coerceIn(
+            0.dp,
+            (maxHeight - labelHeight).coerceAtLeast(0.dp)
+        )
+
+        Box(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(start = 8.dp, top = 116.dp)
+                .offset(x = labelX, y = labelY)
+                .width(labelWidth)
+                .height(labelHeight),
+            contentAlignment = if (side == StatusLabelSide.Left) {
+                Alignment.CenterEnd
+            } else {
+                Alignment.CenterStart
+            }
+        ) {
+            StatusDiagramLabel(
+                value = value,
+                textAlign = if (side == StatusLabelSide.Left) TextAlign.End else TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatusCoordinateButton(
+    onClick: () -> Unit,
+    verticalLine: Int,
+    horizontalLine: Int,
+    side: StatusLabelSide
+) {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val labelWidth = 190.dp
+        val labelHeight = 32.dp
+        val gridWidth = (maxWidth - (STATUS_GRID_CONTENT_INSET * 2)).coerceAtLeast(0.dp)
+        val gridHeight = (maxHeight - (STATUS_GRID_CONTENT_INSET * 2)).coerceAtLeast(0.dp)
+        val lineX = STATUS_GRID_CONTENT_INSET +
+            (gridWidth * ((verticalLine - 1) / (STATUS_GRID_LINE_COUNT - 1).toFloat()))
+        val lineY = STATUS_GRID_CONTENT_INSET +
+            (gridHeight * ((horizontalLine - 1) / (STATUS_GRID_LINE_COUNT - 1).toFloat()))
+        val labelX = (if (side == StatusLabelSide.Left) lineX - labelWidth else lineX)
+            .coerceIn(0.dp, (maxWidth - labelWidth).coerceAtLeast(0.dp))
+        val labelY = (lineY - (labelHeight / 2)).coerceIn(
+            0.dp,
+            (maxHeight - labelHeight).coerceAtLeast(0.dp)
         )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .offset(x = labelX, y = labelY)
+                .width(labelWidth)
+                .height(labelHeight),
+            contentAlignment = if (side == StatusLabelSide.Left) {
+                Alignment.CenterEnd
+            } else {
+                Alignment.CenterStart
+            }
+        ) {
+            StatusAccessoriesButton(
+                onClick = onClick,
+                textAlign = if (side == StatusLabelSide.Left) TextAlign.End else TextAlign.Start,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 
 @Composable
 private fun StatusDiagramLabel(
     value: String,
+    textAlign: TextAlign = TextAlign.Start,
     modifier: Modifier = Modifier
 ) {
     Text(
         text = value,
-        color = PipGreenDim,
-        fontSize = 15.sp,
+        color = PipGreen,
+        fontSize = 16.sp,
         fontFamily = FontFamily.Monospace,
+        textAlign = textAlign,
         modifier = modifier.widthIn(max = 230.dp)
     )
 }
@@ -220,6 +372,7 @@ private fun StatusDiagramLabel(
 @Composable
 private fun StatusAccessoriesButton(
     onClick: () -> Unit,
+    textAlign: TextAlign = TextAlign.Start,
     modifier: Modifier = Modifier
 ) {
     Text(
@@ -227,6 +380,7 @@ private fun StatusAccessoriesButton(
         color = PipGreen,
         fontSize = 16.sp,
         fontFamily = FontFamily.Monospace,
+        textAlign = textAlign,
         modifier = modifier
             .clickable(onClick = onClick)
             .padding(horizontal = 6.dp, vertical = 3.dp)
@@ -280,7 +434,7 @@ fun StatusAccessoriesScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -291,11 +445,6 @@ fun StatusAccessoriesScreen(
 
 private fun statusDisplayValue(value: String?): String =
     value?.trim().takeIf { !it.isNullOrEmpty() } ?: "N/A"
-
-/*
- * The T-45 silhouette is deliberately drawn in Compose for now. It is a
- * replaceable visual placeholder until the final armor asset is available.
- */
 
 @Composable
 fun DontForgetScreen(activeLoadout: LoadoutConfiguration, onBack: () -> Unit) {
@@ -355,7 +504,7 @@ fun DontForgetScreen(activeLoadout: LoadoutConfiguration, onBack: () -> Unit) {
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.7",
+            text = "PIP-SuriOS v2.8",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -59,7 +59,7 @@ fun StorageItemScreen(
         }
         Text("< BACK", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp))
-        Text("PIP-SuriOS v2.7", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
+        Text("PIP-SuriOS v2.8", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp))
     }
 }

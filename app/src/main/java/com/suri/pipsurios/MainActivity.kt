@@ -39,6 +39,8 @@ import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerV3Screen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerV4Screen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerGuideScreen
 import com.suri.pipsurios.ui.screens.PrsDevicesScreen
 import com.suri.pipsurios.ui.screens.PrsTrackingScreen
@@ -48,6 +50,7 @@ import com.suri.pipsurios.ui.screens.IndividualTrackingTrackerScreen
 import com.suri.pipsurios.individualtracking.IndividualTrackingSelection
 import com.suri.pipsurios.ui.screens.PrsOnlyApp
 import com.suri.pipsurios.prs.PrsOperatingMode
+import com.suri.pipsurios.prs.PrsV4Mode
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterScreen
 import com.suri.pipsurios.ui.screens.DataLoadingScreen
@@ -192,7 +195,11 @@ private enum class PIPSuriOSDestination {
     Tools,
     ProximityRadioScannerLoading,
     ProximityRadioScanner,
+    ProximityRadioScannerV3,
+    ProximityRadioScannerV4,
     ProximityRadioScannerGuide,
+    PrsV4Target,
+    PrsV4Grid,
     PrsDevices,
     PrsLocalScan,
     PrsScanProbe,
@@ -280,6 +287,8 @@ private fun destinationUsesTerminalOverlay(destination: PIPSuriOSDestination): B
         PIPSuriOSDestination.HomeOperation,
         PIPSuriOSDestination.ProximityRadioScannerLoading,
         PIPSuriOSDestination.ProximityRadioScannerGuide,
+        PIPSuriOSDestination.PrsV4Target,
+        PIPSuriOSDestination.PrsV4Grid,
         PIPSuriOSDestination.PrsDevices,
         PIPSuriOSDestination.PrsLocalScan,
         PIPSuriOSDestination.PrsScanProbe,
@@ -327,6 +336,8 @@ private fun PIPSuriOSApp(
     }
 
     var individualTrackingSelection by remember { mutableStateOf<IndividualTrackingSelection?>(null) }
+    var prsV4Mode by remember { mutableStateOf(PrsV4Mode.ONLY_PIP_BOY) }
+    var prsV4Selection by remember { mutableStateOf<IndividualTrackingSelection?>(null) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
     var morseInput by remember { mutableStateOf("") }
@@ -701,36 +712,75 @@ private fun PIPSuriOSApp(
             )
 
             PIPSuriOSDestination.ProximityRadioScanner -> ProximityRadioScannerScreen(
+                onV3Selected = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 },
+                onV4Selected = { destination = PIPSuriOSDestination.ProximityRadioScannerV4 },
+                onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+            PIPSuriOSDestination.ProximityRadioScannerV3 -> ProximityRadioScannerV3Screen(
                 onLocalScanSelected = { destination = PIPSuriOSDestination.PrsLocalScan },
                 onScanProbeSelected = { destination = PIPSuriOSDestination.PrsScanProbe },
                 onDevicesSelected = { destination = PIPSuriOSDestination.PrsDevices },
                 onIndividualTrackerSelected = { destination = PIPSuriOSDestination.IndividualTracker },
                 onGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerGuide },
-                onBack = { destination = PIPSuriOSDestination.Tools }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+            PIPSuriOSDestination.ProximityRadioScannerV4 -> ProximityRadioScannerV4Screen(
+                onOnlyPipBoySelected = {
+                    prsV4Mode = PrsV4Mode.ONLY_PIP_BOY
+                    prsV4Selection = null
+                    destination = PIPSuriOSDestination.PrsV4Target
+                },
+                onPipBoyProbeSelected = {
+                    prsV4Mode = PrsV4Mode.PIP_BOY_PROBE
+                    prsV4Selection = null
+                    destination = PIPSuriOSDestination.PrsV4Target
+                },
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+            PIPSuriOSDestination.PrsV4Target -> IndividualTrackingTargetScreen(
+                mode = prsV4Mode.operatingMode,
+                modeLabel = prsV4Mode.displayName,
+                title = "P.R.S. v4.0 / STEP 1",
+                locationStepLabel = "STEP 1 // SELECT LOCATION",
+                targetStepLabel = "STEP 1 // IDENTIFY TARGET",
+                splitLayout = true,
+                onTargetSelected = {
+                    prsV4Selection = it
+                    destination = PIPSuriOSDestination.PrsV4Grid
+                },
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV4 }
+            )
+            PIPSuriOSDestination.PrsV4Grid -> IndividualTrackingTrackerScreen(
+                selection = prsV4Selection,
+                mode = prsV4Mode.operatingMode,
+                modeLabel = prsV4Mode.displayName,
+                title = "P.R.S. v4.0 / STEP 2 // GRID",
+                onSelectTarget = { destination = PIPSuriOSDestination.PrsV4Target },
+                onBack = { destination = PIPSuriOSDestination.PrsV4Target }
             )
             PIPSuriOSDestination.ProximityRadioScannerGuide -> ProximityRadioScannerGuideScreen(
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
             )
 
             PIPSuriOSDestination.PrsDevices -> PrsDevicesScreen(
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
             )
 
             PIPSuriOSDestination.PrsLocalScan -> PrsTrackingScreen(
                 mode = PrsOperatingMode.LOCAL_SCAN,
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
             )
 
             PIPSuriOSDestination.PrsScanProbe -> PrsTrackingScreen(
                 mode = PrsOperatingMode.SCAN_PROBE,
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
             )
 
             PIPSuriOSDestination.IndividualTracker -> IndividualTrackingMenuScreen(
                 selection = individualTrackingSelection,
                 onTargetSelected = { destination = PIPSuriOSDestination.IndividualTrackerTarget },
                 onTrackerSelected = { destination = PIPSuriOSDestination.IndividualTrackerTracker },
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
             )
 
             PIPSuriOSDestination.IndividualTrackerTarget -> IndividualTrackingTargetScreen(
@@ -1374,7 +1424,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
                 )
 
                 Text(
-                    text = "PIP-SuriOS v2.7",
+                    text = "PIP-SuriOS v2.8",
                     color = PipGreenDim,
                     fontSize = 18.sp,
                     fontFamily = FontFamily.Monospace

@@ -1,8 +1,7 @@
 # Integración Orca - QGIS para PIP-SuriOS
 
 Esta carpeta contiene la vinculación reproducible de Orca con la instalación QGIS
-existente. La primera fase no rehace NAVY7 ni descarga datos: solo comprueba el
-entorno y la comunicación.
+existente y los generadores de mapas offline de SuriOS.
 
 ## Entorno auditado
 
@@ -89,18 +88,17 @@ Hillshade queda fuera por defecto. El margen del área, el intervalo de curvas
 (referencia actual: 2 m), la resolución de salida y el estilo serán parámetros
 del futuro generador, no valores codificados para NAVY7.
 
-## Regeneración de NAVY7 en Sprint 020
+## Regeneración de NAVY7 en Sprint 030
 
-La regeneración de NAVY7 se realizó con QGIS LTR 3.44.13 y el proyecto piloto
-`C:\Users\diego\Desktop\GQUIS\MAP SuriOS.qgz`, usando las capas activas
-`highway`, `contours_2m` y `building`. El MDT y OpenStreetMap permanecieron
-desactivados para conservar una salida completamente offline.
+La regeneración de NAVY7 se realizó con QGIS LTR 3.44.13 y `Navy7.gpkg`, usando
+las capas `highway`, `contours_2m` y `building`. El resultado es completamente
+offline y conserva el centro `40.352971232717216, -3.423711863510395`.
 
-El centro solicitado es `40.35297419412242, -3.4237021485063486`. Se conservó
-la huella aproximada del mapa anterior, con la extensión WGS84
-`-3.4266621485063486,40.35152419412242,-3.4207421485063486,40.35442419412242`.
-La salida final es `app/src/main/assets/maps/navy_7_terrain.mbtiles`, PNG,
-overlay, zoom 16–19, compatible con `MbTilesRepository`.
+Desde Sprint 030, NAVY7 usa una huella cuadrada de 2 km x 2 km, con curvas de
+nivel visibles, y 1.699 teselas PNG en zoom 16–19. La salida final es
+`app/src/main/assets/maps/navy_7_terrain.mbtiles`, compatible con
+`MbTilesRepository`. Sus bounds WGS84 son
+`-3.435483145327,40.343965582217,-3.411940581694,40.361976883217`.
 
 ## Modelo estándar HOME para NAVY7 y futuros mapas
 
@@ -112,8 +110,9 @@ El punto de entrada recomendado para nuevos mapas es
 No lee ni transforma el MBTiles anterior.
 Todas las rutas de entrada y salida son argumentos obligatorios; así el pipeline
 no depende de una ruta de usuario concreta.
-El modelo deja fijos los parámetros de HOME; para repetirlo solo se suministra
-el centro geográfico:
+El modelo actual usa una huella estándar de 2 km x 2 km, teselas PNG RGBA opacas
+de 256 x 256, overlay SQLite y zoom 16–19. El centro y el GeoPackage se pasan
+como argumentos:
 
 ```powershell
 $env:QGIS_PREFIX_PATH = "C:\Program Files\QGIS 3.44.13\apps\qgis-ltr"
@@ -124,27 +123,32 @@ $env:QGIS_PREFIX_PATH = "C:\Program Files\QGIS 3.44.13\apps\qgis-ltr"
   --output "C:\Users\diego\Desktop\GQUIS\navy_7_terrain_HOME_STYLE.mbtiles" `
   --center-lat 40.352971232717216 `
   --center-lon -3.423711863510395 `
+  --width-metres 2000 `
+  --height-metres 2000 `
+  --contour-layer contours_2m `
   --force
 ```
 
 Los valores estándar fijados son:
 
-- dimensiones geográficas HOME: 0,05867° x 0,023° (aproximadamente 5 km x
-  2,5 km), centradas en las coordenadas suministradas;
+- huella cuadrada de 2 km x 2 km, centrada en las coordenadas suministradas;
 - tesela PNG RGBA opaca de 256 x 256, fondo `#050805`, overlay SQLite y zoom
   16–19;
 - edificios `#606060` con borde `#050805` de 0,10 mm;
 - carreteras `#2f7ebe`, ancho 0,45 mm, extremos redondeados;
-- curvas menores `#4cb359`, ancho 0,55 mm, y curvas índice `#5bd66b`, ancho
-  0,90 mm;
-- jerarquía de capas: edificios, carreteras, curvas menores y curvas índice.
+- curvas de nivel `#4cb359`, ancho 0,70 mm;
+- jerarquía de capas: edificios, carreteras y curvas de nivel.
 
-El proyecto y la salida se escriben por defecto en GQUIS como
-`Navy7_HOME_STYLE.qgz` y `navy_7_terrain_HOME_STYLE.mbtiles`. La salida Sprint
-023 utiliza `highway`, `contours_2m` y `building`; MDT y OSM online permanecen
-desactivados. La matriz resultante para este centro es 84, 276, 1012 y 3870
-teselas por zoom, 5242 en total, con bounds WGS84
-`-3.453046863510,40.341471232717,-3.394376863510,40.364471232717`.
+El proyecto y la salida se escriben en GQUIS como
+`Navy7_2KM_STYLE.qgz` y `navy_7_terrain_2km.mbtiles`. MDT y OSM online
+permanecen desactivados.
+
+HOME ya disponía de edificios, carreteras y curvas de nivel en su MBTiles
+validado, pero no se encontró su GeoPackage original. Para no perder esas
+capas, Sprint 030 usa `crop_mbtiles_centered.py` y conserva las teselas
+existentes dentro de la nueva huella de 2 km x 2 km. La salida final contiene
+1.699 teselas y sus bounds WGS84 son
+`-3.882292827336,40.438894497808,-3.858717172664,40.456905502192`.
 
 ## Política de fuentes y reproducibilidad
 
@@ -161,21 +165,29 @@ asset Android ya forma parte del artefacto de release.
 
 ## OFFICE en Sprint 027
 
-OFFICE se genera con el mismo contrato visual y dimensional que NAVY7, centrado
-en `40.43717182620207, -3.620425636696507`. Su fuente local es un GeoPackage
+OFFICE se genera con el mismo contrato visual que NAVY7, centrado en
+`40.43717182620207, -3.620425636696507`. Su fuente local es un GeoPackage
 preparado desde OpenStreetMap mediante Overpass, con edificios y carreteras
 reales de la zona. No se generan curvas de nivel cuando la fuente urbana no las
-aporta.
+aporta. Desde Sprint 029 la huella se reduce a 2 km x 2 km para acelerar la
+carga en el dispositivo.
 
 El flujo reproducible es:
 
-1. Consultar Overpass para el rectangulo de 5 km x 2,5 km alrededor del centro.
+1. Consultar Overpass para el rectangulo de 2 km x 2 km alrededor del centro.
 2. Convertir el JSON con `prepare_overpass_gpkg.py` a capas `building` y
    `highway` en un GeoPackage local.
-3. Ejecutar `build_terrain_home_style.py` con `--map-id office`, `--map-name
-   OFFICE` y `--no-contours`.
-4. Copiar el MBTiles resultante a `app/src/main/assets/maps/office_terrain.mbtiles`
+3. Descargar desde el MDT05 del IGN/CNIG el recorte de elevación que cubre el
+   centro y generar la capa `contours_2m` con `gdal_contour`.
+4. Normalizar la referencia espacial de las curvas con
+   `normalize_contour_crs.py` y añadirlas al GeoPackage junto a `building` y
+   `highway`.
+5. Ejecutar `build_terrain_home_style.py` con `--map-id office`, `--map-name
+   OFFICE`, `--width-metres 2000`, `--height-metres 2000` y
+   `--contour-layer contours_2m`.
+6. Copiar el MBTiles resultante a `app/src/main/assets/maps/office_terrain.mbtiles`
    y registrar su SHA-256 y sus bounds en `OfflineMapCatalog`.
 
-La salida generada contiene 5.275 teselas PNG en zoom 16-19 y sus bounds son
-`-3.649760636697,40.425671826202,-3.591090636697,40.448671826202`.
+La salida generada contiene 1.669 teselas PNG en zoom 16-19 y 310 curvas de
+nivel derivadas del MDT05. Sus bounds son
+`-3.632211590216,40.428166307246,-3.608639683177,40.446177345158`.

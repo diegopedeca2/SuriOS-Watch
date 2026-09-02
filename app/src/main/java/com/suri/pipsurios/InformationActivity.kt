@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import com.suri.pipsurios.ui.screens.InformationAcknowledgementsScreen
 import com.suri.pipsurios.ui.screens.InformationDisclaimersScreen
 import com.suri.pipsurios.ui.screens.InformationScreen
+import com.suri.pipsurios.ui.screens.InformationTestersScreen
 import com.suri.pipsurios.ui.screens.TerminalOverlay
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
 
@@ -51,7 +52,8 @@ class InformationActivity : androidx.activity.ComponentActivity() {
 private enum class InformationDestination {
     ROOT,
     ACKNOWLEDGEMENTS,
-    DISCLAIMERS
+    DISCLAIMERS,
+    TESTERS
 }
 
 @Composable
@@ -73,12 +75,18 @@ private fun InformationApp(onExit: () -> Unit) {
             onDisclaimersSelected = {
                 destination = InformationDestination.DISCLAIMERS
             },
+            onTestersSelected = {
+                destination = InformationDestination.TESTERS
+            },
             onBack = onExit
         )
         InformationDestination.ACKNOWLEDGEMENTS -> InformationAcknowledgementsScreen(
             onBack = { destination = InformationDestination.ROOT }
         )
         InformationDestination.DISCLAIMERS -> InformationDisclaimersScreen(
+            onBack = { destination = InformationDestination.ROOT }
+        )
+        InformationDestination.TESTERS -> InformationTestersScreen(
             onBack = { destination = InformationDestination.ROOT }
         )
     }

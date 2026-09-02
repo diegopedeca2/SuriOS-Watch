@@ -21,11 +21,66 @@ TILE_SIZE = 256
 WEB_MERCATOR_RADIUS = 6378137.0
 WEB_MERCATOR_HALF_WORLD = math.pi * WEB_MERCATOR_RADIUS
 
-# HOME's final geographic contract.
-HOME_WIDTH_DEGREES = 0.05867
-HOME_HEIGHT_DEGREES = 0.023
-HOME_EXTENT_WIDTH_METRES = 6530.5898802350275
-HOME_EXTENT_HEIGHT_METRES = 3359.221663842909
+# SuriOS terrain maps use a square 2 km x 2 km field by default. The geographic
+# bounds are calculated at the requested latitude so the ground distance stays
+# consistent across the supported fields.
+HOME_WIDTH_METRES = 2000.0
+HOME_HEIGHT_METRES = 2000.0
+WGS84_METRES_PER_DEGREE_LAT = (
+    111132.92,
+    -559.82,
+    1.175,
+    -0.0023,
+)
+
+
+def metres_per_degree_latitude(latitude: float) -> float:
+    radians = math.radians(latitude)
+    return (
+        WGS84_METRES_PER_DEGREE_LAT[0]
+        + WGS84_METRES_PER_DEGREE_LAT[1] * math.cos(2.0 * radians)
+        + WGS84_METRES_PER_DEGREE_LAT[2] * math.cos(4.0 * radians)
+        + WGS84_METRES_PER_DEGREE_LAT[3] * math.cos(6.0 * radians)
+    )
+
+
+def metres_per_degree_longitude(latitude: float) -> float:
+    radians = math.radians(latitude)
+    return (
+        111412.84 * math.cos(radians)
+        - 93.5 * math.cos(3.0 * radians)
+        + 0.118 * math.cos(5.0 * radians)
+    )
+
+
+def dimensions_in_degrees(
+    center_lat: float,
+    width_metres: float | None,
+    height_metres: float | None,
+) -> tuple[float, float]:
+    if width_metres is None and height_metres is None:
+        width_metres = HOME_WIDTH_METRES
+        height_metres = HOME_HEIGHT_METRES
+    if width_metres is None or height_metres is None:
+        raise ValueError("width and height must be supplied together")
+    return (
+        width_metres / metres_per_degree_longitude(center_lat),
+        height_metres / metres_per_degree_latitude(center_lat),
+    )
+
+
+def dimensions_in_web_mercator_metres(
+    center_lat: float,
+    width_metres: float | None,
+    height_metres: float | None,
+) -> tuple[float, float]:
+    if width_metres is None and height_metres is None:
+        width_metres = HOME_WIDTH_METRES
+        height_metres = HOME_HEIGHT_METRES
+    if width_metres is None or height_metres is None:
+        raise ValueError("width and height must be supplied together")
+    scale = 1.0 / math.cos(math.radians(center_lat))
+    return width_metres * scale, height_metres * scale
 
 # Final opaque HOME palette, measured from home_terrain-v10 / app asset.
 BACKGROUND = (5, 8, 5, 255)
@@ -67,13 +122,21 @@ def tile_extent(x: int, y: int, zoom: int):
     )
 
 
-def metadata_bounds(center_lat: float, center_lon: float) -> str:
+def metadata_bounds(
+    center_lat: float,
+    center_lon: float,
+    width_metres: float | None = None,
+    height_metres: float | None = None,
+) -> str:
+    width_degrees, height_degrees = dimensions_in_degrees(
+        center_lat, width_metres, height_metres
+    )
     return ",".join(
         (
-            f"{center_lon - HOME_WIDTH_DEGREES / 2.0:.12f}",
-            f"{center_lat - HOME_HEIGHT_DEGREES / 2.0:.12f}",
-            f"{center_lon + HOME_WIDTH_DEGREES / 2.0:.12f}",
-            f"{center_lat + HOME_HEIGHT_DEGREES / 2.0:.12f}",
+            f"{center_lon - width_degrees / 2.0:.12f}",
+            f"{center_lat - height_degrees / 2.0:.12f}",
+            f"{center_lon + width_degrees / 2.0:.12f}",
+            f"{center_lat + height_degrees / 2.0:.12f}",
         )
     )
 
@@ -86,7 +149,12 @@ def style_layers(
     road_layer_name: str,
     contour_layer_name: str | None,
 ):
-    from qgis.core import QgsFillSymbol, QgsLineSymbol, QgsSingleSymbolRenderer, QgsVectorLayer
+    from qgis.core import (
+        QgsFillSymbol,
+        QgsLineSymbol,
+        QgsSingleSymbolRenderer,
+        QgsVectorLayer,
+    )
 
     def add(name: str, layer_name: str):
         layer = QgsVectorLayer(f"{gpkg}|layername={layer_name}", name, "ogr")
@@ -122,29 +190,23 @@ def style_layers(
     if contour_layer_name is None:
         return [buildings, roads]
 
-    contours_minor = add("ALTITUDE · 10 m", contour_layer_name)
-    contours_minor.setSubsetString('round("ELEV") % 10 <> 0')
-    contours_minor.setRenderer(
+    # Keep the altitude layer as one provider layer. Loading the same
+    # GeoPackage table twice can make headless QGIS lose the second SQLite
+    # cursor while rendering on Windows. A single symbol is deliberately used
+    # here so the offline renderer cannot discard the lines through a rule
+    # expression; line hierarchy can be added later after visual validation.
+    contours = add("ALTITUDE · 2 m", contour_layer_name)
+    contours.setRenderer(
         QgsSingleSymbolRenderer(
             QgsLineSymbol.createSimple(
-                {"color": CONTOUR_MINOR, "width": "0.55", "capstyle": "round"}
+                {"color": CONTOUR_MINOR, "width": "0.70", "capstyle": "round"}
             )
         )
     )
 
-    contours_major = add("ALTITUDE · 20 m (index)", contour_layer_name)
-    contours_major.setSubsetString('round("ELEV") % 10 = 0')
-    contours_major.setRenderer(
-        QgsSingleSymbolRenderer(
-            QgsLineSymbol.createSimple(
-                {"color": CONTOUR_MAJOR, "width": "0.90", "capstyle": "round"}
-            )
-        )
-    )
-
-    # QgsMapSettings draws the list from bottom to top.  Buildings are below
+    # QgsMapSettings draws the list from bottom to top. Buildings are below
     # roads and contours, exactly like the HOME composition.
-    return [buildings, roads, contours_minor, contours_major]
+    return [buildings, roads, contours]
 
 
 def render_strip(project, layers, x_min: int, x_max: int, y: int, zoom: int) -> list[bytes]:
@@ -189,16 +251,26 @@ def render_strip(project, layers, x_min: int, x_max: int, y: int, zoom: int) -> 
     return pngs
 
 
-def tile_ranges(center_lat: float, center_lon: float, min_zoom: int, max_zoom: int):
+def tile_ranges(
+    center_lat: float,
+    center_lon: float,
+    min_zoom: int,
+    max_zoom: int,
+    width_metres: float | None = None,
+    height_metres: float | None = None,
+):
+    extent_width, extent_height = dimensions_in_web_mercator_metres(
+        center_lat, width_metres, height_metres
+    )
     ranges = {}
     for zoom in range(min_zoom, max_zoom + 1):
         metres_per_pixel = 2.0 * math.pi * WEB_MERCATOR_RADIUS / (TILE_SIZE * 2**zoom)
         center_x = lon_to_x(center_lon, zoom)
         center_y = lat_to_y(center_lat, zoom)
-        left = center_x - HOME_EXTENT_WIDTH_METRES / metres_per_pixel / 2.0
-        right = center_x + HOME_EXTENT_WIDTH_METRES / metres_per_pixel / 2.0
-        top = center_y - HOME_EXTENT_HEIGHT_METRES / metres_per_pixel / 2.0
-        bottom = center_y + HOME_EXTENT_HEIGHT_METRES / metres_per_pixel / 2.0
+        left = center_x - extent_width / metres_per_pixel / 2.0
+        right = center_x + extent_width / metres_per_pixel / 2.0
+        top = center_y - extent_height / metres_per_pixel / 2.0
+        bottom = center_y + extent_height / metres_per_pixel / 2.0
         ranges[zoom] = (
             math.floor(left / TILE_SIZE),
             math.ceil(right / TILE_SIZE) - 1,
@@ -217,6 +289,8 @@ def create_project(
     building_layer_name: str,
     road_layer_name: str,
     contour_layer_name: str | None,
+    width_metres: float | None,
+    height_metres: float | None,
 ):
     from qgis.core import QgsCoordinateReferenceSystem, QgsProject
     from qgis.PyQt.QtGui import QColor
@@ -233,7 +307,14 @@ def create_project(
         road_layer_name,
         contour_layer_name,
     )
-    ranges = tile_ranges(center_lat, center_lon, 16, 19)
+    ranges = tile_ranges(
+        center_lat,
+        center_lon,
+        16,
+        19,
+        width_metres,
+        height_metres,
+    )
     root = project.layerTreeRoot()
     root.setHasCustomLayerOrder(True)
     root.setCustomLayerOrder([layer for layer in reversed(layers)])
@@ -271,6 +352,8 @@ def build(args: argparse.Namespace) -> dict[str, object]:
             args.building_layer,
             args.road_layer,
             None if args.no_contours else args.contour_layer,
+            args.width_metres,
+            args.height_metres,
         )
         print("ACTIVE_LAYERS=" + ",".join(layer.name() for layer in layers), flush=True)
         print(f"QGIS_PROJECT={args.project_output}", flush=True)
@@ -301,7 +384,12 @@ def build(args: argparse.Namespace) -> dict[str, object]:
                 "type": "overlay",
                 "minzoom": str(args.min_zoom),
                 "maxzoom": str(args.max_zoom),
-                "bounds": metadata_bounds(args.center_lat, args.center_lon),
+                "bounds": metadata_bounds(
+                    args.center_lat,
+                    args.center_lon,
+                    args.width_metres,
+                    args.height_metres,
+                ),
             }
             connection.executemany(
                 "INSERT INTO metadata(name,value) VALUES (?,?)", metadata.items()
@@ -332,7 +420,12 @@ def build(args: argparse.Namespace) -> dict[str, object]:
         result = {
             "output": args.output,
             "project": args.project_output,
-            "bounds": metadata_bounds(args.center_lat, args.center_lon),
+            "bounds": metadata_bounds(
+                args.center_lat,
+                args.center_lon,
+                args.width_metres,
+                args.height_metres,
+            ),
             "tile_count": total,
             "ranges": ranges,
         }
@@ -362,12 +455,28 @@ def main() -> int:
     parser.add_argument("--road-layer", default="highway")
     parser.add_argument("--contour-layer", default="contours_2m")
     parser.add_argument("--no-contours", action="store_true")
+    parser.add_argument(
+        "--width-metres",
+        type=float,
+        help="Map width in ground metres; omit with --height-metres for HOME defaults",
+    )
+    parser.add_argument(
+        "--height-metres",
+        type=float,
+        help="Map height in ground metres; omit with --width-metres for HOME defaults",
+    )
     parser.add_argument("--min-zoom", type=int, default=16)
     parser.add_argument("--max-zoom", type=int, default=19)
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
     if args.min_zoom > args.max_zoom:
         parser.error("min zoom must not exceed max zoom")
+    if (args.width_metres is None) != (args.height_metres is None):
+        parser.error("--width-metres and --height-metres must be supplied together")
+    if args.width_metres is not None and args.width_metres <= 0:
+        parser.error("--width-metres must be greater than zero")
+    if args.height_metres is not None and args.height_metres <= 0:
+        parser.error("--height-metres must be greater than zero")
     build(args)
     return 0
 

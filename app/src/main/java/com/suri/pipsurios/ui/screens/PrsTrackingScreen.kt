@@ -845,7 +845,7 @@ private fun probeStatusColor(status: String): Color = when (status.uppercase()) 
     else -> PipGreenDim
 }
 
-private fun probeGridPosition(
+internal fun probeGridPosition(
     phoneFix: TerrainLocationFix?,
     probeNode: PrsProbeNodeSnapshot,
     mode: PrsOperatingMode

@@ -96,15 +96,15 @@ class MapTerrainTest {
         assertEquals(19, OfflineMapCatalog.OFFICE.maxNativeZoom)
     }
 
-    @Test fun sprint23Navy7CenterMatchesRequestedCoordinates() {
+    @Test fun sprint30Navy7CenterMatchesRequestedCoordinates() {
         val center = OfflineMapCatalog.NAVY7.bounds.center
         assertEquals(40.352971232717216, center.latitude, 1e-12)
         assertEquals(-3.423711863510395, center.longitude, 1e-12)
         assertTrue(OfflineMapCatalog.NAVY7.bounds.contains(GeoPoint(40.352971232717216, -3.423711863510395)))
-        assertEquals(-3.453046863510395, OfflineMapCatalog.NAVY7.bounds.west, 1e-12)
-        assertEquals(40.341471232717216, OfflineMapCatalog.NAVY7.bounds.south, 1e-12)
-        assertEquals(-3.394376863510395, OfflineMapCatalog.NAVY7.bounds.east, 1e-12)
-        assertEquals(40.364471232717216, OfflineMapCatalog.NAVY7.bounds.north, 1e-12)
+        assertEquals(-3.435483145327, OfflineMapCatalog.NAVY7.bounds.west, 1e-12)
+        assertEquals(40.343965582217, OfflineMapCatalog.NAVY7.bounds.south, 1e-12)
+        assertEquals(-3.411940581694, OfflineMapCatalog.NAVY7.bounds.east, 1e-12)
+        assertEquals(40.361976883217, OfflineMapCatalog.NAVY7.bounds.north, 1e-12)
     }
 
     @Test fun headingRotatesAroundStableUserPivotWithoutChangingViewportOrCenter() {
