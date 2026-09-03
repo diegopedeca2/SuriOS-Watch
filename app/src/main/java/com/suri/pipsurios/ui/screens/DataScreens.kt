@@ -47,7 +47,9 @@ fun DataLoadingScreen(onFinished: () -> Unit) {
         delay(1_500)
         onFinished()
     }
-    LoadingGlitchText()
+    TerminalScreen {
+        LoadingGlitchText(modifier = Modifier.align(Alignment.Center))
+    }
 }
 
 @Composable
@@ -635,7 +637,7 @@ private fun DataFrame(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

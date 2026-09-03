@@ -87,13 +87,9 @@ object OfflineMapCatalog {
         maxDisplayZoom = 20
     )
 
-    /**
-     * TESTING is a profile-specific field. FENRIR receives the real
-     * Navy7 HOME-style render; CHECHU receives a blank placeholder until its
-     * coordinates are supplied.
-     */
-    val TESTING = if (profile == "FENRIR") {
-        OfflineMapDefinition(
+    /** TESTING is a profile-specific field with an independently generated asset. */
+    val TESTING = when (profile) {
+        "FENRIR" -> OfflineMapDefinition(
             mapId = "testing",
             name = "TESTING",
             assetPath = "maps/testing_terrain.mbtiles",
@@ -108,8 +104,39 @@ object OfflineMapCatalog {
             maxNativeZoom = 19,
             maxDisplayZoom = 20
         )
-    } else {
-        OfflineMapDefinition(
+        "ALTAMIRA" -> OfflineMapDefinition(
+            mapId = "testing",
+            name = "TESTING",
+            assetPath = "maps/testing_terrain.mbtiles",
+            assetSha256 = "734A7AF6E333FCAA00DAF2F144645252C82B3541C6BE8484790645BF62686E54",
+            // Target center: 40.34897942140349, -3.818235386395919.
+            bounds = MapBounds(
+                west = -3.830005974191,
+                south = 40.339973764668,
+                east = -3.806464798600,
+                north = 40.357985078138
+            ),
+            minZoom = 16,
+            maxNativeZoom = 19,
+            maxDisplayZoom = 20
+        )
+        "CHECHU" -> OfflineMapDefinition(
+            mapId = "testing",
+            name = "TESTING",
+            assetPath = "maps/testing_terrain.mbtiles",
+            assetSha256 = "C6DADD4247061DB4F93EF057FBF39ACC90C282216CF5643376E7CFBA2BD3CD34",
+            // Target center: 40.433753, -3.625904.
+            bounds = MapBounds(
+                west = -3.637689356588,
+                south = 40.424747475701,
+                east = -3.614118643412,
+                north = 40.442758524299
+            ),
+            minZoom = 16,
+            maxNativeZoom = 19,
+            maxDisplayZoom = 20
+        )
+        else -> OfflineMapDefinition(
             mapId = "testing",
             name = "TESTING",
             assetPath = "maps/testing_terrain.mbtiles",
@@ -129,7 +156,7 @@ object OfflineMapCatalog {
     /** Map files are listed alphabetically; CHOOSE LOCATION is a UI-only exception before them. */
     val maps = when (profile) {
         "FENRIR", "CHECHU" -> listOf(NAVY7, TESTING)
-        "ALTAMIRA" -> listOf(NAVY7)
+        "ALTAMIRA" -> listOf(NAVY7, TESTING)
         else -> listOf(HOME, NAVY7, OFFICE)
     }.sortedBy { it.name }
 }

@@ -35,7 +35,8 @@ import kotlin.math.sin
 @Composable
 fun LoadingGlitchText(
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = 30.sp
+    fontSize: TextUnit = 30.sp,
+    text: String = "LOADING..."
 ) {
     val interference = rememberInfiniteTransition(label = "loading_glitch")
     val phase by interference.animateFloat(
@@ -62,16 +63,16 @@ fun LoadingGlitchText(
         fontSize = fontSize,
         fontFamily = FontFamily.Monospace
     )
-    val normalText = textMeasurer.measure(text = "LOADING...", style = textStyle)
+    val normalText = textMeasurer.measure(text = text, style = textStyle)
     val dimText = textMeasurer.measure(
-        text = "LOADING...",
+        text = text,
         style = textStyle.copy(color = PipGreen.copy(alpha = 0.48f))
     )
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         // Keeps the component's natural size while Canvas draws the visible version.
         Text(
-            text = "LOADING...",
+            text = text,
             style = textStyle.copy(color = Color.Transparent)
         )
         Canvas(modifier = Modifier.matchParentSize()) {

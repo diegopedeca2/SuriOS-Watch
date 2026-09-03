@@ -49,11 +49,8 @@ fun StatusLoadingScreen(onFinished: () -> Unit) {
         delay(1_500)
         onFinished()
     }
-    Box(
-        modifier = Modifier.fillMaxSize().background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        LoadingGlitchText()
+    TerminalScreen {
+        LoadingGlitchText(modifier = Modifier.align(Alignment.Center))
     }
 }
 
@@ -97,7 +94,7 @@ fun StatusScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -435,7 +432,7 @@ fun StatusAccessoriesScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -505,7 +502,7 @@ fun DontForgetScreen(activeLoadout: LoadoutConfiguration, onBack: () -> Unit) {
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

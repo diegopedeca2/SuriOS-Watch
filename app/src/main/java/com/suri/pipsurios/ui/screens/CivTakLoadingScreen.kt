@@ -2,10 +2,6 @@ package com.suri.pipsurios.ui.screens
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,10 +12,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
-import com.suri.pipsurios.ui.theme.PipBlack
-import com.suri.pipsurios.ui.theme.PipGreen
 import kotlinx.coroutines.delay
 
 private const val CIVTAK_PACKAGE = "com.atakmap.app.civ"
@@ -59,17 +52,11 @@ fun CivTakLoadingScreen(
 
 @Composable
 internal fun ExternalLaunchStatus(text: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = PipGreen,
+    TerminalScreen {
+        LoadingGlitchText(
+            modifier = Modifier.align(Alignment.Center),
             fontSize = 24.sp,
-            fontFamily = FontFamily.Monospace
+            text = text
         )
     }
 }

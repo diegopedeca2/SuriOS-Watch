@@ -62,7 +62,11 @@ fun PrsUserGuideScreen(onBack: () -> Unit) {
             )
             PrsGuideBlock(
                 title = "TRACKER",
-                body = "TRACKER conserva el flujo de la versión anterior: elige ONLY PIP-BOY o PIP-BOY + PROBE, selecciona primero una ubicación del terreno y después identifica un objetivo. Para guardar un dispositivo y poder rastrearlo, vincula previamente los dos dispositivos. El resultado se muestra en el GRID sobre el mapa."
+                body = "Elige ONLY PIP-BOY o PIP-BOY + PROBE, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente: no hay START. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
+            )
+            PrsGuideBlock(
+                title = "LECTURA Y TIEMPO",
+                body = "RAW es la última señal observada y puede cambiar de inmediato. SMOOTH, el historial y la tendencia necesitan varias observaciones y se actualizan por ciclos. WAITING significa que aún no hay suficiente historial. SAMPLES y CONFIDENCE ayudan a saber si la lectura ya es estable."
             )
             PrsGuideBlock(
                 title = "DEVICES",
@@ -70,7 +74,7 @@ fun PrsUserGuideScreen(onBack: () -> Unit) {
             )
             PrsGuideBlock(
                 title = "PERMISOS Y PROBE",
-                body = "Para escanear se necesitan Bluetooth y ubicación. PIP + PROBE necesita además el Watch 2 emparejado y la conexión de PROBE disponible. Si algo falla, concede los permisos o usa TRY AGAIN / RETRY según la pantalla."
+                body = "ONLY PIP-BOY usa el A56 y no necesita otro dispositivo. PIP-BOY + PROBE necesita el Watch 2 emparejado y conectado. Bluetooth y los permisos de escaneo/conexión son necesarios. La posición de PROBE es la del Watch 2 receptor, no la del objetivo. Si algo falla, concede permisos o usa TRY AGAIN / RETRY."
             )
             PrsGuideBlock(
                 title = "LECTURA DE LA PANTALLA",
@@ -78,7 +82,7 @@ fun PrsUserGuideScreen(onBack: () -> Unit) {
             )
             PrsGuideBlock(
                 title = "BUENAS PRÁCTICAS",
-                body = "Mantén el Bluetooth activo, espera a que lleguen varias muestras y evita identificar un dispositivo usando un único dato. Revisa DEVICES antes de una sesión para no ocultar accidentalmente el equipo que quieres observar."
+                body = "Mantén Bluetooth activo, espera varias muestras y no identifiques un dispositivo usando un único dato. Revisa DEVICES antes de la sesión. Para una prueba de campo anota distancia real aproximada, obstáculos, RAW, SMOOTH, TREND, banda, SAMPLES y CONFIDENCE en la plantilla CSV. La distancia real es una referencia externa: P.R.S. no calcula metros."
             )
         }
 

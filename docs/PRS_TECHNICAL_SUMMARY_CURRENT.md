@@ -4,7 +4,7 @@
 
 - **Proyecto:** PIP-SuriOS, dentro de SuriOS Ecosystem.
 - **Aplicación:** `com.suri.pipsurios`.
-- **Versión de la aplicación en este corte:** `2.9`.
+- **Versión de la aplicación en este corte:** `3.0`.
 - **Arquitectura de P.R.S.:** combinación operativa de los motores v3.0 y v4.0
   bajo los menús `SENTRY`, `TRACKER`, `DEVICES` y `USER GUIDE`.
 - **Dispositivo principal:** Samsung Galaxy A56.
@@ -14,7 +14,7 @@
 
 Este documento describe cómo funciona hoy P.R.S. en el código de
 `D:\WristOS`. Está preparado para entregarlo a otro chatbot como contexto
-técnico antes de diseñar una modificación. La versión `2.8` es la versión de
+técnico antes de diseñar una modificación. La versión `3.0` es la versión de
 la aplicación móvil; no significa que la arquitectura de P.R.S. haya vuelto a
 la versión antigua.
 
@@ -621,7 +621,7 @@ documento con una nueva idea:
 
 ```text
 P.R.S. en PIP-SuriOS combina el motor BLE de v3.0 con el flujo de mapa de v4.0
-para el Samsung A56. La aplicación actual está en versión 2.9. El flujo es BLE SCAN -> CONTACTS ->
+para el Samsung A56. La aplicación actual está en versión 3.0. El flujo es BLE SCAN -> CONTACTS ->
 RSSI RAW -> HISTORIAL -> SUAVIZADO -> TENDENCIA -> BANDA RELATIVA -> GRID.
 
 SENTRY puede trabajar solo (`PIP`) o combinarse con el Watch 2 PROBE

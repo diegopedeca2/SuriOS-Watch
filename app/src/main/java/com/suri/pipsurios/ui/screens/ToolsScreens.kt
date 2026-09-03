@@ -28,11 +28,8 @@ fun ToolsLoadingScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        LoadingGlitchText()
+    TerminalScreen {
+        LoadingGlitchText(modifier = Modifier.align(Alignment.Center))
     }
 }
 
@@ -43,11 +40,8 @@ fun ProximityRadioScannerLoadingScreen(onFinished: () -> Unit) {
         onFinished()
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(PipBlack),
-        contentAlignment = Alignment.Center
-    ) {
-        LoadingGlitchText()
+    TerminalScreen {
+        LoadingGlitchText(modifier = Modifier.align(Alignment.Center))
     }
 }
 
@@ -109,7 +103,7 @@ fun ProximityRadioScannerScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -168,7 +162,7 @@ fun ProximityRadioScannerSentryScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -243,7 +237,7 @@ fun ProximityRadioScannerV3Screen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -303,7 +297,7 @@ fun ProximityRadioScannerV4Screen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -373,7 +367,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -31,8 +31,8 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 34
         targetSdk = 37
-        versionCode = 9
-        versionName = "2.9"
+        versionCode = 10
+        versionName = "3.0"
         buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

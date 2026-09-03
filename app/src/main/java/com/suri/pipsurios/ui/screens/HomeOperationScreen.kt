@@ -60,7 +60,7 @@ fun HomeOperationScreen(
         }
 
         Text(
-            text = "PIP-SuriOS v2.9",
+            text = "PIP-SuriOS v3.0",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

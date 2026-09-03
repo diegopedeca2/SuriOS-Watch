@@ -12,7 +12,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 
 ROOT = Path(r"D:\WristOS")
-OUTPUT = ROOT / "output" / "SPRINT_029_APK" / "PIP-SuriOS_ALPHA_TEST_GUIDE_SPRINT_029.docx"
+OUTPUT = ROOT / "output" / "SPRINT_030_APK" / "PIP-SuriOS_ALPHA_TEST_GUIDE_SPRINT_030.docx"
 BLUE = "2E74B5"
 DARK_BLUE = "1F4D78"
 LIGHT_BLUE = "E8EEF5"
@@ -138,7 +138,7 @@ def style_document(doc: Document) -> None:
 
     header = section.header.paragraphs[0]
     header.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    run = header.add_run("PIP-SuriOS  ·  GUÍA ALPHA TESTER  ·  SPRINT 029")
+    run = header.add_run("PIP-SuriOS  ·  GUÍA ALPHA TESTER  ·  SPRINT 030")
     set_font(run, size=8, color=MUTED, bold=True)
     footer = section.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -213,7 +213,7 @@ def main() -> None:
     add_title(
         doc,
         "PIP-SuriOS · Guía de pruebas Alpha",
-        "Sprint 029 · Documento para FENRIR, ALTAMIRA y CHECHU · 03/09/2026",
+        "Sprint 030 · Documento para FENRIR, ALTAMIRA y CHECHU · 03/09/2026",
     )
     add_body(doc, "Gracias por ser las primeras personas en probar esta versión y por ayudarnos a detectar problemas reales de uso. No hace falta saber programación: basta con usar la aplicación con normalidad y anotar lo que ocurra.")
 
@@ -222,10 +222,10 @@ def main() -> None:
         doc,
         ["Tester / APK", "Mapas incluidos", "Observación"],
         [
-            ("FENRIR v1.0", "NAVY7 y TESTING", "TESTING está centrado en 43.32906276228306, -3.0374061720053134."),
-            ("ALTAMIRA v1.0", "NAVY7", "HOME y OFFICE se han eliminado. No se ha añadido ningún mapa nuevo."),
-            ("CHECHU v1.0", "NAVY7 y TESTING", "TESTING está vacío a propósito, hasta disponer de coordenadas."),
-            ("MAIN v2.9", "HOME, NAVY7 y OFFICE", "Es la APK principal de trabajo del A56; no es la APK Alpha asignada."),
+            ("FENRIR v3.0", "NAVY7 y TESTING", "TESTING conserva el campo específico de FENRIR."),
+            ("ALTAMIRA v3.0", "NAVY7 y TESTING", "TESTING está centrado en 40.34897942140349, -3.818235386395919."),
+            ("CHECHU v3.0", "NAVY7 y TESTING", "TESTING está centrado en 40.433753, -3.625904."),
+            ("MAIN v3.0", "HOME, NAVY7 y OFFICE", "Es la APK principal de trabajo del A56; no es la APK Alpha asignada."),
         ],
         [2050, 1850, 5460],
     )
@@ -296,20 +296,71 @@ def main() -> None:
         "Abrir TOOLS > MAP > TERRAIN y revisar la lista de mapas.",
         "Confirmar que HOME y OFFICE no aparecen en las APK Alpha.",
         "En FENRIR abrir TESTING y comprobar que el centro corresponde a la zona indicada.",
-        "En CHECHU abrir TESTING y comprobar que aparece como campo vacío, sin inventar edificios, carreteras o coordenadas.",
+        "En ALTAMIRA abrir TESTING y comprobar que el centro corresponde a 40.34897942140349, -3.818235386395919.",
+        "En CHECHU abrir TESTING y comprobar que el centro corresponde a 40.433753, -3.625904.",
         "Probar pan, zoom, brújula, GPS y la creación de un punto de respawn o zona RAD solo si procede.",
     ], "La lista coincide con la tabla de esta guía, los mapas no se cierran y el comportamiento táctil es comprensible.")
 
-    add_test_block(doc, "4.6 P.R.S. y Bluetooth", "Comprobar escaneo, seguimiento y registro de dispositivos.", [
+    add_test_block(doc, "4.6 P.R.S. y Bluetooth", "Comprobar el escaneo, el seguimiento, las exclusiones y los estados de conexión.", [
         "Abrir PROXIMITY RADIO SCANNER y revisar SENTRY, TRACKER, DEVICES y USER GUIDE.",
-        "En SENTRY probar PIP y PIP + PROBE; anotar qué ocurre sin dispositivos cercanos.",
-        "Antes de guardar un dispositivo en TRACKER, vincular previamente los dos dispositivos que participarán en la sesión.",
-        "En TRACKER probar ONLY PIP-BOY y PIP-BOY + PROBE si hay hardware disponible; comprobar que el dispositivo vinculado se puede guardar y rastrear.",
+        "En SENTRY probar PIP y PIP + PROBE. Anotar qué ocurre sin dispositivos cercanos y qué datos aparecen cuando hay un objetivo controlado.",
+        "En TRACKER elegir ONLY PIP-BOY o PIP-BOY + PROBE, seleccionar primero el mapa TERRAIN y después el objetivo detectado.",
+        "Comprobar que al entrar en la pantalla del objetivo la lectura empieza sola. No hay que buscar un botón START.",
+        "Dejar la pantalla abierta y comprobar que RAW puede cambiar de inmediato, mientras SMOOTH, TREND, SAMPLES y CONFIDENCE se completan con el tiempo.",
+        "Esperar al menos 15 segundos antes de valorar la tendencia. Usar BACK para salir y comprobar que la sesión termina.",
         "En DEVICES añadir, editar y borrar un dispositivo a omitir. Comprobar que SENTRY y TRACKER lo respetan.",
-        "Si se usa Watch 2 / PROBE, anotar modelo, conexión, distancia aproximada y cualquier reconexión.",
-    ], "Los menús cargan, los permisos se explican y los fallos de hardware o conexión muestran un estado entendible.")
+        "En ONLY PIP-BOY no hace falta vincular otro dispositivo. Para PIP-BOY + PROBE, comprobar que el Watch 2 está emparejado y conectado.",
+    ], "Los menús cargan, el seguimiento comienza y termina de forma entendible, y los fallos de permisos o conexión muestran un estado útil.")
 
-    doc.add_heading("5. Pruebas adicionales rápidas", level=1)
+    add_test_block(doc, "4.7 P.R.S. - prueba P01: señal estable por distancia", "Obtener una referencia sencilla entre señal y distancia real en un entorno controlado. La distancia se mide fuera de la aplicación; P.R.S. no calcula metros.", [
+        "Usar un dispositivo Bluetooth controlado como objetivo y mantenerlo quieto. Mantener también el A56 quieto durante cada tramo.",
+        "Probar, si es seguro y posible, aproximadamente 1 m, 3 m, 5 m y 10 m. Si el lugar no permite esas distancias, anotar las distancias disponibles.",
+        "En cada distancia, mantener TRACKER abierto unos 30 segundos. Esperar al menos 15 segundos antes de juzgar TREND o CONFIDENCE.",
+        "Cada aproximadamente 3 segundos, anotar una fila en el CSV: distancia real, RAW, SMOOTH, TREND, banda, SAMPLES, CONFIDENCE y estado de BLE/GPS.",
+        "Repetir una distancia que parezca inestable para comprobar si el resultado cambia.",
+    ], "El CSV contiene varias filas por distancia y permite comparar la señal sin afirmar que exista una conversión fiable a metros.")
+
+    add_test_block(doc, "4.8 P.R.S. - prueba P02: acercamiento y alejamiento", "Comprobar si la tendencia cambia de forma coherente cuando el receptor se acerca o se aleja del objetivo.", [
+        "Colocarse a una distancia inicial conocida y mantener TRACKER abierto hasta que haya historial suficiente.",
+        "Caminar lentamente hacia el objetivo durante al menos 30 segundos y anotar las filas como APPROACH.",
+        "Volver caminando lentamente y alejarse durante al menos 30 segundos; anotar las filas como AWAY.",
+        "Anotar también el movimiento del receptor, el rumbo aproximado y cualquier obstáculo o persona entre los dispositivos.",
+    ], "La tendencia puede mostrar APPROACHING o MOVING AWAY, pero se acepta que haya ruido, retraso o WAITING mientras faltan muestras.")
+
+    add_test_block(doc, "4.9 P.R.S. - prueba P03: orientación y obstáculos", "Separar los cambios producidos por la distancia de los cambios producidos por el cuerpo, la orientación o los obstáculos.", [
+        "Elegir una distancia fija y repetir la lectura con el teléfono en la mano, en el bolsillo y sujeto en otra orientación.",
+        "Repetir con línea de vista libre y después con un obstáculo seguro, como una pared o una persona, sin poner a nadie en riesgo.",
+        "Mantener cada condición unos 30 segundos y escribir la condición en environment u obstacles del CSV.",
+    ], "Los resultados muestran variación real del RSSI y dejan una nota suficiente para saber qué condición produjo cada cambio.")
+
+    add_test_block(doc, "4.10 P.R.S. - prueba P04: desaparición y caducidad", "Comprobar qué ocurre cuando el objetivo deja de emitir o queda fuera del alcance.", [
+        "Con el objetivo visible, anotar una fila normal y después apagarlo o alejarlo de forma controlada.",
+        "Mantener TRACKER abierto al menos 20 segundos y anotar cuándo deja de aparecer o cambia de estado.",
+        "Volver a encender o acercar el objetivo y comprobar si vuelve a aparecer sin cerrar la pantalla.",
+    ], "El contacto puede tardar en desaparecer; la configuración actual considera caducado un contacto sin observaciones recientes después de aproximadamente 15 segundos.")
+
+    add_test_block(doc, "4.11 P.R.S. - prueba P05: PROBE", "Comprobar el aporte del Watch 2 sin confundir la posición del receptor con la del objetivo.", [
+        "Emparejar y conectar el Watch 2 antes de abrir PIP-BOY + PROBE.",
+        "Repetir una distancia corta y una distancia larga de P01, anotando source como A56 o WATCH2 según la lectura.",
+        "Anotar cualquier reconexión, pérdida de batería o cambio de estado en probe_status y notes.",
+        "No interpretar la posición mostrada del Watch 2 como coordenada del objetivo: es la posición del receptor que aporta la lectura.",
+    ], "Las lecturas indican su fuente y el estado de PROBE es entendible, incluso si el reloj no puede conectarse o se desconecta.")
+
+    doc.add_heading("5. Registro estructurado de datos P.R.S.", level=1)
+    add_body(doc, "Rellena el archivo PRS_FIELD_DATA_TEMPLATE.csv que acompaña a esta guía. Está separado por punto y coma (;) para que sea más fácil abrirlo con Excel en configuración española. Cada fila representa una observación aproximadamente cada 3 segundos, no una nueva sesión.")
+    add_body(doc, "Los campos más importantes para esta primera campaña son:")
+    for text in [
+        "test_id: usa P01, P02, P03, P04 o P05 según la prueba.",
+        "mode y source: ONLY_PIP_BOY o PIP_BOY_PROBE; A56 o WATCH2.",
+        "actual_distance_m: distancia aproximada medida fuera de la aplicación. Déjalo vacío si no se puede estimar.",
+        "raw_rssi_dbm, smoothed_rssi_dbm, trend, proximity_band, samples y confidence: copia los valores que aparecen en pantalla.",
+        "environment, obstacles, receiver_movement y notes: describe las condiciones que pueden explicar cambios.",
+        "target_identifier_optional: puede quedar vacío o usar un alias local. No hace falta compartir una dirección MAC.",
+    ]:
+        add_bullet(doc, text)
+    add_body(doc, "Entrega el CSV junto con capturas o vídeo cuando haya un comportamiento extraño. Indica siempre la APK, el modelo del teléfono, el test_id y el momento aproximado de la incidencia.")
+
+    doc.add_heading("6. Pruebas adicionales rápidas", level=1)
     for text in [
         "STATUS: revisar que el estado del operador y del equipamiento sea legible.",
         "INVENTORY y STORAGE: crear, consultar y borrar un elemento de prueba si el flujo lo permite.",
@@ -319,9 +370,9 @@ def main() -> None:
     ]:
         add_bullet(doc, text)
 
-    doc.add_heading("6. Riesgos y límites conocidos", level=1)
+    doc.add_heading("7. Riesgos y límites conocidos", level=1)
     for text in [
-        "Los mapas offline solo cubren las zonas incluidas en cada APK. TESTING de CHECHU está vacío deliberadamente.",
+        "Los mapas offline solo cubren las zonas incluidas en cada APK. TESTING de ALTAMIRA y CHECHU son campos específicos de sus APK.",
         "La posición GPS, brújula y Bluetooth dependen del teléfono, permisos, cobertura, batería y entorno físico.",
         "La conexión con Watch 2 / PROBE no se puede validar completamente sin disponer del hardware compatible.",
         "El sonido de RADS depende del volumen multimedia y del altavoz o auriculares del teléfono; la valoración de realismo es subjetiva.",
@@ -331,7 +382,7 @@ def main() -> None:
     ]:
         add_bullet(doc, text)
 
-    doc.add_heading("7. Cómo enviar el feedback", level=1)
+    doc.add_heading("8. Cómo enviar el feedback", level=1)
     add_body(doc, "Para cada problema, envía una descripción corta con estos datos. Una grabación de pantalla, captura o vídeo del sonido ayuda mucho.")
     add_table(
         doc,
@@ -350,8 +401,8 @@ def main() -> None:
     add_body(doc, "En RADS, añade además: nivel aproximado, si el sonido estaba activo, volumen multimedia y si volvió a sonar después de bajar a 0.")
     add_body(doc, "En mapas, añade: nombre del mapa, si había conexión de datos, si se había concedido ubicación y si el fallo afectó a pan, zoom, brújula, GPS u overlays.")
 
-    doc.add_heading("8. Criterio de cierre de la prueba", level=1)
-    add_body(doc, "La prueba se considera completa cuando se han recorrido las secciones 4.1 a 4.6, se ha anotado el modelo del dispositivo y se ha enviado feedback incluso si todo funciona. Los comentarios positivos también son útiles: indican qué partes no debemos romper en la siguiente versión.")
+    doc.add_heading("9. Criterio de cierre de la prueba", level=1)
+    add_body(doc, "La prueba se considera completa cuando se han recorrido las secciones 4.1 a 4.11, se ha rellenado el CSV de P.R.S. si se dispone de un objetivo controlado, se ha anotado el modelo del dispositivo y se ha enviado feedback incluso si todo funciona. Los comentarios positivos también son útiles: indican qué partes no debemos romper en la siguiente versión.")
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     doc.save(OUTPUT)

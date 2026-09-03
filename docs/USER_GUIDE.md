@@ -1,6 +1,6 @@
 # PIP-SuriOS — Guía de usuario
 
-Versión de la aplicación: **2.9**
+Versión de la aplicación: **3.0**
 Esta guía explica las funciones principales de PIP-SuriOS con palabras
 sencillas. Los nombres de los botones se mantienen como aparecen en pantalla.
 
@@ -132,10 +132,19 @@ entre los dispositivos detectados. El segundo paso muestra el `GRID` sobre el
 mapa. El resultado es una estimación relativa de densidad; no debe interpretarse
 como una coordenada exacta ni como una distancia en metros.
 
-Para guardar un dispositivo en `TRACKER` y poder rastrearlo, vincula previamente
-los dos dispositivos que van a participar en la sesión. Comprueba la conexión
-antes de guardar el objetivo; si no están vinculados, el seguimiento puede no
-iniciarse o no recibir las muestras esperadas.
+El funcionamiento actual es automático. Al entrar en la pantalla del objetivo,
+la aplicación empieza a recibir lecturas BLE; no existe todavía un botón
+`START`. Mientras la pantalla está abierta, el A56 sigue recibiendo lecturas y
+el GPS/rumbo del receptor puede actualizarse. El análisis se revisa
+aproximadamente cada 3 segundos. `RAW` puede cambiar antes, pero `SMOOTH`, la
+tendencia y el historial necesitan varias lecturas. Espera aproximadamente
+12–15 segundos antes de valorar una tendencia. Usa `< BACK` para terminar la
+sesión; no hay un botón separado `STOP` ni un cálculo final manual.
+
+En `ONLY PIP-BOY` solo participa el A56 y no es necesario vincular otro
+dispositivo. En `PIP-BOY + PROBE` sí necesitas un Watch 2 PROBE emparejado y
+conectado. El Watch 2 aporta lecturas como receptor adicional; su posición es
+la del receptor, no la posición exacta del objetivo.
 
 #### DEVICES
 
@@ -152,6 +161,15 @@ el único dato utilizado para identificar un equipo.
 
 Esta pantalla contiene una explicación breve del P.R.S. y de sus límites de
 uso. Puedes volver al menú anterior con `< BACK`.
+
+#### Cómo probar TRACKER
+
+Para obtener datos útiles, mantén el objetivo controlado y anota en cada fila
+el tiempo, la distancia real aproximada medida fuera de la aplicación, `RAW`,
+`SMOOTH`, `TREND`, la banda (`NEAR`, `MEDIUM` o `FAR`), `SAMPLES` y
+`CONFIDENCE`. La plantilla está en
+`docs/PRS_FIELD_DATA_TEMPLATE.csv` y usa `;` como separador. La distancia real
+solo sirve como referencia de la prueba: P.R.S. no la calcula.
 
 ### Comms
 

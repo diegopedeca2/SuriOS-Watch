@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-09-01
+last_updated: 2026-09-03
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,8 +32,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
-| PIP-SuriOS | Ninguno | Sprint 025 | Sprint 025 cerrado |
-| SuriOS Ecosystem | Ninguno | Sprint 028 | Sprint 028 cerrado |
+| PIP-SuriOS | Ninguno | Sprint 030 | Sprint 030 cerrado; mapas TESTING, documentación y distribución completadas |
+| SuriOS Ecosystem | Ninguno | Sprint 030 | Sprint 030 cerrado; mapas TESTING, documentación y distribución completadas |
 
 ---
 
@@ -73,6 +73,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 026 | SuriOS Watch | Esfera PIW-SuriOS no PROBE: STATUS y AMBIENT | Cerrado | Completado | 2026-08-31 | 2026-08-31 | [Sprint 026 v1.0](SPRINT_026_v1.0.md) |
 | 027 | SuriOS Ecosystem | Limpieza del proyecto y detalles documentales menores | Cerrado | Completado | 2026-08-31 | 2026-09-01 | [Sprint 027 v1.0](SPRINT_027_v1.0.md) |
 | 028 | SuriOS Ecosystem | Actualización de versión y estética común de terminal en inicio, identificación, LOADING y HOMESCREEN | Cerrado | Completado | 2026-09-01 | 2026-09-01 | [Sprint 028 v1.0](SPRINT_028_v1.0.md) |
+| 029 | SuriOS Ecosystem / PIP-SuriOS | Distribución Alpha, personalización del equipamiento, P.R.S. combinado y corrección de RADS | Cerrado | Completado con pendiente no crítico de coordenadas de CHECHU | 2026-09-02 | 2026-09-03 | [Sprint 029 v1.0](SPRINT_029_v1.0.md) |
+| 030 | SuriOS Ecosystem / PIP-SuriOS | Mapas TESTING independientes para ALTAMIRA y CHECHU | Cerrado | Completado | 2026-09-03 | 2026-09-03 | [Sprint 030 v1.0](SPRINT_030_v1.0.md) |
 
 ---
 
@@ -872,3 +874,58 @@ correctamente. Sprint 028 queda cerrado técnica y documentalmente y no se abre
 un Sprint posterior.
 
 Documento del Sprint: [Sprint 028 v1.0](SPRINT_028_v1.0.md).
+
+---
+
+## 33. Cierre de Sprint 029 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 029 se cierra el 2026-09-03 tras completar su alcance funcional,
+documental y de distribución Alpha. La versión de cierre fue PIP-SuriOS v2.9,
+con `versionCode=9`.
+
+Queda como pendiente no crítico recibir las coordenadas definitivas de CHECHU
+para regenerar desde cero su mapa `TESTING`, que permanece vacío hasta disponer
+de esa información.
+
+Documento del Sprint: [Sprint 029 v1.0](SPRINT_029_v1.0.md).
+
+No hay ningún Sprint activo tras este cierre.
+
+---
+
+## 34. Apertura de Sprint 030 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 030 se abre el 2026-09-03 por autorización expresa del propietario.
+Su primera tarea es generar desde cero los mapas `TESTING` de ALTAMIRA y CHECHU
+con las coordenadas facilitadas e integrarlos en sus distribuciones Alpha.
+
+El Sprint permanece activo mientras se valida la carga offline, la cobertura,
+los metadatos MBTiles y la compilación de las variantes correspondientes.
+
+---
+
+## 35. Cierre de Sprint 030 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 030 se cierra el 2026-09-03 tras completar su alcance técnico,
+documental y de distribución.
+
+Se generaron e integraron los mapas `TESTING` de ALTAMIRA y CHECHU con las
+coordenadas aprobadas. Las cuatro APK v3.0 (`MAIN`, `FENRIR`, `ALTAMIRA` y
+`CHECHU`) se recompilaron, pasaron tests y `lint`, y se instalaron en el A56
+`RZGYC07H0EX`.
+
+La documentación de P.R.S. quedó sincronizada con el comportamiento actual de
+TRACKER: inicio automático al entrar, adquisición BLE continua, análisis por
+ciclos aproximados de 3 segundos, espera de 12–15 segundos para valorar una
+tendencia y finalización con `< BACK`. Se actualizaron el `USER GUIDE` nativo,
+el manual general, el resumen técnico y la guía Alpha para testers.
+
+Se añadieron las tres guías de funcionamiento como documentos vivos y la
+plantilla `PRS_FIELD_DATA_TEMPLATE.csv`, junto con las pruebas empíricas P01–P05
+para recoger datos de distancia conocida, movimiento, orientación, obstáculos,
+caducidad y uso de PROBE.
+
+No queda ningún Sprint activo tras este cierre. Las futuras modificaciones de
+TRACKER o calibraciones de campo requieren un Sprint posterior autorizado.
+
+Documento del Sprint: [Sprint 030 v1.0](SPRINT_030_v1.0.md).
