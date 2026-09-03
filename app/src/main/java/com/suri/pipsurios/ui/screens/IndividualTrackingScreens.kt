@@ -128,7 +128,7 @@ fun IndividualTrackingMenuScreen(
             modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

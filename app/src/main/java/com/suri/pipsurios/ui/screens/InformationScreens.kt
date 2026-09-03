@@ -102,17 +102,24 @@ fun InformationScreen(
 @Composable
 fun InformationTestersScreen(onBack: () -> Unit) {
     InformationLayout(title = "INFORMATION - TESTERS", onBack = onBack) {
-        Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 560.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
             Text(
-                text = "> ALPHA",
+                text = "ALPHA TESTERS",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
-                text = "> BETA",
-                color = PipGreen,
-                fontSize = 24.sp,
+                text = "Gracias a FENRIR, CHECHU y ALTAMIRA por estar pendientes del proyecto y por ser las primeras personas en poder probar la aplicación y aportar su feedback.",
+                color = PipGreenDim,
+                fontSize = 18.sp,
                 fontFamily = FontFamily.Monospace
             )
         }
@@ -196,7 +203,7 @@ private fun InformationLayout(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

@@ -56,7 +56,7 @@ realizadas.
 - Se vació deliberadamente `OPERATION GUIDE` y se eliminó el menú independiente
   `DIAGNOSTICS`; la instrumentación vive en `CONTACT LIST` y `TRACK TARGET`.
 - Se actualizó la [guía de usuario](../USER_GUIDE.md), el documento técnico
-  [P.R.S. v3.0](../PRS_v3.0.md) y esta auditoría.
+  [P.R.S. v3.0](../OLD VERSIONS/v3.0/PRS_v3.0.md) y esta auditoría.
 - Se conserva la [guía imprimible de calibración P.R.S.](../../output/pdf/PRS_CALIBRATION_GUIDE_SPRINT_015.pdf)
   como material histórico de pruebas, no como flujo operativo vigente.
 
@@ -123,7 +123,8 @@ distribución P.R.S. local:
   ENABLE → REMOVE`; no se dejó ninguna regla de prueba persistida.
 
 La auditoría completa está en [AUDIT_SPRINT_015.md](../AUDIT_SPRINT_015.md).
-El documento técnico vigente está en [PRS_v3.0.md](../PRS_v3.0.md).
+El documento técnico histórico está en
+[PRS_v3.0.md](../OLD VERSIONS/v3.0/PRS_v3.0.md).
 
 La validación del 2026-08-30 ejecutó los tests y ensamblados de ambas variantes
 con resultado `BUILD SUCCESSFUL`. Durante el despliegue, ADB confirmó

@@ -12,17 +12,19 @@ data class OperationLoadoutSnapshot(
     val accesories: List<String>,
     val headgear: String?,
     val frontPanel: String?,
-    val uniform: String? = null
+    val uniform: String? = null,
+    val headgearComponents: List<String> = emptyList()
 ) {
     companion object {
         fun from(loadout: LoadoutConfiguration): OperationLoadoutSnapshot =
             OperationLoadoutSnapshot(
                 primaryWeapon = loadout.primaryWeaponDisplayName(),
-                secondaryWeapon = loadout.secondaryWeapon?.displayName,
-                accesories = loadout.accesories.map { it.displayName }.sorted(),
+                secondaryWeapon = loadout.secondaryWeaponDisplayName(),
+                accesories = (loadout.accesories.map { it.displayName } + loadout.customAccesories).sorted(),
                 headgear = loadout.headgearProfile,
                 frontPanel = loadout.frontPanelRole,
-                uniform = loadout.uniform
+                uniform = loadout.uniform,
+                headgearComponents = loadout.headgearComponents.sorted()
             )
     }
 }

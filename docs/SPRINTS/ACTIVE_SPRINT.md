@@ -4,7 +4,7 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-01
+last_updated: 2026-09-02
 
 ---
 
@@ -21,9 +21,24 @@ El Sprint 028 se ha cerrado el 2026-09-01 tras actualizar la versión y aplicar
 las mejoras visuales de terminal autorizadas, con validación física en el
 Samsung A56.
 
+El Sprint 029 se ha abierto el 2026-09-02 por autorización expresa del
+propietario. Su alcance incluye la primera distribución Alpha, la creación de
+formularios manuales para PRIMARY WEAPON, SECONDARY WEAPON, ACCESORIES,
+FRONT PANEL, UNIFORM y HEADGEAR en dos pasos, la combinación de P.R.S. v3.0 y
+v4.0 en los menús SENTRY, TRACKER, DEVICES y USER GUIDE, y la corrección del
+sonido de RADS.
+
+[Sprint 029 v1.0](SPRINT_029_v1.0.md) — **CLOSED**
+
 [Sprint 028 v1.0](SPRINT_028_v1.0.md) — **CLOSED**
 
 No hay ningún Sprint abierto actualmente.
+
+## Cierre Sprint 029
+
+Sprint 029 cerrado el 2026-09-03. Queda como pendiente no crítico recibir las
+coordenadas de CHECHU para generar desde cero su mapa `TESTING`, actualmente
+vacío.
 
 ## Último Sprint cerrado
 
@@ -69,6 +84,7 @@ Sprint 025: **CLOSED**
 Sprint 026: **CLOSED**
 Sprint 027: **CLOSED**
 Sprint 028: **CLOSED**
+Sprint 029: **ACTIVE**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -77,7 +93,7 @@ presentan alfabéticamente después de esa opción excepcional.
 Sprint 019 audita el monorepo, actualiza PIP-SuriOS a v2.5, desinstala P.R.S.
 //COVER del A56 y documenta el cierre de seguridad y validación.
 
-PIP-SuriOS v2.7 es la versión resultante del Sprint 028, sobre la base
+PIP-SuriOS v2.9 es la versión en preparación del Sprint 029, sobre la base
 completada y cerrada técnica, funcional y documentalmente a fecha 2026-09-01.
 El P.R.S. activo usa
 `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `TRACK TARGET`, con histórico RSSI,
@@ -124,6 +140,9 @@ cifrado/autenticación y las limitaciones inherentes a RSSI/BLE.
 
 - Sprint 015 queda cerrado.
 - Sprint 028 queda cerrado tras actualizar la firma y la estética de terminal.
+- Sprint 029 está activo para preparar la distribución Alpha y personalizar con
+  cuadros de texto PRIMARY WEAPON, SECONDARY WEAPON, ACCESORIES, FRONT PANEL,
+  UNIFORM y el flujo de HEADGEAR.
 - La guía imprimible del P.R.S. queda disponible en `output/pdf/PRS_CALIBRATION_GUIDE_SPRINT_015.pdf`.
 - Se entregan las variantes `fullDebug` y `prsOnlyDebug` de P.R.S.
 - Sprint 016 queda cerrado tras la revisión documentada de temas abiertos y el

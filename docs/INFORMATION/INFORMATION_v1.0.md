@@ -15,12 +15,13 @@ date: 2026-08-31
 ## 1. Ubicación y estructura
 
 `INFORMATION` es una entrada de la columna derecha de `HOMESCREEN`, situada
-debajo de `TOOLS`. Contiene dos apartados al mismo nivel:
+debajo de `TOOLS`. Contiene tres apartados al mismo nivel:
 
 - `ACKNOWLEDGEMENTS`;
-- `DISCLAIMERS`.
+- `DISCLAIMERS`;
+- `TESTERS`.
 
-Ambos apartados son de consulta y no permiten edición ni persistencia.
+Todos los apartados son de consulta y no permiten edición ni persistencia.
 
 ## 2. ACKNOWLEDGEMENTS
 
@@ -36,9 +37,15 @@ La pantalla muestra los siguientes reconocimientos:
 | MI PADRE | Cesión del Watch 2, que originó las ideas para la baliza remota del sónar y se utiliza para su desarrollo. |
 | CAINSHARK | Ayuda con algunos elementos estéticos. |
 
-## 3. DISCLAIMERS
+## 3. TESTERS
 
-### 3.1 Propiedad intelectual de terceros
+Se agradece a FENRIR, CHECHU y ALTAMIRA su atención al proyecto y su
+disposición para ser las primeras personas en probar la aplicación y aportar
+feedback.
+
+## 4. DISCLAIMERS
+
+### 4.1 Propiedad intelectual de terceros
 
 Las imágenes, emblemas y demás elementos identificativos de la Hermandad del
 Acero pertenecen a Bethesda Softworks LLC y/o a sus licenciantes. SuriOS no
@@ -53,7 +60,7 @@ La interfaz de SuriOS está inspirada en el concepto PIP-BOY de FALLOUT, pero
 constituye un desarrollo independiente y no pretende reproducir ni presentarse
 como una copia del producto original.
 
-### 3.2 Desarrollo y recursos
+### 4.2 Desarrollo y recursos
 
 El código de esta aplicación se ha desarrollado con asistencia del agente de
 inteligencia artificial Codex. La revisión, integración, validación y
@@ -63,7 +70,7 @@ El desarrollo de SuriOS se ha realizado desde cero. Los elementos externos
 utilizados se identifican en la documentación correspondiente, junto con el
 reconocimiento de sus titulares y las condiciones de uso conocidas.
 
-### 3.3 Uso y distribución
+### 4.3 Uso y distribución
 
 Esta aplicación se ha desarrollado sin fines comerciales. Cualquier uso
 lucrativo, distribución o explotación posterior será responsabilidad exclusiva

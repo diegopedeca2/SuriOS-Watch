@@ -3,6 +3,24 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+val distributionProfile = providers.gradleProperty("distributionProfile")
+    .orElse("MAIN")
+    .get()
+    .uppercase()
+require(distributionProfile in setOf("MAIN", "FENRIR", "ALTAMIRA", "CHECHU")) {
+    "Unknown distributionProfile: $distributionProfile"
+}
+val distributionAssetsRoot = if (distributionProfile == "MAIN") {
+    file("src/main/assets")
+} else {
+    file("build/generated/distributionAssets/$distributionProfile")
+}
+val distributionResRoots = if (distributionProfile == "MAIN") {
+    listOf(file("src/main/res"))
+} else {
+    listOf(file("src/main/res"), file("build/generated/distributionRes/$distributionProfile"))
+}
+
 android {
     namespace = "com.suri.pipsurios"
     compileSdk {
@@ -13,8 +31,9 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 34
         targetSdk = 37
-        versionCode = 8
-        versionName = "2.8"
+        versionCode = 9
+        versionName = "2.9"
+        buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -24,6 +43,9 @@ android {
         create("full") {
             dimension = "edition"
             buildConfigField("boolean", "PRS_ONLY", "false")
+            if (distributionProfile != "MAIN") {
+                applicationIdSuffix = ".${distributionProfile.lowercase()}"
+            }
         }
         create("prsOnly") {
             dimension = "edition"
@@ -50,6 +72,22 @@ android {
     }
     androidResources {
         noCompress += "mbtiles"
+    }
+    sourceSets["main"].assets.setSrcDirs(listOf(distributionAssetsRoot))
+    sourceSets["main"].res.setSrcDirs(distributionResRoots)
+    defaultConfig {
+        manifestPlaceholders["appIcon"] = when (distributionProfile) {
+            "FENRIR" -> "@drawable/pip_f_icon"
+            "ALTAMIRA" -> "@drawable/pip_a_icon"
+            "CHECHU" -> "@drawable/pip_c_icon"
+            else -> "@mipmap/ic_launcher"
+        }
+        manifestPlaceholders["appLabel"] = when (distributionProfile) {
+            "FENRIR" -> "PIP-SuriOS FENRIR"
+            "ALTAMIRA" -> "PIP-SuriOS ALTAMIRA"
+            "CHECHU" -> "PIP-SuriOS CHECHU"
+            else -> "PIP-SuriOS MAIN"
+        }
     }
 }
 

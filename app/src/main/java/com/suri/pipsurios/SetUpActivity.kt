@@ -24,8 +24,10 @@ import com.suri.pipsurios.ui.screens.HeadgearScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
 import com.suri.pipsurios.ui.screens.SecondaryWeaponScreen
 import com.suri.pipsurios.ui.screens.SetUpDataScreen
+import com.suri.pipsurios.ui.screens.SetUpCustomListsScreen
 import com.suri.pipsurios.ui.screens.SetUpInputScreen
 import com.suri.pipsurios.ui.screens.SetUpScreen
+import com.suri.pipsurios.ui.screens.SetUpWeaponReplicasScreen
 import com.suri.pipsurios.ui.screens.TerminalOverlay
 import com.suri.pipsurios.ui.screens.UniformScreen
 import com.suri.pipsurios.ui.theme.PIPSuriOSTheme
@@ -65,6 +67,8 @@ private enum class SetUpDestination {
     ROOT,
     INPUT,
     DATA,
+    WEAPON_REPLICAS,
+    CUSTOM_LISTS,
     PRIMARY_WEAPON,
     SECONDARY_WEAPON,
     ACCESORIES,
@@ -86,6 +90,9 @@ private fun SetUpApp(onExit: () -> Unit) {
     var setupLoadout by remember { mutableStateOf(loadoutRepository.load()) }
     var operatorProfile by remember { mutableStateOf(operatorRepository.load()) }
     var primaryWeaponReturnDestination by remember {
+        mutableStateOf(SetUpDestination.INPUT)
+    }
+    var secondaryWeaponReturnDestination by remember {
         mutableStateOf(SetUpDestination.INPUT)
     }
 
@@ -114,9 +121,155 @@ private fun SetUpApp(onExit: () -> Unit) {
         operatorProfile = updated
     }
 
+    fun editAccessory(oldValue: String, newValue: String) {
+        if (newValue in setupLoadout.accesoryOptions && newValue != oldValue) return
+        val oldBuiltIn = com.suri.pipsurios.ui.screens.InventoryItem.entries
+            .firstOrNull { it.displayName == oldValue }
+        val newBuiltIn = com.suri.pipsurios.ui.screens.InventoryItem.entries
+            .firstOrNull { it.displayName == newValue }
+        val selected = oldBuiltIn?.let { it in setupLoadout.accesories }
+            ?: (oldValue in setupLoadout.customAccesories)
+        updateSetupLoadout(
+            setupLoadout.copy(
+                accesoryOptions = setupLoadout.accesoryOptions.map { if (it == oldValue) newValue else it },
+                accesories = setupLoadout.accesories
+                    .let { values -> if (oldBuiltIn != null) values - oldBuiltIn else values }
+                    .let { values -> if (selected && newBuiltIn != null) values + newBuiltIn else values },
+                customAccesories = setupLoadout.customAccesories
+                    .minus(oldValue)
+                    .let { values -> if (selected && newBuiltIn == null) values + newValue else values }
+            )
+        )
+    }
+
+    fun deleteAccessory(value: String) {
+        val builtIn = com.suri.pipsurios.ui.screens.InventoryItem.entries
+            .firstOrNull { it.displayName == value }
+        updateSetupLoadout(
+            setupLoadout.copy(
+                accesoryOptions = setupLoadout.accesoryOptions - value,
+                accesories = builtIn?.let { setupLoadout.accesories - it } ?: setupLoadout.accesories,
+                customAccesories = setupLoadout.customAccesories - value
+            )
+        )
+    }
+
+    fun editFrontPanel(oldValue: String, newValue: String) {
+        if (newValue in setupLoadout.frontPanelOptions && newValue != oldValue) return
+        updateSetupLoadout(
+            setupLoadout.copy(
+                frontPanelOptions = setupLoadout.frontPanelOptions.map { if (it == oldValue) newValue else it },
+                frontPanelRole = if (setupLoadout.frontPanelRole == oldValue) newValue else setupLoadout.frontPanelRole
+            )
+        )
+    }
+
+    fun deleteFrontPanel(value: String) {
+        updateSetupLoadout(
+            setupLoadout.copy(
+                frontPanelOptions = setupLoadout.frontPanelOptions - value,
+                frontPanelRole = setupLoadout.frontPanelRole?.takeUnless { it == value }
+            )
+        )
+    }
+
+    fun editUniform(oldValue: String, newValue: String) {
+        if (newValue in setupLoadout.uniformOptions && newValue != oldValue) return
+        updateSetupLoadout(
+            setupLoadout.copy(
+                uniformOptions = setupLoadout.uniformOptions.map { if (it == oldValue) newValue else it },
+                uniform = if (setupLoadout.uniform == oldValue) newValue else setupLoadout.uniform
+            )
+        )
+    }
+
+    fun deleteUniform(value: String) {
+        updateSetupLoadout(
+            setupLoadout.copy(
+                uniformOptions = setupLoadout.uniformOptions - value,
+                uniform = setupLoadout.uniform?.takeUnless { it == value }
+            )
+        )
+    }
+
+    fun editPrimaryWeaponOption(oldValue: String, newValue: String) {
+        val cleanValue = newValue.trim()
+        if (cleanValue.isEmpty() ||
+            setupLoadout.primaryWeaponOptions.any { it.equals(cleanValue, ignoreCase = true) && it != oldValue }
+        ) return
+        val base = setupLoadout.copy(
+            primaryWeaponOptions = setupLoadout.primaryWeaponOptions.map {
+                if (it == oldValue) cleanValue else it
+            }
+        )
+        updateSetupLoadout(
+            if (setupLoadout.primaryWeaponDisplayName() == oldValue) {
+                base.withPrimaryWeaponOption(cleanValue)
+            } else {
+                base
+            }
+        )
+    }
+
+    fun deletePrimaryWeaponOption(value: String) {
+        updateSetupLoadout(
+            if (setupLoadout.primaryWeaponDisplayName() == value) {
+                setupLoadout.copy(
+                    primaryWeaponOptions = setupLoadout.primaryWeaponOptions - value,
+                    primaryRole = null,
+                    primaryWeapon = null,
+                    primaryRoleText = null,
+                    primaryModelText = null
+                )
+            } else {
+                setupLoadout.copy(primaryWeaponOptions = setupLoadout.primaryWeaponOptions - value)
+            }
+        )
+    }
+
+    fun editSecondaryWeaponOption(oldValue: String, newValue: String) {
+        val cleanValue = newValue.trim()
+        if (cleanValue.isEmpty() ||
+            setupLoadout.secondaryWeaponOptions.any { it.equals(cleanValue, ignoreCase = true) && it != oldValue }
+        ) return
+        val base = setupLoadout.copy(
+            secondaryWeaponOptions = setupLoadout.secondaryWeaponOptions.map {
+                if (it == oldValue) cleanValue else it
+            }
+        )
+        updateSetupLoadout(
+            if (setupLoadout.secondaryWeaponDisplayName() == oldValue) {
+                base.withSecondaryWeaponOption(cleanValue)
+            } else {
+                base
+            }
+        )
+    }
+
+    fun deleteSecondaryWeaponOption(value: String) {
+        updateSetupLoadout(
+            if (setupLoadout.secondaryWeaponDisplayName() == value) {
+                setupLoadout.copy(
+                    secondaryWeaponOptions = setupLoadout.secondaryWeaponOptions - value,
+                    secondaryType = null,
+                    secondaryWeapon = null,
+                    secondaryTypeText = null,
+                    secondaryModelText = null
+                )
+            } else {
+                setupLoadout.copy(secondaryWeaponOptions = setupLoadout.secondaryWeaponOptions - value)
+            }
+        )
+    }
+
     fun openPrimaryWeapon(returnTo: SetUpDestination) {
         primaryWeaponReturnDestination = returnTo
         destination = SetUpDestination.PRIMARY_WEAPON
+    }
+
+    fun openSecondaryWeapon(returnTo: SetUpDestination) {
+        secondaryWeaponReturnDestination = returnTo
+        destination = SetUpDestination.SECONDARY_WEAPON
     }
 
     BackHandler {
@@ -124,7 +277,10 @@ private fun SetUpApp(onExit: () -> Unit) {
             SetUpDestination.ROOT -> onExit()
             SetUpDestination.INPUT,
             SetUpDestination.DATA -> destination = SetUpDestination.ROOT
+            SetUpDestination.WEAPON_REPLICAS -> destination = SetUpDestination.DATA
+            SetUpDestination.CUSTOM_LISTS -> destination = SetUpDestination.DATA
             SetUpDestination.PRIMARY_WEAPON -> destination = primaryWeaponReturnDestination
+            SetUpDestination.SECONDARY_WEAPON -> destination = secondaryWeaponReturnDestination
             else -> destination = SetUpDestination.INPUT
         }
     }
@@ -139,7 +295,7 @@ private fun SetUpApp(onExit: () -> Unit) {
         SetUpDestination.INPUT -> SetUpInputScreen(
             onOperatorSelected = { openOperator() },
             onPrimaryWeaponSelected = { openPrimaryWeapon(SetUpDestination.INPUT) },
-            onSecondaryWeaponSelected = { destination = SetUpDestination.SECONDARY_WEAPON },
+            onSecondaryWeaponSelected = { openSecondaryWeapon(SetUpDestination.INPUT) },
             onAccesoriesSelected = { destination = SetUpDestination.ACCESORIES },
             onHeadgearSelected = { destination = SetUpDestination.HEADGEAR },
             onFrontPanelSelected = { destination = SetUpDestination.FRONT_PANEL },
@@ -152,29 +308,36 @@ private fun SetUpApp(onExit: () -> Unit) {
             setupLoadout = setupLoadout,
             onEditOperatorField = ::openOperator,
             onDeleteOperatorField = ::deleteOperatorField,
-            onEditPrimaryWeapon = { openPrimaryWeapon(SetUpDestination.DATA) },
-            onDeletePrimaryRole = {
-                updateSetupLoadout(
-                    setupLoadout.copy(
-                        primaryRole = null,
-                        primaryWeapon = null,
-                        primaryWeaponText = null
-                    )
-                )
-            },
-            onDeletePrimaryWeapon = {
-                updateSetupLoadout(
-                    setupLoadout.copy(primaryWeapon = null, primaryWeaponText = null)
-                )
-            },
+            onWeaponReplicasSelected = { destination = SetUpDestination.WEAPON_REPLICAS },
+            onCustomListsSelected = { destination = SetUpDestination.CUSTOM_LISTS },
             onBack = { destination = SetUpDestination.ROOT }
+        )
+
+        SetUpDestination.WEAPON_REPLICAS -> SetUpWeaponReplicasScreen(
+            setupLoadout = setupLoadout,
+            onEditPrimaryWeapon = ::editPrimaryWeaponOption,
+            onDeletePrimaryWeapon = ::deletePrimaryWeaponOption,
+            onEditSecondaryWeapon = ::editSecondaryWeaponOption,
+            onDeleteSecondaryWeapon = ::deleteSecondaryWeaponOption,
+            onBack = { destination = SetUpDestination.DATA }
+        )
+
+        SetUpDestination.CUSTOM_LISTS -> SetUpCustomListsScreen(
+            setupLoadout = setupLoadout,
+            onEditAccessory = ::editAccessory,
+            onDeleteAccessory = ::deleteAccessory,
+            onEditFrontPanel = ::editFrontPanel,
+            onDeleteFrontPanel = ::deleteFrontPanel,
+            onEditUniform = ::editUniform,
+            onDeleteUniform = ::deleteUniform,
+            onBack = { destination = SetUpDestination.DATA }
         )
 
         SetUpDestination.PRIMARY_WEAPON -> PrimaryWeaponScreen(
             configuration = setupLoadout,
             onConfigurationChanged = ::updateSetupLoadout,
             titlePrefix = "SET-UP",
-            customWeaponInput = true,
+            catalogMode = true,
             onBack = { destination = primaryWeaponReturnDestination }
         )
 
@@ -182,8 +345,8 @@ private fun SetUpApp(onExit: () -> Unit) {
             configuration = setupLoadout,
             onConfigurationChanged = ::updateSetupLoadout,
             titlePrefix = "SET-UP",
-            verticalLayout = true,
-            onBack = { destination = SetUpDestination.INPUT }
+            catalogMode = true,
+            onBack = { destination = secondaryWeaponReturnDestination }
         )
 
         SetUpDestination.ACCESORIES -> AccesoriesScreen(
@@ -191,6 +354,8 @@ private fun SetUpApp(onExit: () -> Unit) {
             onConfigurationChanged = ::updateSetupLoadout,
             titlePrefix = "SET-UP",
             verticalLayout = true,
+            accesoryOptions = setupLoadout.accesoryOptions,
+            catalogMode = true,
             onBack = { destination = SetUpDestination.INPUT }
         )
 
@@ -207,6 +372,7 @@ private fun SetUpApp(onExit: () -> Unit) {
             onConfigurationChanged = ::updateSetupLoadout,
             titlePrefix = "SET-UP",
             verticalLayout = true,
+            frontPanelOptions = setupLoadout.frontPanelOptions,
             onBack = { destination = SetUpDestination.INPUT }
         )
 
@@ -214,6 +380,7 @@ private fun SetUpApp(onExit: () -> Unit) {
             configuration = setupLoadout,
             onConfigurationChanged = ::updateSetupLoadout,
             titlePrefix = "SET-UP",
+            uniformOptions = setupLoadout.uniformOptions,
             onBack = { destination = SetUpDestination.INPUT }
         )
     }

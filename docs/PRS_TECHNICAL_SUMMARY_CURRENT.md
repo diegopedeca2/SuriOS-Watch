@@ -4,11 +4,12 @@
 
 - **Proyecto:** PIP-SuriOS, dentro de SuriOS Ecosystem.
 - **Aplicación:** `com.suri.pipsurios`.
-- **Versión de la aplicación en este corte:** `2.8`.
-- **Arquitectura de P.R.S.:** v3.0 activa y v4.0 inicial sobre mapa.
+- **Versión de la aplicación en este corte:** `2.9`.
+- **Arquitectura de P.R.S.:** combinación operativa de los motores v3.0 y v4.0
+  bajo los menús `SENTRY`, `TRACKER`, `DEVICES` y `USER GUIDE`.
 - **Dispositivo principal:** Samsung Galaxy A56.
 - **Dispositivo auxiliar opcional:** Xiaomi Watch 2 mediante el módulo Wear OS `PROBE`.
-- **Fecha del corte:** 2026-09-01.
+- **Fecha del corte:** 2026-09-03.
 - **Estado:** implementación actual, no diseño histórico.
 
 Este documento describe cómo funciona hoy P.R.S. en el código de
@@ -52,22 +53,21 @@ Ninguna inferencia se presenta como una coordenada física medida.
 ## 2. Menú activo
 
 La edición completa de PIP-SuriOS organiza P.R.S. dentro de
-`TOOLS > PROXIMITY RADIO SCANNER` en dos versiones:
+`TOOLS > PROXIMITY RADIO SCANNER` en cuatro menús:
 
-### v3.0 — funcionamiento actual
+### SENTRY — vigilancia general
 
 | Entrada | Funcionamiento |
 |---|---|
-| `LOCAL SCAN` | Escanea BLE solamente con el A56. |
-| `SCAN + PROBE` | Escanea con el A56 y solicita al Watch 2 PROBE que haga su propia adquisición BLE. |
-| `DEVICES` | Identifica dispositivos y administra reglas guardadas. |
-| `INDIVIDUAL TRACKER` | Selecciona un contacto y lo sigue en una pantalla experimental junto a TERRAIN. |
-| `OPERATION GUIDE` | Actualmente está vacío de forma intencionada; no hay un procedimiento de campo activo en el alcance actual. |
+| `PIP` | Escanea BLE solamente con el A56 y muestra todos los nodos para vigilancia. |
+| `PIP + PROBE` | Escanea con el A56 y el Watch 2 PROBE para vigilancia conjunta. |
 
-### v4.0 — flujo inicial sobre mapa
+SENTRY no permite seleccionar ni seguir un dispositivo concreto. Las reglas
+activas de `DEVICES` se aplican antes de presentar los nodos.
 
-`v4.0` comienza con la misma idea de `INDIVIDUAL TRACKER`, pero separada en
-dos pasos:
+### TRACKER — flujo sobre mapa
+
+`TRACKER` conserva el flujo de v4.0, separado en dos pasos:
 
 1. **Identificar TARGET y ubicación:** se selecciona el campo TERRAIN y luego
    el contacto BLE que se seguirá.
@@ -81,8 +81,13 @@ El operador puede elegir dos modos:
 | `ONLY PIP-BOY` | Adquisición BLE con el A56. |
 | `PIP-BOY + PROBE` | El mismo flujo, añadiendo el Watch 2 PROBE como baliza remota y conservando su comunicación y telemetría actuales. |
 
-Esta primera base de `v4.0` prepara la navegación y la superficie de mapa;
-el modelo probabilístico completo de la propuesta todavía no está activo.
+El modelo probabilístico completo de la propuesta todavía no está activo.
+
+### DEVICES y USER GUIDE
+
+`DEVICES` conserva la identificación, el guardado y la gestión de reglas para
+dispositivos que se deben omitir. `USER GUIDE` ofrece la explicación en
+castellano para el operador.
 
 La edición `prsOnlyDebug` es una versión compacta para la pantalla exterior
 del Z Flip 6. Arranca en un menú propio con:
@@ -91,7 +96,8 @@ del Z Flip 6. Arranca en un menú propio con:
 - `GRID`: solo la visualización de densidad.
 - `DEVICES`: identificación y reglas guardadas.
 
-La edición compacta usa el modo `LOCAL_SCAN`; no expone `SCAN + PROBE`.
+La edición compacta mantiene su superficie reducida y sus reglas de
+dispositivos compartidas.
 
 ## 3. Piezas principales del código
 
@@ -614,14 +620,16 @@ Usa el siguiente bloque como instrucciones iniciales al combinar este
 documento con una nueva idea:
 
 ```text
-P.R.S. v3.0 en PIP-SuriOS es un escáner BLE experimental para el Samsung A56.
-La aplicación actual está en versión 2.8. El flujo es BLE SCAN -> CONTACTS ->
+P.R.S. en PIP-SuriOS combina el motor BLE de v3.0 con el flujo de mapa de v4.0
+para el Samsung A56. La aplicación actual está en versión 2.9. El flujo es BLE SCAN -> CONTACTS ->
 RSSI RAW -> HISTORIAL -> SUAVIZADO -> TENDENCIA -> BANDA RELATIVA -> GRID.
 
-El A56 puede trabajar solo (LOCAL SCAN) o combinarse con el Watch 2 PROBE
-(SCAN + PROBE). El PROBE envía observaciones BLE y ubicación por Wear OS Data
-Layer. La app valida el nodo y la sesión esperados y después procesa las
-observaciones remotas con el mismo tracker que las del A56.
+SENTRY puede trabajar solo (`PIP`) o combinarse con el Watch 2 PROBE
+(`PIP + PROBE`) para vigilancia general. TRACKER mantiene los modos
+`ONLY PIP-BOY` y `PIP-BOY + PROBE` y añade la selección de terreno y objetivo.
+El PROBE envía observaciones BLE y ubicación por Wear OS Data Layer. La app
+valida el nodo y la sesión esperados y después procesa las observaciones
+remotas con el mismo tracker que las del A56.
 
 El tracker evalúa cada 3 s, usa suavizado exponencial alpha 0,35, guarda 8
 muestras, exige 4 muestras y 9 s para inferir tendencia, usa 4,5 dB como
@@ -631,7 +639,8 @@ NEAR/MEDIUM/FAR son bandas relativas con umbrales -76/-88 dBm; no son metros.
 El GRID muestra nubes anulares de azimut completo centradas en el nodo que
 escuchó la señal. No existen bearing, coordenada BLE, RSSI->metros ni posición
 real del objetivo. DEVICES guarda reglas por dirección o nombre BLE. INDIVIDUAL
-TRACKER es experimental, usa solo LOCAL SCAN y combina un contacto con TERRAIN.
+`DEVICES` guarda reglas de omisión compartidas por SENTRY y TRACKER. SENTRY no
+selecciona objetivos concretos; TRACKER combina un contacto con TERRAIN.
 
 Al proponer cambios, conserva la separación entre datos medidos, procesados e
 inferidos. Indica qué archivos cambian, qué datos nuevos son realmente medidos
@@ -641,7 +650,8 @@ P.R.S. v2.0 ni posiciones sintéticas sin una decisión explícita.
 
 ## 21. Fuentes internas
 
-- `docs/PRS_v3.0.md`: descripción canónica de la arquitectura P.R.S. activa.
+- `docs/OLD VERSIONS/v3.0/PRS_v3.0.md`: documentación histórica de la
+  arquitectura P.R.S. v3.0.
 - `app/src/main/java/com/suri/pipsurios/prs/`: modelos, escáner, tracker,
   tuning, reglas y enlace PROBE.
 - `app/src/main/java/com/suri/pipsurios/ui/screens/`: pantallas y GRID.

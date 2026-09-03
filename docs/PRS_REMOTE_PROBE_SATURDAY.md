@@ -2,7 +2,7 @@
 
 > The Remote Probe experiment has been retired. This file is kept as a
 > historical field record only; the active P.R.S. is A56-only and is described
-> in `docs/PRS_v3.0.md`.
+> in `docs/OLD VERSIONS/v3.0/PRS_v3.0.md`.
 
 ## Implementación
 

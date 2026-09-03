@@ -1,5 +1,6 @@
 package com.suri.pipsurios.terrain
 
+import com.suri.pipsurios.BuildConfig
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.exp
@@ -32,6 +33,8 @@ object TerrainFieldSelection {
 }
 
 object OfflineMapCatalog {
+    private val profile = BuildConfig.DISTRIBUTION_PROFILE
+
     val NAVY7 = OfflineMapDefinition(
         mapId = "navy7",
         name = "NAVY7",
@@ -83,8 +86,52 @@ object OfflineMapCatalog {
         maxNativeZoom = 19,
         maxDisplayZoom = 20
     )
+
+    /**
+     * TESTING is a profile-specific field. FENRIR receives the real
+     * Navy7 HOME-style render; CHECHU receives a blank placeholder until its
+     * coordinates are supplied.
+     */
+    val TESTING = if (profile == "FENRIR") {
+        OfflineMapDefinition(
+            mapId = "testing",
+            name = "TESTING",
+            assetPath = "maps/testing_terrain.mbtiles",
+            assetSha256 = "D517EB9A3319046A0214367BF2C674AAEDDB4D811DBD13463BFD10440AB709BD",
+            bounds = MapBounds(
+                west = -3.049735951452,
+                south = 43.320061790853,
+                east = -3.025076392558,
+                north = 43.338063733714
+            ),
+            minZoom = 16,
+            maxNativeZoom = 19,
+            maxDisplayZoom = 20
+        )
+    } else {
+        OfflineMapDefinition(
+            mapId = "testing",
+            name = "TESTING",
+            assetPath = "maps/testing_terrain.mbtiles",
+            assetSha256 = "AA6E8ACA50AA1396E15526E761E9FC0AAB944441700AD522AFD3A4334F53591B",
+            bounds = MapBounds(
+                west = -0.01,
+                south = -0.01,
+                east = 0.01,
+                north = 0.01
+            ),
+            minZoom = 16,
+            maxNativeZoom = 19,
+            maxDisplayZoom = 20
+        )
+    }
+
     /** Map files are listed alphabetically; CHOOSE LOCATION is a UI-only exception before them. */
-    val maps = listOf(HOME, NAVY7, OFFICE).sortedBy { it.name }
+    val maps = when (profile) {
+        "FENRIR", "CHECHU" -> listOf(NAVY7, TESTING)
+        "ALTAMIRA" -> listOf(NAVY7)
+        else -> listOf(HOME, NAVY7, OFFICE)
+    }.sortedBy { it.name }
 }
 
 object TerrainZoomTuning {

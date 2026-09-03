@@ -320,6 +320,7 @@ fun DataLogDetailScreen(
                 log.loadout.accesories.takeIf { it.isNotEmpty() }?.joinToString(" + ")
             )
             DataValue("HEADGEAR", log.loadout.headgear)
+            DataValue("HEADGEAR COMPONENTS", log.loadout.headgearComponents.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("FRONT PANEL", log.loadout.frontPanel)
             DataValue("UNIFORM", log.loadout.uniform)
             Text("CONSUMABLES", color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
@@ -382,8 +383,8 @@ fun OperationEditLoadoutScreen(
     onNext: () -> Unit,
     onBack: () -> Unit
 ) {
-    val primaryOptions = PrimaryWeaponRole.entries.flatMap { it.weapons }.map { it.displayName }
-    val secondaryOptions = SecondaryWeaponCatalog.weapons.map { it.displayName }
+    val primaryOptions = WeaponReplicaCatalog.primary.map { it.displayName }
+    val secondaryOptions = WeaponReplicaCatalog.secondary.map { it.displayName }
     val accessoryOptions = listOf("DETON-A", "THUNDER B", "TANTO", "MINI KNIFE", "VOLCANO", "WATCH 2")
     val headgearOptions = HeadgearCatalog.profiles
     val frontPanelOptions = FrontPanelRole.entries.map { it.displayName }
@@ -495,6 +496,7 @@ fun OperationEditConfirmScreen(
             DataValue("SECONDARY WEAPON", draft.loadout.secondaryWeapon)
             DataValue("ACCESORIES", draft.loadout.accesories.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("HEADGEAR", draft.loadout.headgear)
+            DataValue("HEADGEAR COMPONENTS", draft.loadout.headgearComponents.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("FRONT PANEL", draft.loadout.frontPanel)
             DataValue("UNIFORM", draft.loadout.uniform)
             DataValue("PRIMARY MAG", OperationInputValidator.formatDecimal(draft.consumables.primaryMag))
@@ -527,13 +529,15 @@ fun OperationLoadoutScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DataValue("PRIMARY WEAPON", activeLoadout.primaryWeaponDisplayName())
-            DataValue("SECONDARY WEAPON", activeLoadout.secondaryWeapon?.displayName)
+            DataValue("SECONDARY WEAPON", activeLoadout.secondaryWeaponDisplayName())
             DataValue(
                 "ACCESORIES",
-                activeLoadout.accesories.takeIf { it.isNotEmpty() }
-                    ?.joinToString(" + ") { it.displayName }
+                (activeLoadout.accesories.map { it.displayName } + activeLoadout.customAccesories)
+                    .takeIf { it.isNotEmpty() }
+                    ?.joinToString(" + ")
             )
             DataValue("HEADGEAR", activeLoadout.headgearProfile)
+            DataValue("HEADGEAR COMPONENTS", activeLoadout.headgearComponents.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("FRONT PANEL", activeLoadout.frontPanelRole)
             DataValue("UNIFORM", activeLoadout.uniform)
         }
@@ -575,6 +579,7 @@ fun OperationConfirmScreen(
             DataValue("SECONDARY WEAPON", loadout?.secondaryWeapon)
             DataValue("ACCESORIES", loadout?.accesories?.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("HEADGEAR", loadout?.headgear)
+            DataValue("HEADGEAR COMPONENTS", loadout?.headgearComponents?.takeIf { it.isNotEmpty() }?.joinToString(" + "))
             DataValue("FRONT PANEL", loadout?.frontPanel)
             DataValue("UNIFORM", loadout?.uniform)
             Text("CONSUMABLES", color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
@@ -630,7 +635,7 @@ private fun DataFrame(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

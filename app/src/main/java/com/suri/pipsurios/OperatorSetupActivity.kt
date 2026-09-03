@@ -122,7 +122,6 @@ private fun OperatorSetupScreen(
     val fields = listOf(
         OperatorField.ID to "SURI-14",
         OperatorField.NAME to "DIEGO PEREZ",
-        OperatorField.CALLSIGN to "SURI",
         OperatorField.NUMBER to "01",
         OperatorField.COUNTRY to "SPAIN",
         OperatorField.TEAM to "PIP-SURI"
@@ -182,7 +181,7 @@ private fun OperatorInputFrame(
             OperatorAction("SAVE", PipGreen, onSave)
         }
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,

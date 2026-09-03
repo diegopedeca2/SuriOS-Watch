@@ -51,15 +51,15 @@ fun LoadingScreen(
         "PLEASE SET YOUR USER"
     }
     val systemText = if (operatorConfigured) {
-        "SYSTEM BOOTING UP, WELCOME $normalizedOperatorId"
+        "SYSTEM BOOTING UP // WELCOME, $normalizedOperatorId"
     } else {
         "PLEASE SET YOUR USER"
     }
 
     LaunchedEffect(Unit) {
-        // Keep the original menu timing: modules start at 3 seconds, and the
+        // Keep the menu timing: modules start at 3.25 seconds, and the
         // transition happens 1.5 seconds after the final system message.
-        delay(3_000)
+        delay(3_250)
         homeModules.forEachIndexed { index, _ ->
             visibleModuleCount = index + 1
             delay(750)

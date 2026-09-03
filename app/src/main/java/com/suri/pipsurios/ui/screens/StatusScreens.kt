@@ -97,7 +97,7 @@ fun StatusScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -224,7 +224,7 @@ private fun StatusArmorDiagram(
             side = StatusLabelSide.Left
         )
         StatusCoordinateLabel(
-            value = statusDisplayValue(activeLoadout.secondaryWeapon?.displayName),
+            value = statusDisplayValue(activeLoadout.secondaryWeaponDisplayName()),
             verticalLine = 7,
             horizontalLine = 6,
             side = StatusLabelSide.Right
@@ -401,7 +401,8 @@ fun StatusAccessoriesScreen(
             modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
         )
 
-        val accessories = activeLoadout.accesories.sortedBy { it.displayName }
+        val accessories = (activeLoadout.accesories.map { it.displayName } + activeLoadout.customAccesories)
+            .sorted()
         if (accessories.isEmpty()) {
             Text(
                 text = "> N/A",
@@ -417,7 +418,7 @@ fun StatusAccessoriesScreen(
             ) {
                 accessories.forEach { item ->
                     Text(
-                        text = "> ${item.displayName}",
+                        text = "> $item",
                         color = PipGreen,
                         fontSize = 20.sp,
                         fontFamily = FontFamily.Monospace
@@ -434,7 +435,7 @@ fun StatusAccessoriesScreen(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -504,7 +505,7 @@ fun DontForgetScreen(activeLoadout: LoadoutConfiguration, onBack: () -> Unit) {
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

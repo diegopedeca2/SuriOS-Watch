@@ -39,9 +39,11 @@ import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerSentryScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerV3Screen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerV4Screen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerGuideScreen
+import com.suri.pipsurios.ui.screens.PrsUserGuideScreen
 import com.suri.pipsurios.ui.screens.PrsDevicesScreen
 import com.suri.pipsurios.ui.screens.PrsTrackingScreen
 import com.suri.pipsurios.ui.screens.IndividualTrackingMenuScreen
@@ -101,9 +103,8 @@ import com.suri.pipsurios.storage.StorageCalculator
 import com.suri.pipsurios.storage.StorageItem
 import com.suri.pipsurios.storage.StorageRepository
 import com.suri.pipsurios.ui.screens.PrimaryWeaponRole
-import com.suri.pipsurios.ui.screens.SecondaryWeaponCatalog
+import com.suri.pipsurios.ui.screens.WeaponReplicaCatalog
 import com.suri.pipsurios.ui.screens.HeadgearCatalog
-import com.suri.pipsurios.ui.screens.UniformCatalog
 import com.suri.pipsurios.ui.screens.CurrentGearLoadingScreen
 import com.suri.pipsurios.ui.screens.CurrentGearScreen
 import com.suri.pipsurios.ui.screens.PrimaryWeaponScreen
@@ -195,14 +196,21 @@ private enum class PIPSuriOSDestination {
     Tools,
     ProximityRadioScannerLoading,
     ProximityRadioScanner,
+    ProximityRadioScannerSentry,
+    ProximityRadioScannerTracker,
+    ProximityRadioScannerUserGuide,
     ProximityRadioScannerV3,
     ProximityRadioScannerV4,
     ProximityRadioScannerGuide,
     PrsV4Target,
     PrsV4Grid,
+    PrsTrackerTarget,
+    PrsTrackerGrid,
     PrsDevices,
     PrsLocalScan,
     PrsScanProbe,
+    PrsSentryPip,
+    PrsSentryPipProbe,
     IndividualTracker,
     IndividualTrackerTarget,
     IndividualTrackerTracker,
@@ -286,9 +294,14 @@ private fun destinationUsesTerminalOverlay(destination: PIPSuriOSDestination): B
         PIPSuriOSDestination.Loading,
         PIPSuriOSDestination.HomeOperation,
         PIPSuriOSDestination.ProximityRadioScannerLoading,
+        PIPSuriOSDestination.ProximityRadioScannerSentry,
+        PIPSuriOSDestination.ProximityRadioScannerTracker,
+        PIPSuriOSDestination.ProximityRadioScannerUserGuide,
         PIPSuriOSDestination.ProximityRadioScannerGuide,
         PIPSuriOSDestination.PrsV4Target,
         PIPSuriOSDestination.PrsV4Grid,
+        PIPSuriOSDestination.PrsTrackerTarget,
+        PIPSuriOSDestination.PrsTrackerGrid,
         PIPSuriOSDestination.PrsDevices,
         PIPSuriOSDestination.PrsLocalScan,
         PIPSuriOSDestination.PrsScanProbe,
@@ -527,9 +540,7 @@ private fun PIPSuriOSApp(
         primaryWeaponStatisticsLoading = true
         operationScope.launch {
             val distribution = withContext(Dispatchers.IO) {
-                val primaryWeapons = PrimaryWeaponRole.entries.flatMap { role ->
-                    role.weapons.map(InventoryItem::displayName)
-                }
+                val primaryWeapons = WeaponReplicaCatalog.primary.map { it.displayName }
                 val recordedWeapons = operationRepository.loadAll().entries.map { entry ->
                     entry.log.loadout.primaryWeapon
                 }
@@ -545,7 +556,7 @@ private fun PIPSuriOSApp(
         secondaryWeaponStatisticsLoading = true
         operationScope.launch {
             val distribution = withContext(Dispatchers.IO) {
-                val secondaryWeapons = SecondaryWeaponCatalog.weapons.map(InventoryItem::displayName)
+                val secondaryWeapons = WeaponReplicaCatalog.secondary.map { it.displayName }
                 val recordedWeapons = operationRepository.loadAll().entries.map { entry ->
                     entry.log.loadout.secondaryWeapon
                 }
@@ -590,7 +601,7 @@ private fun PIPSuriOSApp(
         operationScope.launch {
             val distribution = withContext(Dispatchers.IO) {
                 val values = operationRepository.loadAll().entries.map { it.log.loadout.uniform }
-                StatisticsCalculator.percentageDistribution(UniformCatalog.options, values)
+                StatisticsCalculator.percentageDistribution(setupLoadout.uniformOptions, values)
             }
             uniformStatistics = distribution
             uniformStatisticsLoading = false
@@ -712,9 +723,33 @@ private fun PIPSuriOSApp(
             )
 
             PIPSuriOSDestination.ProximityRadioScanner -> ProximityRadioScannerScreen(
-                onV3Selected = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 },
-                onV4Selected = { destination = PIPSuriOSDestination.ProximityRadioScannerV4 },
+                onSentrySelected = { destination = PIPSuriOSDestination.ProximityRadioScannerSentry },
+                onTrackerSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerTracker },
+                onDevicesSelected = { destination = PIPSuriOSDestination.PrsDevices },
+                onUserGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerUserGuide },
                 onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+            PIPSuriOSDestination.ProximityRadioScannerSentry -> ProximityRadioScannerSentryScreen(
+                onPipSelected = { destination = PIPSuriOSDestination.PrsSentryPip },
+                onPipProbeSelected = { destination = PIPSuriOSDestination.PrsSentryPipProbe },
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+            PIPSuriOSDestination.ProximityRadioScannerTracker -> ProximityRadioScannerV4Screen(
+                onOnlyPipBoySelected = {
+                    prsV4Mode = PrsV4Mode.ONLY_PIP_BOY
+                    prsV4Selection = null
+                    destination = PIPSuriOSDestination.PrsTrackerTarget
+                },
+                onPipBoyProbeSelected = {
+                    prsV4Mode = PrsV4Mode.PIP_BOY_PROBE
+                    prsV4Selection = null
+                    destination = PIPSuriOSDestination.PrsTrackerTarget
+                },
+                title = "P.R.S. / TRACKER",
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+            PIPSuriOSDestination.ProximityRadioScannerUserGuide -> PrsUserGuideScreen(
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
             PIPSuriOSDestination.ProximityRadioScannerV3 -> ProximityRadioScannerV3Screen(
                 onLocalScanSelected = { destination = PIPSuriOSDestination.PrsLocalScan },
@@ -750,6 +785,19 @@ private fun PIPSuriOSApp(
                 },
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV4 }
             )
+            PIPSuriOSDestination.PrsTrackerTarget -> IndividualTrackingTargetScreen(
+                mode = prsV4Mode.operatingMode,
+                modeLabel = prsV4Mode.displayName,
+                title = "P.R.S. / TRACKER / STEP 1",
+                locationStepLabel = "STEP 1 // SELECT LOCATION",
+                targetStepLabel = "STEP 1 // IDENTIFY TARGET",
+                splitLayout = true,
+                onTargetSelected = {
+                    prsV4Selection = it
+                    destination = PIPSuriOSDestination.PrsTrackerGrid
+                },
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerTracker }
+            )
             PIPSuriOSDestination.PrsV4Grid -> IndividualTrackingTrackerScreen(
                 selection = prsV4Selection,
                 mode = prsV4Mode.operatingMode,
@@ -758,12 +806,36 @@ private fun PIPSuriOSApp(
                 onSelectTarget = { destination = PIPSuriOSDestination.PrsV4Target },
                 onBack = { destination = PIPSuriOSDestination.PrsV4Target }
             )
+            PIPSuriOSDestination.PrsTrackerGrid -> IndividualTrackingTrackerScreen(
+                selection = prsV4Selection,
+                mode = prsV4Mode.operatingMode,
+                modeLabel = prsV4Mode.displayName,
+                title = "P.R.S. / TRACKER / STEP 2 // GRID",
+                onSelectTarget = { destination = PIPSuriOSDestination.PrsTrackerTarget },
+                onBack = { destination = PIPSuriOSDestination.PrsTrackerTarget }
+            )
             PIPSuriOSDestination.ProximityRadioScannerGuide -> ProximityRadioScannerGuideScreen(
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
             )
 
             PIPSuriOSDestination.PrsDevices -> PrsDevicesScreen(
-                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV3 }
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
+            )
+
+            PIPSuriOSDestination.PrsSentryPip -> PrsTrackingScreen(
+                mode = PrsOperatingMode.LOCAL_SCAN,
+                modeLabel = "PIP",
+                subtitle = "A56 ONLY // SURVEILLANCE",
+                allowTargetSelection = false,
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerSentry }
+            )
+
+            PIPSuriOSDestination.PrsSentryPipProbe -> PrsTrackingScreen(
+                mode = PrsOperatingMode.SCAN_PROBE,
+                modeLabel = "PIP + PROBE",
+                subtitle = "A56 + WATCH 2 // SURVEILLANCE",
+                allowTargetSelection = false,
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerSentry }
             )
 
             PIPSuriOSDestination.PrsLocalScan -> PrsTrackingScreen(
@@ -1222,7 +1294,7 @@ private fun PIPSuriOSApp(
 
             PIPSuriOSDestination.InventoryLoadoutsUniform -> InventoryVisualMenuScreen(
                 title = "LOADOUTS - UNIFORM",
-                entries = UniformCatalog.options.map { "> $it" },
+                entries = setupLoadout.uniformOptions.map { "> $it" },
                 onBack = { destination = PIPSuriOSDestination.InventoryLoadouts }
             )
 
@@ -1265,18 +1337,21 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.CurrentGearPrimaryWeapon -> PrimaryWeaponScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
+                catalogMode = true,
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearSecondaryWeapon -> SecondaryWeaponScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
+                catalogMode = true,
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearAccesories -> AccesoriesScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
+                accesoryOptions = draftLoadout.accesoryOptions,
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
@@ -1289,12 +1364,14 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.CurrentGearFrontPanel -> FrontPanelScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
+                frontPanelOptions = draftLoadout.frontPanelOptions,
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
             PIPSuriOSDestination.CurrentGearUniform -> UniformScreen(
                 configuration = draftLoadout,
                 onConfigurationChanged = { draftLoadout = it },
+                uniformOptions = draftLoadout.uniformOptions,
                 onBack = { destination = PIPSuriOSDestination.CurrentGear }
             )
 
@@ -1424,7 +1501,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
                 )
 
                 Text(
-                    text = "PIP-SuriOS v2.8",
+                    text = "PIP-SuriOS v2.9",
                     color = PipGreenDim,
                     fontSize = 18.sp,
                     fontFamily = FontFamily.Monospace

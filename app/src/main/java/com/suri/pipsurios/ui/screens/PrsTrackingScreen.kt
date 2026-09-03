@@ -79,6 +79,9 @@ enum class PrsCompactPage {
 fun PrsTrackingScreen(
     mode: PrsOperatingMode,
     onBack: () -> Unit,
+    modeLabel: String = mode.displayName,
+    subtitle: String = mode.subtitle,
+    allowTargetSelection: Boolean = true,
     compact: Boolean = false,
     compactPage: PrsCompactPage = PrsCompactPage.SCAN,
     onCompactPageSelected: (PrsCompactPage) -> Unit = {},
@@ -205,6 +208,9 @@ fun PrsTrackingScreen(
 
     PrsTrackingContent(
         mode = mode,
+        modeLabel = modeLabel,
+        subtitle = subtitle,
+        allowTargetSelection = allowTargetSelection,
         compact = compact,
         compactPage = compactPage,
         snapshot = snapshot,
@@ -241,6 +247,9 @@ fun PrsTrackingScreen(
 @Composable
 private fun PrsTrackingContent(
     mode: PrsOperatingMode,
+    modeLabel: String,
+    subtitle: String,
+    allowTargetSelection: Boolean,
     compact: Boolean,
     compactPage: PrsCompactPage,
     snapshot: PrsSnapshot,
@@ -258,14 +267,15 @@ private fun PrsTrackingContent(
     onCompactPageSelected: (PrsCompactPage) -> Unit,
     onCompactDevicesSelected: () -> Unit
 ) {
-    val selected = snapshot.contact(selectedContactId)
+    val selected = if (allowTargetSelection) snapshot.contact(selectedContactId) else null
     if (compact) {
         PrsCompactTrackingContent(
             page = compactPage,
             snapshot = snapshot,
             scanStatus = scanStatus,
             gridProbe = gridProbe,
-            selectedContactId = selectedContactId,
+            selectedContactId = if (allowTargetSelection) selectedContactId else null,
+            allowTargetSelection = allowTargetSelection,
             onSelectContact = onSelectContact,
             onClearTarget = onClearTarget,
             onGrantPermission = onGrantPermission,
@@ -293,7 +303,7 @@ private fun PrsTrackingContent(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    "P.R.S. / ${mode.displayName}",
+                    "P.R.S. / $modeLabel",
                     color = PipGreen,
                     fontSize = 26.sp,
                     fontFamily = FontFamily.Monospace
@@ -331,7 +341,7 @@ private fun PrsTrackingContent(
                     Text("P.R.S.", color = PipGreen, fontSize = 26.sp, fontFamily = FontFamily.Monospace)
                     Text("${snapshot.contacts.size} NODES", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 }
-                Text(mode.subtitle, color = PipNeutralDim, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
+                Text(subtitle, color = PipNeutralDim, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -396,12 +406,15 @@ private fun PrsTrackingContent(
                             snapshot.contacts.forEach { contact ->
                                 ContactListRow(
                                     contact = contact,
-                                    selected = contact.contactId == selectedContactId,
+                                    selected = allowTargetSelection && contact.contactId == selectedContactId,
+                                    selectionEnabled = allowTargetSelection,
                                     onClick = {
-                                        if (contact.contactId == selectedContactId) {
-                                            onClearTarget()
-                                        } else {
-                                            onSelectContact(contact.contactId)
+                                        if (allowTargetSelection) {
+                                            if (contact.contactId == selectedContactId) {
+                                                onClearTarget()
+                                            } else {
+                                                onSelectContact(contact.contactId)
+                                            }
                                         }
                                     }
                                 )
@@ -464,6 +477,7 @@ private fun PrsCompactTrackingContent(
     scanStatus: BleScanStatus,
     gridProbe: PrsGridProbe?,
     selectedContactId: String?,
+    allowTargetSelection: Boolean,
     onSelectContact: (String) -> Unit,
     onClearTarget: () -> Unit,
     onGrantPermission: () -> Unit,
@@ -485,6 +499,7 @@ private fun PrsCompactTrackingContent(
                 scanStatus = scanStatus,
                 selectedContactId = selectedContactId,
                 retryNeeded = retryNeeded,
+                allowTargetSelection = allowTargetSelection,
                 onSelectContact = onSelectContact,
                 onGrantPermission = onGrantPermission,
                 onRetry = onRetry,
@@ -520,6 +535,7 @@ private fun PrsCompactScanPage(
     scanStatus: BleScanStatus,
     selectedContactId: String?,
     retryNeeded: Boolean,
+    allowTargetSelection: Boolean,
     onSelectContact: (String) -> Unit,
     onGrantPermission: () -> Unit,
     onRetry: () -> Unit,
@@ -566,10 +582,13 @@ private fun PrsCompactScanPage(
                 snapshot.contacts.forEach { contact ->
                     CompactContactListRow(
                         contact = contact,
-                        selected = contact.contactId == selectedContactId,
+                        selected = allowTargetSelection && contact.contactId == selectedContactId,
+                        selectionEnabled = allowTargetSelection,
                         onClick = {
-                            if (contact.contactId == selectedContactId) onClearTarget()
-                            else onSelectContact(contact.contactId)
+                            if (allowTargetSelection) {
+                                if (contact.contactId == selectedContactId) onClearTarget()
+                                else onSelectContact(contact.contactId)
+                            }
                         }
                     )
                 }
@@ -693,6 +712,7 @@ private fun CompactNavigationItem(
 private fun CompactContactListRow(
     contact: PrsContactSnapshot,
     selected: Boolean,
+    selectionEnabled: Boolean,
     onClick: () -> Unit
 ) {
     val accent = if (selected) PipAmber else PipGreenDim
@@ -700,7 +720,7 @@ private fun CompactContactListRow(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, accent.copy(alpha = if (selected) 0.9f else 0.45f))
-            .clickable(onClick = onClick)
+            .then(if (selectionEnabled) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(horizontal = 9.dp, vertical = 9.dp)
     ) {
         Text(
@@ -718,6 +738,7 @@ private fun CompactContactListRow(
 private fun ContactListRow(
     contact: PrsContactSnapshot,
     selected: Boolean,
+    selectionEnabled: Boolean,
     onClick: () -> Unit
 ) {
     val accent = if (selected) PipAmber else PipGreenDim
@@ -725,7 +746,7 @@ private fun ContactListRow(
         modifier = Modifier
             .fillMaxWidth()
             .border(1.dp, accent.copy(alpha = if (selected) 0.9f else 0.45f))
-            .clickable(onClick = onClick)
+            .then(if (selectionEnabled) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(horizontal = 8.dp, vertical = 6.dp)
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

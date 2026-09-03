@@ -126,6 +126,35 @@ object SecondaryWeaponCatalog {
     val weapons = handgun + demolition
 }
 
+data class PrimaryWeaponReplica(
+    val role: PrimaryWeaponRole,
+    val model: InventoryItem
+) {
+    val displayName: String
+        get() = "${role.displayName} - ${model.displayName}"
+}
+
+data class SecondaryWeaponReplica(
+    val type: String,
+    val model: InventoryItem
+) {
+    val displayName: String
+        get() = "$type - ${model.displayName}"
+}
+
+object WeaponReplicaCatalog {
+    val primary: List<PrimaryWeaponReplica> = PrimaryWeaponRole.entries.flatMap { role ->
+        role.weapons.map { model -> PrimaryWeaponReplica(role, model) }
+    }
+
+    val secondary: List<SecondaryWeaponReplica> = listOf(
+        "HANDGUN" to SecondaryWeaponCatalog.handgun,
+        "DEMOLITION" to SecondaryWeaponCatalog.demolition
+    ).flatMap { (type, models) ->
+        models.map { model -> SecondaryWeaponReplica(type, model) }
+    }
+}
+
 private data class InventoryDetailLine(
     val text: String,
     val color: Color = PipGreen
@@ -373,7 +402,7 @@ private fun InventoryLayout(
         )
 
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

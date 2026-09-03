@@ -13,6 +13,7 @@ import com.suri.pipsurios.data.UpdateOperationResult
 import com.suri.pipsurios.data.StatisticsCalculator
 import java.io.IOException
 import com.suri.pipsurios.ui.screens.InventoryItem
+import com.suri.pipsurios.ui.screens.PrimaryWeaponRole
 import com.suri.pipsurios.ui.state.LoadoutConfiguration
 import java.math.BigDecimal
 import java.io.File
@@ -58,18 +59,24 @@ class OperationDataTest {
     @Test
     fun loadoutSnapshotDoesNotChangeWithActiveLoadout() {
         val initial = LoadoutConfiguration(
+            primaryRole = PrimaryWeaponRole.SNIPER,
             primaryWeapon = InventoryItem.L96,
+            secondaryType = "HANDGUN",
             secondaryWeapon = InventoryItem.DESERT_EAGLE,
             accesories = setOf(InventoryItem.DETON_A),
             headgearProfile = "SURI-14",
+            headgearComponents = setOf("VYPER", "DYE MASK"),
+            customAccesories = setOf("UTILITY POUCH"),
             frontPanelRole = "SNIPER - ASSAULT",
             uniform = "MCBCK - SUMMER"
         )
         val snapshot = OperationLoadoutSnapshot.from(initial)
         val changed = initial.copy(primaryWeapon = InventoryItem.MCX, accesories = emptySet())
 
-        assertEquals("L96", snapshot.primaryWeapon)
-        assertEquals(listOf("DETON-A"), snapshot.accesories)
+        assertEquals("SNIPER - L96", snapshot.primaryWeapon)
+        assertEquals("HANDGUN - DESERT EAGLE", snapshot.secondaryWeapon)
+        assertEquals(listOf("DETON-A", "UTILITY POUCH"), snapshot.accesories)
+        assertEquals(listOf("DYE MASK", "VYPER"), snapshot.headgearComponents)
         assertNotEquals(changed.primaryWeapon?.displayName, snapshot.primaryWeapon)
         assertEquals("SURI-14", snapshot.headgear)
         assertEquals("MCBCK - SUMMER", snapshot.uniform)

@@ -1,7 +1,8 @@
 # P.R.S. v2.0 — ARCHIVE
 
 > This document describes the retired two-position presence experiment. It is
-> no longer the active P.R.S. implementation. See `docs/PRS_v3.0.md` for the
+> no longer the active P.R.S. implementation. See
+> `docs/OLD VERSIONS/v3.0/PRS_v3.0.md` for the
 > current BLE contact-list, temporal RSSI and density-cloud architecture.
 
 ## Objetivo

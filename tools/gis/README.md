@@ -152,6 +152,13 @@ existentes dentro de la nueva huella de 2 km x 2 km. La salida final contiene
 
 ## Política de fuentes y reproducibilidad
 
+Cada mapa solicitado con nuevas coordenadas se genera siempre desde cero:
+primero se obtiene o prepara una fuente geográfica que cubra esas coordenadas,
+después se crea un GeoPackage nuevo y finalmente se renderiza un MBTiles nuevo.
+No se reutiliza, recorta ni se centra un mapa existente para una ubicación
+distinta. Si no hay datos suficientes para una capa, esa ausencia se declara y
+no se inventa contenido cartográfico.
+
 El GeoPackage y los proyectos QGIS editables se mantienen fuera del repositorio:
 son fuentes de trabajo locales que pueden contener datos cartográficos pesados o
 de terceros. El repositorio conserva el generador, sus parámetros, la versión
@@ -162,6 +169,14 @@ bounds) y tres teselas representativas antes de abrirse. Si el hash no coincide,
 la copia local se recrea automáticamente mediante un temporal y un reemplazo
 seguro. No se introduce Git LFS en esta fase: el GeoPackage no se versiona y el
 asset Android ya forma parte del artefacto de release.
+
+## Curvas de nivel en la automatizaciÃ³n
+
+Las curvas de nivel forman parte del proceso automatizado. Cuando existe un MDT
+para la zona, se generan con `gdal_contour` en intervalos de 2 m, se incorporan
+al GeoPackage con `prepare_overpass_gpkg.py --contours-source` y el renderizador
+se ejecuta con `--contour-layer contours_2m`. No se debe usar `--no-contours` en
+un mapa solicitado con coordenadas si se dispone de datos de elevaciÃ³n.
 
 ## OFFICE en Sprint 027
 

@@ -12,6 +12,7 @@ object OperationJsonCodec {
         appendLine("    \"secondaryWeapon\": ${nullableString(log.loadout.secondaryWeapon)},")
         appendLine("    \"accesories\": [${log.loadout.accesories.joinToString(", ") { string(it) }}],")
         appendLine("    \"headgear\": ${nullableString(log.loadout.headgear)},")
+        appendLine("    \"headgearComponents\": [${log.loadout.headgearComponents.joinToString(", ") { string(it) }}],")
         appendLine("    \"frontPanel\": ${nullableString(log.loadout.frontPanel)},")
         appendLine("    \"uniform\": ${nullableString(log.loadout.uniform)}")
         appendLine("  },")
@@ -39,6 +40,7 @@ object OperationJsonCodec {
                 secondaryWeapon = loadout.nullableStringValue("secondaryWeapon"),
                 accesories = loadout.arrayValue("accesories").map { it as String },
                 headgear = loadout.nullableStringValue("headgear"),
+                headgearComponents = loadout.arrayValueOrEmpty("headgearComponents").map { it as String },
                 frontPanel = loadout.nullableStringValue("frontPanel"),
                 uniform = loadout.nullableStringValue("uniform")
             ),
@@ -213,6 +215,9 @@ private fun Map<String, Any?>.objectValue(key: String): Map<String, Any?> =
 
 private fun Map<String, Any?>.arrayValue(key: String): List<Any?> =
     this[key] as? List<Any?> ?: error("Missing array: $key")
+
+private fun Map<String, Any?>.arrayValueOrEmpty(key: String): List<Any?> =
+    this[key] as? List<Any?> ?: emptyList()
 
 private fun Map<String, Any?>.numberValue(key: String): BigDecimal =
     this[key] as? BigDecimal ?: error("Missing number: $key")

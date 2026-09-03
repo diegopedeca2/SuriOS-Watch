@@ -74,7 +74,7 @@ fun GeigerCounterScreen(
 ) {
     val context = LocalContext.current
     val engine = remember { GeigerEngine() }
-    val clickScheduler = remember { ClickScheduler(context.applicationContext) }
+    val clickScheduler = remember { ClickScheduler() }
     var volumeUpPressed by remember { mutableStateOf(false) }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var mode by remember { mutableStateOf(RadsMode.MANUAL) }
@@ -185,7 +185,7 @@ private fun GeigerCounterContent(
         )
 
         Text(
-            text = "PIP-SuriOS v2.8",
+            text = "PIP-SuriOS v2.9",
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
