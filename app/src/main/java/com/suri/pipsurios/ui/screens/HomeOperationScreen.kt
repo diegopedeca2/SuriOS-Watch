@@ -1,5 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
+import com.suri.pipsurios.PipSuriOsVersion
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,7 +61,7 @@ fun HomeOperationScreen(
         }
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

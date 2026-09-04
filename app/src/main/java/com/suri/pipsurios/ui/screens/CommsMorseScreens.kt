@@ -1,5 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
+import com.suri.pipsurios.PipSuriOsVersion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -124,7 +125,7 @@ fun TerminalFooter(onBack: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
         Text("< BACK", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp))
-        Text("PIP-SuriOS v3.0", color = PipGreenDim, fontSize = 18.sp,
+        Text(PipSuriOsVersion, color = PipGreenDim, fontSize = 18.sp,
             fontFamily = FontFamily.Monospace, modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp))
     }
 }

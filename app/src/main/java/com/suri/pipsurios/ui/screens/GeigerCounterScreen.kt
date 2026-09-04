@@ -1,5 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
+import com.suri.pipsurios.PipSuriOsVersion
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -182,7 +183,7 @@ private fun GeigerCounterContent(
         )
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

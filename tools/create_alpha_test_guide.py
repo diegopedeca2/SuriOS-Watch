@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 from docx import Document
@@ -11,8 +12,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 
-ROOT = Path(r"D:\WristOS")
-OUTPUT = ROOT / "output" / "SPRINT_030_APK" / "PIP-SuriOS_ALPHA_TEST_GUIDE_SPRINT_030.docx"
+DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 BLUE = "2E74B5"
 DARK_BLUE = "1F4D78"
 LIGHT_BLUE = "E8EEF5"
@@ -92,7 +92,7 @@ def set_font(run, name="Calibri", size=11, color="000000", bold=False, italic=Fa
     run.italic = italic
 
 
-def style_document(doc: Document) -> None:
+def style_document(doc: Document, sprint: str) -> None:
     section = doc.sections[0]
     section.page_width = Inches(8.5)
     section.page_height = Inches(11)
@@ -138,7 +138,7 @@ def style_document(doc: Document) -> None:
 
     header = section.header.paragraphs[0]
     header.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    run = header.add_run("PIP-SuriOS  ·  GUÍA ALPHA TESTER  ·  SPRINT 030")
+    run = header.add_run(f"PIP-SuriOS  ·  GUÍA ALPHA TESTER  ·  SPRINT {sprint}")
     set_font(run, size=8, color=MUTED, bold=True)
     footer = section.footer.paragraphs[0]
     footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -208,12 +208,22 @@ def add_test_block(doc, title, purpose, steps, expected):
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Genera la guía DOCX de pruebas Alpha.")
+    parser.add_argument("--root", type=Path, default=DEFAULT_ROOT, help="Raíz del proyecto.")
+    parser.add_argument("--output", type=Path, help="Ruta del DOCX de salida.")
+    parser.add_argument("--sprint", default="031", help="Identificador del Sprint.")
+    parser.add_argument("--date", default="04/09/2026", help="Fecha visible en la guía.")
+    parser.add_argument("--version", default="3.0", help="Versión visible de la aplicación.")
+    args = parser.parse_args()
+
+    project_root = args.root.resolve()
+    output = (args.output or project_root / "output" / f"SPRINT_{args.sprint}_APK" / f"PIP-SuriOS_ALPHA_TEST_GUIDE_SPRINT_{args.sprint}.docx").resolve()
     doc = Document()
-    style_document(doc)
+    style_document(doc, args.sprint)
     add_title(
         doc,
         "PIP-SuriOS · Guía de pruebas Alpha",
-        "Sprint 030 · Documento para FENRIR, ALTAMIRA y CHECHU · 03/09/2026",
+        f"Sprint {args.sprint} · Documento para FENRIR, ALTAMIRA y CHECHU · {args.date}",
     )
     add_body(doc, "Gracias por ser las primeras personas en probar esta versión y por ayudarnos a detectar problemas reales de uso. No hace falta saber programación: basta con usar la aplicación con normalidad y anotar lo que ocurra.")
 
@@ -222,10 +232,10 @@ def main() -> None:
         doc,
         ["Tester / APK", "Mapas incluidos", "Observación"],
         [
-            ("FENRIR v3.0", "NAVY7 y TESTING", "TESTING conserva el campo específico de FENRIR."),
-            ("ALTAMIRA v3.0", "NAVY7 y TESTING", "TESTING está centrado en 40.34897942140349, -3.818235386395919."),
-            ("CHECHU v3.0", "NAVY7 y TESTING", "TESTING está centrado en 40.433753, -3.625904."),
-            ("MAIN v3.0", "HOME, NAVY7 y OFFICE", "Es la APK principal de trabajo del A56; no es la APK Alpha asignada."),
+            (f"FENRIR v{args.version}", "NAVY7 y TESTING", "TESTING conserva el campo específico de FENRIR."),
+            (f"ALTAMIRA v{args.version}", "NAVY7 y TESTING", "TESTING está centrado en 40.34897942140349, -3.818235386395919."),
+            (f"CHECHU v{args.version}", "NAVY7 y TESTING", "TESTING está centrado en 40.433753, -3.625904."),
+            (f"MAIN v{args.version}", "HOME, NAVY7 y OFFICE", "Es la APK principal de trabajo del A56; no es la APK Alpha asignada."),
         ],
         [2050, 1850, 5460],
     )
@@ -242,18 +252,24 @@ def main() -> None:
             ("Versión de Android", "__________________________________________________"),
             ("APK utilizada", "__________________________________________________"),
             ("Fecha y lugar", "__________________________________________________"),
-            ("¿Se usó reloj / PROBE?", "Sí / No · Modelo: ______________________________"),
         ],
         [2700, 6660],
     )
 
     doc.add_heading("3. Preparación y permisos", level=1)
     add_body(doc, "Al abrir la aplicación por primera vez, acepta solo los permisos que quieras probar. Si rechazas uno, anótalo: también es información útil.")
+    doc.add_heading("3.1 Instalación de la APK", level=2)
+    add_number(doc, "Descarga únicamente el archivo APK que corresponda a tu nombre de tester: FENRIR, ALTAMIRA o CHECHU.")
+    add_number(doc, "Abre el archivo APK desde Descargas, Archivos o el lugar donde lo hayas recibido.")
+    add_number(doc, "Si Android muestra un aviso de seguridad, permite temporalmente la instalación desde esa aplicación de archivos y vuelve a abrir la APK.")
+    add_number(doc, "Pulsa INSTALAR. Si ya tenías una versión anterior del mismo tester, Android la actualizará conservando sus datos locales.")
+    add_number(doc, "Comprueba que el nombre y el icono corresponden a tu tester antes de empezar las pruebas.")
+    add_body(doc, "No hace falta instalar un reloj ni ningún accesorio externo para esta Alpha. Si la instalación falla, anota el texto exacto del aviso, el modelo de teléfono y la versión de Android.")
     add_table(
         doc,
         ["Permiso / acceso", "Para qué lo usa la aplicación"],
         [
-            ("Bluetooth: dispositivos cercanos", "P.R.S., conexión con el Watch 2 / PROBE y lectura de dispositivos Bluetooth."),
+            ("Bluetooth: dispositivos cercanos", "P.R.S. y lectura de dispositivos Bluetooth."),
             ("Ubicación precisa o aproximada", "GPS del teléfono, posición en mapas y parte del escaneo Bluetooth de Android."),
             ("Cámara", "Morse: se utiliza el flash trasero para transmitir señales luminosas."),
             ("Google Maps / CivTAK", "Son aplicaciones externas opcionales para MAP OPERATION; si no están instaladas, anotar el mensaje."),
@@ -303,13 +319,13 @@ def main() -> None:
 
     add_test_block(doc, "4.6 P.R.S. y Bluetooth", "Comprobar el escaneo, el seguimiento, las exclusiones y los estados de conexión.", [
         "Abrir PROXIMITY RADIO SCANNER y revisar SENTRY, TRACKER, DEVICES y USER GUIDE.",
-        "En SENTRY probar PIP y PIP + PROBE. Anotar qué ocurre sin dispositivos cercanos y qué datos aparecen cuando hay un objetivo controlado.",
-        "En TRACKER elegir ONLY PIP-BOY o PIP-BOY + PROBE, seleccionar primero el mapa TERRAIN y después el objetivo detectado.",
+        "En SENTRY probar PIP. Anotar qué ocurre sin dispositivos cercanos y qué datos aparecen cuando hay un objetivo controlado.",
+        "En TRACKER elegir ONLY PIP-BOY, seleccionar primero el mapa TERRAIN y después el objetivo detectado.",
         "Comprobar que al entrar en la pantalla del objetivo la lectura empieza sola. No hay que buscar un botón START.",
         "Dejar la pantalla abierta y comprobar que RAW puede cambiar de inmediato, mientras SMOOTH, TREND, SAMPLES y CONFIDENCE se completan con el tiempo.",
         "Esperar al menos 15 segundos antes de valorar la tendencia. Usar BACK para salir y comprobar que la sesión termina.",
         "En DEVICES añadir, editar y borrar un dispositivo a omitir. Comprobar que SENTRY y TRACKER lo respetan.",
-        "En ONLY PIP-BOY no hace falta vincular otro dispositivo. Para PIP-BOY + PROBE, comprobar que el Watch 2 está emparejado y conectado.",
+        "En ONLY PIP-BOY solo se utiliza el teléfono. No hay que vincular otro dispositivo para esta versión.",
     ], "Los menús cargan, el seguimiento comienza y termina de forma entendible, y los fallos de permisos o conexión muestran un estado útil.")
 
     add_test_block(doc, "4.7 P.R.S. - prueba P01: señal estable por distancia", "Obtener una referencia sencilla entre señal y distancia real en un entorno controlado. La distancia se mide fuera de la aplicación; P.R.S. no calcula metros.", [
@@ -339,19 +355,12 @@ def main() -> None:
         "Volver a encender o acercar el objetivo y comprobar si vuelve a aparecer sin cerrar la pantalla.",
     ], "El contacto puede tardar en desaparecer; la configuración actual considera caducado un contacto sin observaciones recientes después de aproximadamente 15 segundos.")
 
-    add_test_block(doc, "4.11 P.R.S. - prueba P05: PROBE", "Comprobar el aporte del Watch 2 sin confundir la posición del receptor con la del objetivo.", [
-        "Emparejar y conectar el Watch 2 antes de abrir PIP-BOY + PROBE.",
-        "Repetir una distancia corta y una distancia larga de P01, anotando source como A56 o WATCH2 según la lectura.",
-        "Anotar cualquier reconexión, pérdida de batería o cambio de estado en probe_status y notes.",
-        "No interpretar la posición mostrada del Watch 2 como coordenada del objetivo: es la posición del receptor que aporta la lectura.",
-    ], "Las lecturas indican su fuente y el estado de PROBE es entendible, incluso si el reloj no puede conectarse o se desconecta.")
-
     doc.add_heading("5. Registro estructurado de datos P.R.S.", level=1)
     add_body(doc, "Rellena el archivo PRS_FIELD_DATA_TEMPLATE.csv que acompaña a esta guía. Está separado por punto y coma (;) para que sea más fácil abrirlo con Excel en configuración española. Cada fila representa una observación aproximadamente cada 3 segundos, no una nueva sesión.")
     add_body(doc, "Los campos más importantes para esta primera campaña son:")
     for text in [
-        "test_id: usa P01, P02, P03, P04 o P05 según la prueba.",
-        "mode y source: ONLY_PIP_BOY o PIP_BOY_PROBE; A56 o WATCH2.",
+        "test_id: usa P01, P02, P03 o P04 según la prueba.",
+        "mode y source: ONLY_PIP_BOY y A56.",
         "actual_distance_m: distancia aproximada medida fuera de la aplicación. Déjalo vacío si no se puede estimar.",
         "raw_rssi_dbm, smoothed_rssi_dbm, trend, proximity_band, samples y confidence: copia los valores que aparecen en pantalla.",
         "environment, obstacles, receiver_movement y notes: describe las condiciones que pueden explicar cambios.",
@@ -374,7 +383,8 @@ def main() -> None:
     for text in [
         "Los mapas offline solo cubren las zonas incluidas en cada APK. TESTING de ALTAMIRA y CHECHU son campos específicos de sus APK.",
         "La posición GPS, brújula y Bluetooth dependen del teléfono, permisos, cobertura, batería y entorno físico.",
-        "La conexión con Watch 2 / PROBE no se puede validar completamente sin disponer del hardware compatible.",
+        "Esta Alpha solo usa el A56. No hace falta disponer de un reloj ni de una baliza externa.",
+        "Incidencia conocida: los mapas e iconos de cada tester se preparan junto con su APK. Si falta un mapa, aparece vacío, no carga o el icono no corresponde al nombre de la aplicación, anótalo como incidencia y continúa con el resto de pruebas. Puede ocurrir solo en algunas instalaciones.",
         "El sonido de RADS depende del volumen multimedia y del altavoz o auriculares del teléfono; la valoración de realismo es subjetiva.",
         "Google Maps y CivTAK son aplicaciones externas: su ausencia o cambios propios pueden afectar MAP OPERATION.",
         "La aplicación está en fase Alpha: puede haber textos provisionales, cambios visuales, pérdida de datos de prueba o cierres inesperados.",
@@ -402,11 +412,11 @@ def main() -> None:
     add_body(doc, "En mapas, añade: nombre del mapa, si había conexión de datos, si se había concedido ubicación y si el fallo afectó a pan, zoom, brújula, GPS u overlays.")
 
     doc.add_heading("9. Criterio de cierre de la prueba", level=1)
-    add_body(doc, "La prueba se considera completa cuando se han recorrido las secciones 4.1 a 4.11, se ha rellenado el CSV de P.R.S. si se dispone de un objetivo controlado, se ha anotado el modelo del dispositivo y se ha enviado feedback incluso si todo funciona. Los comentarios positivos también son útiles: indican qué partes no debemos romper en la siguiente versión.")
+    add_body(doc, "La prueba se considera completa cuando se han recorrido las secciones 4.1 a 4.10, se ha rellenado el CSV de P.R.S. si se dispone de un objetivo controlado, se ha anotado el modelo del dispositivo y se ha enviado feedback incluso si todo funciona. Los comentarios positivos también son útiles: indican qué partes no debemos romper en la siguiente versión.")
 
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    doc.save(OUTPUT)
-    print(OUTPUT)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    doc.save(output)
+    print(output)
 
 
 if __name__ == "__main__":

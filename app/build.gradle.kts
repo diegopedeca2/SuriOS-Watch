@@ -34,6 +34,7 @@ android {
         versionCode = 10
         versionName = "3.0"
         buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
+        buildConfigField("boolean", "PROBE_ENABLED", (distributionProfile == "MAIN").toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -88,6 +89,7 @@ android {
             "CHECHU" -> "PIP-SuriOS CHECHU"
             else -> "PIP-SuriOS MAIN"
         }
+        manifestPlaceholders["probeEnabled"] = (distributionProfile == "MAIN").toString()
     }
 }
 

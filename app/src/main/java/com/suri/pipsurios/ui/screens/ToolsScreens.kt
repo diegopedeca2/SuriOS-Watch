@@ -1,5 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
+import com.suri.pipsurios.PipSuriOsVersion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -103,7 +104,7 @@ fun ProximityRadioScannerScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -116,7 +117,8 @@ fun ProximityRadioScannerScreen(
 fun ProximityRadioScannerSentryScreen(
     onPipSelected: () -> Unit,
     onPipProbeSelected: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    showProbe: Boolean = true
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
@@ -139,13 +141,15 @@ fun ProximityRadioScannerSentryScreen(
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onPipSelected)
             )
-            Text(
-                text = "> PIP + PROBE",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onPipProbeSelected)
-            )
+            if (showProbe) {
+                Text(
+                    text = "> PIP + PROBE",
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable(onClick = onPipProbeSelected)
+                )
+            }
         }
 
         Text(
@@ -162,7 +166,7 @@ fun ProximityRadioScannerSentryScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -178,7 +182,8 @@ fun ProximityRadioScannerV3Screen(
     onDevicesSelected: () -> Unit,
     onIndividualTrackerSelected: () -> Unit,
     onGuideSelected: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    showProbe: Boolean = true
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
@@ -201,13 +206,15 @@ fun ProximityRadioScannerV3Screen(
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onLocalScanSelected)
             )
-            Text(
-                text = "> ${PrsOperatingMode.SCAN_PROBE.displayName}",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onScanProbeSelected)
-            )
+            if (showProbe) {
+                Text(
+                    text = "> ${PrsOperatingMode.SCAN_PROBE.displayName}",
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable(onClick = onScanProbeSelected)
+                )
+            }
             Text(
                 text = "> DEVICES",
                 color = PipGreen,
@@ -237,7 +244,7 @@ fun ProximityRadioScannerV3Screen(
         )
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -251,7 +258,8 @@ fun ProximityRadioScannerV4Screen(
     onOnlyPipBoySelected: () -> Unit,
     onPipBoyProbeSelected: () -> Unit,
     onBack: () -> Unit,
-    title: String = "P.R.S. v4.0"
+    title: String = "P.R.S. v4.0",
+    showProbe: Boolean = true
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
@@ -274,13 +282,15 @@ fun ProximityRadioScannerV4Screen(
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onOnlyPipBoySelected)
             )
-            Text(
-                text = "> PIP-BOY + PROBE",
-                color = PipGreen,
-                fontSize = 24.sp,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.clickable(onClick = onPipBoyProbeSelected)
-            )
+            if (showProbe) {
+                Text(
+                    text = "> PIP-BOY + PROBE",
+                    color = PipGreen,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable(onClick = onPipBoyProbeSelected)
+                )
+            }
         }
 
         Text(
@@ -297,7 +307,7 @@ fun ProximityRadioScannerV4Screen(
         )
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
@@ -367,7 +377,7 @@ fun ToolsScreen(
         )
 
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

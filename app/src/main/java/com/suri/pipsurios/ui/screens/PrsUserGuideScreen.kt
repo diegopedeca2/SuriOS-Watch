@@ -25,7 +25,7 @@ import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipNeutral
 
 @Composable
-fun PrsUserGuideScreen(onBack: () -> Unit) {
+fun PrsUserGuideScreen(onBack: () -> Unit, showProbe: Boolean = true) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,11 +58,19 @@ fun PrsUserGuideScreen(onBack: () -> Unit) {
             )
             PrsGuideBlock(
                 title = "SENTRY",
-                body = "SENTRY es el modo de vigilancia. PIP utiliza el escáner del A56. PIP + PROBE combina el A56 con el Watch 2 PROBE. Ambos modos muestran todos los nodos detectados y no permiten seleccionar ni seguir un dispositivo concreto."
+                body = if (showProbe) {
+                    "SENTRY es el modo de vigilancia. PIP utiliza el escáner del A56. PIP + PROBE combina el A56 con el Watch 2 PROBE. Ambos modos muestran todos los nodos detectados y no permiten seleccionar ni seguir un dispositivo concreto."
+                } else {
+                    "SENTRY es el modo de vigilancia. PIP utiliza el escáner del A56 y muestra todos los nodos detectados. No permite seleccionar ni seguir un dispositivo concreto."
+                }
             )
             PrsGuideBlock(
                 title = "TRACKER",
-                body = "Elige ONLY PIP-BOY o PIP-BOY + PROBE, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente: no hay START. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
+                body = if (showProbe) {
+                    "Elige ONLY PIP-BOY o PIP-BOY + PROBE, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente: no hay START. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
+                } else {
+                    "Elige ONLY PIP-BOY, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente: no hay START. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
+                }
             )
             PrsGuideBlock(
                 title = "LECTURA Y TIEMPO",
@@ -73,8 +81,12 @@ fun PrsUserGuideScreen(onBack: () -> Unit) {
                 body = "Aquí se identifican y guardan dispositivos que deben omitirse. Las reglas activas se aplican automáticamente tanto a SENTRY como a TRACKER. Comprueba el nombre, el identificador o la dirección observada antes de guardar una regla; el RSSI solo es una referencia relativa."
             )
             PrsGuideBlock(
-                title = "PERMISOS Y PROBE",
-                body = "ONLY PIP-BOY usa el A56 y no necesita otro dispositivo. PIP-BOY + PROBE necesita el Watch 2 emparejado y conectado. Bluetooth y los permisos de escaneo/conexión son necesarios. La posición de PROBE es la del Watch 2 receptor, no la del objetivo. Si algo falla, concede permisos o usa TRY AGAIN / RETRY."
+                title = if (showProbe) "PERMISOS Y PROBE" else "PERMISOS",
+                body = if (showProbe) {
+                    "ONLY PIP-BOY usa el A56 y no necesita otro dispositivo. PIP-BOY + PROBE necesita el Watch 2 emparejado y conectado. Bluetooth y los permisos de escaneo/conexión son necesarios. La posición de PROBE es la del Watch 2 receptor, no la del objetivo. Si algo falla, concede permisos o usa TRY AGAIN / RETRY."
+                } else {
+                    "Esta edición utiliza únicamente el A56. Bluetooth y los permisos de escaneo/conexión son necesarios. Si algo falla, concede permisos o usa TRY AGAIN / RETRY."
+                }
             )
             PrsGuideBlock(
                 title = "LECTURA DE LA PANTALLA",

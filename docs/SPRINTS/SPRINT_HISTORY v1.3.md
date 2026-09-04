@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-09-03
+last_updated: 2026-09-04
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,8 +32,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
-| PIP-SuriOS | Ninguno | Sprint 030 | Sprint 030 cerrado; mapas TESTING, documentación y distribución completadas |
-| SuriOS Ecosystem | Ninguno | Sprint 030 | Sprint 030 cerrado; mapas TESTING, documentación y distribución completadas |
+| PIP-SuriOS | Sprint 032 | Sprint 031 | Sprint 032 activo; recogida de feedback Alpha |
+| SuriOS Ecosystem | Sprint 032 | Sprint 031 | Sprint 032 activo; recogida de feedback Alpha |
 
 ---
 
@@ -75,6 +75,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 028 | SuriOS Ecosystem | Actualización de versión y estética común de terminal en inicio, identificación, LOADING y HOMESCREEN | Cerrado | Completado | 2026-09-01 | 2026-09-01 | [Sprint 028 v1.0](SPRINT_028_v1.0.md) |
 | 029 | SuriOS Ecosystem / PIP-SuriOS | Distribución Alpha, personalización del equipamiento, P.R.S. combinado y corrección de RADS | Cerrado | Completado con pendiente no crítico de coordenadas de CHECHU | 2026-09-02 | 2026-09-03 | [Sprint 029 v1.0](SPRINT_029_v1.0.md) |
 | 030 | SuriOS Ecosystem / PIP-SuriOS | Mapas TESTING independientes para ALTAMIRA y CHECHU | Cerrado | Completado | 2026-09-03 | 2026-09-03 | [Sprint 030 v1.0](SPRINT_030_v1.0.md) |
+| 031 | SuriOS Ecosystem / PIP-SuriOS | Auditoría externa, revisión de duplicidades y preparación de distribución Beta | Cerrado | Alpha controlada empaquetada y validada físicamente en A56; AUD-031-01 pausada | 2026-09-04 | 2026-09-04 | [Sprint 031 v1.0](SPRINT_031_v1.0.md) |
 
 ---
 
@@ -929,3 +930,45 @@ No queda ningún Sprint activo tras este cierre. Las futuras modificaciones de
 TRACKER o calibraciones de campo requieren un Sprint posterior autorizado.
 
 Documento del Sprint: [Sprint 030 v1.0](SPRINT_030_v1.0.md).
+
+---
+
+## 36. Apertura de Sprint 031 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 031 se abre el 2026-09-04 para auditar el proyecto como un agente
+externo antes de preparar una nueva distribución Beta. Se revisan
+reproducibilidad, duplicidades de código y recursos, ciclo de vida de P.R.S.,
+seguridad del Data Layer, cobertura de pruebas y herramientas de entrega.
+
+La auditoría está documentada en
+[AUDIT_SPRINT_031](../AUDIT_SPRINT_031.md). El resultado es **incidencias
+abiertas**: `test` y `lint` pasan para MAIN, pero los recursos generados de los
+perfiles no están versionados y existen deudas de mantenibilidad y seguridad.
+
+La condición inicial de distribución sin incidencias se mantiene pausada para
+`AUD-031-01`, pero el propietario autoriza una Alpha controlada para obtener
+feedback. Las APK tester no exponen PROBE y cada paquete incluye guía, CSV y
+hash de sus archivos.
+
+La validación física se completó el 2026-09-04 en el Samsung A56 `SM_A566B`,
+identificador ADB `RZGYC07H0EX`. FENRIR, ALTAMIRA y CHECHU se instalaron y
+abrieron correctamente; SENTRY y TRACKER funcionaron, TRACKER inició la lectura
+automáticamente y `BACK` terminó la sesión. No apareció PROBE en las APK
+tester.
+
+FENRIR mostró la cartografía base de `TESTING`. ALTAMIRA y CHECHU cargaron el
+campo y la cuadrícula, pero mostraron la cartografía base vacía, aunque el mapa
+está incluido en las APK. `AUD-031-01` queda pausada para recibir feedback de
+los testers. El Sprint 031 se cierra y se abre el Sprint 032 para continuar el
+seguimiento de la Alpha.
+
+## 37. Apertura de Sprint 032 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 032 se abre el 2026-09-04, inmediatamente después del cierre del
+Sprint 031. Su finalidad inicial es recoger el feedback de los tres testers
+Alpha, comprobar la reproducibilidad de `AUD-031-01` y decidir, con datos
+reales, qué incidencias deben corregirse.
+
+El Sprint 032 queda **ACTIVE**. No se cambia la firma de versión ni se modifica
+el código por adelantado: primero se espera el resultado de las pruebas de los
+testers.

@@ -181,7 +181,7 @@ private fun OperatorInputFrame(
             OperatorAction("SAVE", PipGreen, onSave)
         }
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 15.sp,
             fontFamily = FontFamily.Monospace,

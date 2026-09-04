@@ -321,6 +321,7 @@ private fun PIPSuriOSApp(
     initialDestination: PIPSuriOSDestination = PIPSuriOSDestination.Splash
 ) {
     val context = LocalContext.current
+    val probeEnabled = BuildConfig.PROBE_ENABLED
     if (BuildConfig.PRS_ONLY) {
         PrsOnlyApp()
         return
@@ -732,6 +733,7 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.ProximityRadioScannerSentry -> ProximityRadioScannerSentryScreen(
                 onPipSelected = { destination = PIPSuriOSDestination.PrsSentryPip },
                 onPipProbeSelected = { destination = PIPSuriOSDestination.PrsSentryPipProbe },
+                showProbe = probeEnabled,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
             PIPSuriOSDestination.ProximityRadioScannerTracker -> ProximityRadioScannerV4Screen(
@@ -745,15 +747,18 @@ private fun PIPSuriOSApp(
                     prsV4Selection = null
                     destination = PIPSuriOSDestination.PrsTrackerTarget
                 },
+                showProbe = probeEnabled,
                 title = "P.R.S. / TRACKER",
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
             PIPSuriOSDestination.ProximityRadioScannerUserGuide -> PrsUserGuideScreen(
+                showProbe = probeEnabled,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
             PIPSuriOSDestination.ProximityRadioScannerV3 -> ProximityRadioScannerV3Screen(
                 onLocalScanSelected = { destination = PIPSuriOSDestination.PrsLocalScan },
                 onScanProbeSelected = { destination = PIPSuriOSDestination.PrsScanProbe },
+                showProbe = probeEnabled,
                 onDevicesSelected = { destination = PIPSuriOSDestination.PrsDevices },
                 onIndividualTrackerSelected = { destination = PIPSuriOSDestination.IndividualTracker },
                 onGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerGuide },
@@ -770,6 +775,7 @@ private fun PIPSuriOSApp(
                     prsV4Selection = null
                     destination = PIPSuriOSDestination.PrsV4Target
                 },
+                showProbe = probeEnabled,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
             PIPSuriOSDestination.PrsV4Target -> IndividualTrackingTargetScreen(
@@ -1501,7 +1507,7 @@ fun PIPSuriOSScreen(onFinished: () -> Unit) {
                 )
 
                 Text(
-                    text = "PIP-SuriOS v3.0",
+                    text = PipSuriOsVersion,
                     color = PipGreenDim,
                     fontSize = 18.sp,
                     fontFamily = FontFamily.Monospace

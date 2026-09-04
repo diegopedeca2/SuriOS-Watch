@@ -1,5 +1,6 @@
 package com.suri.pipsurios.ui.screens
 
+import com.suri.pipsurios.PipSuriOsVersion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -1132,7 +1133,7 @@ private fun CurrentGearLayout(
             modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
         )
         Text(
-            text = "PIP-SuriOS v3.0",
+            text = PipSuriOsVersion,
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,

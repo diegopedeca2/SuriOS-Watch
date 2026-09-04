@@ -4,14 +4,19 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-03
+last_updated: 2026-09-04
 
 ---
 
 ## Sprint activo
 
-No hay ningún Sprint activo. El Sprint 030 se ha cerrado el 2026-09-03 tras
-completar su alcance técnico, documental y de distribución.
+El Sprint 032 se abre el 2026-09-04 después del cierre documental, técnico y
+físico del Sprint 031. Su objetivo es recoger el feedback de los testers Alpha
+y decidir las siguientes correcciones.
+
+[Sprint 032 v1.0](SPRINT_032_v1.0.md) — **ACTIVE**
+
+[Sprint 031 v1.0](SPRINT_031_v1.0.md) — **CLOSED**
 
 [Sprint 030 v1.0](SPRINT_030_v1.0.md) — **CLOSED**
 
@@ -37,7 +42,31 @@ sonido de RADS.
 
 [Sprint 028 v1.0](SPRINT_028_v1.0.md) — **CLOSED**
 
-No hay ningún Sprint abierto actualmente.
+No hay ningún Sprint pendiente de cierre. El Sprint 032 es ahora el único Sprint
+abierto.
+
+## Validación y cierre del Sprint 031
+
+La comprobación física se realizó el 2026-09-04 en un Samsung A56, modelo
+`SM_A566B`, identificador ADB `RZGYC07H0EX`.
+
+- [x] Se instalaron las APK Alpha de FENRIR, ALTAMIRA y CHECHU.
+- [x] Se confirmó el nombre, el icono y la versión `v3.0` de cada APK.
+- [x] Se probaron permisos, apertura, navegación, SENTRY y TRACKER.
+- [x] TRACKER mostró lectura automática al entrar en el objetivo y terminó al
+      usar `BACK`.
+- [x] Las APK tester no mostraron ni activaron PROBE.
+- [x] Se registró la incidencia conocida `AUD-031-01`: FENRIR muestra la
+      cartografía base de `TESTING`; ALTAMIRA y CHECHU cargan el campo y la
+      cuadrícula, pero muestran la cartografía base vacía. Los mapas están
+      incluidos en las APK. La incidencia queda pausada para feedback Alpha.
+- [x] El resultado quedó registrado en la auditoría y en el documento del
+      Sprint.
+- [x] El Sprint 031 se marcó `CLOSED` y se preparó su commit y push.
+
+El Sprint 031 queda cerrado con `AUD-031-01` pausada por decisión del
+propietario. El Sprint 032 recoge el trabajo posterior y el feedback de los
+testers.
 
 ## Cierre Sprint 029
 
@@ -46,6 +75,8 @@ de CHECHU quedó resuelta durante Sprint 030 con la generación de su mapa
 `TESTING`.
 
 ## Último Sprint cerrado
+
+[Sprint 031 v1.0](SPRINT_031_v1.0.md) — **CLOSED**
 
 [Sprint 030 v1.0](SPRINT_030_v1.0.md) — **CLOSED**
 
@@ -95,6 +126,8 @@ Sprint 027: **CLOSED**
 Sprint 028: **CLOSED**
 Sprint 029: **CLOSED**
 Sprint 030: **CLOSED**
+Sprint 031: **CLOSED**
+Sprint 032: **ACTIVE**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -221,7 +254,7 @@ cancelados por decisión expresa del propietario. La futura integración de
 movimiento/orientación tampoco forma parte del Sprint 016. El resto de temas
 abiertos queda trasladado a una futura autorización. El Sprint 027 quedó
 cerrado el 2026-09-01 y el Sprint 028 queda registrado como último Sprint
-cerrado; actualmente no hay un Sprint activo.
+cerrado; ese registro corresponde a un momento anterior al Sprint 031.
 
 ## Addendum de cierre de SuriOS Watch y del AVD — 2026-08-30
 
