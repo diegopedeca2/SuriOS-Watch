@@ -4,17 +4,17 @@
 
 - **Proyecto:** PIP-SuriOS, dentro de SuriOS Ecosystem.
 - **Aplicación:** `com.suri.pipsurios`.
-- **Versión de la aplicación en este corte:** `3.0`.
+- **Versión de la aplicación en este corte:** `3.1`.
 - **Arquitectura de P.R.S.:** combinación operativa de los motores v3.0 y v4.0
   bajo los menús `SENTRY`, `TRACKER`, `DEVICES` y `USER GUIDE`.
 - **Dispositivo principal:** Samsung Galaxy A56.
 - **Dispositivo auxiliar opcional:** Xiaomi Watch 2 mediante el módulo Wear OS `PROBE`.
-- **Fecha del corte:** 2026-09-03.
+- **Fecha del corte:** 2026-09-04.
 - **Estado:** implementación actual, no diseño histórico.
 
 Este documento describe cómo funciona hoy P.R.S. en el código de
 `D:\WristOS`. Está preparado para entregarlo a otro chatbot como contexto
-técnico antes de diseñar una modificación. La versión `3.0` es la versión de
+técnico antes de diseñar una modificación. La versión `3.1` es la versión de
 la aplicación móvil; no significa que la arquitectura de P.R.S. haya vuelto a
 la versión antigua.
 
@@ -71,8 +71,9 @@ activas de `DEVICES` se aplican antes de presentar los nodos.
 
 1. **Identificar TARGET y ubicación:** se selecciona el campo TERRAIN y luego
    el contacto BLE que se seguirá.
-2. **GRID sobre mapa:** se muestra el mapa offline seleccionado con el GRID
-   P.R.S. superpuesto y centrado en la posición GPS del A56.
+2. **Niebla de probabilidad sobre mapa:** se muestra el mapa offline
+   seleccionado con `PrsProbabilityFog` superpuesto y centrado en la posición
+   GPS del A56.
 
 El operador puede elegir dos modos:
 
@@ -81,7 +82,8 @@ El operador puede elegir dos modos:
 | `ONLY PIP-BOY` | Adquisición BLE con el A56. |
 | `PIP-BOY + PROBE` | El mismo flujo, añadiendo el Watch 2 PROBE como baliza remota y conservando su comunicación y telemetría actuales. |
 
-El modelo probabilístico completo de la propuesta todavía no está activo.
+La niebla es una representación visual relativa basada en `DensityCloud`; no es
+una coordenada, distancia ni bearing del objetivo.
 
 ### DEVICES y USER GUIDE
 
@@ -110,6 +112,7 @@ dispositivos compartidas.
 | `app/src/main/java/com/suri/pipsurios/prs/PrsTuning.kt` | Contiene los valores provisionales de evaluación y umbrales. |
 | `app/src/main/java/com/suri/pipsurios/prs/PrsDensityEstimator.kt` | Convierte una banda de proximidad en una nube visual de incertidumbre. |
 | `app/src/main/java/com/suri/pipsurios/ui/screens/PrsDensityGrid.kt` | Dibuja la retícula, anillos, nubes, emblema y subgrid del PROBE. |
+| `app/src/main/java/com/suri/pipsurios/ui/screens/PrsProbabilityFog.kt` | Dibuja la niebla irregular de probabilidad usada por TRACKER. |
 | `app/src/main/java/com/suri/pipsurios/prs/PrsDeviceRegistry.kt` | Guarda las reglas de dispositivos conocidos y sus estados. |
 | `app/src/main/java/com/suri/pipsurios/prs/PrsDeviceCategory.kt` | Hace una clasificación orientativa del tipo de dispositivo. |
 | `app/src/main/java/com/suri/pipsurios/prs/ProbeLink.kt` | Envía órdenes del teléfono al Watch 2 por Wear OS Data Layer. |
@@ -300,7 +303,7 @@ El resultado es una ayuda para leer la lista rápidamente. No es una
 identificación definitiva del fabricante o del modelo y no muestra un margen
 de confianza.
 
-## 9. GRID y nubes de densidad
+## 9. GRID, nubes de densidad y niebla de TRACKER
 
 ### 9.1 Retícula
 
@@ -336,7 +339,21 @@ La nube cubre todo el azimut (`azimuthCoverage = 1`). Esto es deliberado:
 un solo receptor BLE puede medir que una señal está presente y comparar su
 intensidad, pero no puede obtener por sí mismo un rumbo fiable.
 
-### 9.3 Subgrid del Watch 2
+### 9.3 Niebla de probabilidad de TRACKER
+
+`PrsProbabilityFog` es la superficie visual de la ruta `P.R.S. / TRACKER`. No
+dibuja una retícula ni anillos. Cubre el mapa con nubes suaves distribuidas en
+18 columnas por 12 filas. Cada nube recibe una opacidad calculada a partir de
+la distancia relativa al origen, el centro radial, la extensión y la confianza
+de `DensityCloud`.
+
+La probabilidad más baja produce menos opacidad y deja ver más mapa. La
+confianza alta reduce la capa de incertidumbre general. Si todavía no hay
+contacto seleccionado, se conserva una cobertura amplia. La superficie no
+inventa dirección: con `azimuthCoverage = 1f` sigue siendo radial y
+experimental.
+
+### 9.4 Subgrid del Watch 2
 
 En `SCAN + PROBE`, el Watch 2 puede aparecer como un nodo en un subgrid. El
 subgrid:
@@ -403,8 +420,9 @@ Flujo:
 
 1. En `TARGET`, el usuario elige primero un campo TERRAIN.
 2. Después elige un único contacto detectado por `LOCAL SCAN`.
-3. En `TRACKER`, se muestra el mapa seleccionado junto al GRID P.R.S.
-4. El GRID queda centrado en la posición GPS actual del A56.
+3. En `TRACKER`, se muestra el mapa seleccionado junto a la nube de
+   probabilidad P.R.S.
+4. La nube queda centrada en la posición GPS actual del A56.
 5. Solo se muestra la señal del contacto elegido.
 
 La función no calcula la coordenada del objetivo, ni su rumbo, ni metros, ni
@@ -621,8 +639,8 @@ documento con una nueva idea:
 
 ```text
 P.R.S. en PIP-SuriOS combina el motor BLE de v3.0 con el flujo de mapa de v4.0
-para el Samsung A56. La aplicación actual está en versión 3.0. El flujo es BLE SCAN -> CONTACTS ->
-RSSI RAW -> HISTORIAL -> SUAVIZADO -> TENDENCIA -> BANDA RELATIVA -> GRID.
+para el Samsung A56. La aplicación actual está en versión 3.1. El flujo es BLE SCAN -> CONTACTS ->
+RSSI RAW -> HISTORIAL -> SUAVIZADO -> TENDENCIA -> BANDA RELATIVA -> VISUALIZACIÓN.
 
 SENTRY puede trabajar solo (`PIP`) o combinarse con el Watch 2 PROBE
 (`PIP + PROBE`) para vigilancia general. TRACKER mantiene los modos
@@ -636,11 +654,13 @@ muestras, exige 4 muestras y 9 s para inferir tendencia, usa 4,5 dB como
 variación significativa, 2 confirmaciones y expira contactos tras 15 s.
 NEAR/MEDIUM/FAR son bandas relativas con umbrales -76/-88 dBm; no son metros.
 
-El GRID muestra nubes anulares de azimut completo centradas en el nodo que
-escuchó la señal. No existen bearing, coordenada BLE, RSSI->metros ni posición
-real del objetivo. DEVICES guarda reglas por dirección o nombre BLE. INDIVIDUAL
-`DEVICES` guarda reglas de omisión compartidas por SENTRY y TRACKER. SENTRY no
-selecciona objetivos concretos; TRACKER combina un contacto con TERRAIN.
+SENTRY y la superficie v4.0 conservan el GRID con nubes anulares de azimut
+completo. TRACKER utiliza `PrsProbabilityFog`, que despeja visualmente las
+zonas de menor probabilidad. No existen bearing, coordenada BLE, RSSI->metros
+ni posición real del objetivo. DEVICES guarda reglas por dirección o nombre
+BLE. INDIVIDUAL `DEVICES` guarda reglas de omisión compartidas por SENTRY y
+TRACKER. SENTRY no selecciona objetivos concretos; TRACKER combina un contacto
+con TERRAIN.
 
 Al proponer cambios, conserva la separación entre datos medidos, procesados e
 inferidos. Indica qué archivos cambian, qué datos nuevos son realmente medidos

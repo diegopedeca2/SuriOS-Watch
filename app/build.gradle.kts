@@ -15,6 +15,7 @@ val distributionAssetsRoot = if (distributionProfile == "MAIN") {
 } else {
     file("build/generated/distributionAssets/$distributionProfile")
 }
+val commonAssetsRoot = rootProject.file("assets")
 val distributionResRoots = if (distributionProfile == "MAIN") {
     listOf(file("src/main/res"))
 } else {
@@ -31,8 +32,8 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 34
         targetSdk = 37
-        versionCode = 10
-        versionName = "3.0"
+        versionCode = 11
+        versionName = "3.1"
         buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
         buildConfigField("boolean", "PROBE_ENABLED", (distributionProfile == "MAIN").toString())
 
@@ -72,9 +73,9 @@ android {
         buildConfig = true
     }
     androidResources {
-        noCompress += "mbtiles"
+        noCompress += listOf("mbtiles", "mp3")
     }
-    sourceSets["main"].assets.setSrcDirs(listOf(distributionAssetsRoot))
+    sourceSets["main"].assets.setSrcDirs(listOf(distributionAssetsRoot, commonAssetsRoot))
     sourceSets["main"].res.setSrcDirs(distributionResRoots)
     defaultConfig {
         manifestPlaceholders["appIcon"] = when (distributionProfile) {

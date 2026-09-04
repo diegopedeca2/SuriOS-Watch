@@ -76,7 +76,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     val overlayRepository = remember { TerrainOverlayRepository.from(context.applicationContext) }
     val locationSource = remember { TerrainLocation(context.applicationContext) }
     val headingSource = remember { TerrainHeading(context.applicationContext) }
-    val clickScheduler = remember { ClickScheduler() }
+    val clickScheduler = remember(context) { ClickScheduler(context.applicationContext) }
     var mapData by remember { mutableStateOf<MbTilesData?>(null) }
     var loadedTiles by remember { mutableStateOf<Map<TileKey, ImageBitmap>>(emptyMap()) }
     var loadError by remember { mutableStateOf<String?>(null) }

@@ -1,6 +1,6 @@
 # Guía de funcionamiento de SuriOS — nivel MEDIO
 
-> Documento vivo. Última revisión: 2026-09-03. Se actualizará junto con los
+> Documento vivo. Última revisión: 2026-09-04. Se actualizará junto con los
 > cambios de pantallas, funcionamiento, parámetros y pruebas. Si el código
 > cambia y esta guía no cambia con él, la guía queda pendiente de revisión.
 
@@ -111,7 +111,7 @@ BluetoothLeScanner
   → snapshot inmediato
   → evaluate() cada 3 s
   → PrsContactSnapshot
-  → PrsDensityGrid / panel TRACKER
+  → PrsProbabilityFog en TRACKER / PrsDensityGrid en las superficies GRID
 ```
 
 En modo `SCAN + PROBE`, el Watch 2 envía muestras por la Data Layer. El
@@ -206,10 +206,36 @@ operador. El centro sigue el fix GPS del A56 cuando este está disponible. La
 orientación se obtiene de `TerrainHeading` y se incorpora a la transformación
 de la vista.
 
-El objetivo seleccionado se dibuja con `PrsDensityGrid`, pero el modelo tiene
-`azimuthCoverage = 1f`: la cobertura angular es completa porque un receptor BLE
-único no proporciona bearing. La superficie es una representación radial de
-incertidumbre basada en la banda y la confianza, no una coordenada del objetivo.
+En TRACKER, el objetivo seleccionado se dibuja con `PrsProbabilityFog`. La
+capa cubre el mapa con una niebla irregular y calcula su densidad a partir de
+`DensityCloud`. Las áreas con menor probabilidad reciben menos niebla y dejan
+ver más cartografía. En las superficies que conservan el GRID, el objetivo
+sigue dibujándose con `PrsDensityGrid`.
+
+El modelo mantiene `azimuthCoverage = 1f`: la cobertura angular es completa
+porque un receptor BLE único no proporciona bearing. Por ello la niebla es una
+representación relativa de incertidumbre, no una coordenada del objetivo.
+
+El mapa de TRACKER admite `detectTransformGestures` sobre el área cartográfica.
+El pellizco modifica `zoom` entre los límites del mapa y conserva el punto
+geográfico situado bajo el centro del gesto mediante
+`TerrainViewportTransform.applyGesture()`. El movimiento se limita a la
+cobertura disponible de los tiles para no enseñar zonas fuera del mapa.
+
+### 6.1 Cálculo visual de la niebla
+
+`PrsProbabilityFog` divide visualmente el mapa en una malla de nubes suaves,
+pero no dibuja líneas de grid. Para cada zona calcula una distancia relativa al
+A56 y la compara con el centro y la extensión de `DensityCloud`:
+
+```text
+densidad de niebla = incertidumbre restante + probabilidad relativa
+```
+
+La confianza reduce la incertidumbre restante. Cuando la confianza es baja,
+se conserva una capa amplia para no dar una falsa sensación de precisión.
+Cuando aumenta, las zonas alejadas del centro probable se despejan más. La
+función sigue siendo radial porque el BLE no aporta dirección.
 
 En `SCAN + PROBE`, `probeGridPosition()` sí calcula la posición relativa del
 Watch 2 usando sus coordenadas GPS y las del A56. Esto localiza el nodo PROBE,
@@ -261,3 +287,33 @@ Estas pruebas verifican la lógica del modelo, no demuestran que RSSI sea una
 medida fiable de distancia en todos los entornos. La calibración física del A56,
 del Watch 2 y de cada dispositivo objetivo sigue siendo una actividad de campo
 separada.
+
+## 10. RADS y las tres capas de audio
+
+`RadsClickSound` carga `sounds/1.mp3`, `sounds/2.mp3` y `sounds/3.mp3`
+mediante `SoundPool`, desde el directorio común `assets/sounds`. Las tres
+pistas se reproducen en bucle mientras el nivel lo requiere y cada canal usa
+volumen fijo `1.0`.
+
+`ClickScheduler` convierte el nivel interno 0..1 al nivel visible entero 0..10:
+
+```text
+nivelVisible = redondear(nivel × 10)
+```
+
+La selección es:
+
+```text
+0       -> silencio
+1..2    -> audio 1
+3       -> audio 1 + audio 2
+4..5    -> audio 2
+6       -> audio 2 + audio 3
+7..10   -> audio 3
+```
+
+Los niveles 3 y 6 son solapes intencionados. Cambia la selección de pistas,
+no el volumen ni la velocidad de reproducción.
+
+El cambio de pista se revisa cada 40 ms. Así se evita que la aguja cambie de
+nivel y el audio espere al siguiente intervalo largo del programador.

@@ -798,6 +798,7 @@ private fun PIPSuriOSApp(
                 locationStepLabel = "STEP 1 // SELECT LOCATION",
                 targetStepLabel = "STEP 1 // IDENTIFY TARGET",
                 splitLayout = true,
+                useProbabilityFog = true,
                 onTargetSelected = {
                     prsV4Selection = it
                     destination = PIPSuriOSDestination.PrsTrackerGrid
@@ -816,7 +817,8 @@ private fun PIPSuriOSApp(
                 selection = prsV4Selection,
                 mode = prsV4Mode.operatingMode,
                 modeLabel = prsV4Mode.displayName,
-                title = "P.R.S. / TRACKER / STEP 2 // GRID",
+                title = "P.R.S. / TRACKER / STEP 2 // FOG",
+                useProbabilityFog = true,
                 onSelectTarget = { destination = PIPSuriOSDestination.PrsTrackerTarget },
                 onBack = { destination = PIPSuriOSDestination.PrsTrackerTarget }
             )

@@ -1,6 +1,6 @@
 # Guía de funcionamiento de SuriOS — nivel EXTREMADAMENTE BÁSICO
 
-> Documento vivo. Última revisión: 2026-09-03. Se actualizará junto con los
+> Documento vivo. Última revisión: 2026-09-04. Se actualizará junto con los
 > cambios de pantallas, funcionamiento, parámetros y pruebas. Si el código
 > cambia y esta guía no cambia con él, la guía queda pendiente de revisión.
 
@@ -89,6 +89,16 @@ escaneo. Desde ese momento:
 - el mapa se actualiza alrededor del operador;
 - la información del objetivo se refresca mientras llegan nuevas señales.
 
+En la versión actual, el antiguo dibujo de círculos se ha sustituido por una
+niebla de probabilidad. Las zonas donde el objetivo parece menos probable se
+van haciendo más visibles; las zonas que todavía tienen más incertidumbre
+conservan más niebla. Esto sigue siendo una ayuda visual, no una coordenada
+exacta.
+
+En la pantalla del mapa puedes hacer el gesto de pellizcar con dos dedos para
+acercar o alejar la vista. El seguimiento sigue funcionando mientras cambias
+el zoom.
+
 No hay que pulsar un botón de inicio en la versión actual.
 
 ## 4. ¿Las lecturas y los cálculos son fluidos mientras camino?
@@ -165,6 +175,14 @@ dispositivo y otros aparatos.
 - **TARGET**: el dispositivo que hemos elegido observar.
 - **MAP/TERRAIN**: el mapa offline del campo elegido.
 - **Historial**: conjunto de lecturas anteriores usadas para comparar el cambio.
+
+## 9. RADS
+
+`RADS` es el contador visual de radiación. Usa tres audios según el nivel
+visible de 0 a 10: el audio 1 cubre 1–2, el audio 2 cubre 4–5 y el audio 3
+cubre 7–10. El nivel 0 es silencioso. En los niveles de transición 3 y 6 se
+superponen dos audios: 1+2 en 3 y 2+3 en 6. El volumen no se cambia de forma
+deliberada.
 
 ## Resumen final
 

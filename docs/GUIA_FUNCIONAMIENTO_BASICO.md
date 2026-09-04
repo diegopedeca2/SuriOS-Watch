@@ -1,6 +1,6 @@
 # Guía de funcionamiento de SuriOS — nivel BÁSICO
 
-> Documento vivo. Última revisión: 2026-09-03. Se actualizará junto con los
+> Documento vivo. Última revisión: 2026-09-04. Se actualizará junto con los
 > cambios de pantallas, funcionamiento, parámetros y pruebas. Si el código
 > cambia y esta guía no cambia con él, la guía queda pendiente de revisión.
 
@@ -55,6 +55,15 @@ flujo actual es:
 
 La pantalla de selección ya empieza a escanear automáticamente. La pantalla
 final también inicia automáticamente sus recursos.
+
+La pantalla final de TRACKER ya no utiliza el antiguo grid circular. Ahora
+muestra `DISPLAY: PROBABILITY FOG`: una nube irregular cubre el mapa y deja ver
+mejor las zonas de menor probabilidad según se acumulan y analizan lecturas.
+No representa una coordenada exacta del objetivo.
+
+En el mapa final también puedes usar un pellizco con dos dedos para acercar o
+alejar la vista. El objetivo y la niebla siguen actualizándose durante el
+zoom.
 
 ## 3. Funcionamiento actual de TRACKER
 
@@ -205,6 +214,11 @@ no calcula el rumbo Bluetooth del objetivo y no triangula su posición.
   dispositivos antes de que entren en P.R.S.
 - Las variantes MAIN, FENRIR, ALTAMIRA y CHECHU pueden compartir código y
   diferenciarse por recursos y mapas de distribución.
+- RADS utiliza tres recursos: `assets/sounds/1.mp3`, `2.mp3` y `3.mp3`. El
+  nivel visible se redondea a una escala de 0 a 10. El nivel 0 es silencio;
+  1–2 usa el audio 1, 4–5 el audio 2 y 7–10 el audio 3. Los niveles 3 y 6 son
+  transiciones y reproducen simultáneamente los dos audios vecinos. El
+  volumen de cada pista permanece fijo.
 
 ## 10. Conclusión
 

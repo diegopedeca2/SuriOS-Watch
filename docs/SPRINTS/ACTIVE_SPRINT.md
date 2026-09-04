@@ -10,11 +10,49 @@ last_updated: 2026-09-04
 
 ## Sprint activo
 
-El Sprint 032 se abre el 2026-09-04 después del cierre documental, técnico y
-físico del Sprint 031. Su objetivo es recoger el feedback de los testers Alpha
-y decidir las siguientes correcciones.
+No hay ningún Sprint activo. El Sprint 032 se ha cerrado el 2026-09-04 tras
+validar físicamente las modificaciones de RADS y TRACKER y completar su
+auditoría documental.
 
-[Sprint 032 v1.0](SPRINT_032_v1.0.md) — **ACTIVE**
+[Sprint 032 v1.0](SPRINT_032_v1.0.md) — **CLOSED**
+
+[Auditoría Sprint 032](../AUDIT_SPRINT_032.md) — **APROBADA PARA CIERRE**
+
+## Avance operativo del Sprint 032 - 2026-09-04
+
+- [x] RADS usa `assets/sounds/1.mp3`, `2.mp3` y `3.mp3` en las APK generadas.
+- [x] RADS deja el nivel 0 en silencio y solapa las capas en los niveles 3 y
+      6; el volumen de cada pista permanece fijo.
+- [x] RADS revisa el nivel cada 40 ms para reducir el retraso entre la aguja y
+      el cambio de pista.
+- [x] TRACKER usa una nube de probabilidad tipo niebla de guerra.
+- [x] TRACKER admite zoom manual mediante pellizco de dos dedos, manteniendo
+      la lectura y la niebla activas.
+- [x] SENTRY y la superficie v4.0 conservan el GRID anterior.
+- [x] Se generaron y verificaron las cuatro APK v3.0 de MAIN, FENRIR, ALTAMIRA
+      y CHECHU en `output/SPRINT_032_APK`.
+- [x] La validación física previa de las APK tester recorrió RADS y TRACKER en
+      el A56 sin cierres; corresponde a la compilación anterior a estos audios.
+- [x] Las cuatro APK finales de esta iteración se instalaron en el A56 con
+      resultado `Success`.
+- [x] MAIN se recorrió hasta `P.R.S. / TRACKER / STEP 2 // FOG` y mostró
+      `DISPLAY: PROBABILITY FOG`; RADS también abrió sin cierres.
+- [x] ALTAMIRA llegó hasta `FIELD: TESTING` y `DISPLAY: PROBABILITY FOG` con
+      un objetivo BLE detectado.
+- [x] Valorar auditivamente las tres capas y los solapes de RADS en LOW, HIGH y
+      CRITICAL; validación física confirmada por el propietario.
+- [x] Confirmar en una prueba manual de campo que el pellizco de zoom resulta
+      cómodo y no interfiere con la lectura; validación física confirmada por
+      el propietario.
+- [x] La actualización de las cuatro APK de esta iteración fue autorizada de
+      forma explícita; las APK tester no se actualizarán en iteraciones futuras
+      salvo nueva orden explícita.
+- [ ] Recibir feedback adicional de los testers; se traslada al siguiente
+      Sprint y no bloquea este cierre.
+
+El Sprint 032 se abrió el 2026-09-04 después del cierre documental, técnico y
+físico del Sprint 031. Su objetivo se amplió para integrar y validar las
+modificaciones de audio de RADS y la niebla y el zoom de TRACKER.
 
 [Sprint 031 v1.0](SPRINT_031_v1.0.md) — **CLOSED**
 
@@ -42,8 +80,8 @@ sonido de RADS.
 
 [Sprint 028 v1.0](SPRINT_028_v1.0.md) — **CLOSED**
 
-No hay ningún Sprint pendiente de cierre. El Sprint 032 es ahora el único Sprint
-abierto.
+No hay ningún Sprint pendiente de cierre. El Sprint 032 queda cerrado y no se
+abre un Sprint posterior en este cierre.
 
 ## Validación y cierre del Sprint 031
 
@@ -127,7 +165,7 @@ Sprint 028: **CLOSED**
 Sprint 029: **CLOSED**
 Sprint 030: **CLOSED**
 Sprint 031: **CLOSED**
-Sprint 032: **ACTIVE**
+Sprint 032: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se
@@ -136,9 +174,9 @@ presentan alfabéticamente después de esa opción excepcional.
 Sprint 019 audita el monorepo, actualiza PIP-SuriOS a v2.5, desinstala P.R.S.
 //COVER del A56 y documenta el cierre de seguridad y validación.
 
-La firma visible y técnica de PIP-SuriOS queda actualizada a v3.0 para el
-Sprint 030, sobre la base completada y cerrada técnica, funcional y
-documentalmente a fecha 2026-09-03.
+La firma visible y técnica de PIP-SuriOS queda actualizada a v3.1 para el
+cierre del Sprint 032, sobre la base completada y cerrada técnica, funcional y
+documentalmente a fecha 2026-09-04.
 El P.R.S. activo usa
 `LOCAL SCAN`, `SCAN + PROBE`, `DEVICES` y `TRACK TARGET`, con histórico RSSI,
 suavizado y nubes de densidad sin posicionamiento sintético. PIW-SuriOS Watch

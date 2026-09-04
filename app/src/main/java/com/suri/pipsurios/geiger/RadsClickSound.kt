@@ -1,143 +1,115 @@
 package com.suri.pipsurios.geiger
 
+import android.content.Context
 import android.media.AudioAttributes
-import android.media.AudioFormat
-import android.media.AudioTrack
-import kotlin.math.PI
-import kotlin.math.exp
-import kotlin.math.sin
-import kotlin.random.Random
+import android.media.SoundPool
+import kotlin.math.roundToInt
 
 /**
- * Short, original Geiger-style crackle: one detection is a small cluster of
- * irregular micro-discharges, rather than one isolated click. Several
- * variants avoid the artificial effect of repeating exactly the same burst.
+ * Mixes the three RADS audio layers according to the visible 0..10 meter
+ * level. The individual stream volumes stay fixed; the layers themselves
+ * provide the change in character and intensity.
  */
-class RadsClickSound {
-    private val variantRandom = Random.Default
-    private val tracks = Array(CLICK_VARIANTS) { variant -> createTrack(variant) }
+class RadsClickSound(context: Context) {
+    private val soundPool = SoundPool.Builder()
+        .setMaxStreams(AUDIO_LAYER_COUNT)
+        .setAudioAttributes(
+            AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+        )
+        .build()
 
-    fun play() {
-        val audio = tracks[variantRandom.nextInt(tracks.size)]
-        if (audio == null) return
-        runCatching {
-            if (audio.playState != AudioTrack.PLAYSTATE_STOPPED) {
-                audio.stop()
+    private val soundIds = IntArray(AUDIO_LAYER_COUNT)
+    private val loaded = BooleanArray(AUDIO_LAYER_COUNT)
+    private val streamIds = IntArray(AUDIO_LAYER_COUNT)
+    private var released = false
+
+    init {
+        soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+            val layer = soundIds.indexOf(sampleId)
+            if (layer >= 0 && status == 0) loaded[layer] = true
+        }
+        AUDIO_ASSET_PATHS.forEachIndexed { layer, path ->
+            soundIds[layer] = runCatching {
+                context.assets.openFd(path).use { descriptor ->
+                    soundPool.load(descriptor, 1)
+                }
+            }.getOrDefault(0)
+        }
+    }
+
+    /**
+     * Keeps the correct layer(s) looping for the current normalized meter
+     * level. At displayed levels 3 and 6 the adjacent layers overlap.
+     */
+    fun play(level: Float) {
+        if (released) return
+        val meterLevel = meterLevel(level)
+        val desiredLayers = audioLayersForMeterLevel(meterLevel)
+        if (desiredLayers.isEmpty()) {
+            stop()
+            return
+        }
+
+        for (layer in 0 until AUDIO_LAYER_COUNT) {
+            val shouldPlay = layer in desiredLayers
+            if (!shouldPlay && streamIds[layer] != 0) {
+                runCatching { soundPool.stop(streamIds[layer]) }
+                streamIds[layer] = 0
             }
-            audio.reloadStaticData()
-            audio.play()
+            if (shouldPlay && streamIds[layer] == 0 && loaded[layer] && soundIds[layer] != 0) {
+                // Keep each layer at a fixed volume. The sample selection and
+                // overlap, rather than loudness, express the meter intensity.
+                streamIds[layer] = soundPool.play(
+                    soundIds[layer],
+                    1.0f,
+                    1.0f,
+                    1,
+                    -1,
+                    1.0f
+                )
+            }
         }
     }
 
     fun stop() {
-        tracks.forEach { audio ->
-            if (audio != null) {
-                runCatching { audio.stop() }
+        streamIds.forEachIndexed { layer, streamId ->
+            if (streamId != 0) {
+                runCatching { soundPool.stop(streamId) }
+                streamIds[layer] = 0
             }
         }
     }
 
     fun release() {
-        tracks.forEach { audio ->
-            if (audio != null) {
-                runCatching { audio.release() }
-            }
-        }
+        if (released) return
+        released = true
+        stop()
+        soundPool.release()
     }
 
-    private fun createTrack(variant: Int): AudioTrack? {
-        val samples = createClickSamples(variant)
-        var newTrack: AudioTrack? = null
-        return try {
-            newTrack = AudioTrack.Builder()
-                .setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_GAME)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build()
-                )
-                .setAudioFormat(
-                    AudioFormat.Builder()
-                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                        .setSampleRate(SAMPLE_RATE)
-                        .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
-                        .build()
-                )
-                .setTransferMode(AudioTrack.MODE_STATIC)
-                .setBufferSizeInBytes(samples.size * BYTES_PER_SAMPLE)
-                .build()
+    companion object {
+        const val AUDIO_LAYER_COUNT = 3
+        val AUDIO_ASSET_PATHS = arrayOf(
+            "sounds/1.mp3",
+            "sounds/2.mp3",
+            "sounds/3.mp3"
+        )
 
-            val written = newTrack.write(samples, 0, samples.size)
-            if (written != samples.size) {
-                newTrack.release()
-                null
-            } else {
-                newTrack
-            }
-        } catch (_: RuntimeException) {
-            newTrack?.release()
-            null
-        }
-    }
+        /** Converts the internal 0..1 value to the visible integer level 0..10. */
+        fun meterLevel(level: Float): Int =
+            (level.coerceIn(0f, 1f) * 10f).roundToInt().coerceIn(0, 10)
 
-    private fun createClickSamples(variant: Int): ShortArray {
-        val samples = ShortArray((CLICK_DURATION_SECONDS * SAMPLE_RATE).toInt())
-        val random = Random(RANDOM_SEED + variant)
-        val pitch = 2_450.0 + (variant - 2) * 90.0
-        val gain = 0.84 + (variant % 3) * 0.035
-        val hitCount = 7 + (variant % 4)
-        val hitTimes = DoubleArray(hitCount)
-        val hitPitches = DoubleArray(hitCount)
-        val hitGains = DoubleArray(hitCount)
-        var nextHitTime = 0.001 + random.nextDouble() * 0.005
-        for (hit in 0 until hitCount) {
-            hitTimes[hit] = nextHitTime
-            hitPitches[hit] = pitch * (0.84 + random.nextDouble() * 0.34)
-            hitGains[hit] = 0.42 + random.nextDouble() * 0.36
-            // Alternate between tight clusters and longer gaps. This makes
-            // the burst feel like an irregular scrape instead of a metronome.
-            val clusteredGap = random.nextDouble() < 0.34
-            val gap = if (clusteredGap) {
-                0.0015 + random.nextDouble() * 0.0055
-            } else {
-                0.009 + random.nextDouble() * 0.021
-            }
-            nextHitTime += gap
+        /** Returns zero-based audio layers; transition levels intentionally overlap. */
+        fun audioLayersForMeterLevel(level: Int): List<Int> = when (level.coerceIn(0, 10)) {
+            0 -> emptyList()
+            1, 2 -> listOf(0)
+            3 -> listOf(0, 1)
+            4, 5 -> listOf(1)
+            6 -> listOf(1, 2)
+            else -> listOf(2)
         }
-        for (index in samples.indices) {
-            val time = index.toDouble() / SAMPLE_RATE
-            var crackle = 0.0
-            for (hit in hitTimes.indices) {
-                val sinceHit = time - hitTimes[hit]
-                if (sinceHit >= 0.0) {
-                    // The first part is the rough scrape; the second is the
-                    // short metallic body left by the detector circuit.
-                    val roughEnvelope = exp(-sinceHit * 1_100.0)
-                    val metalEnvelope = exp(-sinceHit * 235.0)
-                    val rough =
-                        (random.nextDouble() * 2.0 - 1.0) *
-                            hitGains[hit] * 0.42 * roughEnvelope
-                    val metal =
-                        sin(2.0 * PI * hitPitches[hit] * sinceHit) *
-                            hitGains[hit] * 0.28 * metalEnvelope
-                    crackle += rough + metal
-                }
-            }
-            // A low-level, quickly fading texture glues the micro-hits into a
-            // single rough burst instead of a row of clean beeps.
-            val textureEnvelope = exp(-time * 72.0)
-            val texture = (random.nextDouble() * 2.0 - 1.0) * 0.13 * textureEnvelope
-            val sample = (crackle + texture) * gain
-            samples[index] = (sample.coerceIn(-1.0, 1.0) * Short.MAX_VALUE).toInt().toShort()
-        }
-        return samples
-    }
-
-    private companion object {
-        const val SAMPLE_RATE = 44_100
-        const val BYTES_PER_SAMPLE = 2
-        const val CLICK_DURATION_SECONDS = 0.105
-        const val CLICK_VARIANTS = 18
-        const val RANDOM_SEED = 0x52414453
     }
 }

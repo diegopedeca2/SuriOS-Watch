@@ -353,7 +353,11 @@ Pendientes: logotipo oficial de SuriOS, iconografía propia, biblioteca de indic
 
 # 14\. Interacción háptica
 
-No se definirán sonidos oficiales por el momento. Como comportamiento común del ecosistema se priorizará la respuesta háptica (vibración) para confirmar acciones importantes cuando el dispositivo lo permita.
+No se define una biblioteca común de sonidos por el momento. RADS usa recursos
+específicos de la herramienta (`assets/sounds/1.mp3`, `2.mp3` y `3.mp3`) con
+selección por capas y solape en los niveles de transición. Como comportamiento
+común del ecosistema se priorizará la respuesta háptica (vibración) para
+confirmar acciones importantes cuando el dispositivo lo permita.
 
 # Anexo A - Glosario del ecosistema
 

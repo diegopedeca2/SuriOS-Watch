@@ -72,7 +72,7 @@ fun GeigerCounterScreen(
 ) {
     val context = LocalContext.current
     val engine = remember { GeigerEngine() }
-    val clickScheduler = remember { ClickScheduler() }
+    val clickScheduler = remember(context) { ClickScheduler(context.applicationContext) }
     var volumeUpPressed by remember { mutableStateOf(false) }
     var snapshot by remember { mutableStateOf(engine.snapshot()) }
     var mode by remember { mutableStateOf(RadsMode.MANUAL) }

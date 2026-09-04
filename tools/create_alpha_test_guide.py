@@ -213,7 +213,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, help="Ruta del DOCX de salida.")
     parser.add_argument("--sprint", default="031", help="Identificador del Sprint.")
     parser.add_argument("--date", default="04/09/2026", help="Fecha visible en la guía.")
-    parser.add_argument("--version", default="3.0", help="Versión visible de la aplicación.")
+    parser.add_argument("--version", default="3.1", help="Versión visible de la aplicación.")
     args = parser.parse_args()
 
     project_root = args.root.resolve()
@@ -301,12 +301,14 @@ def main() -> None:
         "Abrir CURRENT GEAR y confirmar que muestra el equipo activo, sin opciones genéricas como OPTION 1.",
     ], "DATA y CURRENT GEAR reflejan el contenido introducido y no pierden elementos al volver atrás.")
 
-    add_test_block(doc, "4.4 RADS", "Comprobar el medidor y valorar el nuevo sonido de ráfaga/crujido.", [
+    add_test_block(doc, "4.4 RADS", "Comprobar el medidor y valorar las tres capas de sonido de RADS.", [
         "Abrir TOOLS > RADS y probar los niveles LOW, HIGH y CRITICAL.",
-        "Escuchar si el sonido parece una ráfaga irregular de microdescargas, no una fila de clics iguales.",
+        "Mantener el volumen multimedia constante y comprobar que el nivel 0 es silencioso.",
+        "Comprobar que entre los niveles 1 y 2 suena el audio 1, entre 4 y 5 el audio 2 y entre 7 y 10 el audio 3.",
+        "Comprobar en el nivel 3 que los audios 1 y 2 se oyen a la vez, y en el nivel 6 que se oyen a la vez los audios 2 y 3.",
         "Bajar el nivel a 0 y volver a subirlo sin salir de la herramienta.",
-        "Repetir la prueba varias veces y anotar si el ritmo se repite demasiado o si hay cortes.",
-    ], "El sonido se inicia al detectar nivel, se detiene en 0 y vuelve automáticamente al subir. El ritmo cambia de forma natural.")
+        "Repetir la prueba varias veces y anotar si una capa no suena, si el solape no se percibe o si hay cortes.",
+    ], "El nivel 0 detiene el sonido, cada tramo activa su pista y los niveles 3 y 6 reproducen las dos pistas vecinas sin cambiar deliberadamente el volumen.")
 
     add_test_block(doc, "4.5 MAP > TERRAIN", "Comprobar los mapas específicos de cada APK.", [
         "Abrir TOOLS > MAP > TERRAIN y revisar la lista de mapas.",
@@ -323,6 +325,8 @@ def main() -> None:
         "En TRACKER elegir ONLY PIP-BOY, seleccionar primero el mapa TERRAIN y después el objetivo detectado.",
         "Comprobar que al entrar en la pantalla del objetivo la lectura empieza sola. No hay que buscar un botón START.",
         "Dejar la pantalla abierta y comprobar que RAW puede cambiar de inmediato, mientras SMOOTH, TREND, SAMPLES y CONFIDENCE se completan con el tiempo.",
+        "Observar que el mapa usa una nube de probabilidad tipo niebla de guerra, no el antiguo grid circular; las zonas menos probables deben dejar ver más mapa al acumularse lecturas.",
+        "En la pantalla final, probar un pellizco con dos dedos para acercar y alejar el mapa. Comprobar que el mapa no se cierra y que la niebla sigue visible.",
         "Esperar al menos 15 segundos antes de valorar la tendencia. Usar BACK para salir y comprobar que la sesión termina.",
         "En DEVICES añadir, editar y borrar un dispositivo a omitir. Comprobar que SENTRY y TRACKER lo respetan.",
         "En ONLY PIP-BOY solo se utiliza el teléfono. No hay que vincular otro dispositivo para esta versión.",
@@ -385,7 +389,7 @@ def main() -> None:
         "La posición GPS, brújula y Bluetooth dependen del teléfono, permisos, cobertura, batería y entorno físico.",
         "Esta Alpha solo usa el A56. No hace falta disponer de un reloj ni de una baliza externa.",
         "Incidencia conocida: los mapas e iconos de cada tester se preparan junto con su APK. Si falta un mapa, aparece vacío, no carga o el icono no corresponde al nombre de la aplicación, anótalo como incidencia y continúa con el resto de pruebas. Puede ocurrir solo en algunas instalaciones.",
-        "El sonido de RADS depende del volumen multimedia y del altavoz o auriculares del teléfono; la valoración de realismo es subjetiva.",
+        "El sonido de RADS depende del volumen multimedia y del altavoz o auriculares del teléfono; valora la selección de pistas y el solape, no una subida deliberada de volumen.",
         "Google Maps y CivTAK son aplicaciones externas: su ausencia o cambios propios pueden afectar MAP OPERATION.",
         "La aplicación está en fase Alpha: puede haber textos provisionales, cambios visuales, pérdida de datos de prueba o cierres inesperados.",
         "RADS, P.R.S. y los mapas son herramientas de simulación/prueba; no sustituyen instrumentos profesionales ni procedimientos reales.",

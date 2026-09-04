@@ -8,6 +8,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +41,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -147,7 +150,8 @@ fun IndividualTrackingTargetScreen(
     title: String = "INDIVIDUAL TRACKER / TARGET",
     locationStepLabel: String = "STEP 1 // SELECT TERRAIN FIELD",
     targetStepLabel: String = "STEP 2 // SELECT DETECTED TARGET",
-    splitLayout: Boolean = false
+    splitLayout: Boolean = false,
+    useProbabilityFog: Boolean = false
 ) {
     val context = LocalContext.current
     val scanner = remember(context) { BleScanner(context.applicationContext) }
@@ -272,7 +276,8 @@ fun IndividualTrackingTargetScreen(
                 onTargetSelected = ::chooseTarget,
                 onAllowBluetooth = { permissionLauncher.launch(prsPermissions()) },
                 onRetry = { retryVersion++ },
-                onBack = onBack
+                onBack = onBack,
+                useProbabilityFog = useProbabilityFog
             )
         } else {
         Column(
@@ -371,6 +376,7 @@ private fun V4TargetSplitLayout(
     registry: PrsDeviceRegistry,
     probeNode: PrsProbeNodeSnapshot,
     probeLinkStatus: String,
+    useProbabilityFog: Boolean,
     onMapSelected: (OfflineMapDefinition) -> Unit,
     onChangeLocation: () -> Unit,
     onTargetSelected: (PrsContactSnapshot) -> Unit,
@@ -407,8 +413,19 @@ private fun V4TargetSplitLayout(
                     Text(targetStepLabel, color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
                     Text("SELECT A TARGET FROM THE DEVICE LIST.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                        Text("STEP 2 // GRID OVER MAP", color = PipGreen, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
-                        Text("The selected target opens the map GRID.", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                        Text(
+                            if (useProbabilityFog) "STEP 2 // PROBABILITY FOG" else "STEP 2 // GRID OVER MAP",
+                            color = PipGreen,
+                            fontSize = 13.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Text(
+                            if (useProbabilityFog) "The selected target opens the probability fog map."
+                            else "The selected target opens the map GRID.",
+                            color = PipGreenDim,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
                         IndividualMenuAction("> CHANGE LOCATION", onChangeLocation)
                     }
                 }
@@ -480,7 +497,8 @@ fun IndividualTrackingTrackerScreen(
     onBack: () -> Unit,
     mode: PrsOperatingMode = PrsOperatingMode.LOCAL_SCAN,
     modeLabel: String = mode.displayName,
-    title: String = "INDIVIDUAL TRACKER"
+    title: String = "INDIVIDUAL TRACKER",
+    useProbabilityFog: Boolean = false
 ) {
     if (selection == null) {
         Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
@@ -502,7 +520,8 @@ fun IndividualTrackingTrackerScreen(
         onBack = onBack,
         mode = mode,
         modeLabel = modeLabel,
-        title = title
+        title = title,
+        useProbabilityFog = useProbabilityFog
     )
 }
 
@@ -512,7 +531,8 @@ private fun IndividualTrackerMapContent(
     onBack: () -> Unit,
     mode: PrsOperatingMode,
     modeLabel: String,
-    title: String
+    title: String,
+    useProbabilityFog: Boolean
 ) {
     val context = LocalContext.current
     val definition = OfflineMapCatalog.maps.firstOrNull { it.mapId == selection.mapId }
@@ -664,6 +684,15 @@ private fun IndividualTrackerMapContent(
     val tileCoverage = remember(mapData) {
         mapData?.let { TerrainTileCoverage.from(it.tileKeys, definition.maxNativeZoom) }
     }
+    val minimumCoverageZoom = tileCoverage?.minimumDisplayZoom(
+        canvasSize.width,
+        canvasSize.height,
+        definition.minZoom.toFloat(),
+        definition.maxDisplayZoom.toFloat()
+    ) ?: definition.minZoom.toFloat()
+    val currentCenter by rememberUpdatedState(center)
+    val currentZoom by rememberUpdatedState(zoom)
+    val currentHeading by rememberUpdatedState(heading)
     LaunchedEffect(tileCoverage, canvasSize) {
         val coverage = tileCoverage ?: return@LaunchedEffect
         if (canvasSize.width <= 0 || canvasSize.height <= 0) return@LaunchedEffect
@@ -709,7 +738,39 @@ private fun IndividualTrackerMapContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.weight(1f).fillMaxHeight().onSizeChanged { canvasSize = it }
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .onSizeChanged { canvasSize = it }
+                    .pointerInput(tileCoverage, canvasSize, definition.mapId) {
+                        detectTransformGestures { centroid, pan, zoomChange, _ ->
+                            if (canvasSize.width <= 0 || canvasSize.height <= 0) return@detectTransformGestures
+                            val currentTransform = TerrainViewportTransform(
+                                currentCenter,
+                                currentZoom,
+                                canvasSize.width,
+                                canvasSize.height,
+                                currentHeading
+                            )
+                            val updated = currentTransform.applyGesture(
+                                centroid.x,
+                                centroid.y,
+                                pan.x,
+                                pan.y,
+                                zoomChange,
+                                minimumCoverageZoom,
+                                definition.maxDisplayZoom.toFloat()
+                            )
+                            center = tileCoverage?.constrainCenterMovement(
+                                currentCenter,
+                                updated.center,
+                                updated.zoom,
+                                canvasSize.width,
+                                canvasSize.height
+                            ) ?: updated.center
+                            zoom = updated.zoom
+                        }
+                    }
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     drawRect(PipMapBackground)
@@ -756,16 +817,24 @@ private fun IndividualTrackerMapContent(
                         }
                     }
                 }
-                PrsDensityGrid(
-                    contacts = selectedContact?.let(::listOf) ?: emptyList(),
-                    selectedContactId = selectedContact?.contactId,
-                    selectedDisplayName = selection.target.displayName,
-                    probeNodes = listOfNotNull(gridProbe),
-                    modifier = Modifier.fillMaxSize().padding(2.dp),
-                    surfaceColor = Color.Transparent,
-                    showEmblem = false,
-                    showTargetLabel = false
-                )
+                if (useProbabilityFog) {
+                    PrsProbabilityFog(
+                        contact = selectedContact,
+                        probeNodes = listOfNotNull(gridProbe),
+                        modifier = Modifier.fillMaxSize().padding(2.dp)
+                    )
+                } else {
+                    PrsDensityGrid(
+                        contacts = selectedContact?.let(::listOf) ?: emptyList(),
+                        selectedContactId = selectedContact?.contactId,
+                        selectedDisplayName = selection.target.displayName,
+                        probeNodes = listOfNotNull(gridProbe),
+                        modifier = Modifier.fillMaxSize().padding(2.dp),
+                        surfaceColor = Color.Transparent,
+                        showEmblem = false,
+                        showTargetLabel = false
+                    )
+                }
             }
 
             Column(
@@ -780,7 +849,12 @@ private fun IndividualTrackerMapContent(
                 Text(title, color = PipGreen, fontSize = 19.sp, fontFamily = FontFamily.Monospace)
                 Text("FIELD: ${definition.name}", color = PipAmber, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                 Text("MODE: $modeLabel", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
-                Text("GRID: TARGET ONLY", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                Text(
+                    if (useProbabilityFog) "DISPLAY: PROBABILITY FOG" else "GRID: TARGET ONLY",
+                    color = PipGreenDim,
+                    fontSize = 11.sp,
+                    fontFamily = FontFamily.Monospace
+                )
                 Text("CENTER: A56 // GPS FOLLOW", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                 Text("AZIMUTH: UNAVAILABLE", color = PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                 Column(

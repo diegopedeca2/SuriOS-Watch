@@ -444,3 +444,30 @@ revisión documental y de SuriOS Watch/AVD.
 
 - Sprint 028 cerrado documentalmente el 2026-09-01; no se abre un Sprint
   posterior.
+## Sprint 032 / PIP-SuriOS v3.1 — audio por capas RADS y niebla de probabilidad en TRACKER — 2026-09-04
+
+### Añadido y modificado
+
+- RADS retira el sonido anterior y carga `assets/sounds/1.mp3`, `2.mp3` y
+  `3.mp3`.
+- RADS mantiene el nivel 0 en silencio, selecciona audio 1 en 1–2, audio 2 en
+  4–5 y audio 3 en 7–10; los niveles 3 y 6 reproducen las capas vecinas a la
+  vez. El volumen de cada pista permanece fijo.
+- TRACKER sustituye el grid circular por `PrsProbabilityFog`, una nube
+  irregular que deja ver progresivamente las zonas de menor probabilidad.
+- SENTRY y la superficie v4.0 conservan su GRID, manteniendo la diferencia
+  funcional entre ambas experiencias.
+- Se actualizan la guía nativa, la guía de usuario y las tres guías técnicas.
+
+### Validación
+
+- `test` y `lint` terminan correctamente para MAIN.
+- Se añaden pruebas unitarias para la selección y el solape de capas de audio,
+  además de la densidad visual de la niebla.
+- El retardo entre la aguja y el audio se reduce con una comprobación del nivel
+  cada 40 ms.
+- TRACKER incorpora zoom manual por pellizco de dos dedos.
+- Las modificaciones se validan físicamente en el Samsung A56.
+- La firma visible pasa a `PIP-SuriOS v3.1` y `versionCode` a `11`.
+- Sprint 032 cerrado documentalmente; el feedback adicional de testers queda
+  trasladado al siguiente Sprint.

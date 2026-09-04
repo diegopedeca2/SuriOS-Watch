@@ -32,8 +32,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
-| PIP-SuriOS | Sprint 032 | Sprint 031 | Sprint 032 activo; recogida de feedback Alpha |
-| SuriOS Ecosystem | Sprint 032 | Sprint 031 | Sprint 032 activo; recogida de feedback Alpha |
+| PIP-SuriOS | Ninguno | Sprint 032 | Sprint 032 cerrado; PIP-SuriOS v3.1 validado |
+| SuriOS Ecosystem | Ninguno | Sprint 032 | Sprint 032 cerrado; auditoría sin bloqueos |
 
 ---
 
@@ -969,6 +969,25 @@ Sprint 031. Su finalidad inicial es recoger el feedback de los tres testers
 Alpha, comprobar la reproducibilidad de `AUD-031-01` y decidir, con datos
 reales, qué incidencias deben corregirse.
 
-El Sprint 032 queda **ACTIVE**. No se cambia la firma de versión ni se modifica
-el código por adelantado: primero se espera el resultado de las pruebas de los
-testers.
+El Sprint 032 queda **CLOSED** el 2026-09-04 tras validar físicamente RADS y
+TRACKER, actualizar la firma a `PIP-SuriOS v3.1` y completar la auditoría. El
+feedback adicional de los testers se traslada al siguiente Sprint.
+
+## 38. Cierre de Sprint 032 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 032 se cierra el 2026-09-04. RADS incorpora las tres capas de audio y
+revisa el nivel cada 40 ms para mantener la aguja y el sonido sincronizados.
+TRACKER utiliza la niebla de probabilidad y admite zoom manual por pellizco,
+mientras SENTRY conserva su GRID.
+
+La versión de la aplicación pasa de `3.0` (`versionCode=10`) a `3.1`
+(`versionCode=11`). `test`, `lint` y la compilación de MAIN terminan
+correctamente, y la validación física en el Samsung A56 confirma las
+modificaciones.
+
+La auditoría del Sprint no encuentra incidencias críticas ni bloqueantes. Se
+mantienen documentados como riesgos aceptados la reproducibilidad de los
+recursos de perfiles tester y la deuda de duplicidad entre rutas de P.R.S. Las
+APK tester no se regeneran ni redistribuyen sin orden expresa.
+
+Documento del Sprint: [Sprint 032 v1.0](SPRINT_032_v1.0.md).

@@ -1,39 +1,30 @@
 package com.suri.pipsurios.geiger
 
+import android.content.Context
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
-import kotlin.random.Random
 
 class ClickScheduler(
-    private val random: Random = Random.Default
+    context: Context
 ) {
-    private val clickSound = RadsClickSound()
+    private val clickSound = RadsClickSound(context)
     private var released = false
 
     suspend fun run(levelProvider: () -> Float) {
-        var playImmediately = true
         while (currentCoroutineContext().isActive && !released) {
             val level = levelProvider().coerceIn(0f, 1f)
             if (level <= STOP_LEVEL) {
                 stop()
-                playImmediately = true
                 delay(INACTIVE_POLL_MS)
                 continue
             }
-            if (!playImmediately) {
-                delay(intervalMillis(level, random.nextFloat()))
-                currentCoroutineContext().ensureActive()
-            } else {
-                playImmediately = false
-            }
-            val levelAtPlayback = levelProvider().coerceIn(0f, 1f)
-            if (levelAtPlayback <= STOP_LEVEL) {
-                playImmediately = true
-                continue
-            }
-            clickSound.play()
+            // The audio layers are continuous. Polling frequently keeps a
+            // needle change and its layer change practically simultaneous.
+            clickSound.play(level)
+            delay(AUDIO_LEVEL_POLL_MS)
+            currentCoroutineContext().ensureActive()
         }
     }
 
@@ -58,6 +49,7 @@ class ClickScheduler(
         const val MAX_INTERVAL_MS = 1_600L
         const val MIN_INTERVAL_MS = 120L
         const val VARIATION_FRACTION = 0.12f
+        private const val AUDIO_LEVEL_POLL_MS = 40L
         private const val INACTIVE_POLL_MS = 100L
         private const val STOP_LEVEL = 0.005f
     }
