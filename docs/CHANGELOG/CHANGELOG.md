@@ -471,3 +471,28 @@ revisión documental y de SuriOS Watch/AVD.
 - La firma visible pasa a `PIP-SuriOS v3.1` y `versionCode` a `11`.
 - Sprint 032 cerrado documentalmente; el feedback adicional de testers queda
   trasladado al siguiente Sprint.
+
+## Sprint 033 / correcciones de auditoría y reglas de distribución - 2026-09-05
+
+### Estado
+
+- Sprint 033 cerrado el 2026-09-05. Las APK tester existentes no se regeneran
+  ni se redistribuyen en esta corrección.
+
+### Implementado
+
+- Los mapas e iconos de tester pasan a recursos finales versionados con Git LFS;
+  la generación GIS queda reservada para cambios de cartografía.
+- Gradle migra de `setSrcDirs` a `directories`.
+- Se elimina el código antiguo de cadencia de RADS y sus tests históricos.
+- Se fija la diferencia funcional entre SENTRY y TRACKER.
+- Se documenta que los gestos de pantalla se validan físicamente.
+- Se establece que las APK tester son instantáneas fijas y que una futura
+  distribución nueva elimina los artefactos tester anteriores.
+
+El empaquetador exige `-AllowTesterRelease` para impedir actualizaciones
+accidentales de las APK tester.
+
+### Pendiente
+
+- Mejorar el tiempo de carga de los mapas MBTiles en una futura versión.

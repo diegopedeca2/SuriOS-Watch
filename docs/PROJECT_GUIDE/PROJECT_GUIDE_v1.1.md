@@ -157,6 +157,21 @@ Un Sprint solo estará terminado cuando:
 - exista autorización para el commit;
 - el commit estable se haya creado.
 
+### 9.1 Validación de gestos físicos
+
+Las funcionalidades que dependan de gestos sobre la pantalla, como pellizcar,
+arrastrar con varios dedos o cualquier interacción multitáctil, se verificarán
+de forma física en el dispositivo objetivo. No se considerarán validadas por
+un emulador ni por una inyección ADB que no reproduzca exactamente el gesto.
+
+### 9.2 Versiones fijas de testers
+
+Las APK de FENRIR, ALTAMIRA y CHECHU son instantáneas fijas de prueba. No se
+actualizan aunque cambie la versión principal de PIP-SuriOS, salvo orden
+expresa del propietario. Cuando se genere una nueva versión de tester, se
+eliminarán los artefactos de distribución de la versión anterior y se
+conservará únicamente la instantánea nueva.
+
 ## 10. Estructura documental vigente
 
 ```text

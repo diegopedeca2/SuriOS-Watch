@@ -9,7 +9,7 @@
   bajo los menús `SENTRY`, `TRACKER`, `DEVICES` y `USER GUIDE`.
 - **Dispositivo principal:** Samsung Galaxy A56.
 - **Dispositivo auxiliar opcional:** Xiaomi Watch 2 mediante el módulo Wear OS `PROBE`.
-- **Fecha del corte:** 2026-09-04.
+- **Fecha del corte:** 2026-09-05.
 - **Estado:** implementación actual, no diseño histórico.
 
 Este documento describe cómo funciona hoy P.R.S. en el código de
@@ -100,6 +100,25 @@ del Z Flip 6. Arranca en un menú propio con:
 
 La edición compacta mantiene su superficie reducida y sus reglas de
 dispositivos compartidas.
+
+### Reglas operativas vigentes
+
+- `SENTRY` y `TRACKER` mantienen sus diferencias: SENTRY es un sensor de
+  proximidad para patrulla, vigilancia o protección y no necesita mapa; TRACKER
+  estima la posición más probable sobre un mapa. No se considera necesario
+  unificar sus superficies visuales en esta fase.
+- Las funciones que dependen de pellizcos, arrastres de varios dedos u otros
+  gestos multitáctiles solo se validan físicamente en el dispositivo objetivo.
+  El emulador o ADB no certifican por sí solos ese comportamiento.
+- Las APK tester de FENRIR, ALTAMIRA y CHECHU son instantáneas fijas. No se
+  actualizan con los cambios de MAIN salvo orden expresa del propietario. Al
+  generar una nueva distribución tester, el empaquetador elimina los artefactos
+  tester anteriores y conserva la nueva instantánea.
+- El empaquetador exige `-AllowTesterRelease` para crear una nueva distribucion
+  tester; sin ese permiso, las instantaneas existentes no se tocan.
+- Los mapas e iconos finales de tester se conservan en rutas versionadas con
+  Git LFS. Esto permite compilar desde un clon limpio; la mejora del tiempo de
+  carga de MBTiles en el dispositivo queda como trabajo futuro.
 
 ## 3. Piezas principales del código
 

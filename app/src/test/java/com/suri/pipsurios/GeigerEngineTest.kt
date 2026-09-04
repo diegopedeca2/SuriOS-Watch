@@ -1,6 +1,5 @@
 package com.suri.pipsurios
 
-import com.suri.pipsurios.geiger.ClickScheduler
 import com.suri.pipsurios.geiger.GeigerEngine
 import com.suri.pipsurios.geiger.GeigerStatus
 import kotlin.random.Random
@@ -51,15 +50,6 @@ class GeigerEngineTest {
         assertEquals(GeigerStatus.CRITICAL, GeigerEngine.statusFor(0.80f))
     }
 
-    @Test
-    fun clickRateGetsFasterWithoutBecomingConcurrent() {
-        val background = ClickScheduler.intervalMillis(0f, 0.5f)
-        val critical = ClickScheduler.intervalMillis(1f, 0.5f)
-
-        assertTrue(background > critical)
-        assertTrue(critical >= 80L)
-    }
-
     @Test fun manualRiseUsesReducedGradualTuning() {
         val engine = GeigerEngine(Random(1))
         repeat(10) { engine.update(true, 0.1f) }
@@ -67,11 +57,4 @@ class GeigerEngineTest {
         assertTrue(GeigerEngine.RISE_PER_SECOND < 0.34f)
     }
 
-    @Test fun clickCadenceChangesContinuouslyWithEffectiveLevel() {
-        val low = ClickScheduler.intervalMillis(0.2f, 0.5f)
-        val middle = ClickScheduler.intervalMillis(0.5f, 0.5f)
-        val high = ClickScheduler.intervalMillis(0.8f, 0.5f)
-        assertTrue(low > middle)
-        assertTrue(middle > high)
-    }
 }

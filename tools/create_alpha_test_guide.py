@@ -242,6 +242,7 @@ def main() -> None:
     add_body(doc, "Las cuatro aplicaciones pueden estar instaladas a la vez porque cada una tiene un identificador independiente. En Android, comprueba que abres la aplicación con el nombre de tu tester y el icono correspondiente: PIP-F, PIP-A o PIP-C.")
     add_body(doc, "Importante: estas son versiones de prueba. No deben utilizarse para tomar decisiones reales de seguridad, navegación o exposición a radiación.")
 
+    add_body(doc, "Cada APK tester es una versión fija. No la actualices por tu cuenta ni instales otra versión salvo que el propietario la distribuya expresamente.")
     doc.add_heading("2. Ficha del dispositivo y de la prueba", level=1)
     add_table(
         doc,
@@ -262,7 +263,7 @@ def main() -> None:
     add_number(doc, "Descarga únicamente el archivo APK que corresponda a tu nombre de tester: FENRIR, ALTAMIRA o CHECHU.")
     add_number(doc, "Abre el archivo APK desde Descargas, Archivos o el lugar donde lo hayas recibido.")
     add_number(doc, "Si Android muestra un aviso de seguridad, permite temporalmente la instalación desde esa aplicación de archivos y vuelve a abrir la APK.")
-    add_number(doc, "Pulsa INSTALAR. Si ya tenías una versión anterior del mismo tester, Android la actualizará conservando sus datos locales.")
+    add_number(doc, "Pulsa INSTALAR. Si ya tenías una versión anterior del mismo tester, no la sustituyas salvo que hayas recibido una nueva distribución expresamente autorizada.")
     add_number(doc, "Comprueba que el nombre y el icono corresponden a tu tester antes de empezar las pruebas.")
     add_body(doc, "No hace falta instalar un reloj ni ningún accesorio externo para esta Alpha. Si la instalación falla, anota el texto exacto del aviso, el modelo de teléfono y la versión de Android.")
     add_table(
@@ -317,6 +318,7 @@ def main() -> None:
         "En ALTAMIRA abrir TESTING y comprobar que el centro corresponde a 40.34897942140349, -3.818235386395919.",
         "En CHECHU abrir TESTING y comprobar que el centro corresponde a 40.433753, -3.625904.",
         "Probar pan, zoom, brújula, GPS y la creación de un punto de respawn o zona RAD solo si procede.",
+        "Los gestos de varios dedos, como el pellizco, solo se validan tocando físicamente el teléfono; el emulador y ADB no sustituyen esta prueba.",
     ], "La lista coincide con la tabla de esta guía, los mapas no se cierran y el comportamiento táctil es comprensible.")
 
     add_test_block(doc, "4.6 P.R.S. y Bluetooth", "Comprobar el escaneo, el seguimiento, las exclusiones y los estados de conexión.", [
@@ -388,7 +390,8 @@ def main() -> None:
         "Los mapas offline solo cubren las zonas incluidas en cada APK. TESTING de ALTAMIRA y CHECHU son campos específicos de sus APK.",
         "La posición GPS, brújula y Bluetooth dependen del teléfono, permisos, cobertura, batería y entorno físico.",
         "Esta Alpha solo usa el A56. No hace falta disponer de un reloj ni de una baliza externa.",
-        "Incidencia conocida: los mapas e iconos de cada tester se preparan junto con su APK. Si falta un mapa, aparece vacío, no carga o el icono no corresponde al nombre de la aplicación, anótalo como incidencia y continúa con el resto de pruebas. Puede ocurrir solo en algunas instalaciones.",
+        "Los paquetes nuevos de tester usan mapas e iconos versionados. Si en una APK fija falta un mapa, aparece vacío, no carga o el icono no corresponde al nombre de la aplicación, anótalo como incidencia y continúa con el resto de pruebas.",
+        "Los gestos de pantalla se validan físicamente en el teléfono; una prueba en emulador o mediante ADB no certifica el resultado multitáctil.",
         "El sonido de RADS depende del volumen multimedia y del altavoz o auriculares del teléfono; valora la selección de pistas y el solape, no una subida deliberada de volumen.",
         "Google Maps y CivTAK son aplicaciones externas: su ausencia o cambios propios pueden afectar MAP OPERATION.",
         "La aplicación está en fase Alpha: puede haber textos provisionales, cambios visuales, pérdida de datos de prueba o cierres inesperados.",

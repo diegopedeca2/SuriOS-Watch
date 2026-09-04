@@ -277,6 +277,19 @@ Un sprint solo se considerará terminado cuando cumpla todos los criterios aplic
 • La documentación se ha actualizado si durante el desarrollo cambió alguna decisión aprobada.  
 • Los problemas pendientes están claramente documentados y no se ocultan bajo la consideración de "completado".
 
+### 7.8 Validación de gestos y distribuciones tester
+
+Las funcionalidades que dependan de gestos sobre la pantalla, como pellizcos,
+arrastres multitáctiles u otras interacciones de varios dedos, solo se
+considerarán verificadas mediante una prueba física en el dispositivo objetivo.
+El emulador o ADB pueden servir para comprobar que la aplicación arranca, pero
+no sustituyen esa verificación del gesto.
+
+Las APK de FENRIR, ALTAMIRA y CHECHU son versiones fijas de tester. No se
+actualizarán por cambios de la aplicación principal salvo orden expresa. Al
+generar una nueva versión tester, se eliminarán los artefactos de distribución
+de la anterior.
+
 ## 8\. Animaciones
 
 Solo si aportan información. Cortas, discretas y nunca decorativas.

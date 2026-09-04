@@ -99,6 +99,9 @@ En la pantalla del mapa puedes hacer el gesto de pellizcar con dos dedos para
 acercar o alejar la vista. El seguimiento sigue funcionando mientras cambias
 el zoom.
 
+Los gestos de pantalla se comprueban físicamente en el dispositivo. Un emulador
+o una prueba mediante ADB no sustituyen esa comprobación.
+
 No hay que pulsar un botón de inicio en la versión actual.
 
 ## 4. ¿Las lecturas y los cálculos son fluidos mientras camino?

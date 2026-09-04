@@ -65,6 +65,9 @@ En el mapa final también puedes usar un pellizco con dos dedos para acercar o
 alejar la vista. El objetivo y la niebla siguen actualizándose durante el
 zoom.
 
+Como esta función depende de varios dedos, su verificación oficial se hace
+físicamente en el dispositivo; el emulador o ADB no sustituyen esa prueba.
+
 ## 3. Funcionamiento actual de TRACKER
 
 Tu expectativa de una sesión manual sería:

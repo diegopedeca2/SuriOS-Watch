@@ -10,16 +10,19 @@ val distributionProfile = providers.gradleProperty("distributionProfile")
 require(distributionProfile in setOf("MAIN", "FENRIR", "ALTAMIRA", "CHECHU")) {
     "Unknown distributionProfile: $distributionProfile"
 }
-val distributionAssetsRoot = if (distributionProfile == "MAIN") {
-    file("src/main/assets")
-} else {
-    file("build/generated/distributionAssets/$distributionProfile")
-}
 val commonAssetsRoot = rootProject.file("assets")
 val distributionResRoots = if (distributionProfile == "MAIN") {
     listOf(file("src/main/res"))
 } else {
-    listOf(file("src/main/res"), file("build/generated/distributionRes/$distributionProfile"))
+    listOf(file("src/main/res"), rootProject.file("distribution-res/$distributionProfile"))
+}
+val distributionAssetsRoots = if (distributionProfile == "MAIN") {
+    listOf(file("src/main/assets"))
+} else {
+    listOf(
+        rootProject.file("distribution-assets/common"),
+        rootProject.file("distribution-assets/$distributionProfile")
+    )
 }
 
 android {
@@ -75,8 +78,12 @@ android {
     androidResources {
         noCompress += listOf("mbtiles", "mp3")
     }
-    sourceSets["main"].assets.setSrcDirs(listOf(distributionAssetsRoot, commonAssetsRoot))
-    sourceSets["main"].res.setSrcDirs(distributionResRoots)
+    sourceSets["main"].assets.directories.clear()
+    sourceSets["main"].assets.directories.addAll(
+        (distributionAssetsRoots + commonAssetsRoot).map { it.absolutePath }
+    )
+    sourceSets["main"].res.directories.clear()
+    sourceSets["main"].res.directories.addAll(distributionResRoots.map { it.absolutePath })
     defaultConfig {
         manifestPlaceholders["appIcon"] = when (distributionProfile) {
             "FENRIR" -> "@drawable/pip_f_icon"

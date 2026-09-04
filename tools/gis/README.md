@@ -167,8 +167,15 @@ oficial de QGIS LTR (`3.44.13-Solothurn`) y el MBTiles final que consume Android
 La salida Android se valida por SHA-256, metadata MBTiles (`format`, zoom y
 bounds) y tres teselas representativas antes de abrirse. Si el hash no coincide,
 la copia local se recrea automáticamente mediante un temporal y un reemplazo
-seguro. No se introduce Git LFS en esta fase: el GeoPackage no se versiona y el
-asset Android ya forma parte del artefacto de release.
+seguro. Los GeoPackage y proyectos QGIS de trabajo no se versionan. Los mapas e
+iconos finales de las distribuciones tester se conservan en
+`distribution-assets/` y `distribution-res/`, con Git LFS, para que un clon
+limpio pueda compilar sin regenerar todo el GIS. La generación GIS se reserva
+para cuando cambie un mapa.
+
+Esta decisión resuelve la reproducibilidad de compilación, pero no acelera la
+carga de mapas dentro de la aplicación. La mejora de carga en el dispositivo
+queda como trabajo futuro independiente.
 
 ## Curvas de nivel en la automatizaciÃ³n
 

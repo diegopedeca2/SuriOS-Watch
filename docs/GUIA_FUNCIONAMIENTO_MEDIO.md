@@ -222,6 +222,10 @@ geográfico situado bajo el centro del gesto mediante
 `TerrainViewportTransform.applyGesture()`. El movimiento se limita a la
 cobertura disponible de los tiles para no enseñar zonas fuera del mapa.
 
+La prueba de aceptación del gesto es física. Las pruebas por emulador o ADB
+pueden comprobar el arranque y la estabilidad, pero no certifican una
+interacción multitáctil real.
+
 ### 6.1 Cálculo visual de la niebla
 
 `PrsProbabilityFog` divide visualmente el mapa en una malla de nubes suaves,

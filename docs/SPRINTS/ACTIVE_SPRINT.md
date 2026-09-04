@@ -4,21 +4,42 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-04
+last_updated: 2026-09-05
 
 ---
 
 ## Sprint activo
 
-No hay ningún Sprint activo. El Sprint 032 se ha cerrado el 2026-09-04 tras
-validar físicamente las modificaciones de RADS y TRACKER y completar su
-auditoría documental.
+No hay un Sprint activo. El Sprint 033 queda cerrado documental y técnicamente
+el 2026-09-05.
+
+[Sprint 033 v1.0](SPRINT_033_v1.0.md) — **CLOSED**
 
 [Sprint 032 v1.0](SPRINT_032_v1.0.md) — **CLOSED**
 
 [Auditoría Sprint 032](../AUDIT_SPRINT_032.md) — **APROBADA PARA CIERRE**
 
-## Avance operativo del Sprint 032 - 2026-09-04
+## Estado final del Sprint 033 - 2026-09-05
+
+- [x] Se adopta la estrategia híbrida de recursos definida en ADR-004.
+- [x] Los mapas e iconos tester se leen desde rutas versionadas con Git LFS.
+- [x] Gradle usa `directories` y no `setSrcDirs`.
+- [x] El empaquetador exige una autorizacion explicita para crear una nueva
+      distribucion tester.
+- [x] Se elimina el código antiguo de cadencia de RADS y sus tests históricos.
+- [x] Los gestos de pantalla quedan sujetos a validación física.
+- [x] Las APK tester quedan fijadas y el empaquetador elimina sus artefactos
+      anteriores cuando genera una nueva versión.
+- [ ] Mejorar el tiempo de carga de MBTiles en una futura versión.
+- [x] Cerrar el Sprint 033 tras la revisión final y autorización del propietario.
+
+## Cierre documental del Sprint 033 - 2026-09-05
+
+La auditoría final no detecta incidencias graves ni bloqueantes. La mejora del
+tiempo de carga de MBTiles se traslada a una futura versión y no bloquea este
+cierre. Las APK tester existentes no se han regenerado ni modificado.
+
+## Cierre documental del Sprint 032 - 2026-09-04
 
 - [x] RADS usa `assets/sounds/1.mp3`, `2.mp3` y `3.mp3` en las APK generadas.
 - [x] RADS deja el nivel 0 en silencio y solapa las capas en los niveles 3 y
@@ -80,8 +101,8 @@ sonido de RADS.
 
 [Sprint 028 v1.0](SPRINT_028_v1.0.md) — **CLOSED**
 
-No hay ningún Sprint pendiente de cierre. El Sprint 032 queda cerrado y no se
-abre un Sprint posterior en este cierre.
+En el momento de este registro histórico no había ningún Sprint pendiente de
+cierre. El Sprint 032 quedó cerrado; el Sprint 033 se abrió posteriormente.
 
 ## Validación y cierre del Sprint 031
 
@@ -166,6 +187,7 @@ Sprint 029: **CLOSED**
 Sprint 030: **CLOSED**
 Sprint 031: **CLOSED**
 Sprint 032: **CLOSED**
+Sprint 033: **ACTIVE**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se

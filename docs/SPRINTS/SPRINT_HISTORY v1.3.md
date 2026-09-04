@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-09-04
+last_updated: 2026-09-05
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,8 +32,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
-| PIP-SuriOS | Ninguno | Sprint 032 | Sprint 032 cerrado; PIP-SuriOS v3.1 validado |
-| SuriOS Ecosystem | Ninguno | Sprint 032 | Sprint 032 cerrado; auditoría sin bloqueos |
+| PIP-SuriOS | Ninguno | Sprint 033 | Sprint 033 cerrado; correcciones de auditoría |
+| SuriOS Ecosystem | Ninguno | Sprint 033 | Sprint 033 cerrado; reglas de distribución y validación |
 
 ---
 
@@ -76,6 +76,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 029 | SuriOS Ecosystem / PIP-SuriOS | Distribución Alpha, personalización del equipamiento, P.R.S. combinado y corrección de RADS | Cerrado | Completado con pendiente no crítico de coordenadas de CHECHU | 2026-09-02 | 2026-09-03 | [Sprint 029 v1.0](SPRINT_029_v1.0.md) |
 | 030 | SuriOS Ecosystem / PIP-SuriOS | Mapas TESTING independientes para ALTAMIRA y CHECHU | Cerrado | Completado | 2026-09-03 | 2026-09-03 | [Sprint 030 v1.0](SPRINT_030_v1.0.md) |
 | 031 | SuriOS Ecosystem / PIP-SuriOS | Auditoría externa, revisión de duplicidades y preparación de distribución Beta | Cerrado | Alpha controlada empaquetada y validada físicamente en A56; AUD-031-01 pausada | 2026-09-04 | 2026-09-04 | [Sprint 031 v1.0](SPRINT_031_v1.0.md) |
+| 032 | SuriOS Ecosystem / PIP-SuriOS | Audio por capas RADS, niebla de probabilidad y zoom en TRACKER | Cerrado | PIP-SuriOS v3.1 validado; auditoría sin bloqueos | 2026-09-04 | 2026-09-04 | [Sprint 032 v1.0](SPRINT_032_v1.0.md) |
+| 033 | SuriOS Ecosystem / PIP-SuriOS | Correcciones de auditoría, recursos reproducibles y reglas de distribución | Cerrado | Completado con deuda futura explícita | 2026-09-05 | 2026-09-05 | [Sprint 033 v1.0](SPRINT_033_v1.0.md) |
 
 ---
 
@@ -991,3 +993,30 @@ recursos de perfiles tester y la deuda de duplicidad entre rutas de P.R.S. Las
 APK tester no se regeneran ni redistribuyen sin orden expresa.
 
 Documento del Sprint: [Sprint 032 v1.0](SPRINT_032_v1.0.md).
+
+## 39. Apertura de Sprint 033 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 033 se abre el 2026-09-05 para resolver las correcciones aceptadas
+de la auditoría del Sprint 032. SENTRY y TRACKER conservan sus finalidades
+distintas y la duplicidad interna se registra como decisión de diseño, no como
+incidencia funcional.
+
+Se adopta una estrategia híbrida para los recursos: los mapas se regeneran con
+GIS cuando cambian, pero los artefactos finales de tester se versionan con Git
+LFS para que las compilaciones sean reproducibles. La mejora del tiempo de carga
+de mapas queda fuera de este Sprint.
+
+Las APK tester pasan a ser instantáneas fijas: no se actualizan sin orden
+expresa y una futura distribución nueva eliminará los artefactos tester
+anteriores.
+
+## 40. Cierre de Sprint 033 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 033 se cierra el 2026-09-05 tras una auditoría final positiva.
+Gradle usa la API `directories`, se elimina el código histórico de cadencia de
+RADS, los recursos de tester quedan reproducibles mediante Git LFS y el
+empaquetador exige autorización expresa para crear nuevas APK tester.
+
+La mejora del tiempo de carga de MBTiles queda trasladada a una futura versión.
+No hay incidencias graves ni bloqueantes, y las APK tester existentes no se
+regeneran ni modifican en este cierre.

@@ -1,0 +1,4 @@
+# Release resources are large binary files. Git LFS keeps the repository
+# history light while preserving reproducible tester builds from a clean clone.
+/distribution-assets/**/*.mbtiles filter=lfs diff=lfs merge=lfs -text
+/distribution-res/**/*.png filter=lfs diff=lfs merge=lfs -text
