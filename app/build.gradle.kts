@@ -35,8 +35,8 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 34
         targetSdk = 37
-        versionCode = 11
-        versionName = "3.1"
+        versionCode = 12
+        versionName = "3.2"
         buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
         buildConfigField("boolean", "PROBE_ENABLED", (distributionProfile == "MAIN").toString())
 
@@ -89,7 +89,7 @@ android {
             "FENRIR" -> "@drawable/pip_f_icon"
             "ALTAMIRA" -> "@drawable/pip_a_icon"
             "CHECHU" -> "@drawable/pip_c_icon"
-            else -> "@mipmap/ic_launcher"
+            else -> "@drawable/pip_main_icon"
         }
         manifestPlaceholders["appLabel"] = when (distributionProfile) {
             "FENRIR" -> "PIP-SuriOS FENRIR"

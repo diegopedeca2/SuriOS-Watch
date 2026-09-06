@@ -12,9 +12,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -25,12 +27,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
@@ -148,11 +153,23 @@ private fun TextToMorseScreen(
         onDispose { stop() }
     }
 
-    Box(Modifier.fillMaxSize().background(PipBlack)) {
-        Text("COMMS // MORSE TERMINAL", color = PipGreen, fontSize = 25.sp,
-            fontFamily = FontFamily.Monospace, modifier = Modifier.padding(24.dp))
+    Box(Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
+        Text(
+            "COMMS // MORSE TERMINAL",
+            color = PipGreen,
+            fontSize = 22.sp,
+            fontFamily = FontFamily.Monospace,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 14.dp)
+        )
         Column(
-            modifier = Modifier.align(Alignment.Center).fillMaxWidth().padding(horizontal = 28.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = 72.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text("TEXT > MORSE", color = PipGreen, fontSize = 22.sp,
@@ -202,7 +219,7 @@ private fun TextToMorseScreen(
             signal?.let { encoded ->
                 Text("SIGNAL", color = PipGreen, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
                 Text(encoded.ifEmpty { "_" }, color = PipGreen, fontSize = 18.sp,
-                    fontFamily = FontFamily.Monospace)
+                    fontFamily = FontFamily.Monospace, maxLines = 4, overflow = TextOverflow.Ellipsis)
                 Text("STATUS", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace)
                 Text(status, color = if (status == "ERROR") PipRed else PipGreen, fontSize = 22.sp,
                     fontFamily = FontFamily.Monospace)

@@ -1,6 +1,6 @@
 # Guía de funcionamiento de SuriOS — nivel MEDIO
 
-> Documento vivo. Última revisión: 2026-09-04. Se actualizará junto con los
+> Documento vivo. Última revisión: 2026-09-06. Se actualizará junto con los
 > cambios de pantallas, funcionamiento, parámetros y pruebas. Si el código
 > cambia y esta guía no cambia con él, la guía queda pendiente de revisión.
 
@@ -111,7 +111,7 @@ BluetoothLeScanner
   → snapshot inmediato
   → evaluate() cada 3 s
   → PrsContactSnapshot
-  → PrsProbabilityFog en TRACKER / PrsDensityGrid en las superficies GRID
+  → PrsProbabilityArea en TRACKER / PrsDensityGrid en las superficies GRID
 ```
 
 En modo `SCAN + PROBE`, el Watch 2 envía muestras por la Data Layer. El
@@ -206,15 +206,17 @@ operador. El centro sigue el fix GPS del A56 cuando este está disponible. La
 orientación se obtiene de `TerrainHeading` y se incorpora a la transformación
 de la vista.
 
-En TRACKER, el objetivo seleccionado se dibuja con `PrsProbabilityFog`. La
-capa cubre el mapa con una niebla irregular y calcula su densidad a partir de
-`DensityCloud`. Las áreas con menor probabilidad reciben menos niebla y dejan
-ver más cartografía. En las superficies que conservan el GRID, el objetivo
-sigue dibujándose con `PrsDensityGrid`.
+En TRACKER, el objetivo seleccionado se dibuja con `PrsProbabilityArea`. La
+capa muestra solo la hipótesis vigente como líneas rojas finas e intermitentes
+recortadas dentro de un área circular. Cada evaluación reemplaza el área
+anterior; no se acumulan líneas ni se usa la niebla antigua. En las superficies
+que conservan el GRID, el objetivo sigue dibujándose con `PrsDensityGrid`.
 
-El modelo mantiene `azimuthCoverage = 1f`: la cobertura angular es completa
-porque un receptor BLE único no proporciona bearing. Por ello la niebla es una
-representación relativa de incertidumbre, no una coordenada del objetivo.
+`PrsTargetAreaEstimator` combina el punto GPS del receptor, el rumbo disponible
+del A56 y el RSSI suavizado. Usa el rumbo para inferir experimentalmente un
+lado, desplaza la hipótesis hacia ese lado y pondera las hipótesis recientes por
+la intensidad de señal. No obtiene un bearing BLE real y el resultado no es una
+coordenada física del objetivo.
 
 El mapa de TRACKER admite `detectTransformGestures` sobre el área cartográfica.
 El pellizco modifica `zoom` entre los límites del mapa y conserva el punto
@@ -226,20 +228,25 @@ La prueba de aceptación del gesto es física. Las pruebas por emulador o ADB
 pueden comprobar el arranque y la estabilidad, pero no certifican una
 interacción multitáctil real.
 
-### 6.1 Cálculo visual de la niebla
+### 6.1 Cálculo visual del área probable
 
-`PrsProbabilityFog` divide visualmente el mapa en una malla de nubes suaves,
-pero no dibuja líneas de grid. Para cada zona calcula una distancia relativa al
-A56 y la compara con el centro y la extensión de `DensityCloud`:
+Para cada lectura evaluada, `PrsTargetAreaEstimator` crea una hipótesis. La
+distancia de referencia depende de la banda relativa: 25 m para `NEAR`, 75 m
+para `MEDIUM`, 150 m para `FAR` y 120 m para `UNKNOWN`. Cuando el lado todavía
+no está confirmado, la hipótesis parte del receptor; cuando sí lo está, se
+desplaza 65 grados hacia izquierda o derecha según la votación de rumbo y RSSI.
+
+El centro visible es la media ponderada de las hipótesis recientes, donde las
+lecturas con mejor RSSI pesan más. El radio se calcula como:
 
 ```text
-densidad de niebla = incertidumbre restante + probabilidad relativa
+R = max(R_min, R_banda × (1 − 0,60 × C)
+        + 0,35 × dispersión + 0,50 × precisión_GPS)
 ```
 
-La confianza reduce la incertidumbre restante. Cuando la confianza es baja,
-se conserva una capa amplia para no dar una falsa sensación de precisión.
-Cuando aumenta, las zonas alejadas del centro probable se despejan más. La
-función sigue siendo radial porque el BLE no aporta dirección.
+El radio queda limitado a 450 m. Se conserva un máximo de 12 evaluaciones y la
+confianza alcanza su máximo práctico con 8. La pantalla dibuja una sola área
+actual; la visualización no conserva el sombreado de áreas anteriores.
 
 En `SCAN + PROBE`, `probeGridPosition()` sí calcula la posición relativa del
 Watch 2 usando sus coordenadas GPS y las del A56. Esto localiza el nodo PROBE,

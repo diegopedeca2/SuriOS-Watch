@@ -61,6 +61,24 @@ class IndividualTrackingModelsTest {
         )
     }
 
+    @Test
+    fun savedTargetCanSearchBothScannerSources() {
+        val target = IndividualTrackingTarget(
+            contactId = "SAVED-ADDRESS-AA:BB:CC:DD:EE:FF",
+            deviceIdentifier = "AA:BB:CC:DD:EE:FF",
+            displayName = "FIELD BEACON",
+            source = null,
+            knownRule = PrsSavedDevice(
+                type = PrsDeviceRuleType.ADDRESS,
+                value = "AA:BB:CC:DD:EE:FF",
+                displayName = "Field beacon"
+            )
+        )
+
+        assertTrue(target.matches(observation("AA:BB:CC:DD:EE:FF", source = PrsObservationSource.A56)))
+        assertTrue(target.matches(observation("AA:BB:CC:DD:EE:FF", source = PrsObservationSource.PROBE_WATCH_2)))
+    }
+
     private fun target(
         deviceIdentifier: String,
         knownRule: PrsSavedDevice? = null

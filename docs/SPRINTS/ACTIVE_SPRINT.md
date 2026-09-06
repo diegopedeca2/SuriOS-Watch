@@ -4,14 +4,18 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-05
+last_updated: 2026-09-06
 
 ---
 
 ## Sprint activo
 
-No hay un Sprint activo. El Sprint 033 queda cerrado documental y técnicamente
-el 2026-09-05.
+No hay un Sprint activo. El Sprint 034 queda cerrado documental y técnicamente
+el 2026-09-06.
+
+[Sprint 034 v1.0](SPRINT_034_v1.0.md) — **CLOSED**
+
+[Auditoría Sprint 034](../AUDIT_SPRINT_034.md) — **APROBADA PARA CIERRE**
 
 [Sprint 033 v1.0](SPRINT_033_v1.0.md) — **CLOSED**
 
@@ -187,7 +191,8 @@ Sprint 029: **CLOSED**
 Sprint 030: **CLOSED**
 Sprint 031: **CLOSED**
 Sprint 032: **CLOSED**
-Sprint 033: **ACTIVE**
+Sprint 033: **CLOSED**
+Sprint 034: **CLOSED**
 
 Sprint 020 regeneró NAVY7 desde QGIS, corrigió el centro del campo y estableció
 CHOOSE LOCATION como selección inicial de TERRAIN. Los mapas persistentes se

@@ -9,11 +9,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
@@ -358,6 +361,7 @@ private fun EditableCatalogSection(
                     fontSize = 18.sp,
                     fontFamily = FontFamily.Monospace,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
                 SetupDataAction("EDIT", PipGreen) {
@@ -391,6 +395,7 @@ private fun SetupDataRow(
             fontSize = 19.sp,
             fontFamily = FontFamily.Monospace,
             maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
         )
         SetupDataAction("EDIT", PipGreen, onClick = onEdit)
@@ -1112,17 +1117,24 @@ private fun CurrentGearLayout(
     contentModifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
         Text(
             text = title,
             color = PipGreen,
-            fontSize = 30.sp,
+            fontSize = 24.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 14.dp)
         )
         Box(
             modifier = Modifier
                 .align(contentAlignment)
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
                 .then(contentModifier)
         ) { content() }
         Text(
@@ -1130,7 +1142,7 @@ private fun CurrentGearLayout(
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
+            modifier = Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(24.dp).clickable(onClick = onBack)
         )
         Text(
             text = PipSuriOsVersion,

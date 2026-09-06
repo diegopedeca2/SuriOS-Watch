@@ -52,7 +52,7 @@ fun PrsDensityGrid(
     Box(
         modifier = modifier
             .then(if (showFrame) Modifier.border(1.dp, PipGreenDim) else Modifier)
-            .background(surfaceColor)
+        .background(surfaceColor)
     ) {
         if (showEmblem) {
             Image(
@@ -61,7 +61,9 @@ fun PrsDensityGrid(
                 contentScale = ContentScale.Fit,
                 alpha = 0.10f,
                 colorFilter = ColorFilter.tint(PipGreenDim),
-                modifier = Modifier.fillMaxSize().padding(48.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(48.dp)
             )
         }
         Canvas(modifier = Modifier.fillMaxSize().padding(12.dp)) {
@@ -144,7 +146,7 @@ fun PrsDensityGrid(
         }
         if (showTargetLabel && selectedDisplayName != null) {
             Text(
-                text = "TRACK TARGET: $selectedDisplayName",
+                text = "SEGUIR OBJETIVO: $selectedDisplayName",
                 color = PipAmber,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace,
@@ -153,7 +155,7 @@ fun PrsDensityGrid(
         }
         if (probeNodes.isNotEmpty()) {
             Text(
-                text = "WATCH 2 // PROBE SUBGRID",
+                text = "WATCH 2 // SUBCUADRÍCULA PROBE",
                 color = PipBlue,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,

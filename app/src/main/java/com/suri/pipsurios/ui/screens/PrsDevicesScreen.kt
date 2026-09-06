@@ -31,8 +31,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -132,32 +132,26 @@ private fun PrsDevicesRootScreen(
             verticalArrangement = Arrangement.spacedBy(rowSpacing)
         ) {
             Text(
-                "DEVICE FILTERS",
-                color = PipAmber,
-                fontSize = if (compact) 13.sp else 16.sp,
-                fontFamily = FontFamily.Monospace
-            )
-            Text(
-                "IDENTIFY A CONTACT TO SAVE IT, THEN TOGGLE ITS RULE WHEN NEEDED.",
+                "IDENTIFICA UN CONTACTO PARA GUARDARLO Y DARLE UN NOMBRE LOCAL.",
                 color = PipGreenDim,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace
             )
             PrsDevicesMenuRow(
-                label = "> IDENTIFY DEVICE",
-                detail = "LIVE BLE CONTACTS / SAVE ONE DEVICE",
+                label = "> IDENTIFY DEVICES",
+                detail = "CONTACTOS BLE DEL A56 / GUARDAR + NOMBRE LOCAL",
                 onClick = onIdentifySelected,
                 compact = compact
             )
             PrsDevicesMenuRow(
                 label = "> SAVED DEVICES",
-                detail = "ENABLE, DISABLE OR REMOVE RULES",
+                detail = "ACTIVAR, DESACTIVAR, RENOMBRAR O ELIMINAR REGLAS",
                 onClick = onSavedSelected,
                 compact = compact
             )
             PrsDevicesMenuRow(
-                label = "> MAC ADDRESS GUIDE",
-                detail = "FIND, VERIFY AND SAVE A BLE ADDRESS",
+                label = "> GUIA DE DIRECCION MAC",
+                detail = "BUSCAR, COMPROBAR Y GUARDAR UNA DIRECCIÓN BLE",
                 onClick = onMacGuideSelected,
                 compact = compact
             )
@@ -178,7 +172,7 @@ private fun PrsMacAddressGuideScreen(
     val outerPadding = if (compact) 12.dp else 24.dp
     Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
         Text(
-            text = "P.R.S. / MAC ADDRESS GUIDE",
+            text = "P.R.S. / GUÍA DE DIRECCIÓN MAC",
             color = PipGreen,
             fontSize = if (compact) 18.sp else 24.sp,
             fontFamily = FontFamily.Monospace,
@@ -194,47 +188,53 @@ private fun PrsMacAddressGuideScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text("HOW TO IDENTIFY A DEVICE", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
+            Text("GUIA PARA IDENTIFICAR UN DISPOSITIVO", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
             Text(
-                "1. Keep the target device powered on, Bluetooth enabled and close to the A56.",
+                "1. Mantén el dispositivo objetivo encendido, con Bluetooth activo y cerca del A56.",
                 color = PipGreenDim,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
-                "2. Open IDENTIFY DEVICE and wait for its BLE advertisement to appear.",
+                "2. Abre IDENTIFY DEVICES y espera a que aparezca su anuncio BLE.",
                 color = PipGreenDim,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
-                "3. Verify the device name, RSSI and ID shown in the row. The ID is the observed BLE address when Android exposes one.",
+                "3. Comprueba el nombre, el RSSI y el ID mostrados. El ID es la dirección BLE observada cuando Android la proporciona.",
                 color = PipGreenDim,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
-                "4. Use SAVE DEVICE on that row. P.R.S. stores the address as the primary known-device rule.",
-                color = PipGreenDim,
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace
-            )
-            Text("MANUAL FORMAT", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
-            Text(
-                "A valid address has 12 hexadecimal digits, for example AA:BB:CC:DD:EE:FF. Colons or hyphens are accepted in IDENTIFY DEVICE.",
-                color = PipGreenDim,
-                fontSize = 11.sp,
-                fontFamily = FontFamily.Monospace
-            )
-            Text("PRIVATE / ROTATING ADDRESS", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
-            Text(
-                "Some phones, watches and BLE accessories do not expose a stable MAC. In that case save the exact advertised BLE name instead; a name can match more than one physical device.",
+                "4. Usa GUARDAR en esa fila. Puedes introducir antes un nombre local; P.R.S. guardará la dirección como regla principal.",
                 color = PipGreenDim,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
-                "If a known rule is ENABLED, P.R.S. omits matching contacts. Set it to DISABLED in SAVED DEVICES before selecting it as an INDIVIDUAL TRACKER target.",
+                "5. Para cambiar el nombre local más adelante, abre SAVED DEVICES y elige RENOMBRAR. La dirección BLE y la regla no cambian.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text("FORMATO MANUAL", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                "Una dirección válida tiene 12 dígitos hexadecimales, por ejemplo AA:BB:CC:DD:EE:FF. En IDENTIFY DEVICES se aceptan dos puntos o guiones.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text("DIRECCION PRIVADA / ROTATORIA", color = PipAmber, fontSize = 14.sp, fontFamily = FontFamily.Monospace)
+            Text(
+                "Algunos teléfonos, relojes y accesorios BLE no muestran una MAC estable. En ese caso, guarda el nombre BLE anunciado exacto; un mismo nombre puede coincidir con más de un dispositivo físico.",
+                color = PipGreenDim,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "Si una regla conocida está ACTIVADA, SENTRY omite los contactos coincidentes; INDIVIDUAL TRACKER puede seleccionar el dispositivo guardado aunque esté desconectado.",
                 color = PipAmber,
                 fontSize = 11.sp,
                 fontFamily = FontFamily.Monospace
@@ -320,13 +320,13 @@ private fun PrsIdentifyDeviceScreen(
             observation.deviceName?.let { registry.saveName(it, it) } ?: false
         }
         refreshSavedDevices()
-        actionStatus = if (saved) "DEVICE SAVED" else "DEVICE ALREADY SAVED"
+        actionStatus = if (saved) "DISPOSITIVO GUARDADO // RENÓMBRALO EN SAVED DEVICES" else "EL DISPOSITIVO YA ESTÁ GUARDADO"
     }
 
     fun saveManualDevice() {
         val value = manualIdentifier.trim()
         if (value.isEmpty()) {
-            actionStatus = "ENTER A MAC ADDRESS OR BLE NAME"
+            actionStatus = "INTRODUCE UNA DIRECCIÓN MAC O UN NOMBRE BLE"
             return
         }
         val saved = if (PrsDeviceRegistry.normalizeAddress(value) != null) {
@@ -336,64 +336,141 @@ private fun PrsIdentifyDeviceScreen(
         }
         if (saved) manualIdentifier = ""
         refreshSavedDevices()
-        actionStatus = if (saved) "DEVICE SAVED" else "INVALID OR ALREADY SAVED"
+        actionStatus = if (saved) "DISPOSITIVO GUARDADO" else "INVÁLIDO O YA GUARDADO"
     }
 
     val outerPadding = if (compact) 12.dp else 24.dp
-    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
-        Text(
-            text = "P.R.S. / IDENTIFY DEVICE",
-            color = PipGreen,
-            fontSize = if (compact) 18.sp else 24.sp,
-            fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(outerPadding)
-        )
+    val view = LocalView.current
+    val cutout = view.rootWindowInsets?.displayCutout
+    val cameraOnRight = (cutout?.safeInsetRight ?: 0) > (cutout?.safeInsetLeft ?: 0)
 
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding()) {
+        Row(
+            modifier = Modifier.fillMaxSize().padding(outerPadding)
+        ) {
+            val infoModifier = Modifier.weight(1f).fillMaxHeight()
+            val listModifier = Modifier.weight(2f).fillMaxHeight()
+            if (cameraOnRight) {
+                PrsIdentifyContactListPanel(
+                    modifier = listModifier,
+                    compact = compact,
+                    liveDevices = liveDevices,
+                    registry = registry,
+                    onSave = ::saveObservation
+                )
+                PrsIdentifyInfoPanel(
+                    modifier = infoModifier,
+                    compact = compact,
+                    scanStatus = scanStatus,
+                    liveCount = liveDevices.size,
+                    savedCount = savedDevices.size,
+                    manualIdentifier = manualIdentifier,
+                    onManualIdentifierChanged = { manualIdentifier = it },
+                    onSaveManual = ::saveManualDevice,
+                    actionStatus = actionStatus,
+                    onBack = onBack
+                )
+            } else {
+                PrsIdentifyInfoPanel(
+                    modifier = infoModifier,
+                    compact = compact,
+                    scanStatus = scanStatus,
+                    liveCount = liveDevices.size,
+                    savedCount = savedDevices.size,
+                    manualIdentifier = manualIdentifier,
+                    onManualIdentifierChanged = { manualIdentifier = it },
+                    onSaveManual = ::saveManualDevice,
+                    actionStatus = actionStatus,
+                    onBack = onBack
+                )
+                PrsIdentifyContactListPanel(
+                    modifier = listModifier,
+                    compact = compact,
+                    liveDevices = liveDevices,
+                    registry = registry,
+                    onSave = ::saveObservation
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PrsIdentifyInfoPanel(
+    modifier: Modifier,
+    compact: Boolean,
+    scanStatus: BleScanStatus,
+    liveCount: Int,
+    savedCount: Int,
+    manualIdentifier: String,
+    onManualIdentifierChanged: (String) -> Unit,
+    onSaveManual: () -> Unit,
+    actionStatus: String?,
+    onBack: () -> Unit
+) {
+    Box(modifier) {
         Column(
             modifier = Modifier
-                .widthIn(max = 470.dp)
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .align(Alignment.Center)
-                .padding(vertical = if (compact) 46.dp else 72.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .fillMaxSize()
+                .padding(
+                    end = if (compact) 10.dp else 22.dp,
+                    bottom = 60.dp
+                )
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(if (compact) 7.dp else 10.dp)
         ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("LIVE BLE CONTACTS", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
-                Text("${savedDevices.size} SAVED", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
-            }
             Text(
-                "${scanStatus.name.replace('_', ' ')} // ${liveDevices.size} OBSERVED",
-                color = if (scanStatus == BleScanStatus.SCANNING) PipGreen else PipAmber,
-                fontSize = 11.sp,
+                text = "P.R.S. / IDENTIFY DEVICES",
+                color = PipGreen,
+                fontSize = if (compact) 17.sp else 23.sp,
                 fontFamily = FontFamily.Monospace
             )
             Text(
-                "ADDRESS IS PRIMARY. NAME IS FALLBACK FOR PRIVATE / ROTATING ADDRESSES.",
+                "ESCANEO BLE LOCAL DEL A56",
+                color = PipAmber,
+                fontSize = if (compact) 12.sp else 15.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "${prsDeviceScanStatusLabel(scanStatus)} // $liveCount OBSERVADOS // $savedCount GUARDADOS",
+                color = if (scanStatus == BleScanStatus.SCANNING) PipGreen else PipAmber,
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "WATCH 2 PROBE ES REMOTO. NO APARECE EN ESTA LISTA BLE LOCAL.",
+                color = PipAmber,
+                fontSize = 9.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            Text(
+                "GUARDA UN CONTACTO DE LA LISTA. RENÓMBRALO DESPUÉS EN SAVED DEVICES.",
                 color = PipGreenDim,
                 fontSize = 9.sp,
                 fontFamily = FontFamily.Monospace
             )
-
+            Text(
+                "GUARDADO MANUAL",
+                color = PipAmber,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace
+            )
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, PipGreenDim.copy(alpha = 0.65f))
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth().border(1.dp, PipGreenDim.copy(alpha = 0.65f)).padding(7.dp),
+                horizontalArrangement = Arrangement.spacedBy(7.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .border(1.dp, PipGreenDim.copy(alpha = 0.45f))
-                        .padding(horizontal = 8.dp, vertical = 5.dp)
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
                 ) {
                     if (manualIdentifier.isEmpty()) {
                         Text(
-                            "MAC ADDRESS OR EXACT BLE NAME",
+                            "MAC O NOMBRE BLE EXACTO",
                             color = PipGreenDim,
-                            fontSize = 10.sp,
+                            fontSize = 9.sp,
                             fontFamily = FontFamily.Monospace,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -401,43 +478,66 @@ private fun PrsIdentifyDeviceScreen(
                     }
                     BasicTextField(
                         value = manualIdentifier,
-                        onValueChange = { manualIdentifier = it },
+                        onValueChange = onManualIdentifierChanged,
                         singleLine = true,
                         textStyle = TextStyle(
                             color = PipNeutral,
-                            fontSize = 11.sp,
+                            fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
                 Text(
-                    "> SAVE",
+                    "> GUARDAR",
                     color = PipGreen,
-                    fontSize = 12.sp,
+                    fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
-                    modifier = Modifier.clickable(onClick = ::saveManualDevice)
+                    modifier = Modifier.clickable(onClick = onSaveManual)
                 )
             }
-
             actionStatus?.let {
-                Text(it, color = PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+                Text(it, color = PipAmber, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
             }
+        }
+        PrsBackButton(onBack = onBack, modifier = Modifier.align(Alignment.BottomStart))
+    }
+}
 
+@Composable
+private fun PrsIdentifyContactListPanel(
+    modifier: Modifier,
+    compact: Boolean,
+    liveDevices: List<BleObservation>,
+    registry: PrsDeviceRegistry,
+    onSave: (BleObservation) -> Unit
+) {
+    Box(modifier, contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .fillMaxHeight()
+                .padding(vertical = if (compact) 8.dp else 18.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp)
+        ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("CONTACTOS", color = PipAmber, fontSize = if (compact) 12.sp else 15.sp, fontFamily = FontFamily.Monospace)
+                Text("${liveDevices.size}", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+            }
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .border(1.dp, PipGreenDim.copy(alpha = 0.45f))
-                    .padding(8.dp)
+                    .padding(6.dp)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(7.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 if (liveDevices.isEmpty()) {
                     Text(
-                        "WAITING FOR BLE ADVERTISEMENTS...",
+                        "ESPERANDO BLE...",
                         color = PipGreenDim,
-                        fontSize = 11.sp,
+                        fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace
                     )
                 } else {
@@ -445,17 +545,12 @@ private fun PrsIdentifyDeviceScreen(
                         ObservedDeviceRow(
                             observation = observation,
                             savedDevice = registry.savedDeviceFor(observation),
-                            onSave = { saveObservation(observation) }
+                            onSave = { onSave(observation) }
                         )
                     }
                 }
             }
         }
-
-        PrsBackButton(
-            onBack = onBack,
-            modifier = Modifier.align(Alignment.BottomStart).padding(outerPadding)
-        )
     }
 }
 
@@ -466,6 +561,7 @@ private fun PrsSavedDevicesScreen(
     onBack: () -> Unit
 ) {
     var savedDevices by remember { mutableStateOf(registry.snapshot()) }
+    var actionStatus by remember { mutableStateOf<String?>(null) }
 
     fun refreshSavedDevices() {
         savedDevices = registry.snapshot()
@@ -492,18 +588,21 @@ private fun PrsSavedDevicesScreen(
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("SAVED DEVICES", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
-                Text("${savedDevices.size} TOTAL", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                Text("${savedDevices.size} EN TOTAL", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
             }
             Text(
                 if (compact) {
-                    "ENABLED RULES ARE OMITTED FROM LOCAL SCAN."
+                    "LAS REGLAS ACTIVADAS SE OMITEN DEL ESCANEO LOCAL."
                 } else {
-                    "ENABLED RULES ARE OMITTED FROM LOCAL SCAN AND SCAN + PROBE."
+                    "LAS REGLAS ACTIVADAS SE OMITEN DEL ESCANEO LOCAL Y SCAN + PROBE."
                 },
                 color = PipGreenDim,
                 fontSize = 9.sp,
                 fontFamily = FontFamily.Monospace
             )
+            actionStatus?.let {
+                Text(it, color = PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+            }
 
             Column(
                 modifier = Modifier
@@ -515,7 +614,7 @@ private fun PrsSavedDevicesScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (savedDevices.isEmpty()) {
-                    Text("NO SAVED DEVICES", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                    Text("NO HAY DISPOSITIVOS GUARDADOS", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 } else {
                     savedDevices.forEach { device ->
                         SavedDeviceRow(
@@ -527,6 +626,11 @@ private fun PrsSavedDevicesScreen(
                             onRemove = {
                                 registry.remove(device)
                                 refreshSavedDevices()
+                            },
+                            onRename = { localName ->
+                                val renamed = registry.rename(device, localName)
+                                refreshSavedDevices()
+                                actionStatus = if (renamed) "NOMBRE LOCAL GUARDADO" else "NOMBRE LOCAL SIN CAMBIOS"
                             }
                         )
                     }
@@ -547,7 +651,7 @@ private fun ObservedDeviceRow(
     savedDevice: PrsSavedDevice?,
     onSave: () -> Unit
 ) {
-    val name = (observation.deviceName?.takeIf { it.isNotBlank() } ?: "UNKNOWN BLE DEVICE") + observation.categorySuffix()
+    val name = (observation.deviceName?.takeIf { it.isNotBlank() } ?: "DISPOSITIVO BLE DESCONOCIDO") + observation.categorySuffix()
     val accent = when {
         savedDevice?.enabled == true -> PipAmber
         savedDevice != null -> PipGreenDim
@@ -563,27 +667,29 @@ private fun ObservedDeviceRow(
             Text(name, color = accent, fontSize = 12.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
             Text(
                 when {
-                    savedDevice?.enabled == true -> "SAVED / ON"
-                    savedDevice != null -> "SAVED / OFF"
-                    else -> "UNSAVED"
+                    savedDevice?.enabled == true -> "GUARDADO / ACTIVO"
+                    savedDevice != null -> "GUARDADO / INACTIVO"
+                    else -> "NO GUARDADO"
                 },
                 color = accent,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace
             )
         }
-        Text("ID ${observation.deviceIdentifier} // ${observation.addressTypeLabel()}", color = PipNeutralDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
-        Text("RAW ${observation.rssi}   ADV ${observation.advertisingDataHex?.take(24) ?: "--"}", color = PipNeutralDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text("ID ${observation.deviceIdentifier}", color = PipNeutralDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+        Text("RSSI ${observation.rssi} dBm // ${observation.addressTypeLabel()}", color = PipNeutralDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
         Text(
             when {
-                savedDevice == null -> "> SAVE DEVICE"
-                savedDevice.enabled -> "> SAVED / DISABLE IN SCAN"
-                else -> "> SAVED / ENABLE IN SCAN"
+                savedDevice == null -> "> GUARDAR DISPOSITIVO"
+                savedDevice.enabled -> "> GUARDADO / DESACTIVAR EN ESCANEO"
+                else -> "> GUARDADO / ACTIVAR EN ESCANEO"
             },
             color = PipGreen,
             fontSize = 10.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.clickable(enabled = savedDevice == null, onClick = onSave).padding(top = 3.dp)
+            modifier = Modifier
+                .clickable(enabled = savedDevice == null, onClick = onSave)
+                .padding(top = 3.dp)
         )
     }
 }
@@ -592,8 +698,11 @@ private fun ObservedDeviceRow(
 private fun SavedDeviceRow(
     device: PrsSavedDevice,
     onToggle: () -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    onRename: (String) -> Unit
 ) {
+    var editingName by remember(device) { mutableStateOf(false) }
+    var draftName by remember(device) { mutableStateOf(device.displayName.orEmpty()) }
     val accent = if (device.enabled) PipAmber else PipGreenDim
     Column(
         modifier = Modifier
@@ -612,23 +721,68 @@ private fun SavedDeviceRow(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                if (device.enabled) "ENABLED" else "DISABLED",
+                if (device.enabled) "ACTIVADO" else "DESACTIVADO",
                 color = accent,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace
             )
         }
         Text("${device.type.label} // ${device.value}", color = PipNeutralDim, fontSize = 9.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        if (editingName) {
+            BasicTextField(
+                value = draftName,
+                onValueChange = { draftName = it },
+                singleLine = true,
+                textStyle = TextStyle(
+                    color = PipNeutral,
+                    fontSize = 10.sp,
+                    fontFamily = FontFamily.Monospace
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, PipGreenDim.copy(alpha = 0.45f))
+                    .padding(horizontal = 6.dp, vertical = 4.dp)
+            )
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(
+                    "> GUARDAR NOMBRE",
+                    color = PipGreen,
+                    fontSize = 10.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable {
+                        onRename(draftName)
+                        editingName = false
+                    }.padding(top = 5.dp)
+                )
+                Text(
+                    "> CANCELAR",
+                    color = PipGreenDim,
+                    fontSize = 10.sp,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.clickable { editingName = false }.padding(top = 5.dp)
+                )
+            }
+        }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                if (device.enabled) "> DISABLE" else "> ENABLE",
+                if (device.enabled) "> DESACTIVAR" else "> ACTIVAR",
                 color = PipGreen,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onToggle).padding(top = 5.dp)
             )
             Text(
-                "> REMOVE",
+                "> RENOMBRAR",
+                color = PipGreen,
+                fontSize = 10.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable {
+                    draftName = device.displayName.orEmpty()
+                    editingName = true
+                }.padding(top = 5.dp)
+            )
+            Text(
+                "> ELIMINAR",
                 color = PipGreen,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,
@@ -636,4 +790,13 @@ private fun SavedDeviceRow(
             )
         }
     }
+}
+
+private fun prsDeviceScanStatusLabel(status: BleScanStatus): String = when (status) {
+    BleScanStatus.IDLE -> "EN ESPERA"
+    BleScanStatus.SCANNING -> "ESCANEANDO"
+    BleScanStatus.PERMISSION_REQUIRED -> "PERMISO NECESARIO"
+    BleScanStatus.BLUETOOTH_OFF -> "BLUETOOTH DESACTIVADO"
+    BleScanStatus.UNSUPPORTED -> "NO COMPATIBLE"
+    BleScanStatus.ERROR -> "ERROR"
 }

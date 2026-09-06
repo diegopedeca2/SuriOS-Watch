@@ -1,6 +1,5 @@
 package com.suri.pipsurios.ui.screens
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,9 +23,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
@@ -159,17 +156,13 @@ private fun DrawScope.drawTerminalFrame(margin: Float = 0f) {
 @Composable
 private fun TerminalEmblem() {
     Box(modifier = Modifier.fillMaxSize()) {
-        val configuration = LocalConfiguration.current
-        val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-        val rotation = if (isPortrait) 90f else 0f
         Image(
             painter = painterResource(R.drawable.brotherhood_emblem_pipgreen),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize(0.82f)
-                .alpha(0.26f)
-                .graphicsLayer { rotationZ = rotation },
+                .alpha(0.26f),
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(PipGreenDim)
         )

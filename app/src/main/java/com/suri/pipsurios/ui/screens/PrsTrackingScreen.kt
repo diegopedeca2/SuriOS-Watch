@@ -49,6 +49,7 @@ import com.suri.pipsurios.prs.PrsDeviceRegistry
 import com.suri.pipsurios.prs.PrsProbeDisplayTuning
 import com.suri.pipsurios.prs.PrsProbeNodeSnapshot
 import com.suri.pipsurios.prs.PrsProximityBand
+import com.suri.pipsurios.prs.PrsReadingSound
 import com.suri.pipsurios.prs.PrsSnapshot
 import com.suri.pipsurios.prs.PrsTrend
 import com.suri.pipsurios.prs.PrsTuning
@@ -82,6 +83,7 @@ fun PrsTrackingScreen(
     modeLabel: String = mode.displayName,
     subtitle: String = mode.subtitle,
     allowTargetSelection: Boolean = true,
+    showGridHeader: Boolean = true,
     compact: Boolean = false,
     compactPage: PrsCompactPage = PrsCompactPage.SCAN,
     onCompactPageSelected: (PrsCompactPage) -> Unit = {},
@@ -92,11 +94,12 @@ fun PrsTrackingScreen(
     val probeLink = remember(context) { ProbeLink(context.applicationContext) }
     val phoneLocation = remember(context) { TerrainLocation(context.applicationContext) }
     val tracker = remember { PrsContactTracker() }
+    val readingSound = remember(context) { PrsReadingSound(context.applicationContext) }
     val deviceRegistry = remember(context) { PrsDeviceRegistry.from(context.applicationContext) }
     var snapshot by remember { mutableStateOf(PrsSnapshot()) }
     var scanStatus by remember { mutableStateOf(BleScanStatus.IDLE) }
     var probeNode by remember { mutableStateOf(PrsProbeNodeSnapshot()) }
-    var probeLinkStatus by remember { mutableStateOf(if (mode.probeEnabled) "STARTING" else "NOT USED") }
+    var probeLinkStatus by remember { mutableStateOf(if (mode.probeEnabled) "INICIANDO" else "NO USADO") }
     var phoneFix by remember { mutableStateOf<TerrainLocationFix?>(null) }
     var selectedContactId by remember { mutableStateOf<String?>(null) }
     var permissionVersion by remember { mutableIntStateOf(0) }
@@ -145,9 +148,9 @@ fun PrsTrackingScreen(
 
     DisposableEffect(mode) {
         if (mode.probeEnabled) {
-            probeLinkStatus = "STARTING"
+            probeLinkStatus = "INICIANDO"
             probeLink.send(mode.command!!, sessionId) { success, detail ->
-                probeLinkStatus = if (success) "COMMAND SENT // $detail" else "ERROR // $detail"
+                probeLinkStatus = if (success) "COMANDO ENVIADO // $detail" else "ERROR // $detail"
             }
         }
         onDispose {
@@ -193,10 +196,15 @@ fun PrsTrackingScreen(
         }
     }
 
+    DisposableEffect(readingSound) {
+        onDispose { readingSound.release() }
+    }
+
     LaunchedEffect(tracker) {
         while (true) {
             delay(PrsTuning.DEFAULT.evaluationIntervalMillis)
-            tracker.evaluate(SystemClock.elapsedRealtime())
+            val readingCompleted = tracker.evaluate(SystemClock.elapsedRealtime())
+            if (readingCompleted) readingSound.play()
             snapshot = tracker.snapshot()
             if (selectedContactId != null && snapshot.contact(selectedContactId) == null) {
                 selectedContactId = null
@@ -211,6 +219,7 @@ fun PrsTrackingScreen(
         modeLabel = modeLabel,
         subtitle = subtitle,
         allowTargetSelection = allowTargetSelection,
+        showGridHeader = showGridHeader,
         compact = compact,
         compactPage = compactPage,
         snapshot = snapshot,
@@ -225,10 +234,10 @@ fun PrsTrackingScreen(
         onRetry = {
             retryVersion++
             if (mode.probeEnabled) {
-                probeLinkStatus = "RETRYING"
+                probeLinkStatus = "REINTENTANDO"
                 mode.command?.let { command ->
                     probeLink.send(command, sessionId) { success, detail ->
-                        probeLinkStatus = if (success) "COMMAND SENT // $detail" else "ERROR // $detail"
+                        probeLinkStatus = if (success) "COMANDO ENVIADO // $detail" else "ERROR // $detail"
                     }
                 }
             }
@@ -250,6 +259,7 @@ private fun PrsTrackingContent(
     modeLabel: String,
     subtitle: String,
     allowTargetSelection: Boolean,
+    showGridHeader: Boolean,
     compact: Boolean,
     compactPage: PrsCompactPage,
     snapshot: PrsSnapshot,
@@ -297,31 +307,44 @@ private fun PrsTrackingContent(
             horizontalArrangement = Arrangement.spacedBy(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    "P.R.S. / $modeLabel",
-                    color = PipGreen,
-                    fontSize = 26.sp,
-                    fontFamily = FontFamily.Monospace
-                )
-                PrsDensityGrid(
-                    contacts = snapshot.contacts,
-                    selectedContactId = selectedContactId,
-                    selectedDisplayName = selected?.displayNameWithCategory(),
-                    probeNodes = listOfNotNull(gridProbe),
-                    modifier = Modifier.fillMaxHeight().aspectRatio(1f).padding(top = 8.dp)
-                )
-                Text(
-                    "GRID: DENSITY ONLY  /  AZIMUTH: UNAVAILABLE",
-                    color = PipGreenDim,
-                    fontSize = 12.sp,
-                    fontFamily = FontFamily.Monospace,
-                    modifier = Modifier.padding(top = 6.dp)
-                )
+            if (showGridHeader) {
+                Column(
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        "P.R.S. / $modeLabel",
+                        color = PipGreen,
+                        fontSize = 26.sp,
+                        fontFamily = FontFamily.Monospace
+                    )
+                    PrsDensityGrid(
+                        contacts = snapshot.contacts,
+                        selectedContactId = selectedContactId,
+                        selectedDisplayName = selected?.displayNameWithCategory(),
+                        probeNodes = listOfNotNull(gridProbe),
+                        modifier = Modifier.fillMaxHeight().aspectRatio(1f).padding(top = 8.dp)
+                    )
+                }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(bottom = 64.dp)
+                ) {
+                    PrsDensityGrid(
+                        contacts = snapshot.contacts,
+                        selectedContactId = selectedContactId,
+                        selectedDisplayName = selected?.displayNameWithCategory(),
+                        probeNodes = listOfNotNull(gridProbe),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .aspectRatio(1f)
+                            .align(Alignment.Center)
+                    )
+                }
             }
 
             Column(
@@ -339,7 +362,7 @@ private fun PrsTrackingContent(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Text("P.R.S.", color = PipGreen, fontSize = 26.sp, fontFamily = FontFamily.Monospace)
-                    Text("${snapshot.contacts.size} NODES", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+                    Text("${snapshot.contacts.size} NODOS", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 }
                 Text(subtitle, color = PipNeutralDim, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                 Row(
@@ -347,13 +370,13 @@ private fun PrsTrackingContent(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "A56: ${if (mode.localScannerEnabled) scanStatus.name.replace('_', ' ') else "STANDBY"}",
+                        "A56: ${if (mode.localScannerEnabled) prsScanStatusLabel(scanStatus) else "EN ESPERA"}",
                         color = scanStatusColor(scanStatus),
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
                     )
                     Text(
-                        "EVAL ${PrsTuning.DEFAULT.evaluationIntervalMillis / 1_000}s",
+                        "LECTURA ${PrsTuning.DEFAULT.evaluationIntervalMillis / 1_000}s",
                         color = PipGreenDim,
                         fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace
@@ -361,7 +384,7 @@ private fun PrsTrackingContent(
                 }
                 if (mode.probeEnabled) {
                     Text(
-                        "PROBE: ${probeNode.state}",
+                        "PROBE: ${prsProbeStateLabel(probeNode.state)}",
                         color = probeStatusColor(probeNode.state),
                         fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace
@@ -376,13 +399,13 @@ private fun PrsTrackingContent(
                     )
                     probeNode.location?.let { location ->
                         Text(
-                            "PROBE FIX: ±${formatRssi(location.accuracyMeters)} m  BAT ${location.batteryPercent?.toString() ?: "--"}%",
+                            "POSICIÓN PROBE: ±${formatRssi(location.accuracyMeters)} m  BATERÍA ${location.batteryPercent?.toString() ?: "--"}%",
                             color = PipNeutralDim,
                             fontSize = 10.sp,
                             fontFamily = FontFamily.Monospace
                         )
                     } ?: Text(
-                        "PROBE FIX: WAITING FOR LOCATION",
+                        "POSICIÓN PROBE: ESPERANDO UBICACIÓN",
                         color = PipAmber,
                         fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace
@@ -399,9 +422,9 @@ private fun PrsTrackingContent(
                         modifier = Modifier.fillMaxSize().verticalScroll(panelScroll),
                         verticalArrangement = Arrangement.spacedBy(7.dp)
                     ) {
-                        Text("CONTACT LIST // ALL NODES", color = PipAmber, fontSize = 15.sp, fontFamily = FontFamily.Monospace)
+                        Text("LISTA DE CONTACTOS // TODOS LOS NODOS", color = PipAmber, fontSize = 15.sp, fontFamily = FontFamily.Monospace)
                         if (snapshot.contacts.isEmpty()) {
-                            Text("WAITING FOR BLE ADVERTISEMENTS...", color = PipGreenDim, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
+                            Text("ESPERANDO ANUNCIOS BLE...", color = PipGreenDim, fontSize = 12.sp, fontFamily = FontFamily.Monospace)
                         } else {
                             snapshot.contacts.forEach { contact ->
                                 ContactListRow(
@@ -433,10 +456,10 @@ private fun PrsTrackingContent(
                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         if (selected != null) {
-                            PrsButton("> STOP TRACKING", onClick = onClearTarget, modifier = Modifier.weight(1f))
+                            PrsButton("> DETENER SEGUIMIENTO", onClick = onClearTarget, modifier = Modifier.weight(1f))
                         }
                         if (mode.probeEnabled && probeNode.state != "ACTIVE") {
-                            PrsButton("> RETRY PROBE LINK", onClick = onRetry, modifier = Modifier.weight(1f))
+                            PrsButton("> REINTENTAR ENLACE PROBE", onClick = onRetry, modifier = Modifier.weight(1f))
                         }
                     }
                 }
@@ -450,12 +473,12 @@ private fun PrsTrackingContent(
                 ) {
                     if (retryNeeded) {
                         when (scanStatus) {
-                            BleScanStatus.PERMISSION_REQUIRED -> PrsButton("> ALLOW BLUETOOTH", onClick = onGrantPermission, modifier = Modifier.weight(1f))
-                            else -> PrsButton("> TRY AGAIN", onClick = onRetry, modifier = Modifier.weight(1f))
+                            BleScanStatus.PERMISSION_REQUIRED -> PrsButton("> PERMITIR BLUETOOTH", onClick = onGrantPermission, modifier = Modifier.weight(1f))
+                            else -> PrsButton("> REINTENTAR", onClick = onRetry, modifier = Modifier.weight(1f))
                         }
                     }
                     PrsButton(
-                        "> CLEAR CONTACTS",
+                        "> BORRAR CONTACTOS",
                         onClick = onClear,
                         modifier = Modifier.weight(if (retryNeeded) 1f else 2f)
                     )
@@ -554,10 +577,10 @@ private fun PrsCompactScanPage(
             verticalAlignment = Alignment.Bottom
         ) {
             Text("SCAN", color = PipGreen, fontSize = 21.sp, fontFamily = FontFamily.Monospace)
-            Text("${snapshot.contacts.size} NODES", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+            Text("${snapshot.contacts.size} NODOS", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
         }
         Text(
-            "A56: ${scanStatus.name.replace('_', ' ')}",
+            "A56: ${prsScanStatusLabel(scanStatus)}",
             color = scanStatusColor(scanStatus),
             fontSize = 9.sp,
             fontFamily = FontFamily.Monospace
@@ -573,7 +596,7 @@ private fun PrsCompactScanPage(
         ) {
             if (snapshot.contacts.isEmpty()) {
                 Text(
-                    "WAITING FOR BLE ADVERTISEMENTS...",
+                    "ESPERANDO ANUNCIOS BLE...",
                     color = PipGreenDim,
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace
@@ -626,7 +649,7 @@ private fun PrsCompactGridPage(
 
         if (scanStatus != BleScanStatus.SCANNING) {
             Text(
-                "A56: ${scanStatus.name.replace('_', ' ')}",
+                "A56: ${prsScanStatusLabel(scanStatus)}",
                 color = scanStatusColor(scanStatus),
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,
@@ -650,20 +673,20 @@ private fun CompactActionRow(
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         if (retryNeeded) {
             PrsButton(
-                if (permissionRequired) "> ALLOW" else "> RETRY",
+                if (permissionRequired) "> PERMITIR" else "> REINTENTAR",
                 onClick = if (permissionRequired) onGrantPermission else onRetry,
                 modifier = Modifier.weight(1f)
             )
         }
         if (selected) {
             PrsButton(
-                "> STOP",
+                "> DETENER",
                 onClick = onClearTarget,
                 modifier = Modifier.weight(1f)
             )
         }
         PrsButton(
-            "> CLEAR",
+            "> BORRAR",
             onClick = onClear,
             modifier = Modifier.weight(1f)
         )
@@ -762,7 +785,7 @@ private fun ContactListRow(
             Text(contact.inference.trend.displayLabel(), color = trendColor(contact.inference.trend), fontSize = 12.sp, fontFamily = FontFamily.Monospace)
         }
         Text(
-            "RAW ${contact.measured.rssi}   SMOOTH ${formatRssi(contact.processed.smoothedRssi)}   ${contact.inference.proximity.displayLabel()}",
+            "BRUTO ${contact.measured.rssi}   SUAVIZADO ${formatRssi(contact.processed.smoothedRssi)}   ${contact.inference.proximity.displayLabel()}",
             color = PipNeutralDim,
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace
@@ -780,22 +803,22 @@ private fun PrsTargetDetails(contact: PrsContactSnapshot, onClearTarget: () -> U
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("TRACK TARGET", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
-            Text("[STOP TRACKING]", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace, modifier = Modifier.clickable(onClick = onClearTarget))
+            Text("SEGUIR OBJETIVO", color = PipAmber, fontSize = 16.sp, fontFamily = FontFamily.Monospace)
+            Text("[DETENER SEGUIMIENTO]", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace, modifier = Modifier.clickable(onClick = onClearTarget))
         }
         Text(contact.displayNameWithCategory(), color = PipNeutral, fontSize = 20.sp, fontFamily = FontFamily.Monospace)
-        Text("SOURCE: ${contact.source.displayName}", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
+        Text("ORIGEN: ${contact.source.displayName}", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
         Text("ID: ${contact.contactId}", color = PipGreenDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
-        TargetValue("SIGNAL RAW", "${contact.measured.rssi} dBm")
-        TargetValue("SIGNAL SMOOTHED", "${formatRssi(contact.processed.smoothedRssi)} dBm")
-        TargetValue("TREND", contact.inference.trend.displayLabel())
-        TargetValue("PROXIMITY", "${contact.inference.proximity.displayLabel()} / RELATIVE")
-        Text("DIRECTION: NOT MEASURED", color = PipAmber, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        TargetValue("SEÑAL BRUTA", "${contact.measured.rssi} dBm")
+        TargetValue("SEÑAL SUAVIZADA", "${formatRssi(contact.processed.smoothedRssi)} dBm")
+        TargetValue("TENDENCIA", contact.inference.trend.displayLabel())
+        TargetValue("PROXIMIDAD", "${contact.inference.proximity.displayLabel()} / RELATIVA")
+        Text("DIRECCIÓN: NO MEDIDA", color = PipAmber, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
         Text(contact.inference.explanation, color = PipNeutralDim, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
-        Text("RECENT RSSI", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
+        Text("RSSI RECIENTE", color = PipGreenDim, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
         contact.processed.history.takeLast(PrsTuning.DEFAULT.historyWindowSize).forEach { point ->
             Text(
-                "${point.observedAtElapsedMillis}  RAW ${point.rawRssi}  SMOOTH ${formatRssi(point.smoothedRssi)}  Δ ${point.variationFromPreviousDb?.let(::formatRssi) ?: "--"}",
+                "${point.observedAtElapsedMillis}  BRUTO ${point.rawRssi}  SUAVIZADO ${formatRssi(point.smoothedRssi)}  Δ ${point.variationFromPreviousDb?.let(::formatRssi) ?: "--"}",
                 color = PipNeutralDim,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace
@@ -830,17 +853,17 @@ private fun PrsButton(text: String, onClick: () -> Unit, modifier: Modifier = Mo
 }
 
 private fun PrsTrend.displayLabel(): String = when (this) {
-    PrsTrend.APPROACHING -> "APPROACHING"
-    PrsTrend.MOVING_AWAY -> "MOVING AWAY"
-    PrsTrend.STABLE -> "STABLE"
-    PrsTrend.INSUFFICIENT_DATA -> "WAITING"
+    PrsTrend.APPROACHING -> "ACERCÁNDOSE"
+    PrsTrend.MOVING_AWAY -> "ALEJÁNDOSE"
+    PrsTrend.STABLE -> "ESTABLE"
+    PrsTrend.INSUFFICIENT_DATA -> "ESPERANDO"
 }
 
 private fun PrsProximityBand.displayLabel(): String = when (this) {
-    PrsProximityBand.UNKNOWN -> "UNKNOWN"
-    PrsProximityBand.NEAR -> "NEAR"
-    PrsProximityBand.MEDIUM -> "MEDIUM"
-    PrsProximityBand.FAR -> "FAR"
+    PrsProximityBand.UNKNOWN -> "DESCONOCIDA"
+    PrsProximityBand.NEAR -> "CERCA"
+    PrsProximityBand.MEDIUM -> "MEDIA"
+    PrsProximityBand.FAR -> "LEJOS"
 }
 
 private fun formatRssi(value: Float): String = "%.1f".format(java.util.Locale.US, value)
@@ -858,6 +881,24 @@ private fun scanStatusColor(status: BleScanStatus): Color = when (status) {
     BleScanStatus.BLUETOOTH_OFF,
     BleScanStatus.ERROR -> PipAmber
     else -> PipGreenDim
+}
+
+private fun prsScanStatusLabel(status: BleScanStatus): String = when (status) {
+    BleScanStatus.IDLE -> "EN ESPERA"
+    BleScanStatus.SCANNING -> "ESCANEANDO"
+    BleScanStatus.PERMISSION_REQUIRED -> "PERMISO NECESARIO"
+    BleScanStatus.BLUETOOTH_OFF -> "BLUETOOTH DESACTIVADO"
+    BleScanStatus.UNSUPPORTED -> "NO COMPATIBLE"
+    BleScanStatus.ERROR -> "ERROR"
+}
+
+private fun prsProbeStateLabel(state: String): String = when (state) {
+    "ACTIVE" -> "ACTIVO"
+    "DISCONNECTED" -> "DESCONECTADO"
+    "STARTING" -> "INICIANDO"
+    "STOPPED" -> "DETENIDO"
+    "STALE" -> "DESACTUALIZADO"
+    else -> state
 }
 
 private fun probeStatusColor(status: String): Color = when (status.uppercase()) {

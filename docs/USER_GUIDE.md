@@ -1,6 +1,6 @@
 # PIP-SuriOS — Guía de usuario
 
-Versión de la aplicación: **3.1**
+Versión de la aplicación: **3.2**
 Esta guía explica las funciones principales de PIP-SuriOS con palabras
 sencillas. Los nombres de los botones se mantienen como aparecen en pantalla.
 
@@ -104,7 +104,7 @@ eliminarla de forma deliberada.
 
 ### P.R.S.
 
-`P.R.S.` es el sistema de proximidad de PIP-SuriOS. El menú actual tiene cuatro
+`P.R.S.` es el sistema de proximidad de PIP-SuriOS. El menú actual tiene cinco
 opciones:
 
 #### SENTRY
@@ -142,12 +142,19 @@ tendencia y el historial necesitan varias lecturas. Espera aproximadamente
 12–15 segundos antes de valorar una tendencia. Usa `< BACK` para terminar la
 sesión; no hay un botón separado `STOP` ni un cálculo final manual.
 
-La nube cubre el mapa como una niebla de guerra. Las zonas de menor
-probabilidad se van despejando a medida que llegan y se analizan lecturas. La
-niebla no demuestra que el objetivo esté en una coordenada concreta.
+El mapa muestra el área probable actual del objetivo mediante líneas rojas,
+finas e intermitentes. Cada nueva estimación sustituye la anterior: no se
+acumulan líneas ni se vuelve a la antigua niebla de guerra. La inferencia usa
+la posición del receptor, el rumbo del móvil y los cambios de RSSI para estimar
+si el objetivo queda a izquierda o derecha. No es una coordenada exacta ni una
+distancia medida.
+
+El punto azul representa la posición del usuario. Al tocarlo, el mapa se
+recentra sobre esa posición.
 
 En la pantalla del mapa puedes pellizcar con dos dedos para acercar o alejar la
-vista. El seguimiento y la niebla continúan actualizándose durante el zoom.
+vista. El seguimiento y el área probable continúan actualizándose durante el
+zoom.
 
 En `ONLY PIP-BOY` solo participa el A56 y no es necesario vincular otro
 dispositivo. En `PIP-BOY + PROBE` sí necesitas un Watch 2 PROBE emparejado y

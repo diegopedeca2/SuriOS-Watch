@@ -86,9 +86,9 @@ data class PrsSnapshot(
 }
 
 /**
- * A full-azimuth uncertainty region. The current renderer intentionally has
- * no angle, bearing or X/Y coordinate because a single BLE receiver cannot
- * measure those values.
+ * Signal-derived uncertainty data kept for the general density grid. The
+ * target-area estimator adds a separate, experimental heading/RSSI hypothesis
+ * for TRACKER without claiming that BLE provides a direct bearing.
  */
 data class DensityCloud(
     val radialCenterFraction: Float,
@@ -97,7 +97,7 @@ data class DensityCloud(
     val azimuthCoverage: Float = 1f
 )
 
-/** Future motion/orientation input. It is deliberately optional in this version. */
+/** Optional motion/orientation input for future estimators. */
 data class PrsMovementContext(
     val eastDisplacementMeters: Double = 0.0,
     val northDisplacementMeters: Double = 0.0,

@@ -39,7 +39,7 @@ object OfflineMapCatalog {
         mapId = "navy7",
         name = "NAVY7",
         assetPath = "maps/navy_7_terrain.mbtiles",
-        assetSha256 = "4EF2FAF458C107EAC69E0F4627F298088B4B12223AAC3D907C1EB038C8F4E9EC",
+        assetSha256 = "D21A2C69FA96B213521B7A67AFD40B72A037DAABC6C75BE30CE6F6DC8A84016A",
         // Target center preserved: 40.352971232717216, -3.423711863510395.
         // Sprint 030 footprint: 2 km x 2 km, zoom 16..19, with altitude lines.
         bounds = MapBounds(
@@ -56,7 +56,7 @@ object OfflineMapCatalog {
         mapId = "home",
         name = "HOME",
         assetPath = "maps/home_terrain.mbtiles",
-        assetSha256 = "25640AC28B4CAED81432F1081506C5C5A4B9ADF59565F1BA5B02BD5D3CB4AFE9",
+        assetSha256 = "3F02B4C8B55A5D703033651DFFF5C50662879AD680C2E734CF29AC655377BBEA",
         // Target center preserved: 40.4479, -3.870505.
         // Sprint 030 footprint: 2 km x 2 km, cropped from the validated HOME map.
         bounds = MapBounds(
@@ -73,7 +73,7 @@ object OfflineMapCatalog {
         mapId = "office",
         name = "OFFICE",
         assetPath = "maps/office_terrain.mbtiles",
-        assetSha256 = "FC8B3754C31C43DE0F4456007691B9BF56A11E1BD1F90D7A8BD8AF26E9A502E7",
+        assetSha256 = "F3508FB8C990C9CC54DE110F32554880546486DAB3BC872F65A9F2A8F0F5E20D",
         // Sprint 027 target center: 40.43717182620207, -3.620425636696507.
         // Sprint 029 footprint: 2 km x 2 km, zoom 16..19.
         bounds = MapBounds(
@@ -86,6 +86,40 @@ object OfflineMapCatalog {
         maxNativeZoom = 19,
         maxDisplayZoom = 20
     )
+    val BRICKTOWN = OfflineMapDefinition(
+        mapId = "bricktown",
+        name = "BRICKTOWN",
+        assetPath = "maps/bricktown_terrain.mbtiles",
+        assetSha256 = "E8CAEBE149C7A66FAEFE3E49407F056800F243C8974F5380D09955648120D6AD",
+        // Target center: 40.43061267348348, -3.3518651804964206.
+        // Sprint 031 footprint: 2 km x 2 km, zoom 16..19, with altitude lines.
+        bounds = MapBounds(
+            west = -3.363649988871,
+            south = 40.421607144278,
+            east = -3.340080372122,
+            north = 40.439618202689
+        ),
+        minZoom = 16,
+        maxNativeZoom = 19,
+        maxDisplayZoom = 20
+    )
+    val AIRSOFT_TOTAL = OfflineMapDefinition(
+        mapId = "airsoft_total",
+        name = "AIRSOFT TOTAL",
+        assetPath = "maps/airsoft_total_terrain.mbtiles",
+        assetSha256 = "120834E597C7D56A76CA79A0B798EEB1451447FDE68B2A057D4A5A4F7772C13D",
+        // Target center: 40.81068714827759, -4.269950411691506.
+        // Sprint 032 footprint: 2 km x 2 km, zoom 16..19, with altitude lines.
+        bounds = MapBounds(
+            west = -4.281802203876,
+            south = 40.801682213578,
+            east = -4.258098619507,
+            north = 40.819692082977
+        ),
+        minZoom = 16,
+        maxNativeZoom = 19,
+        maxDisplayZoom = 20
+    )
 
     /** TESTING is a profile-specific field with an independently generated asset. */
     val TESTING = when (profile) {
@@ -93,7 +127,7 @@ object OfflineMapCatalog {
             mapId = "testing",
             name = "TESTING",
             assetPath = "maps/testing_terrain.mbtiles",
-            assetSha256 = "D517EB9A3319046A0214367BF2C674AAEDDB4D811DBD13463BFD10440AB709BD",
+            assetSha256 = "F2A4AE52E3AA7E13F143A3BAF8A38EFBC68E21576837F635A7C45BE65A9239CA",
             bounds = MapBounds(
                 west = -3.049735951452,
                 south = 43.320061790853,
@@ -108,7 +142,7 @@ object OfflineMapCatalog {
             mapId = "testing",
             name = "TESTING",
             assetPath = "maps/testing_terrain.mbtiles",
-            assetSha256 = "734A7AF6E333FCAA00DAF2F144645252C82B3541C6BE8484790645BF62686E54",
+            assetSha256 = "809AF986908D443243615175B294101E7709F84ACD88444894DCCFE397350301",
             // Target center: 40.34897942140349, -3.818235386395919.
             bounds = MapBounds(
                 west = -3.830005974191,
@@ -124,7 +158,7 @@ object OfflineMapCatalog {
             mapId = "testing",
             name = "TESTING",
             assetPath = "maps/testing_terrain.mbtiles",
-            assetSha256 = "C6DADD4247061DB4F93EF057FBF39ACC90C282216CF5643376E7CFBA2BD3CD34",
+            assetSha256 = "5F236C8F7F43D5490C94C891373DF51FE3C0588B8AC0BF4B6297A87ECC4E4618",
             // Target center: 40.433753, -3.625904.
             bounds = MapBounds(
                 west = -3.637689356588,
@@ -157,7 +191,7 @@ object OfflineMapCatalog {
     val maps = when (profile) {
         "FENRIR", "CHECHU" -> listOf(NAVY7, TESTING)
         "ALTAMIRA" -> listOf(NAVY7, TESTING)
-        else -> listOf(HOME, NAVY7, OFFICE)
+        else -> listOf(AIRSOFT_TOTAL, BRICKTOWN, HOME, NAVY7, OFFICE)
     }.sortedBy { it.name }
 }
 

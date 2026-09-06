@@ -84,7 +84,7 @@ class MapTerrainTest {
     @Test fun terrainCatalogKeepsChooseLocationFirstAndMapsAlphabetical() {
         val expectedMaps = when (BuildConfig.DISTRIBUTION_PROFILE) {
             "FENRIR", "ALTAMIRA", "CHECHU" -> listOf("NAVY7", "TESTING")
-            else -> listOf("HOME", "NAVY7", "OFFICE")
+            else -> listOf("AIRSOFT TOTAL", "BRICKTOWN", "HOME", "NAVY7", "OFFICE")
         }
         assertEquals(expectedMaps, OfflineMapCatalog.maps.map { it.name })
         assertEquals("choose-location", TerrainFieldSelection.CHOOSE_LOCATION_ID)

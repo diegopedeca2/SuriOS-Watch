@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.data.OperatorField
@@ -153,13 +155,18 @@ private fun OperatorInputFrame(
     onSave: () -> Unit,
     fields: @Composable ColumnScope.() -> Unit
 ) {
-    Box(Modifier.fillMaxSize().background(PipBlack).imePadding()) {
+    Box(Modifier.fillMaxSize().background(PipBlack).safeDrawingPadding().imePadding()) {
         Text(
             text = title,
             color = PipGreen,
-            fontSize = 22.sp,
+            fontSize = 20.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.TopStart).padding(20.dp)
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 14.dp)
         )
         Column(
             modifier = Modifier

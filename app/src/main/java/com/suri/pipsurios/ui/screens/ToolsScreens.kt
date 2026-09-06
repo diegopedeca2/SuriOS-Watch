@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -17,9 +18,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suri.pipsurios.ui.theme.PipBlack
+import com.suri.pipsurios.ui.theme.PipAmber
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.prs.PrsOperatingMode
+import com.suri.pipsurios.prs.PrsWatch2Role
 import kotlinx.coroutines.delay
 
 @Composable
@@ -50,9 +53,11 @@ fun ProximityRadioScannerLoadingScreen(onFinished: () -> Unit) {
 fun ProximityRadioScannerScreen(
     onSentrySelected: () -> Unit,
     onTrackerSelected: () -> Unit,
+    onProbeSelected: () -> Unit,
     onDevicesSelected: () -> Unit,
     onUserGuideSelected: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    watch2Role: PrsWatch2Role = PrsWatch2Role.REMOTE_BEACON
 ) {
     Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
         Text(
@@ -83,6 +88,13 @@ fun ProximityRadioScannerScreen(
                 modifier = Modifier.clickable(onClick = onTrackerSelected)
             )
             Text(
+                text = "> PROBE",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onProbeSelected)
+            )
+            Text(
                 text = "> DEVICES",
                 color = PipGreen,
                 fontSize = 24.sp,
@@ -97,6 +109,87 @@ fun ProximityRadioScannerScreen(
                 modifier = Modifier.clickable(onClick = onUserGuideSelected)
             )
         }
+
+        Text(
+            text = "WATCH 2 // MODO: ${watch2Role.displayName}",
+            color = PipGreenDim,
+            fontSize = 14.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.Center).padding(top = 260.dp)
+        )
+
+        PrsBackButton(
+            onBack = onBack,
+            modifier = Modifier.align(Alignment.BottomStart).padding(24.dp)
+        )
+
+        Text(
+            text = PipSuriOsVersion,
+            color = PipGreenDim,
+            fontSize = 18.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp)
+        )
+    }
+}
+
+@Composable
+fun ProximityRadioScannerProbeScreen(
+    selectedRole: PrsWatch2Role,
+    onRemoteProbeSelected: () -> Unit,
+    onLocalDeviceSelected: () -> Unit,
+    onBack: () -> Unit,
+    probeAvailable: Boolean = true
+) {
+    Box(modifier = Modifier.fillMaxSize().background(PipBlack)) {
+        Text(
+            text = "P.R.S. / PROBE",
+            color = PipGreen,
+            fontSize = 30.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.TopStart).padding(24.dp)
+        )
+
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = if (selectedRole == PrsWatch2Role.REMOTE_BEACON) {
+                    "> WATCH 2 // BALIZA REMOTA [SELECCIONADA]"
+                } else {
+                    "> WATCH 2 // BALIZA REMOTA"
+                },
+                color = if (probeAvailable) PipGreen else PipGreenDim,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(enabled = probeAvailable, onClick = onRemoteProbeSelected)
+            )
+            Text(
+                text = if (selectedRole == PrsWatch2Role.LOCAL_DEVICE) {
+                    "> WATCH 2 // DISPOSITIVO LOCAL [SELECCIONADO]"
+                } else {
+                    "> WATCH 2 // DISPOSITIVO LOCAL"
+                },
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onLocalDeviceSelected)
+            )
+        }
+
+        Text(
+            text = if (probeAvailable) {
+                "SELECCIONA UN MODO // REMOTA = PROBE // LOCAL = CONTACTO BLE"
+            } else {
+                "BALIZA REMOTA NO DISPONIBLE // CONTACTO BLE LOCAL DISPONIBLE"
+            },
+            color = if (probeAvailable) PipGreenDim else PipAmber,
+            fontSize = 12.sp,
+            fontFamily = FontFamily.Monospace,
+            modifier = Modifier.align(Alignment.Center).padding(top = 150.dp)
+        )
 
         PrsBackButton(
             onBack = onBack,
@@ -153,7 +246,7 @@ fun ProximityRadioScannerSentryScreen(
         }
 
         Text(
-            text = "SURVEILLANCE // ALL DETECTED NODES",
+            text = "VIGILANCIA // TODOS LOS NODOS DETECTADOS",
             color = PipGreenDim,
             fontSize = 14.sp,
             fontFamily = FontFamily.Monospace,
@@ -276,7 +369,7 @@ fun ProximityRadioScannerV4Screen(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "> ONLY PIP-BOY",
+                text = "> PIP",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -284,7 +377,7 @@ fun ProximityRadioScannerV4Screen(
             )
             if (showProbe) {
                 Text(
-                    text = "> PIP-BOY + PROBE",
+                    text = "> PIP + PROBE",
                     color = PipGreen,
                     fontSize = 24.sp,
                     fontFamily = FontFamily.Monospace,
@@ -294,7 +387,7 @@ fun ProximityRadioScannerV4Screen(
         }
 
         Text(
-            text = "STEP 1 // IDENTIFY TARGET + LOCATION",
+            text = "PASO 1 // IDENTIFICAR OBJETIVO + UBICACIÓN",
             color = PipGreenDim,
             fontSize = 14.sp,
             fontFamily = FontFamily.Monospace,
@@ -353,7 +446,7 @@ fun ToolsScreen(
                 modifier = Modifier.clickable(onClick = onMapSelected)
             )
             Text(
-                text = "> PROXIMITY RADIO SCANNER",
+                text = "> P.R.S.",
                 color = PipGreen,
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
@@ -373,7 +466,7 @@ fun ToolsScreen(
             color = PipGreenDim,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp)
+            modifier = Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(24.dp).clickable(onClick = onBack)
         )
 
         Text(

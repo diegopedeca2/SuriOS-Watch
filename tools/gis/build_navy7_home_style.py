@@ -82,12 +82,14 @@ def dimensions_in_web_mercator_metres(
     scale = 1.0 / math.cos(math.radians(center_lat))
     return width_metres * scale, height_metres * scale
 
-# Final opaque HOME palette, measured from home_terrain-v10 / app asset.
-BACKGROUND = (5, 8, 5, 255)
-BUILDING = "#606060"
-CONTOUR_MINOR = "#4cb359"
-CONTOUR_MAJOR = "#5bd66b"
-ROAD = "#2f7ebe"
+# Final opaque SuriOS DAY palette. Red remains reserved for live P.R.S.
+# uncertainty rings and alerts, so the map itself avoids red tones.
+BACKGROUND = (244, 241, 232, 255)  # #F4F1E8, warm high-luminance base
+BUILDING = "#66727A"                # slate grey
+BUILDING_OUTLINE = "#263238"       # dark blue-grey
+CONTOUR_MINOR = "#607D3B"           # olive green
+CONTOUR_MAJOR = "#7A3E8D"           # violet for hierarchy without red
+ROAD = "#005A73"                    # high-contrast petroleum blue
 
 def lon_to_x(lon: float, zoom: int) -> float:
     return (lon + 180.0) / 360.0 * (TILE_SIZE * 2**zoom)
@@ -170,7 +172,7 @@ def style_layers(
             QgsFillSymbol.createSimple(
                 {
                     "color": BUILDING,
-                    "outline_color": "#050805",
+                    "outline_color": BUILDING_OUTLINE,
                     "outline_width": "0.10",
                 }
             )
@@ -381,6 +383,7 @@ def build(args: argparse.Namespace) -> dict[str, object]:
                 "name": args.metadata_name,
                 "description": args.map_name,
                 "version": "1.1",
+                "style": "SURIOS_DAY_V1",
                 "type": "overlay",
                 "minzoom": str(args.min_zoom),
                 "maxzoom": str(args.max_zoom),

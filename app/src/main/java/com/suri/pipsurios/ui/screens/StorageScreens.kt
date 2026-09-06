@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -59,7 +60,7 @@ fun StorageItemScreen(
             StorageValue("TOTAL", balance.total)
         }
         Text("< BACK", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp))
+            modifier = Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(24.dp).clickable(onClick = onBack))
         Text(PipSuriOsVersion, color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
             modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp))
     }

@@ -215,16 +215,16 @@ class PrsContactTracker(
     }
 
     private fun explanation(state: ContactState, variation: Float): String = when (state.trend) {
-        PrsTrend.APPROACHING -> "SMOOTHED RSSI INCREASED ${formatDb(abs(variation))} dB ACROSS WINDOW"
-        PrsTrend.MOVING_AWAY -> "SMOOTHED RSSI DECREASED ${formatDb(abs(variation))} dB ACROSS WINDOW"
-        PrsTrend.STABLE -> "WINDOW VARIATION REMAINS BELOW TREND THRESHOLD"
-        PrsTrend.INSUFFICIENT_DATA -> "WAITING FOR TEMPORAL WINDOW"
+        PrsTrend.APPROACHING -> "EL RSSI SUAVIZADO AUMENTÓ ${formatDb(abs(variation))} dB EN LA VENTANA"
+        PrsTrend.MOVING_AWAY -> "EL RSSI SUAVIZADO DISMINUYÓ ${formatDb(abs(variation))} dB EN LA VENTANA"
+        PrsTrend.STABLE -> "LA VARIACIÓN DE LA VENTANA SIGUE BAJO EL UMBRAL DE TENDENCIA"
+        PrsTrend.INSUFFICIENT_DATA -> "ESPERANDO VENTANA TEMPORAL"
     }
 
     private fun displayName(state: ContactState): String =
-        usableName(state.latest.deviceName) ?: state.unknownLabel ?: "UNKNOWN"
+        usableName(state.latest.deviceName) ?: state.unknownLabel ?: "DESCONOCIDO"
 
-    private fun nextUnknownLabel(): String = "UNKNOWN ${nextUnknownNumber++.toString().padStart(2, '0')}"
+    private fun nextUnknownLabel(): String = "DESCONOCIDO ${nextUnknownNumber++.toString().padStart(2, '0')}"
 
     private fun expireLocked(nowElapsedMillis: Long) {
         contacts.values.removeIf {

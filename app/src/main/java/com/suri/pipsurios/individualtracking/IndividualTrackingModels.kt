@@ -16,7 +16,7 @@ data class IndividualTrackingTarget(
     val contactId: String,
     val deviceIdentifier: String,
     val displayName: String,
-    val source: PrsObservationSource,
+    val source: PrsObservationSource? = null,
     val knownRule: PrsSavedDevice? = null
 ) {
     /**
@@ -24,7 +24,7 @@ data class IndividualTrackingTarget(
      * and Android rotates the device address between sessions.
      */
     fun matches(observation: BleObservation): Boolean {
-        if (observation.source != source) return false
+        if (source != null && observation.source != source) return false
         if (observation.deviceIdentifier.equals(deviceIdentifier, ignoreCase = true)) return true
         return knownRule?.type == PrsDeviceRuleType.ADVERTISED_NAME &&
             normalizeName(observation.deviceName) == knownRule.value

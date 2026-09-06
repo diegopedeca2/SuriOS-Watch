@@ -6,11 +6,11 @@ enum class PrsV4Mode(
     val operatingMode: PrsOperatingMode
 ) {
     ONLY_PIP_BOY(
-        displayName = "ONLY PIP-BOY",
+        displayName = "PIP",
         operatingMode = PrsOperatingMode.LOCAL_SCAN
     ),
     PIP_BOY_PROBE(
-        displayName = "PIP-BOY + PROBE",
+        displayName = "PIP + PROBE",
         operatingMode = PrsOperatingMode.SCAN_PROBE
     )
 }

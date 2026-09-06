@@ -1,6 +1,6 @@
 # Guía de funcionamiento de SuriOS — nivel BÁSICO
 
-> Documento vivo. Última revisión: 2026-09-04. Se actualizará junto con los
+> Documento vivo. Última revisión: 2026-09-06. Se actualizará junto con los
 > cambios de pantallas, funcionamiento, parámetros y pruebas. Si el código
 > cambia y esta guía no cambia con él, la guía queda pendiente de revisión.
 
@@ -56,14 +56,17 @@ flujo actual es:
 La pantalla de selección ya empieza a escanear automáticamente. La pantalla
 final también inicia automáticamente sus recursos.
 
-La pantalla final de TRACKER ya no utiliza el antiguo grid circular. Ahora
-muestra `DISPLAY: PROBABILITY FOG`: una nube irregular cubre el mapa y deja ver
-mejor las zonas de menor probabilidad según se acumulan y analizan lecturas.
+La pantalla final de TRACKER muestra el área probable actual del objetivo con
+líneas rojas finas e intermitentes. La forma se actualiza con cada evaluación y
+reemplaza la anterior; no acumula líneas ni utiliza la niebla de guerra antigua.
 No representa una coordenada exacta del objetivo.
 
+El punto azul marca la posición del usuario. Puedes tocarlo para recentrar el
+mapa sobre el receptor.
+
 En el mapa final también puedes usar un pellizco con dos dedos para acercar o
-alejar la vista. El objetivo y la niebla siguen actualizándose durante el
-zoom.
+alejar la vista. El objetivo y el área probable siguen actualizándose durante
+el zoom.
 
 Como esta función depende de varios dedos, su verificación oficial se hace
 físicamente en el dispositivo; el emulador o ADB no sustituyen esa prueba.

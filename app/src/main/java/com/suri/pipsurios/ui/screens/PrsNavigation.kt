@@ -3,11 +3,14 @@ package com.suri.pipsurios.ui.screens
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,9 +24,13 @@ fun PrsBackButton(
 ) {
     Box(
         modifier = modifier
-            .size(48.dp)
-            .border(1.dp, PipGreenDim.copy(alpha = 0.85f))
-            .clickable(onClick = onBack),
+            .navigationBarsPadding()
+            // Keep the visible frame at 48 dp while giving the control a
+            // 64 dp touch target, away from the system gesture edge.
+            .size(64.dp)
+            .clickable(role = Role.Button, onClick = onBack)
+            .padding(8.dp)
+            .border(1.dp, PipGreenDim.copy(alpha = 0.85f)),
         contentAlignment = Alignment.Center
     ) {
         Text(

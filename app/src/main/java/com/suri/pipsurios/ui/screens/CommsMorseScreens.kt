@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,10 +26,15 @@ import com.suri.pipsurios.ui.theme.PipGreenDim
 fun CommsModeSelectionScreen(
     onFrequenciesSelected: () -> Unit,
     onMorseSelected: () -> Unit,
+    onBinarySelected: () -> Unit,
     onBack: () -> Unit
 ) = TerminalSelectionScreen(
     title = "COMMS SELECT MODE",
-    options = listOf("> FREQUENCIES" to onFrequenciesSelected, "> MORSE" to onMorseSelected),
+    options = listOf(
+        "> FREQUENCIES" to onFrequenciesSelected,
+        "> MORSE" to onMorseSelected,
+        "> BINARY" to onBinarySelected
+    ),
     onBack = onBack
 )
 
@@ -124,7 +130,7 @@ private fun MorseButton(label: String, enabled: Boolean = true, onClick: () -> U
 fun TerminalFooter(onBack: () -> Unit) {
     Box(Modifier.fillMaxSize()) {
         Text("< BACK", color = PipGreenDim, fontSize = 18.sp, fontFamily = FontFamily.Monospace,
-            modifier = Modifier.align(Alignment.BottomStart).clickable(onClick = onBack).padding(24.dp))
+            modifier = Modifier.align(Alignment.BottomStart).navigationBarsPadding().padding(24.dp).clickable(onClick = onBack))
         Text(PipSuriOsVersion, color = PipGreenDim, fontSize = 18.sp,
             fontFamily = FontFamily.Monospace, modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp))
     }

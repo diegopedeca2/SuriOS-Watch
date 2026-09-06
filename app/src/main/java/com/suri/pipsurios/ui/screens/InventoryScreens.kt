@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -398,8 +399,9 @@ private fun InventoryLayout(
             fontFamily = FontFamily.Monospace,
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .clickable(onClick = onBack)
+                .navigationBarsPadding()
                 .padding(24.dp)
+                .clickable(onClick = onBack)
         )
 
         Text(

@@ -132,16 +132,23 @@ $env:QGIS_PREFIX_PATH = "C:\Program Files\QGIS 3.44.13\apps\qgis-ltr"
 Los valores estándar fijados son:
 
 - huella cuadrada de 2 km x 2 km, centrada en las coordenadas suministradas;
-- tesela PNG RGBA opaca de 256 x 256, fondo `#050805`, overlay SQLite y zoom
+- tesela PNG RGBA opaca de 256 x 256, fondo diurno `#F4F1E8`, overlay SQLite y zoom
   16–19;
-- edificios `#606060` con borde `#050805` de 0,10 mm;
-- carreteras `#2f7ebe`, ancho 0,45 mm, extremos redondeados;
-- curvas de nivel `#4cb359`, ancho 0,70 mm;
+- edificios `#66727A` con borde `#263238` de 0,10 mm;
+- carreteras `#005A73`, ancho 0,45 mm, extremos redondeados;
+- curvas de nivel `#607D3B`, ancho 0,70 mm;
+- las curvas principales usan `#7A3E8D`; el rojo queda reservado para el anillo
+  de incertidumbre y las alertas P.R.S.;
 - jerarquía de capas: edificios, carreteras y curvas de nivel.
 
 El proyecto y la salida se escriben en GQUIS como
 `Navy7_2KM_STYLE.qgz` y `navy_7_terrain_2km.mbtiles`. MDT y OSM online
 permanecen desactivados.
+
+La paleta diurna `SURIOS_DAY_V1` se puede aplicar también sobre un MBTiles
+existente con `recolor_mbtiles_day.py`. El conversor conserva bounds, niveles
+de zoom y número de teselas; solo cambia los PNG del mapa. Se usa cuando no se
+dispone del GeoPackage vectorial original.
 
 HOME ya disponía de edificios, carreteras y curvas de nivel en su MBTiles
 validado, pero no se encontró su GeoPackage original. Para no perder esas

@@ -74,7 +74,7 @@ class PrsContactTrackerTest {
 
         assertEquals("AA:BB:CC:DD:EE:FF", id)
         assertEquals("AA:BB:CC:DD:EE:FF", contact.contactId)
-        assertEquals("UNKNOWN 01", contact.displayName)
+        assertEquals("DESCONOCIDO 01", contact.displayName)
         assertEquals(PrsProximityBand.MEDIUM, contact.inference.proximity)
         assertEquals(1f, contact.inference.densityCloud.azimuthCoverage)
     }

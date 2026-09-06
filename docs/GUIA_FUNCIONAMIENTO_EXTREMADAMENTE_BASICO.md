@@ -1,6 +1,6 @@
 # Guía de funcionamiento de SuriOS — nivel EXTREMADAMENTE BÁSICO
 
-> Documento vivo. Última revisión: 2026-09-04. Se actualizará junto con los
+> Documento vivo. Última revisión: 2026-09-06. Se actualizará junto con los
 > cambios de pantallas, funcionamiento, parámetros y pruebas. Si el código
 > cambia y esta guía no cambia con él, la guía queda pendiente de revisión.
 
@@ -89,15 +89,18 @@ escaneo. Desde ese momento:
 - el mapa se actualiza alrededor del operador;
 - la información del objetivo se refresca mientras llegan nuevas señales.
 
-En la versión actual, el antiguo dibujo de círculos se ha sustituido por una
-niebla de probabilidad. Las zonas donde el objetivo parece menos probable se
-van haciendo más visibles; las zonas que todavía tienen más incertidumbre
-conservan más niebla. Esto sigue siendo una ayuda visual, no una coordenada
-exacta.
+En la versión actual, el antiguo dibujo de círculos y la niebla de probabilidad
+se han sustituido por un área probable dibujada con líneas rojas finas e
+intermitentes. Solo se conserva el área calculada más reciente, por lo que el
+mapa no se llena de líneas acumuladas. Es una ayuda visual experimental, no
+una coordenada exacta.
+
+El punto azul representa al usuario. Al tocarlo, el mapa vuelve a centrar la
+vista sobre su ubicación.
 
 En la pantalla del mapa puedes hacer el gesto de pellizcar con dos dedos para
-acercar o alejar la vista. El seguimiento sigue funcionando mientras cambias
-el zoom.
+acercar o alejar la vista. El seguimiento y el área probable siguen funcionando
+mientras cambias el zoom.
 
 Los gestos de pantalla se comprueban físicamente en el dispositivo. Un emulador
 o una prueba mediante ADB no sustituyen esa comprobación.

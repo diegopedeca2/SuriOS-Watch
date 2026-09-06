@@ -22,6 +22,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -39,6 +41,7 @@ import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
+import com.suri.pipsurios.ui.screens.ProximityRadioScannerProbeScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerSentryScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerV3Screen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerV4Screen
@@ -53,6 +56,7 @@ import com.suri.pipsurios.individualtracking.IndividualTrackingSelection
 import com.suri.pipsurios.ui.screens.PrsOnlyApp
 import com.suri.pipsurios.prs.PrsOperatingMode
 import com.suri.pipsurios.prs.PrsV4Mode
+import com.suri.pipsurios.prs.PrsWatch2Role
 import com.suri.pipsurios.ui.screens.GeigerCounterLoadingScreen
 import com.suri.pipsurios.ui.screens.GeigerCounterScreen
 import com.suri.pipsurios.ui.screens.DataLoadingScreen
@@ -127,6 +131,9 @@ import com.suri.pipsurios.ui.screens.CommsModeSelectionScreen
 import com.suri.pipsurios.ui.screens.MorseModeSelectionScreen
 import com.suri.pipsurios.ui.screens.MorseToTextInputScreen
 import com.suri.pipsurios.ui.screens.MorseToTextOutputScreen
+import com.suri.pipsurios.ui.screens.BinaryModeSelectionScreen
+import com.suri.pipsurios.ui.screens.BinaryToTextInputScreen
+import com.suri.pipsurios.ui.screens.BinaryToTextOutputScreen
 import com.suri.pipsurios.ui.screens.GoogleMapsLoadingScreen
 import com.suri.pipsurios.ui.screens.MapLoadingScreen
 import com.suri.pipsurios.ui.screens.MapModeSelectionScreen
@@ -196,6 +203,7 @@ private enum class PIPSuriOSDestination {
     Tools,
     ProximityRadioScannerLoading,
     ProximityRadioScanner,
+    ProximityRadioScannerProbe,
     ProximityRadioScannerSentry,
     ProximityRadioScannerTracker,
     ProximityRadioScannerUserGuide,
@@ -275,6 +283,9 @@ private enum class PIPSuriOSDestination {
     MorseModeSelection,
     MorseToTextInput,
     MorseToTextOutput,
+    BinaryModeSelection,
+    BinaryToTextInput,
+    BinaryToTextOutput,
     MapLoading,
     MapModeSelection,
     MapTerrain,
@@ -282,6 +293,14 @@ private enum class PIPSuriOSDestination {
     CivTakLoading,
     GoogleMapsLoading
 }
+
+private val PIPSuriOSDestinationSaver = Saver<PIPSuriOSDestination, String>(
+    save = { it.name },
+    restore = { savedName ->
+        PIPSuriOSDestination.entries.firstOrNull { it.name == savedName }
+            ?: PIPSuriOSDestination.Splash
+    }
+)
 
 private enum class VerticalOperationStep {
     DATE_LOCATION, CONSUMABLES, EDIT_DATE_LOCATION, EDIT_CONSUMABLES
@@ -294,19 +313,10 @@ private fun destinationUsesTerminalOverlay(destination: PIPSuriOSDestination): B
         PIPSuriOSDestination.Loading,
         PIPSuriOSDestination.HomeOperation,
         PIPSuriOSDestination.ProximityRadioScannerLoading,
-        PIPSuriOSDestination.ProximityRadioScannerSentry,
-        PIPSuriOSDestination.ProximityRadioScannerTracker,
-        PIPSuriOSDestination.ProximityRadioScannerUserGuide,
-        PIPSuriOSDestination.ProximityRadioScannerGuide,
         PIPSuriOSDestination.PrsV4Target,
         PIPSuriOSDestination.PrsV4Grid,
         PIPSuriOSDestination.PrsTrackerTarget,
         PIPSuriOSDestination.PrsTrackerGrid,
-        PIPSuriOSDestination.PrsDevices,
-        PIPSuriOSDestination.PrsLocalScan,
-        PIPSuriOSDestination.PrsScanProbe,
-        PIPSuriOSDestination.IndividualTracker,
-        PIPSuriOSDestination.IndividualTrackerTarget,
         PIPSuriOSDestination.IndividualTrackerTracker,
         PIPSuriOSDestination.MapLoading,
         PIPSuriOSDestination.MapTerrain,
@@ -326,7 +336,9 @@ private fun PIPSuriOSApp(
         PrsOnlyApp()
         return
     }
-    var destination by remember { mutableStateOf(initialDestination) }
+    var destination by rememberSaveable(
+        stateSaver = PIPSuriOSDestinationSaver
+    ) { mutableStateOf(initialDestination) }
     val operatorProfileRepository = remember(context) {
         OperatorProfileRepository.from(context.applicationContext)
     }
@@ -352,10 +364,13 @@ private fun PIPSuriOSApp(
     var individualTrackingSelection by remember { mutableStateOf<IndividualTrackingSelection?>(null) }
     var prsV4Mode by remember { mutableStateOf(PrsV4Mode.ONLY_PIP_BOY) }
     var prsV4Selection by remember { mutableStateOf<IndividualTrackingSelection?>(null) }
+    var watch2Role by remember { mutableStateOf(PrsWatch2Role.REMOTE_BEACON) }
     var selectedInventoryItem by remember { mutableStateOf(InventoryItem.L96) }
     var selectedStorageItem by remember { mutableStateOf<StorageItem?>(null) }
     var morseInput by remember { mutableStateOf("") }
     var morseOutput by remember { mutableStateOf("") }
+    var binaryInput by remember { mutableStateOf("") }
+    var binaryOutput by remember { mutableStateOf("") }
     val loadoutConfigurationRepository = remember(context) {
         LoadoutConfigurationRepository.from(context.applicationContext)
     }
@@ -397,6 +412,21 @@ private fun PIPSuriOSApp(
     val operationRepository = remember(context) { OperationRepository.from(context.applicationContext) }
     val storageRepository = remember(context) { StorageRepository.from(context.applicationContext) }
     val operationScope = rememberCoroutineScope()
+
+    val sentryUsesRemoteProbe = probeEnabled && watch2Role == PrsWatch2Role.REMOTE_BEACON
+    val trackerUsesRemoteProbe = probeEnabled &&
+        prsV4Mode == PrsV4Mode.PIP_BOY_PROBE &&
+        watch2Role == PrsWatch2Role.REMOTE_BEACON
+    val trackerOperatingMode = if (trackerUsesRemoteProbe) {
+        PrsOperatingMode.SCAN_PROBE
+    } else {
+        PrsOperatingMode.LOCAL_SCAN
+    }
+    val trackerModeLabel = when {
+        prsV4Mode == PrsV4Mode.ONLY_PIP_BOY -> "PIP"
+        trackerUsesRemoteProbe -> "PIP + PROBE"
+        else -> "PIP + WATCH 2 BLE"
+    }
 
     val operationInputLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -726,9 +756,24 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.ProximityRadioScanner -> ProximityRadioScannerScreen(
                 onSentrySelected = { destination = PIPSuriOSDestination.ProximityRadioScannerSentry },
                 onTrackerSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerTracker },
+                onProbeSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerProbe },
                 onDevicesSelected = { destination = PIPSuriOSDestination.PrsDevices },
                 onUserGuideSelected = { destination = PIPSuriOSDestination.ProximityRadioScannerUserGuide },
-                onBack = { destination = PIPSuriOSDestination.Tools }
+                onBack = { destination = PIPSuriOSDestination.Tools },
+                watch2Role = watch2Role
+            )
+            PIPSuriOSDestination.ProximityRadioScannerProbe -> ProximityRadioScannerProbeScreen(
+                selectedRole = watch2Role,
+                onRemoteProbeSelected = {
+                    watch2Role = PrsWatch2Role.REMOTE_BEACON
+                    destination = PIPSuriOSDestination.ProximityRadioScanner
+                },
+                onLocalDeviceSelected = {
+                    watch2Role = PrsWatch2Role.LOCAL_DEVICE
+                    destination = PIPSuriOSDestination.ProximityRadioScanner
+                },
+                probeAvailable = probeEnabled,
+                onBack = { destination = PIPSuriOSDestination.ProximityRadioScanner }
             )
             PIPSuriOSDestination.ProximityRadioScannerSentry -> ProximityRadioScannerSentryScreen(
                 onPipSelected = { destination = PIPSuriOSDestination.PrsSentryPip },
@@ -781,9 +826,9 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.PrsV4Target -> IndividualTrackingTargetScreen(
                 mode = prsV4Mode.operatingMode,
                 modeLabel = prsV4Mode.displayName,
-                title = "P.R.S. v4.0 / STEP 1",
-                locationStepLabel = "STEP 1 // SELECT LOCATION",
-                targetStepLabel = "STEP 1 // IDENTIFY TARGET",
+                title = "P.R.S. v4.0 / PASO 1",
+                locationStepLabel = "PASO 1 // SELECCIONAR UBICACIÓN",
+                targetStepLabel = "PASO 1 // IDENTIFICAR OBJETIVO",
                 splitLayout = true,
                 onTargetSelected = {
                     prsV4Selection = it
@@ -792,13 +837,13 @@ private fun PIPSuriOSApp(
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerV4 }
             )
             PIPSuriOSDestination.PrsTrackerTarget -> IndividualTrackingTargetScreen(
-                mode = prsV4Mode.operatingMode,
-                modeLabel = prsV4Mode.displayName,
-                title = "P.R.S. / TRACKER / STEP 1",
-                locationStepLabel = "STEP 1 // SELECT LOCATION",
-                targetStepLabel = "STEP 1 // IDENTIFY TARGET",
+                mode = trackerOperatingMode,
+                modeLabel = trackerModeLabel,
+                title = "P.R.S. / TRACKER / PASO 1",
+                locationStepLabel = "PASO 1 // SELECCIONAR UBICACIÓN",
+                targetStepLabel = "PASO 1 // IDENTIFICAR OBJETIVO",
                 splitLayout = true,
-                useProbabilityFog = true,
+                useProbabilityArea = true,
                 onTargetSelected = {
                     prsV4Selection = it
                     destination = PIPSuriOSDestination.PrsTrackerGrid
@@ -809,16 +854,16 @@ private fun PIPSuriOSApp(
                 selection = prsV4Selection,
                 mode = prsV4Mode.operatingMode,
                 modeLabel = prsV4Mode.displayName,
-                title = "P.R.S. v4.0 / STEP 2 // GRID",
+                title = "P.R.S. v4.0 / PASO 2 // GRID",
                 onSelectTarget = { destination = PIPSuriOSDestination.PrsV4Target },
                 onBack = { destination = PIPSuriOSDestination.PrsV4Target }
             )
             PIPSuriOSDestination.PrsTrackerGrid -> IndividualTrackingTrackerScreen(
                 selection = prsV4Selection,
-                mode = prsV4Mode.operatingMode,
-                modeLabel = prsV4Mode.displayName,
-                title = "P.R.S. / TRACKER / STEP 2 // FOG",
-                useProbabilityFog = true,
+                mode = trackerOperatingMode,
+                modeLabel = trackerModeLabel,
+                title = "P.R.S. / TRACKER / PASO 2 // ÁREA OBJETIVO",
+                useProbabilityArea = true,
                 onSelectTarget = { destination = PIPSuriOSDestination.PrsTrackerTarget },
                 onBack = { destination = PIPSuriOSDestination.PrsTrackerTarget }
             )
@@ -833,16 +878,26 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.PrsSentryPip -> PrsTrackingScreen(
                 mode = PrsOperatingMode.LOCAL_SCAN,
                 modeLabel = "PIP",
-                subtitle = "A56 ONLY // SURVEILLANCE",
+                subtitle = "A56 SOLO // VIGILANCIA",
                 allowTargetSelection = false,
+                showGridHeader = false,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerSentry }
             )
 
             PIPSuriOSDestination.PrsSentryPipProbe -> PrsTrackingScreen(
-                mode = PrsOperatingMode.SCAN_PROBE,
-                modeLabel = "PIP + PROBE",
-                subtitle = "A56 + WATCH 2 // SURVEILLANCE",
+                mode = if (sentryUsesRemoteProbe) {
+                    PrsOperatingMode.SCAN_PROBE
+                } else {
+                    PrsOperatingMode.LOCAL_SCAN
+                },
+                modeLabel = if (sentryUsesRemoteProbe) "PIP + PROBE" else "PIP + WATCH 2 BLE",
+                subtitle = if (sentryUsesRemoteProbe) {
+                    "A56 + WATCH 2 // VIGILANCIA"
+                } else {
+                    "A56 SOLO // WATCH 2 COMO DISPOSITIVO BLE LOCAL"
+                },
                 allowTargetSelection = false,
+                showGridHeader = false,
                 onBack = { destination = PIPSuriOSDestination.ProximityRadioScannerSentry }
             )
 
@@ -1411,6 +1466,7 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.CommsModeSelection -> CommsModeSelectionScreen(
                 onFrequenciesSelected = { destination = PIPSuriOSDestination.CommsFrequencies },
                 onMorseSelected = { destination = PIPSuriOSDestination.MorseModeSelection },
+                onBinarySelected = { destination = PIPSuriOSDestination.BinaryModeSelection },
                 onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
@@ -1445,6 +1501,36 @@ private fun PIPSuriOSApp(
                     morseInput = ""
                     morseOutput = ""
                     destination = PIPSuriOSDestination.MorseToTextInput
+                }
+            )
+
+            PIPSuriOSDestination.BinaryModeSelection -> BinaryModeSelectionScreen(
+                onTextToBinarySelected = {
+                    context.startActivity(Intent(context, TextToBinaryActivity::class.java))
+                },
+                onBinaryToTextSelected = {
+                    binaryInput = ""
+                    destination = PIPSuriOSDestination.BinaryToTextInput
+                },
+                onBack = { destination = PIPSuriOSDestination.CommsModeSelection }
+            )
+
+            PIPSuriOSDestination.BinaryToTextInput -> BinaryToTextInputScreen(
+                input = binaryInput,
+                onInputChanged = { binaryInput = it },
+                onConvert = {
+                    binaryOutput = com.suri.pipsurios.binary.BinaryCodec.decode(binaryInput)
+                    destination = PIPSuriOSDestination.BinaryToTextOutput
+                },
+                onBack = { destination = PIPSuriOSDestination.BinaryModeSelection }
+            )
+
+            PIPSuriOSDestination.BinaryToTextOutput -> BinaryToTextOutputScreen(
+                output = binaryOutput,
+                onBack = {
+                    binaryInput = ""
+                    binaryOutput = ""
+                    destination = PIPSuriOSDestination.BinaryToTextInput
                 }
             )
 

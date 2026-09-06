@@ -48,12 +48,15 @@ import com.suri.pipsurios.geiger.ClickScheduler
 import com.suri.pipsurios.terrain.*
 import com.suri.pipsurios.ui.theme.PipAmber
 import com.suri.pipsurios.ui.theme.PipBlack
+import com.suri.pipsurios.ui.theme.PipBlue
 import com.suri.pipsurios.ui.theme.PipGreen
 import com.suri.pipsurios.ui.theme.PipGreenDim
 import com.suri.pipsurios.ui.theme.PipRed
 import com.suri.pipsurios.ui.theme.PipMapBackground
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.log2
@@ -100,6 +103,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
     val currentHeading by rememberUpdatedState(effectiveHeading)
     val currentCenter by rememberUpdatedState(center)
     val currentZoom by rememberUpdatedState(zoom)
+    val tileRequestHeading = (effectiveHeading / 15f).roundToInt() * 15f
 
     LaunchedEffect(selectedMapId) {
         mapData = null
@@ -135,20 +139,21 @@ fun MapTerrainScreen(onBack: () -> Unit) {
         val current = mapData
         onDispose { current?.close() }
     }
-    LaunchedEffect(mapData, center, zoom, currentHeading, canvasSize) {
+    LaunchedEffect(mapData, center, zoom, tileRequestHeading, canvasSize) {
         val data = mapData ?: return@LaunchedEffect
         if (canvasSize.width <= 0 || canvasSize.height <= 0) return@LaunchedEffect
+        delay(80)
         val tileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
         val requested = visibleTileKeys(
             data,
-            TerrainViewportTransform(center, zoom, canvasSize.width, canvasSize.height, currentHeading),
+            TerrainViewportTransform(center, zoom, canvasSize.width, canvasSize.height, tileRequestHeading),
             tileZoom,
             canvasSize
         )
         val missing = requested.filterNot(loadedTiles::containsKey)
         if (missing.isNotEmpty()) {
             val loaded = withContext(Dispatchers.IO) {
-                missing.mapNotNull { key -> data.loadTile(key)?.let { key to it } }.toMap()
+                data.loadTiles(missing.toSet())
             }
             loadedTiles = loadedTiles.filterKeys { it in requested } + loaded
         } else {
@@ -275,20 +280,32 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                 Modifier.matchParentSize()
                     .onSizeChanged { canvasSize = it }
                     .then(navigationModifier)
-                    .pointerInput(editMode, overlays, center, zoom, hasSelectedMap) {
+                    .pointerInput(editMode, overlays, center, zoom, hasSelectedMap, fix, tileCoverage) {
                         detectTapGestures(
                             onTap = { offset ->
                                 if (hasSelectedMap) {
-                                    val point = screenToGeo(offset)
-                                    val respawn = hitRespawn(offset); val zone = if (respawn == null) hitZone(point) else null
-                                    when {
-                                        respawn != null -> selection = MapSelection.RespawnSelected(respawn.id)
-                                        zone != null -> selection = MapSelection.ZoneSelected(zone.id)
-                                        editMode == TerrainEditMode.ADD_RESPAWN -> {
-                                            overlays = overlays.copy(respawns = overlays.respawns + Respawn(UUID.randomUUID().toString(), point)); editMode = TerrainEditMode.NONE
+                                    val userFix = fix
+                                    val userMarker = userFix?.let { geoToScreen(it.point) }
+                                    if (userMarker != null && (userMarker - offset).getDistance() <= 38f) {
+                                        center = tileCoverage?.clampCenterForFullRotation(
+                                            userFix.point,
+                                            zoom,
+                                            canvasSize.width,
+                                            canvasSize.height
+                                        ) ?: clamp(userFix.point, zoom)
+                                        selection = MapSelection.None
+                                    } else {
+                                        val point = screenToGeo(offset)
+                                        val respawn = hitRespawn(offset); val zone = if (respawn == null) hitZone(point) else null
+                                        when {
+                                            respawn != null -> selection = MapSelection.RespawnSelected(respawn.id)
+                                            zone != null -> selection = MapSelection.ZoneSelected(zone.id)
+                                            editMode == TerrainEditMode.ADD_RESPAWN -> {
+                                                overlays = overlays.copy(respawns = overlays.respawns + Respawn(UUID.randomUUID().toString(), point)); editMode = TerrainEditMode.NONE
+                                            }
+                                            editMode == TerrainEditMode.ADD_RAD_ZONE -> draftZone = draftZone + point
+                                            else -> selection = MapSelection.None
                                         }
-                                        editMode == TerrainEditMode.ADD_RAD_ZONE -> draftZone = draftZone + point
-                                        else -> selection = MapSelection.None
                                     }
                                 }
                             },
@@ -307,10 +324,16 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                     rotate(-currentHeading, Offset(transform.pivotX, transform.pivotY)) {
                         val data = mapData
                         if (data != null) {
-                            val tileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
-                            val scale = 2.0.pow(zoom.toDouble() - tileZoom).toFloat()
-                            val centerPixel = WebMercator.toWorldPixel(center, tileZoom)
-                            loadedTiles.filterKeys { it.zoom == tileZoom }.forEach { (key, image) ->
+                            val desiredTileZoom = zoom.roundToInt().coerceIn(definition.minZoom, definition.maxNativeZoom)
+                            val renderTileZoom = loadedTiles.keys
+                                .asSequence()
+                                .map { it.zoom }
+                                .distinct()
+                                .minByOrNull { abs(it - desiredTileZoom) }
+                                ?: desiredTileZoom
+                            val scale = 2.0.pow(zoom.toDouble() - renderTileZoom).toFloat()
+                            val centerPixel = WebMercator.toWorldPixel(center, renderTileZoom)
+                            loadedTiles.filterKeys { it.zoom == renderTileZoom }.forEach { (key, image) ->
                                 val x = (size.width / 2 + (key.x * 256.0 - centerPixel.x) * scale).roundToInt()
                                 val y = (size.height / 2 + (key.xyzY * 256.0 - centerPixel.y) * scale).roundToInt()
                                 drawImage(image, dstOffset = IntOffset(x, y), dstSize = IntSize(ceil(256 * scale).toInt(), ceil(256 * scale).toInt()))
@@ -330,7 +353,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                             drawLine(PipGreen, p - Offset(16f,0f), p + Offset(16f,0f), 2f)
                             drawLine(PipGreen, p - Offset(0f,16f), p + Offset(0f,16f), 2f)
                         }
-                        fix?.let { drawCircle(if (definition.bounds.contains(it.point)) PipAmber else PipRed, 9f, geoToMapScreen(it.point)); drawCircle(PipAmber.copy(alpha=.5f), 18f, geoToMapScreen(it.point), style=Stroke(2f)) }
+                        fix?.let { drawUserLocationMarker(geoToMapScreen(it.point)) }
                     }
                 }
             }
@@ -428,6 +451,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
             }
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(loadError ?: "$locationStatus  $headingStatus  Z${"%.1f".format(zoom)}", color=if(loadError==null) PipGreenDim else PipRed, fontSize=11.sp, fontFamily=FontFamily.Monospace)
+                if (hasSelectedMap) Text("TAP BLUE POINT // RECENTER", color = PipBlue, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
                 TerrainAction("< BACK", editMode == TerrainEditMode.NONE, Modifier.fillMaxWidth(), onBack)
             }
         }
@@ -438,7 +462,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
 @Suppress("ModifierParameter")
 private fun TerrainAction(text: String, enabled: Boolean=true, modifier: Modifier=Modifier, onClick:()->Unit) {
     Text(text, color=if(enabled) PipGreen else PipGreenDim, fontSize=14.sp, fontFamily=FontFamily.Monospace,
-        modifier=if(enabled) modifier.background(PipBlack.copy(alpha=.82f)).clickable(onClick=onClick).padding(6.dp) else modifier.padding(6.dp))
+        modifier=if(enabled) modifier.background(PipBlack.copy(alpha=.82f)).padding(6.dp).clickable(onClick=onClick) else modifier.padding(6.dp))
 }
 
 private fun visibleTileKeys(

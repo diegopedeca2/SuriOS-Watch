@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets
 import java.util.Locale
 
 enum class PrsDeviceRuleType(val label: String) {
-    ADDRESS("BLE ADDRESS"),
-    ADVERTISED_NAME("BLE NAME")
+    ADDRESS("DIRECCIÓN BLE"),
+    ADVERTISED_NAME("NOMBRE BLE")
 }
 
 data class PrsSavedDevice(
@@ -63,6 +63,18 @@ class PrsDeviceRegistry private constructor(
         val index = savedDevices.indexOfFirst { it.sameKeyAs(device) }
         if (index < 0 || savedDevices[index].enabled == enabled) return false
         savedDevices[index] = savedDevices[index].copy(enabled = enabled)
+        persist()
+        return true
+    }
+
+    /** Changes only the local label; the matching rule remains untouched. */
+    @Synchronized
+    fun rename(device: PrsSavedDevice, rawDisplayName: String): Boolean {
+        val index = savedDevices.indexOfFirst { it.sameKeyAs(device) }
+        if (index < 0) return false
+        val updated = savedDevices[index].copy(displayName = cleanDisplayName(rawDisplayName))
+        if (updated == savedDevices[index]) return false
+        savedDevices[index] = updated
         persist()
         return true
     }

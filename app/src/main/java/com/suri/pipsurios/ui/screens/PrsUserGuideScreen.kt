@@ -67,14 +67,36 @@ fun PrsUserGuideScreen(onBack: () -> Unit, showProbe: Boolean = true) {
             PrsGuideBlock(
                 title = "TRACKER",
                 body = if (showProbe) {
-                    "Elige ONLY PIP-BOY o PIP-BOY + PROBE, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente: no hay START. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. TRACKER muestra ahora una niebla de probabilidad sobre el mapa: las zonas menos probables se despejan progresivamente. Puedes pellizcar con dos dedos para acercar o alejar el mapa mientras la lectura continúa. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
+                    "Elige PIP o PIP + PROBE, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. TRACKER muestra sobre el mapa un área estimada del objetivo con líneas rojas finas e intermitentes. El área se recalcula en cada lectura y sustituye a la anterior: no acumula niebla ni líneas históricas. La inferencia usa el rumbo del móvil y la variación de RSSI para estimar si el objetivo está a la izquierda o a la derecha. Cada ciclo de lectura emite un sonar. Puedes pellizcar con dos dedos para acercar o alejar el mapa mientras la lectura continúa. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
                 } else {
-                    "Elige ONLY PIP-BOY, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente: no hay START. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. TRACKER muestra ahora una niebla de probabilidad sobre el mapa: las zonas menos probables se despejan progresivamente. Puedes pellizcar con dos dedos para acercar o alejar el mapa mientras la lectura continúa. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
+                    "Elige PIP, selecciona primero el terreno y después el objetivo. Al entrar en la pantalla del objetivo la lectura empieza automáticamente. BLE recibe datos de forma continua mientras la pantalla está abierta. El análisis se revisa aproximadamente cada 3 s. Espera 12–15 s antes de valorar una tendencia. TRACKER muestra sobre el mapa un área estimada del objetivo con líneas rojas finas e intermitentes. El área se recalcula en cada lectura y sustituye a la anterior: no acumula niebla ni líneas históricas. La inferencia usa el rumbo del móvil y la variación de RSSI para estimar si el objetivo está a la izquierda o a la derecha. Cada ciclo de lectura emite un sonar. Puedes pellizcar con dos dedos para acercar o alejar el mapa mientras la lectura continúa. BACK termina la sesión; todavía no hay STOP ni cálculo final manual."
                 }
             )
             PrsGuideBlock(
+                title = "CONSIDERACIONES",
+                body = """
+                    MODELO ESTADÍSTICO
+                    P.R.S. no convierte RSSI en distancia exacta. Cada ciclo de 3 s toma el RSSI suavizado que mantiene el seguimiento. La suavización aplicada por el rastreador es S_t = S_(t-1) + 0.35 x (RSSI_t - S_(t-1)); en la primera medición, S_1 = RSSI_1. El estimador de zona conserva como máximo 12 lecturas evaluadas del objetivo.
+
+                    La confianza temporal es C = clamp(n / 8, 0, 1), donde n es el número de lecturas guardadas para construir la zona. El resultado no es una probabilidad geográfica calibrada: indica cuánto respaldo temporal tiene la hipótesis. Las lecturas antiguas se vuelven menos influyentes mediante el peso w_i = 2^((S_i - S_max) / 6), donde S_max es el RSSI suavizado más fuerte.
+
+                    LADO SEGÚN RUMBO Y RSSI
+                    P.R.S. compara el giro del móvil (delta H) con el cambio de señal (delta S). Si ambos tienen el mismo signo, la lectura vota DERECHA; si tienen signo contrario, vota IZQUIERDA. Solo se usa una votación cuando |delta H| >= 10 grados y |delta S| >= 1.5 dB. La memoria de votos es Score_t = 0.70 x Score_(t-1) + voto x evidencia. IZQUIERDA o DERECHA se muestra cuando |Score| >= 0.25. Es una inferencia experimental: el BLE normal no mide directamente el ángulo del objetivo y una antena omnidireccional puede producir lecturas ambiguas.
+
+                    ÁREA PROBABLE DEL OBJETIVO
+                    Cada lectura genera una hipótesis delante del móvil, desplazada 65 grados hacia el lado estimado. La distancia de referencia depende de la banda: CERCA 25 m, MEDIA 75 m, LEJOS 150 m y DESCONOCIDA 120 m. El centro actual es el promedio ponderado en coordenadas locales: X_objetivo = sum(w_i x_i) / sum(w_i), y lo mismo para el eje norte.
+
+                    El radio de la zona se calcula como R = max(R_min, R_banda x (1 - 0.60 x C) + 0.35 x dispersión + 0.50 x precisión_GPS), con un límite superior de 450 m. R_banda vale 40/90/180/180 m para CERCA/MEDIA/LEJOS/DESCONOCIDA; R_min vale 15/28/55/65 m. El área equivalente sería A = pi x R^2, pero no debe interpretarse como una probabilidad real en m2. En pantalla solo se dibuja la zona actual con líneas rojas discontinuas; cada nueva estimación reemplaza la anterior y no deja sombreado acumulado.
+
+                    BANDAS Y TIEMPO MÍNIMO
+                    CERCA: S >= -76 dBm. MEDIA: -88 dBm <= S < -76 dBm. LEJOS: S < -88 dBm. DESCONOCIDA aparece antes de disponer de historial útil. Son umbrales iniciales y pueden variar por cuerpo, orientación, obstáculos y entorno.
+
+                    La primera lectura se evalúa aproximadamente a los 3 s. Para una lectura mínimamente fiable, espera al menos 4 evaluaciones (unos 12 s) y, para que el lado se confirme con mayor estabilidad, 12–15 s. Lo recomendable es mantener 15–20 s si hay movimiento u obstáculos. Si no llega una señal nueva durante 15 s, el contacto puede caducar. El objetivo se supone estático; si se mueve, las zonas superpuestas dejan de representar una única ubicación.
+                """.trimIndent()
+            )
+            PrsGuideBlock(
                 title = "LECTURA Y TIEMPO",
-                body = "RAW es la última señal observada y puede cambiar de inmediato. SMOOTH, el historial y la tendencia necesitan varias observaciones y se actualizan por ciclos. WAITING significa que aún no hay suficiente historial. SAMPLES y CONFIDENCE ayudan a saber si la lectura ya es estable."
+                body = "SEÑAL BRUTA es la última señal observada y puede cambiar de inmediato. SEÑAL SUAVIZADA, el historial y la tendencia necesitan varias observaciones y se actualizan por ciclos. ESPERANDO significa que aún no hay suficiente historial. MUESTRAS y CONFIANZA ayudan a saber si la lectura ya es estable."
             )
             PrsGuideBlock(
                 title = "DEVICES",
@@ -83,18 +105,18 @@ fun PrsUserGuideScreen(onBack: () -> Unit, showProbe: Boolean = true) {
             PrsGuideBlock(
                 title = if (showProbe) "PERMISOS Y PROBE" else "PERMISOS",
                 body = if (showProbe) {
-                    "ONLY PIP-BOY usa el A56 y no necesita otro dispositivo. PIP-BOY + PROBE necesita el Watch 2 emparejado y conectado. Bluetooth y los permisos de escaneo/conexión son necesarios. La posición de PROBE es la del Watch 2 receptor, no la del objetivo. Si algo falla, concede permisos o usa TRY AGAIN / RETRY."
+                    "PIP usa el A56 y no necesita otro dispositivo. PIP + PROBE necesita el Watch 2 emparejado y conectado. Bluetooth y los permisos de escaneo/conexión son necesarios. La posición de PROBE es la del Watch 2 receptor, no la del objetivo. Si algo falla, concede permisos o usa REINTENTAR."
                 } else {
-                    "Esta edición utiliza únicamente el A56. Bluetooth y los permisos de escaneo/conexión son necesarios. Si algo falla, concede permisos o usa TRY AGAIN / RETRY."
+                    "Esta edición utiliza únicamente el A56. Bluetooth y los permisos de escaneo/conexión son necesarios. Si algo falla, concede permisos o usa REINTENTAR."
                 }
             )
             PrsGuideBlock(
                 title = "LECTURA DE LA PANTALLA",
-                body = "RAW es la última señal observada. SMOOTH es una señal suavizada. NEAR, MEDIUM y FAR son bandas relativas. APPROACHING y MOVING AWAY indican una tendencia estimada; WAITING significa que todavía no hay suficientes muestras."
+                body = "SEÑAL BRUTA es la última señal observada. SEÑAL SUAVIZADA es un valor filtrado. CERCA, MEDIA y LEJOS son bandas relativas. ACERCÁNDOSE y ALEJÁNDOSE indican una tendencia estimada; ESPERANDO significa que todavía no hay suficientes muestras."
             )
             PrsGuideBlock(
                 title = "BUENAS PRÁCTICAS",
-                body = "Mantén Bluetooth activo, espera varias muestras y no identifiques un dispositivo usando un único dato. Revisa DEVICES antes de la sesión. Para una prueba de campo anota distancia real aproximada, obstáculos, RAW, SMOOTH, TREND, banda, SAMPLES y CONFIDENCE en la plantilla CSV. La distancia real es una referencia externa: P.R.S. no calcula metros."
+                body = "Mantén Bluetooth activo, espera varias muestras y no identifiques un dispositivo usando un único dato. Revisa DEVICES antes de la sesión. Para una prueba de campo anota distancia real aproximada, obstáculos, señal bruta, señal suavizada, tendencia, banda, muestras y confianza en la plantilla CSV. La distancia real es una referencia externa: P.R.S. no calcula metros."
             )
         }
 

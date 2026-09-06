@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-09-05
+last_updated: 2026-09-06
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,8 +32,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
-| PIP-SuriOS | Ninguno | Sprint 033 | Sprint 033 cerrado; correcciones de auditoría |
-| SuriOS Ecosystem | Ninguno | Sprint 033 | Sprint 033 cerrado; reglas de distribución y validación |
+| PIP-SuriOS | Ninguno | Sprint 034 | Sprint 034 cerrado; P.R.S., mapas y mantenimiento |
+| SuriOS Ecosystem | Ninguno | Sprint 034 | Sprint 034 cerrado; auditoría completa aprobada |
 
 ---
 
@@ -78,6 +78,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 031 | SuriOS Ecosystem / PIP-SuriOS | Auditoría externa, revisión de duplicidades y preparación de distribución Beta | Cerrado | Alpha controlada empaquetada y validada físicamente en A56; AUD-031-01 pausada | 2026-09-04 | 2026-09-04 | [Sprint 031 v1.0](SPRINT_031_v1.0.md) |
 | 032 | SuriOS Ecosystem / PIP-SuriOS | Audio por capas RADS, niebla de probabilidad y zoom en TRACKER | Cerrado | PIP-SuriOS v3.1 validado; auditoría sin bloqueos | 2026-09-04 | 2026-09-04 | [Sprint 032 v1.0](SPRINT_032_v1.0.md) |
 | 033 | SuriOS Ecosystem / PIP-SuriOS | Correcciones de auditoría, recursos reproducibles y reglas de distribución | Cerrado | Completado con deuda futura explícita | 2026-09-05 | 2026-09-05 | [Sprint 033 v1.0](SPRINT_033_v1.0.md) |
+| 034 | SuriOS Ecosystem / PIP-SuriOS | P.R.S., área probable TRACKER, mapas, comunicaciones, audio y cierre de mantenimiento | Cerrado | PIP-SuriOS v3.2 validado; auditoría sin incidencias abiertas | 2026-09-06 | 2026-09-06 | [Sprint 034 v1.0](SPRINT_034_v1.0.md) |
 
 ---
 
@@ -1020,3 +1021,10 @@ empaquetador exige autorización expresa para crear nuevas APK tester.
 La mejora del tiempo de carga de MBTiles queda trasladada a una futura versión.
 No hay incidencias graves ni bloqueantes, y las APK tester existentes no se
 regeneran ni modifican en este cierre.
+
+## 41. Cierre de Sprint 034 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 034 se cierra el 2026-09-06 con PIP-SuriOS v3.2 (`versionCode=12`).
+La auditoría completa valida la aplicación, los módulos Wear OS, las pruebas
+instrumentadas en el A56, los mapas MBTiles, los audios, la documentación y el
+flujo de cierre Git. No quedan incidencias abiertas dentro del alcance.

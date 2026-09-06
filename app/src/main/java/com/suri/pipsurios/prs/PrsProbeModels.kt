@@ -2,6 +2,12 @@ package com.suri.pipsurios.prs
 
 import com.suri.probeprotocol.ProbeProtocol
 
+/** How the Watch 2 participates in P.R.S. sessions. */
+enum class PrsWatch2Role(val displayName: String) {
+    REMOTE_BEACON("BALIZA REMOTA"),
+    LOCAL_DEVICE("DISPOSITIVO LOCAL")
+}
+
 enum class PrsOperatingMode(
     val displayName: String,
     val subtitle: String,
@@ -11,14 +17,14 @@ enum class PrsOperatingMode(
 ) {
     LOCAL_SCAN(
         displayName = "LOCAL SCAN",
-        subtitle = "A56 ONLY // LOCAL PROSPECTION",
+        subtitle = "A56 SOLO // PROSPECCIÓN LOCAL",
         localScannerEnabled = true,
         probeEnabled = false,
         command = null
     ),
     SCAN_PROBE(
         displayName = "SCAN + PROBE",
-        subtitle = "A56 + WATCH 2 // MOBILE PROBE",
+        subtitle = "A56 + WATCH 2 // PROBE MÓVIL",
         localScannerEnabled = true,
         probeEnabled = true,
         command = ProbeProtocol.Command.START_RECON

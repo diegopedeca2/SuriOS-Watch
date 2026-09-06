@@ -496,3 +496,28 @@ accidentales de las APK tester.
 ### Pendiente
 
 - Mejorar el tiempo de carga de los mapas MBTiles en una futura versión.
+## Sprint 034 / PIP-SuriOS v3.2 — P.R.S., mapas, comunicaciones y mantenimiento — 2026-09-06
+
+### Añadido y modificado
+
+- La firma móvil pasa a `PIP-SuriOS v3.2` y `versionCode=12`.
+- El menú `P.R.S.` conserva las siglas e incluye `PROBE` únicamente para
+  elegir si Watch 2 actúa como baliza remota o como dispositivo BLE local.
+- TRACKER sustituye la antigua niebla por un área probable única dibujada con
+  líneas rojas finas e intermitentes; el área combina rumbo del A56 y cambios
+  de RSSI como inferencia experimental.
+- TERRAIN y TRACKER muestran la ubicación del usuario con un punto azul y
+  permiten recentrar el mapa al tocarlo.
+- La carga de mapas usa lotes de teselas visibles, caché limitada y fallback al
+  nivel de teselas más cercano durante la carga o el zoom.
+- Se incorporan los mapas offline `BRICKTOWN` y `AIRSOFT TOTAL`.
+- Se añade BINARY con flash largo para `1` y doble flash corto para `0`.
+- Se añaden sonidos de lectura de P.R.S. y de interacción de botones.
+- Se amplía el área táctil de `BACK` y se actualizan las guías vivas.
+
+### Validación
+
+- Tests, lint y ensamblados de todas las variantes y módulos: correctos.
+- Pruebas instrumentadas en Samsung A56: 3/3 correctas.
+- Mapas MBTiles íntegros, en PNG, zoom 16..19 y hashes verificados.
+- Sprint 034 cerrado documentalmente sin incidencias abiertas.

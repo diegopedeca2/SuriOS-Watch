@@ -15,6 +15,8 @@ import java.nio.file.StandardCopyOption
 
 data class TileKey(val zoom: Int, val x: Int, val xyzY: Int)
 
+private const val MAX_QUERY_TILES = 80
+
 /**
  * MBTiles index plus a bounded decoded-tile cache.
  *
@@ -31,6 +33,54 @@ class MbTilesData(
     private val cache = object : LinkedHashMap<TileKey, ImageBitmap>(maxCachedTiles, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<TileKey, ImageBitmap>?): Boolean =
             size > maxCachedTiles
+    }
+
+    /** Loads all missing visible tiles with one indexed SQLite query per small batch. */
+    fun loadTiles(keys: Set<TileKey>): Map<TileKey, ImageBitmap> {
+        if (keys.isEmpty()) return emptyMap()
+        val result = LinkedHashMap<TileKey, ImageBitmap>()
+        val missing = ArrayList<TileKey>()
+        synchronized(cache) {
+            keys.forEach { key ->
+                val cached = cache[key]
+                if (cached == null) missing += key else result[key] = cached
+            }
+        }
+        if (missing.isEmpty()) return result
+
+        synchronized(database) {
+            if (!database.isOpen) return@synchronized
+            missing.groupBy(TileKey::zoom).forEach { (zoom, zoomKeys) ->
+                zoomKeys.chunked(MAX_QUERY_TILES).forEach { batch ->
+                    val predicates = batch.joinToString(" OR ") { "(tile_column=? AND tile_row=?)" }
+                    val args = ArrayList<String>(1 + batch.size * 2).apply {
+                        add(zoom.toString())
+                        batch.forEach { key ->
+                            add(key.x.toString())
+                            add(((1 shl zoom) - 1 - key.xyzY).toString())
+                        }
+                    }
+                    database.rawQuery(
+                        "SELECT tile_column,tile_row,tile_data FROM tiles WHERE zoom_level=? AND ($predicates)",
+                        args.toTypedArray()
+                    ).use { cursor ->
+                        while (cursor.moveToNext()) {
+                            val key = TileKey(
+                                zoom = zoom,
+                                x = cursor.getInt(0),
+                                xyzY = (1 shl zoom) - 1 - cursor.getInt(1)
+                            )
+                            val bytes = cursor.getBlob(2)
+                            BitmapFactory.decodeByteArray(bytes, 0, bytes.size)?.asImageBitmap()?.let { image ->
+                                result[key] = image
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        synchronized(cache) { result.forEach { (key, image) -> cache[key] = image } }
+        return result
     }
 
     fun loadTile(key: TileKey): ImageBitmap? {
@@ -101,15 +151,20 @@ class MbTilesRepository(private val context: Context) {
         val target = File(directory, "${definition.mapId}.mbtiles")
         val expectedHash = definition.assetSha256.uppercase(Locale.US)
         require(expectedHash.matches(SHA256_PATTERN)) { "Invalid asset SHA-256 for ${definition.mapId}" }
-        if (target.isFile && sha256(target) == expectedHash) return target
+        if (target.isFile) {
+            if (MbTilesVerificationCache.isVerified(target, expectedHash) || sha256(target) == expectedHash) {
+                MbTilesVerificationCache.markVerified(target, expectedHash)
+                return target
+            }
+        }
 
         val temporary = File.createTempFile(".${definition.mapId}-", ".tmp", directory)
         try {
-            context.assets.open(definition.assetPath).use { input ->
-                temporary.outputStream().use(input::copyTo)
+            check(copyAssetAndHash(definition.assetPath, temporary) == expectedHash) {
+                "Asset hash mismatch for ${definition.mapId}"
             }
-            check(sha256(temporary) == expectedHash) { "Asset hash mismatch for ${definition.mapId}" }
             moveIntoPlace(temporary, target)
+            MbTilesVerificationCache.markVerified(target, expectedHash)
         } finally {
             temporary.delete()
         }
@@ -145,6 +200,22 @@ class MbTilesRepository(private val context: Context) {
         digest.digest().joinToString("") { "%02X".format(Locale.US, it.toInt() and 0xFF) }
     }
 
+    private fun copyAssetAndHash(assetPath: String, target: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        context.assets.open(assetPath).use { input ->
+            target.outputStream().use { output ->
+                val buffer = ByteArray(HASH_BUFFER_SIZE)
+                while (true) {
+                    val count = input.read(buffer)
+                    if (count < 0) break
+                    output.write(buffer, 0, count)
+                    digest.update(buffer, 0, count)
+                }
+            }
+        }
+        return digest.digest().joinToString("") { "%02X".format(Locale.US, it.toInt() and 0xFF) }
+    }
+
     private fun moveIntoPlace(source: File, target: File) {
         try {
             Files.move(
@@ -164,4 +235,19 @@ class MbTilesRepository(private val context: Context) {
         const val BOUNDS_TOLERANCE = 0.000000001
         val SHA256_PATTERN = Regex("[0-9A-F]{64}")
     }
+}
+
+private object MbTilesVerificationCache {
+    private val verifiedFiles = mutableSetOf<String>()
+
+    @Synchronized
+    fun isVerified(file: File, expectedHash: String): Boolean = signature(file, expectedHash) in verifiedFiles
+
+    @Synchronized
+    fun markVerified(file: File, expectedHash: String) {
+        verifiedFiles += signature(file, expectedHash)
+    }
+
+    private fun signature(file: File, expectedHash: String): String =
+        "${file.absolutePath}|$expectedHash|${file.length()}|${file.lastModified()}"
 }

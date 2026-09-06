@@ -129,9 +129,9 @@ private fun ByteArray.toHexString(): String =
     joinToString(separator = "") { byte -> "%02X".format(Locale.US, byte.toInt() and 0xFF) }
 
 fun BleObservation.addressTypeLabel(): String = when (deviceAddressType) {
-    BluetoothDevice.ADDRESS_TYPE_PUBLIC -> "PUBLIC"
-    BluetoothDevice.ADDRESS_TYPE_RANDOM -> "RANDOM / PRIVATE"
-    BluetoothDevice.ADDRESS_TYPE_ANONYMOUS -> "ANONYMOUS"
-    BluetoothDevice.ADDRESS_TYPE_UNKNOWN, null -> "UNKNOWN"
-    else -> "TYPE $deviceAddressType"
+    BluetoothDevice.ADDRESS_TYPE_PUBLIC -> "PÚBLICA"
+    BluetoothDevice.ADDRESS_TYPE_RANDOM -> "ALEATORIA / PRIVADA"
+    BluetoothDevice.ADDRESS_TYPE_ANONYMOUS -> "ANÓNIMA"
+    BluetoothDevice.ADDRESS_TYPE_UNKNOWN, null -> "DESCONOCIDA"
+    else -> "TIPO $deviceAddressType"
 }

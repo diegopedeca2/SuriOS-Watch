@@ -44,32 +44,34 @@ fun PrsOnlyApp() {
         page = PrsOnlyPage.MENU
     }
 
-    when (page) {
-        PrsOnlyPage.MENU -> PrsOnlyMenuScreen(
-            onScanSelected = { page = PrsOnlyPage.SCAN },
-            onGridSelected = { page = PrsOnlyPage.GRID },
-            onDevicesSelected = { page = PrsOnlyPage.DEVICES }
-        )
+    TerminalOverlay {
+        when (page) {
+            PrsOnlyPage.MENU -> PrsOnlyMenuScreen(
+                onScanSelected = { page = PrsOnlyPage.SCAN },
+                onGridSelected = { page = PrsOnlyPage.GRID },
+                onDevicesSelected = { page = PrsOnlyPage.DEVICES }
+            )
 
-        PrsOnlyPage.SCAN,
-        PrsOnlyPage.GRID -> PrsTrackingScreen(
-            mode = PrsOperatingMode.LOCAL_SCAN,
-            compact = true,
-            compactPage = if (page == PrsOnlyPage.SCAN) PrsCompactPage.SCAN else PrsCompactPage.GRID,
-            onCompactPageSelected = { selectedPage ->
-                page = when (selectedPage) {
-                    PrsCompactPage.SCAN -> PrsOnlyPage.SCAN
-                    PrsCompactPage.GRID -> PrsOnlyPage.GRID
-                }
-            },
-            onCompactDevicesSelected = { page = PrsOnlyPage.DEVICES },
-            onBack = { page = PrsOnlyPage.MENU }
-        )
+            PrsOnlyPage.SCAN,
+            PrsOnlyPage.GRID -> PrsTrackingScreen(
+                mode = PrsOperatingMode.LOCAL_SCAN,
+                compact = true,
+                compactPage = if (page == PrsOnlyPage.SCAN) PrsCompactPage.SCAN else PrsCompactPage.GRID,
+                onCompactPageSelected = { selectedPage ->
+                    page = when (selectedPage) {
+                        PrsCompactPage.SCAN -> PrsOnlyPage.SCAN
+                        PrsCompactPage.GRID -> PrsOnlyPage.GRID
+                    }
+                },
+                onCompactDevicesSelected = { page = PrsOnlyPage.DEVICES },
+                onBack = { page = PrsOnlyPage.MENU }
+            )
 
-        PrsOnlyPage.DEVICES -> PrsDevicesScreen(
-            compact = true,
-            onBack = { page = PrsOnlyPage.MENU }
-        )
+            PrsOnlyPage.DEVICES -> PrsDevicesScreen(
+                compact = true,
+                onBack = { page = PrsOnlyPage.MENU }
+            )
+        }
     }
 }
 
@@ -101,14 +103,14 @@ private fun PrsOnlyMenuScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "SELECT MENU",
+                text = "SELECCIONAR MENÚ",
                 color = PipAmber,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace
             )
-            PrsOnlyMenuItem("> SCAN", "LIVE BLE CONTACTS", onScanSelected)
-            PrsOnlyMenuItem("> GRID", "DENSITY DISPLAY", onGridSelected)
-            PrsOnlyMenuItem("> DEVICES", "DEVICE RULES", onDevicesSelected)
+            PrsOnlyMenuItem("> SCAN", "CONTACTOS BLE EN DIRECTO", onScanSelected)
+            PrsOnlyMenuItem("> GRID", "VISUALIZACIÓN DE DENSIDAD", onGridSelected)
+            PrsOnlyMenuItem("> DEVICES", "REGLAS DE DISPOSITIVOS", onDevicesSelected)
         }
     }
 }

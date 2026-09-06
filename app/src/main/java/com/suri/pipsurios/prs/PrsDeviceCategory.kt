@@ -4,11 +4,11 @@ import android.bluetooth.BluetoothClass
 import java.util.Locale
 
 enum class PrsDeviceCategory(val label: String) {
-    PHONE("PHONE"),
-    WATCH("WATCH"),
+    PHONE("TELÉFONO"),
+    WATCH("RELOJ"),
     TV("TV"),
     AUDIO("AUDIO"),
-    COMPUTER("COMPUTER")
+    COMPUTER("ORDENADOR")
 }
 
 /** Best-effort category inference from data exposed by a passive BLE scan. */
