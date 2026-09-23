@@ -1,6 +1,6 @@
 # PIP-SuriOS — Guía de usuario
 
-Versión de la aplicación: **3.3**
+Versión de la aplicación: **3.4** (`versionCode=14`)
 Esta guía explica las funciones principales de PIP-SuriOS con palabras
 sencillas. Los nombres de los botones se mantienen como aparecen en pantalla.
 
@@ -196,12 +196,35 @@ indicaciones de la pantalla para convertirlo.
 
 `MAP` abre las funciones de mapa y navegación disponibles sin conexión. La
 posición y la precisión dependen de los sensores y permisos del dispositivo.
-En `TERRAIN`, los mapas pueden mostrar cuadrícula, perímetro y POI de una
-organización. Al pulsar un POI puedes elegir `NAVIGATE` para ver una flecha,
-distancia y rumbo. También puedes mantener pulsado un punto libre para crear
+En `TERRAIN`, los mapas pueden mostrar cuadrícula, perímetro, caminos internos
+y POI de una organización. En los mapas de referencia, el GRID se dibuja en
+negro, los caminos internos en azul y los POI en rojo con separación oscura
+para poder distinguirlos de las curvas de nivel.
+
+AIRSOFT TOTAL es el primer mapa de referencia de este flujo. También están
+disponibles HOME, NAVY7, OFFICE, BRICKTOWN y MAJADAHONDA cuando la APK es la
+principal `MAIN`.
+
+Al pulsar un POI puedes elegir `NAVIGATE` para ver una flecha, distancia y
+dirección relativa. También puedes mantener pulsado un punto libre para crear
 un `WAYPOINT`. La navegación no calcula rutas: solo indica dirección y
 distancia en línea recta. `STOP NAVIGATION` y `CLEAR WAYPOINT` detienen la
 navegación sin borrar el POI ni los datos del mapa.
+
+La flecha pertenece al panel de navegación, por lo que sigue funcionando
+aunque el destino quede fuera de la zona visible o cambies el zoom. La
+dirección se suaviza para evitar saltos bruscos de la brújula.
+
+### Versiones BETA para testers
+
+Las versiones BETA se distribuyen como APK independientes. Cada tester debe
+instalar únicamente la APK cuyo nombre coincide con su perfil. Los mapas
+`NAVY7` y `TESTING` son específicos de cada perfil. JAVI utiliza un mapa
+`TESTING` centrado en `40.431175043353754, -3.638558623703386`.
+
+La distribución BETA incluye una guía de pruebas y una plantilla CSV. Si el
+mapa aparece vacío, la aplicación se cierra o el nombre/icono no coincide con
+el perfil, hay que anotarlo como incidencia indicando los pasos realizados.
 
 ### RADS
 
@@ -226,9 +249,8 @@ tener varias muestras antes de sacar conclusiones.
 ## Information
 
 `INFORMATION` contiene la versión, el estado del proyecto, los avisos y los
-agradecimientos. La sección de testers agradece a FENRIR, CHECHU y ALTAMIRA su
-atención al proyecto y que sean las primeras personas en probar la aplicación
-y aportar feedback.
+agradecimientos. La sección de testers agradece a FENRIR, CHECHU, ALTAMIRA y
+JAVI su atención al proyecto y sus pruebas de campo.
 
 ## Solución rápida de problemas
 

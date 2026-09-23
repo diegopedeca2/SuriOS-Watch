@@ -4,11 +4,22 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 
 ---
 
-## Sprint activo
+## Último Sprint cerrado
+
+[Sprint 036 v1.0](SPRINT_036_v1.0.md) - **CLOSED**
+
+El Sprint 036 mejora la lectura del mapa AIRSOFT TOTAL: GRID negro y más
+grueso, POI rojos con halo de separación y caminos internos azules de mayor
+intensidad. También prepara la distribución BETA v3.4 para FENRIR, ALTAMIRA y
+CHECHU y JAVI, manteniendo separada la distribución histórica ALPHA. La
+auditoría ha sido aprobada y la prueba física queda como verificación operativa
+posterior.
+
+[Auditoría Sprint 036](../AUDIT_SPRINT_036.md) — **APROBADA PARA CIERRE**
 
 [Sprint 035 v1.0](SPRINT_035_v1.0.md) - **CLOSED**
 

@@ -540,3 +540,22 @@ accidentales de las APK tester.
 - `test`, `assembleFullDebug` y `lintAnalyzeFullDebug`: correctos.
 - `connectedFullDebugAndroidTest`: 7/7 correctos en Samsung A56.
 - Sprint 035 cerrado con PIP-SuriOS `3.3` (`versionCode=13`).
+
+## Sprint 036 — AIRSOFT TOTAL REFERENCE MAP + BETA TESTER BUILDS — 2026-09-24
+
+### Añadido y modificado
+
+- La firma visible pasa a `PIP-SuriOS v3.4` y `versionCode=14`.
+- AIRSOFT TOTAL mejora la lectura del GRID, los POI y los caminos internos.
+- Se crea el mapa TESTING de JAVI con sus coordenadas y se integra su icono
+  PIP-J basado en Unown J.
+- Se prepara la distribución BETA de FENRIR, ALTAMIRA, CHECHU y JAVI.
+- Cada distribución incluye APK, guía, plantilla de pruebas, SHA-256 y ZIP.
+
+### Validación y cierre
+
+- `test`, `assembleFullDebug` y `lintAnalyzeFullDebug`: correctos.
+- `connectedFullDebugAndroidTest`: 7/7 correctas en Samsung A56.
+- La APK JAVI se instala y arranca correctamente.
+- Sprint 036 cerrado con la auditoría aprobada. La prueba física de campo
+  queda como comprobación operativa posterior.

@@ -1042,3 +1042,16 @@ información de la interfaz.
 correctamente en el Samsung A56 (`SM-A566B`, ADB `RZGYC07H0EX`). No quedan
 incidencias técnicas abiertas dentro del alcance. La prueba física de GPS y
 brújula queda como verificación operativa posterior del propietario.
+
+## 43. Cierre de Sprint 036 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 036 se cierra el 2026-09-24 con PIP-SuriOS v3.4
+(`versionCode=14`). La auditoría valida las mejoras visuales de AIRSOFT TOTAL,
+el mapa TESTING y el icono de JAVI, la distribución BETA de FENRIR, ALTAMIRA,
+CHECHU y JAVI, y el flujo de empaquetado con hashes y ZIP independientes.
+
+`test`, `assembleFullDebug`, lint y 7 pruebas instrumentadas terminan
+correctamente en el Samsung A56. La APK JAVI se instala y arranca sin errores.
+La prueba física de GPS, brújula, navegación y Bluetooth queda como
+verificación operativa posterior, sin incidencias técnicas abiertas dentro del
+alcance del Sprint.

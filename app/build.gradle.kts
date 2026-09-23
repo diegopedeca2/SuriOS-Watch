@@ -7,7 +7,7 @@ val distributionProfile = providers.gradleProperty("distributionProfile")
     .orElse("MAIN")
     .get()
     .uppercase()
-require(distributionProfile in setOf("MAIN", "FENRIR", "ALTAMIRA", "CHECHU")) {
+require(distributionProfile in setOf("MAIN", "FENRIR", "ALTAMIRA", "CHECHU", "JAVI")) {
     "Unknown distributionProfile: $distributionProfile"
 }
 val commonAssetsRoot = rootProject.file("assets")
@@ -35,8 +35,8 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 34
         targetSdk = 37
-        versionCode = 13
-        versionName = "3.3"
+        versionCode = 14
+        versionName = "3.4"
         buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
         buildConfigField("boolean", "PROBE_ENABLED", (distributionProfile == "MAIN").toString())
 
@@ -89,12 +89,14 @@ android {
             "FENRIR" -> "@drawable/pip_f_icon"
             "ALTAMIRA" -> "@drawable/pip_a_icon"
             "CHECHU" -> "@drawable/pip_c_icon"
+            "JAVI" -> "@drawable/pip_j_icon"
             else -> "@drawable/pip_main_icon"
         }
         manifestPlaceholders["appLabel"] = when (distributionProfile) {
             "FENRIR" -> "PIP-SuriOS FENRIR"
             "ALTAMIRA" -> "PIP-SuriOS ALTAMIRA"
             "CHECHU" -> "PIP-SuriOS CHECHU"
+            "JAVI" -> "PIP-SuriOS JAVI"
             else -> "PIP-SuriOS MAIN"
         }
         manifestPlaceholders["probeEnabled"] = (distributionProfile == "MAIN").toString()

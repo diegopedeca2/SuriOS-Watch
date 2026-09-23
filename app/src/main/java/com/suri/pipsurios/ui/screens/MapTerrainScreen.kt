@@ -510,17 +510,21 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                         visibleOrganizationOverlay?.let { overlay ->
                             val grid = overlay.grid
                             if (grid != null) {
-                                val gridColor = PipGreenDim.copy(alpha = 0.34f)
+                                // The organization grid is an orientation layer, not
+                                // decorative terrain. Black and a wider stroke keep it
+                                // readable over the light raster and contour lines.
+                                val gridColor = PipBlack
+                                val gridStrokeWidth = 3.5f
                                 if (grid.cells.isNotEmpty()) {
                                     grid.cells.forEach { cell ->
                                         val northWest = geoToMapScreen(GeoPoint(cell.bounds.north, cell.bounds.west))
                                         val northEast = geoToMapScreen(GeoPoint(cell.bounds.north, cell.bounds.east))
                                         val southEast = geoToMapScreen(GeoPoint(cell.bounds.south, cell.bounds.east))
                                         val southWest = geoToMapScreen(GeoPoint(cell.bounds.south, cell.bounds.west))
-                                        drawLine(gridColor, northWest, northEast, strokeWidth = 1.5f)
-                                        drawLine(gridColor, northEast, southEast, strokeWidth = 1.5f)
-                                        drawLine(gridColor, southEast, southWest, strokeWidth = 1.5f)
-                                        drawLine(gridColor, southWest, northWest, strokeWidth = 1.5f)
+                                        drawLine(gridColor, northWest, northEast, strokeWidth = gridStrokeWidth)
+                                        drawLine(gridColor, northEast, southEast, strokeWidth = gridStrokeWidth)
+                                        drawLine(gridColor, southEast, southWest, strokeWidth = gridStrokeWidth)
+                                        drawLine(gridColor, southWest, northWest, strokeWidth = gridStrokeWidth)
                                         val labelPosition = geoToMapScreen(
                                             GeoPoint(
                                                 (cell.bounds.north + cell.bounds.south) / 2.0,
@@ -538,7 +542,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                                         gridColor,
                                         geoToMapScreen(GeoPoint(grid.bounds.north, longitude)),
                                         geoToMapScreen(GeoPoint(grid.bounds.south, longitude)),
-                                        strokeWidth = 1.5f,
+                                        strokeWidth = gridStrokeWidth,
                                     )
                                 }
                                 for (index in 0..grid.rows.size) {
@@ -547,7 +551,7 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                                         gridColor,
                                         geoToMapScreen(GeoPoint(latitude, grid.bounds.west)),
                                         geoToMapScreen(GeoPoint(latitude, grid.bounds.east)),
-                                        strokeWidth = 1.5f,
+                                        strokeWidth = gridStrokeWidth,
                                     )
                                 }
                                 grid.rows.forEachIndexed { index, row ->
@@ -577,13 +581,18 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                                 internalPath.points.map(::geoToMapScreen).forEachIndexed { index, point ->
                                     if (index == 0) path.moveTo(point.x, point.y) else path.lineTo(point.x, point.y)
                                 }
-                                drawPath(path, PipGreenDim.copy(alpha = 0.8f), style = Stroke(2f))
+                                // Blue identifies organization paths and the dark halo
+                                // prevents them from disappearing over contours.
+                                drawPath(path, PipBlack.copy(alpha = 0.72f), style = Stroke(7f))
+                                drawPath(path, PipBlue, style = Stroke(4.5f))
                             }
                             overlay.pois.forEach { poi ->
                                 val point = geoToMapScreen(poi.point)
-                                val color = PipRed
-                                drawCircle(color, 9f, point, style = Stroke(2f))
-                                drawCircle(color, 2.5f, point)
+                                // Keep the official red, but isolate each POI from
+                                // green contours and blue organization paths.
+                                drawCircle(PipBlack.copy(alpha = 0.92f), 13.5f, point)
+                                drawCircle(PipRed, 10f, point, style = Stroke(3.5f))
+                                drawCircle(PipRed, 4f, point)
                                 drawMapLabel(
                                     gridTextMeasurer,
                                     poi.name,

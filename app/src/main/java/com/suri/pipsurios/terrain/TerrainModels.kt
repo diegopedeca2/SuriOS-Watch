@@ -191,6 +191,22 @@ object OfflineMapCatalog {
             maxNativeZoom = 19,
             maxDisplayZoom = 20
         )
+        "JAVI" -> OfflineMapDefinition(
+            mapId = "testing",
+            name = "TESTING",
+            assetPath = "maps/testing_terrain.mbtiles",
+            assetSha256 = "229972A70C3AE47746A5E1D2E4BACF0947FD78A1ACBD8200D69007DEDE1A2207",
+            // Target center: 40.431175043353754, -3.638558623703386.
+            bounds = MapBounds(
+                west = -3.650343530245,
+                south = 40.422169515027,
+                east = -3.626773717161,
+                north = 40.440180571681
+            ),
+            minZoom = 16,
+            maxNativeZoom = 19,
+            maxDisplayZoom = 20
+        )
         else -> OfflineMapDefinition(
             mapId = "testing",
             name = "TESTING",
@@ -210,8 +226,7 @@ object OfflineMapCatalog {
 
     /** Map files are listed alphabetically; CHOOSE LOCATION is a UI-only exception before them. */
     val maps = when (profile) {
-        "FENRIR", "CHECHU" -> listOf(NAVY7, TESTING)
-        "ALTAMIRA" -> listOf(NAVY7, TESTING)
+        "FENRIR", "CHECHU", "ALTAMIRA", "JAVI" -> listOf(NAVY7, TESTING)
         else -> listOf(AIRSOFT_TOTAL, BRICKTOWN, HOME, MAJADAHONDA, NAVY7, OFFICE)
     }.sortedBy { it.name }
 }

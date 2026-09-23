@@ -83,7 +83,7 @@ class MapTerrainTest {
 
     @Test fun terrainCatalogKeepsChooseLocationFirstAndMapsAlphabetical() {
         val expectedMaps = when (BuildConfig.DISTRIBUTION_PROFILE) {
-            "FENRIR", "ALTAMIRA", "CHECHU" -> listOf("NAVY7", "TESTING")
+            "FENRIR", "ALTAMIRA", "CHECHU", "JAVI" -> listOf("NAVY7", "TESTING")
             else -> listOf("AIRSOFT TOTAL", "BRICKTOWN", "HOME", "MAJADAHONDA", "NAVY7", "OFFICE")
         }
         assertEquals(expectedMaps, OfflineMapCatalog.maps.map { it.name })
@@ -107,6 +107,16 @@ class MapTerrainTest {
         assertTrue(OfflineMapCatalog.MAJADAHONDA.bounds.contains(center))
         assertEquals("maps/majadahonda_terrain.mbtiles", OfflineMapCatalog.MAJADAHONDA.assetPath)
         assertEquals(19, OfflineMapCatalog.MAJADAHONDA.maxNativeZoom)
+    }
+
+    @Test fun javiTestingCenterMatchesRequestedCoordinates() {
+        if (BuildConfig.DISTRIBUTION_PROFILE != "JAVI") return
+        val center = OfflineMapCatalog.TESTING.bounds.center
+        assertEquals(40.431175043354, center.latitude, 1e-12)
+        assertEquals(-3.638558623703, center.longitude, 1e-12)
+        assertTrue(OfflineMapCatalog.TESTING.bounds.contains(center))
+        assertEquals("maps/testing_terrain.mbtiles", OfflineMapCatalog.TESTING.assetPath)
+        assertEquals(19, OfflineMapCatalog.TESTING.maxNativeZoom)
     }
 
     @Test fun sprint30Navy7CenterMatchesRequestedCoordinates() {
