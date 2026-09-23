@@ -79,6 +79,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 032 | SuriOS Ecosystem / PIP-SuriOS | Audio por capas RADS, niebla de probabilidad y zoom en TRACKER | Cerrado | PIP-SuriOS v3.1 validado; auditoría sin bloqueos | 2026-09-04 | 2026-09-04 | [Sprint 032 v1.0](SPRINT_032_v1.0.md) |
 | 033 | SuriOS Ecosystem / PIP-SuriOS | Correcciones de auditoría, recursos reproducibles y reglas de distribución | Cerrado | Completado con deuda futura explícita | 2026-09-05 | 2026-09-05 | [Sprint 033 v1.0](SPRINT_033_v1.0.md) |
 | 034 | SuriOS Ecosystem / PIP-SuriOS | P.R.S., área probable TRACKER, mapas, comunicaciones, audio y cierre de mantenimiento | Cerrado | PIP-SuriOS v3.2 validado; auditoría sin incidencias abiertas | 2026-09-06 | 2026-09-06 | [Sprint 034 v1.0](SPRINT_034_v1.0.md) |
+| 035 | SuriOS Ecosystem / PIP-SuriOS | MAP: ORGANIZATION OVERLAY, WAYPOINT NAVIGATION y mapas de prueba | Cerrado | PIP-SuriOS v3.3 validado; auditoría aprobada para cierre | 2026-09-23 | 2026-09-23 | [Sprint 035 v1.0](SPRINT_035_v1.0.md) |
 
 ---
 
@@ -1028,3 +1029,16 @@ El Sprint 034 se cierra el 2026-09-06 con PIP-SuriOS v3.2 (`versionCode=12`).
 La auditoría completa valida la aplicación, los módulos Wear OS, las pruebas
 instrumentadas en el A56, los mapas MBTiles, los audios, la documentación y el
 flujo de cierre Git. No quedan incidencias abiertas dentro del alcance.
+
+## 42. Cierre de Sprint 035 de SuriOS Ecosystem / PIP-SuriOS
+
+El Sprint 035 se cierra el 2026-09-23 con PIP-SuriOS v3.3
+(`versionCode=13`). La auditoría valida ORGANIZATION OVERLAY, GRID, POI,
+WAYPOINT NAVIGATION offline, la regeneración clara de AIRSOFT TOTAL, el mapa
+MAJADAHONDA, la estabilidad del cambio de mapas y la regla de densidad de
+información de la interfaz.
+
+`test`, `assembleFullDebug`, lint y 7 pruebas instrumentadas terminan
+correctamente en el Samsung A56 (`SM-A566B`, ADB `RZGYC07H0EX`). No quedan
+incidencias técnicas abiertas dentro del alcance. La prueba física de GPS y
+brújula queda como verificación operativa posterior del propietario.

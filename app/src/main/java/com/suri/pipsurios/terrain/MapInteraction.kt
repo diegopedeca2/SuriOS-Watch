@@ -3,6 +3,8 @@ package com.suri.pipsurios.terrain
 sealed interface MapSelection {
     data object None : MapSelection
     data class RespawnSelected(val id: String) : MapSelection
+    data class OrganizationPoiSelected(val id: String) : MapSelection
+    data object WaypointSelected : MapSelection
     data class DeleteRespawnConfirm(val id: String) : MapSelection
     data class ZoneSelected(val id: String) : MapSelection
     data class ClearZoneConfirm(val id: String) : MapSelection

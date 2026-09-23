@@ -107,14 +107,35 @@ object OfflineMapCatalog {
         mapId = "airsoft_total",
         name = "AIRSOFT TOTAL",
         assetPath = "maps/airsoft_total_terrain.mbtiles",
-        assetSha256 = "120834E597C7D56A76CA79A0B798EEB1451447FDE68B2A057D4A5A4F7772C13D",
+        assetSha256 = "92C78730E0846F4E0FF3092299A6981F021750302995713DFFE6EE8D5865B350",
         // Target center: 40.81068714827759, -4.269950411691506.
-        // Sprint 032 footprint: 2 km x 2 km, zoom 16..19, with altitude lines.
+        // Sprint 035 field-test footprint: 4 km x 4 km, zoom 16..19. The
+        // larger native coverage lets the complete field be viewed when
+        // pinching out, while keeping the original center unchanged. The
+        // raster is generated from the source GeoPackage with the same light
+        // palette used by HOME, NAVY7 and OFFICE.
         bounds = MapBounds(
-            west = -4.281802203876,
-            south = 40.801682213578,
-            east = -4.258098619507,
-            north = 40.819692082977
+            west = -4.293653996060,
+            south = 40.792677278878,
+            east = -4.246246827323,
+            north = 40.828697017677
+        ),
+        minZoom = 16,
+        maxNativeZoom = 19,
+        maxDisplayZoom = 20
+    )
+    val MAJADAHONDA = OfflineMapDefinition(
+        mapId = "majadahonda",
+        name = "MAJADAHONDA",
+        assetPath = "maps/majadahonda_terrain.mbtiles",
+        assetSha256 = "C27B5ECC705C898A0EB2F07253624FB2E8A5EEFD8ABA40136AB31AF0F7E736BF",
+        // User-supplied center: 40.47334391546396, -3.878185791180616.
+        // Sprint 035 footprint: 2 km x 2 km, light SuriOS palette.
+        bounds = MapBounds(
+            west = -3.889978066677,
+            south = 40.464338453037,
+            east = -3.866393515684,
+            north = 40.482349377891
         ),
         minZoom = 16,
         maxNativeZoom = 19,
@@ -191,7 +212,7 @@ object OfflineMapCatalog {
     val maps = when (profile) {
         "FENRIR", "CHECHU" -> listOf(NAVY7, TESTING)
         "ALTAMIRA" -> listOf(NAVY7, TESTING)
-        else -> listOf(AIRSOFT_TOTAL, BRICKTOWN, HOME, NAVY7, OFFICE)
+        else -> listOf(AIRSOFT_TOTAL, BRICKTOWN, HOME, MAJADAHONDA, NAVY7, OFFICE)
     }.sortedBy { it.name }
 }
 

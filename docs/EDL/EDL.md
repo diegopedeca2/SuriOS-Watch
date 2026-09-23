@@ -188,6 +188,8 @@ Una pantalla nueva debe ser reconocible como parte del ecosistema SuriOS aunque 
 
 ### 6.6 Densidad de información
 
+El texto que se introduzca en las distintas herramientas debe aportar información útil y no duplicar otros textos en pantalla salvo instrucción explícita en contrario o que se trate de un componente estético.
+
 Se prioriza mostrar mucha información sin saturar la interfaz.  
 El desplazamiento (scroll) deberá evitarse cuando sea posible, pero está permitido cuando la naturaleza de la información lo requiera (por ejemplo, historiales como MISSION LOG).
 

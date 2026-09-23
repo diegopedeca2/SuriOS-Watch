@@ -1,6 +1,6 @@
 # PIP-SuriOS — Guía de usuario
 
-Versión de la aplicación: **3.2**
+Versión de la aplicación: **3.3**
 Esta guía explica las funciones principales de PIP-SuriOS con palabras
 sencillas. Los nombres de los botones se mantienen como aparecen en pantalla.
 
@@ -196,6 +196,12 @@ indicaciones de la pantalla para convertirlo.
 
 `MAP` abre las funciones de mapa y navegación disponibles sin conexión. La
 posición y la precisión dependen de los sensores y permisos del dispositivo.
+En `TERRAIN`, los mapas pueden mostrar cuadrícula, perímetro y POI de una
+organización. Al pulsar un POI puedes elegir `NAVIGATE` para ver una flecha,
+distancia y rumbo. También puedes mantener pulsado un punto libre para crear
+un `WAYPOINT`. La navegación no calcula rutas: solo indica dirección y
+distancia en línea recta. `STOP NAVIGATION` y `CLEAR WAYPOINT` detienen la
+navegación sin borrar el POI ni los datos del mapa.
 
 ### RADS
 

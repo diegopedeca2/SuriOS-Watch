@@ -82,14 +82,28 @@ def dimensions_in_web_mercator_metres(
     scale = 1.0 / math.cos(math.radians(center_lat))
     return width_metres * scale, height_metres * scale
 
-# Final opaque SuriOS DAY palette. Red remains reserved for live P.R.S.
-# uncertainty rings and alerts, so the map itself avoids red tones.
-BACKGROUND = (244, 241, 232, 255)  # #F4F1E8, warm high-luminance base
-BUILDING = "#66727A"                # slate grey
-BUILDING_OUTLINE = "#263238"       # dark blue-grey
-CONTOUR_MINOR = "#607D3B"           # olive green
-CONTOUR_MAJOR = "#7A3E8D"           # violet for hierarchy without red
-ROAD = "#005A73"                    # high-contrast petroleum blue
+PALETTES = {
+    # Existing light SuriOS terrain palette.
+    "day": {
+        "background": (244, 241, 232, 255),
+        "building": "#66727A",
+        "building_outline": "#263238",
+        "contour": "#607D3B",
+        "major_contour": "#7A3E8D",
+        "road": "#005A73",
+        "style": "SURIOS_DAY_V1",
+    },
+    # P.R.S. Tracker palette. This is rendered directly by QGIS, so the
+    # resulting map is not a recolour of an older MBTiles file.
+    "tracker": {
+        "background": (0, 0, 0, 255),
+        "building": "#000000",
+        "building_outline": "#3FAF5A",
+        "contour": "#3FAF5A",
+        "road": "#66FF99",
+        "style": "SURIOS_PIP_TRACKER_V1",
+    },
+}
 
 def lon_to_x(lon: float, zoom: int) -> float:
     return (lon + 180.0) / 360.0 * (TILE_SIZE * 2**zoom)
@@ -150,13 +164,20 @@ def style_layers(
     building_layer_name: str,
     road_layer_name: str,
     contour_layer_name: str | None,
+    palette_name: str,
 ):
     from qgis.core import (
         QgsFillSymbol,
         QgsLineSymbol,
+        QgsRuleBasedRenderer,
         QgsSingleSymbolRenderer,
         QgsVectorLayer,
     )
+
+    try:
+        palette = PALETTES[palette_name]
+    except KeyError as error:
+        raise ValueError(f"unknown palette: {palette_name}") from error
 
     def add(name: str, layer_name: str):
         layer = QgsVectorLayer(f"{gpkg}|layername={layer_name}", name, "ogr")
@@ -171,8 +192,8 @@ def style_layers(
         QgsSingleSymbolRenderer(
             QgsFillSymbol.createSimple(
                 {
-                    "color": BUILDING,
-                    "outline_color": BUILDING_OUTLINE,
+                    "color": palette["building"],
+                    "outline_color": palette["building_outline"],
                     "outline_width": "0.10",
                 }
             )
@@ -184,7 +205,7 @@ def style_layers(
     roads.setRenderer(
         QgsSingleSymbolRenderer(
             QgsLineSymbol.createSimple(
-                {"color": ROAD, "width": "0.45", "capstyle": "round"}
+                {"color": palette["road"], "width": "0.45", "capstyle": "round"}
             )
         )
     )
@@ -192,26 +213,56 @@ def style_layers(
     if contour_layer_name is None:
         return [buildings, roads]
 
-    # Keep the altitude layer as one provider layer. Loading the same
-    # GeoPackage table twice can make headless QGIS lose the second SQLite
-    # cursor while rendering on Windows. A single symbol is deliberately used
-    # here so the offline renderer cannot discard the lines through a rule
-    # expression; line hierarchy can be added later after visual validation.
+    # Keep the altitude layer as one provider layer. A rule renderer gives the
+    # light HOME/NAVY7/OFFICE palette its two visual levels without opening the
+    # GeoPackage table twice (which can make headless QGIS lose a SQLite
+    # cursor). Every fifth contour is an index line, matching the existing
+    # SuriOS terrain maps.
     contours = add("ALTITUDE · 2 m", contour_layer_name)
-    contours.setRenderer(
-        QgsSingleSymbolRenderer(
-            QgsLineSymbol.createSimple(
-                {"color": CONTOUR_MINOR, "width": "0.70", "capstyle": "round"}
+    minor_symbol = QgsLineSymbol.createSimple(
+        {"color": palette["contour"], "width": "0.70", "capstyle": "round"}
+    )
+    if palette_name == "day":
+        major_symbol = QgsLineSymbol.createSimple(
+            {
+                "color": palette["major_contour"],
+                "width": "0.95",
+                "capstyle": "round",
+            }
+        )
+        root_rule = QgsRuleBasedRenderer.Rule(None)
+        root_rule.appendChild(
+            QgsRuleBasedRenderer.Rule(
+                major_symbol,
+                filterExp='round("ELEV") % 10 = 0',
+                label="INDEX CONTOUR",
             )
         )
-    )
+        root_rule.appendChild(
+            QgsRuleBasedRenderer.Rule(
+                minor_symbol,
+                filterExp='round("ELEV") % 10 <> 0',
+                label="CONTOUR",
+            )
+        )
+        contours.setRenderer(QgsRuleBasedRenderer(root_rule))
+    else:
+        contours.setRenderer(QgsSingleSymbolRenderer(minor_symbol))
 
     # QgsMapSettings draws the list from bottom to top. Buildings are below
     # roads and contours, exactly like the HOME composition.
     return [buildings, roads, contours]
 
 
-def render_strip(project, layers, x_min: int, x_max: int, y: int, zoom: int) -> list[bytes]:
+def render_strip(
+    project,
+    layers,
+    x_min: int,
+    x_max: int,
+    y: int,
+    zoom: int,
+    background: tuple[int, int, int, int],
+) -> list[bytes]:
     from qgis.PyQt.QtCore import QBuffer, QIODevice, QSize
     from qgis.PyQt.QtGui import QColor, QImage
     from qgis.core import QgsCoordinateReferenceSystem, QgsMapRendererSequentialJob, QgsMapSettings, QgsRectangle
@@ -231,7 +282,7 @@ def render_strip(project, layers, x_min: int, x_max: int, y: int, zoom: int) -> 
     )
     settings.setOutputSize(QSize(columns * TILE_SIZE, TILE_SIZE))
     settings.setOutputImageFormat(QImage.Format_ARGB32_Premultiplied)
-    settings.setBackgroundColor(QColor(*BACKGROUND))
+    settings.setBackgroundColor(QColor(*background))
 
     job = QgsMapRendererSequentialJob(settings)
     job.start()
@@ -293,14 +344,19 @@ def create_project(
     contour_layer_name: str | None,
     width_metres: float | None,
     height_metres: float | None,
+    palette_name: str,
 ):
     from qgis.core import QgsCoordinateReferenceSystem, QgsProject
     from qgis.PyQt.QtGui import QColor
 
     project = QgsProject()
     project.setCrs(QgsCoordinateReferenceSystem("EPSG:3857"))
-    project.setTitle(f"SuriOS {map_name} HOME-style terrain")
-    project.setBackgroundColor(QColor(*BACKGROUND))
+    project.setTitle(f"SuriOS {map_name} terrain")
+    try:
+        palette = PALETTES[palette_name]
+    except KeyError as error:
+        raise ValueError(f"unknown palette: {palette_name}") from error
+    project.setBackgroundColor(QColor(*palette["background"]))
     layers = style_layers(
         project,
         gpkg,
@@ -308,6 +364,7 @@ def create_project(
         building_layer_name,
         road_layer_name,
         contour_layer_name,
+        palette_name,
     )
     ranges = tile_ranges(
         center_lat,
@@ -324,7 +381,7 @@ def create_project(
         root.findLayer(layer.id()).setItemVisibilityChecked(True)
     if not project.write(str(project_path)):
         raise RuntimeError(f"Could not write QGIS project {project_path}")
-    return project, layers, ranges
+    return project, layers, ranges, palette
 
 
 def build(args: argparse.Namespace) -> dict[str, object]:
@@ -345,7 +402,7 @@ def build(args: argparse.Namespace) -> dict[str, object]:
                 raise RuntimeError(f"Refusing to overwrite existing output: {args.output}")
             args.output.unlink()
 
-        project, layers, ranges = create_project(
+        project, layers, ranges, palette = create_project(
             args.project_output,
             args.gpkg,
             args.center_lat,
@@ -356,6 +413,7 @@ def build(args: argparse.Namespace) -> dict[str, object]:
             None if args.no_contours else args.contour_layer,
             args.width_metres,
             args.height_metres,
+            args.palette,
         )
         print("ACTIVE_LAYERS=" + ",".join(layer.name() for layer in layers), flush=True)
         print(f"QGIS_PROJECT={args.project_output}", flush=True)
@@ -383,7 +441,7 @@ def build(args: argparse.Namespace) -> dict[str, object]:
                 "name": args.metadata_name,
                 "description": args.map_name,
                 "version": "1.1",
-                "style": "SURIOS_DAY_V1",
+                "style": palette["style"],
                 "type": "overlay",
                 "minzoom": str(args.min_zoom),
                 "maxzoom": str(args.max_zoom),
@@ -402,7 +460,15 @@ def build(args: argparse.Namespace) -> dict[str, object]:
             for zoom in range(args.min_zoom, args.max_zoom + 1):
                 x_min, x_max, y_min, y_max = ranges[zoom]
                 for y in range(y_min, y_max + 1):
-                    pngs = render_strip(project, layers, x_min, x_max, y, zoom)
+                    pngs = render_strip(
+                        project,
+                        layers,
+                        x_min,
+                        x_max,
+                        y,
+                        zoom,
+                        palette["background"],
+                    )
                     for offset, png in enumerate(pngs):
                         x = x_min + offset
                         tms_y = (1 << zoom) - 1 - y
@@ -458,6 +524,12 @@ def main() -> int:
     parser.add_argument("--road-layer", default="highway")
     parser.add_argument("--contour-layer", default="contours_2m")
     parser.add_argument("--no-contours", action="store_true")
+    parser.add_argument(
+        "--palette",
+        choices=sorted(PALETTES),
+        default="day",
+        help="Palette rendered directly into the PNG tiles",
+    )
     parser.add_argument(
         "--width-metres",
         type=float,

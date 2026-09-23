@@ -137,7 +137,6 @@ private fun LoadingLine(
             fontFamily = FontFamily.Monospace,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
         )
         if (visibleCharacterCount < text.length) {
             Box(

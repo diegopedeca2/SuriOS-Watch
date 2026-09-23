@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,6 +45,7 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
@@ -70,6 +72,7 @@ import com.suri.pipsurios.prs.PrsOperatingMode
 import com.suri.pipsurios.prs.PrsProbeNodeSnapshot
 import com.suri.pipsurios.prs.ProbeLink
 import com.suri.pipsurios.prs.ProbeTelemetryStore
+import com.suri.pipsurios.prs.addressTypeLabel
 import com.suri.pipsurios.terrain.GeoPoint
 import com.suri.pipsurios.terrain.MapOverlays
 import com.suri.pipsurios.terrain.MbTilesData
@@ -169,6 +172,7 @@ fun IndividualTrackingTargetScreen(
     var probeNode by remember { mutableStateOf(PrsProbeNodeSnapshot()) }
     var probeLinkStatus by remember { mutableStateOf(if (mode.probeEnabled) "INICIANDO" else "NO USADO") }
     var selectedMapId by remember { mutableStateOf<String?>(null) }
+    var targetQuery by remember { mutableStateOf("") }
     var permissionVersion by remember { mutableIntStateOf(0) }
     var retryVersion by remember { mutableIntStateOf(0) }
     val sessionId = remember(mode) { "PRS-V4-TARGET-${System.currentTimeMillis()}" }
@@ -248,6 +252,13 @@ fun IndividualTrackingTargetScreen(
         .mapNotNull { registry.savedDeviceFor(it.measured) }
         .toSet()
     val offlineSavedDevices = savedDevices.filterNot(observedSavedDevices::contains)
+    val visibleContacts = snapshot.contacts
+        .filter { contact ->
+            targetMatchesQuery(contact, registry.savedDeviceFor(contact.measured), targetQuery)
+        }
+        .sortedWith(targetContactComparator(registry))
+    val visibleOfflineSavedDevices = offlineSavedDevices
+        .filter { device -> savedDeviceMatchesQuery(device, targetQuery) }
     fun chooseTarget(contact: PrsContactSnapshot) {
         val map = selectedMap ?: return
         val knownRule = registry.savedDeviceFor(contact.measured)
@@ -292,16 +303,19 @@ fun IndividualTrackingTargetScreen(
                 locationStepLabel = locationStepLabel,
                 targetStepLabel = targetStepLabel,
                 selectedMap = selectedMap,
-                snapshot = snapshot,
                 scanStatus = scanStatus,
                 mode = mode,
                 registry = registry,
                 probeNode = probeNode,
                 probeLinkStatus = probeLinkStatus,
+                targetQuery = targetQuery,
+                onTargetQueryChanged = { targetQuery = it },
+                visibleContacts = visibleContacts,
+                totalContactCount = snapshot.contacts.size,
                 onMapSelected = { selectedMapId = it.mapId },
-                onChangeLocation = { selectedMapId = null },
+                onChangeLocation = { selectedMapId = null; targetQuery = "" },
                 onTargetSelected = ::chooseTarget,
-                offlineSavedDevices = offlineSavedDevices,
+                offlineSavedDevices = visibleOfflineSavedDevices,
                 onSavedDeviceSelected = ::chooseSavedDevice,
                 onAllowBluetooth = { permissionLauncher.launch(prsPermissions()) },
                 onRetry = { retryVersion++ },
@@ -343,6 +357,10 @@ fun IndividualTrackingTargetScreen(
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace
                 )
+                TargetSearchField(
+                    query = targetQuery,
+                    onQueryChanged = { targetQuery = it },
+                )
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -350,15 +368,19 @@ fun IndividualTrackingTargetScreen(
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(7.dp)
                 ) {
-                    if (snapshot.contacts.isEmpty() && offlineSavedDevices.isEmpty()) {
+                    if (visibleContacts.isEmpty() && visibleOfflineSavedDevices.isEmpty()) {
                         Text(
-                            "${scanStatusLabel(scanStatus)} // ESPERANDO ANUNCIOS BLE...",
+                            if (snapshot.contacts.isEmpty() && offlineSavedDevices.isEmpty()) {
+                                "${scanStatusLabel(scanStatus)} // ESPERANDO ANUNCIOS BLE..."
+                            } else {
+                                "SIN COINCIDENCIAS PARA LA BÚSQUEDA"
+                            },
                             color = individualScanStatusColor(scanStatus),
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace
                         )
                     } else {
-                        snapshot.contacts.forEach { contact ->
+                        visibleContacts.forEach { contact ->
                             val knownRule = registry.savedDeviceFor(contact.measured)
                             val omitted = registry.isIgnored(contact.measured)
                             IndividualTargetRow(
@@ -368,7 +390,7 @@ fun IndividualTrackingTargetScreen(
                                 onClick = { chooseTarget(contact) }
                             )
                         }
-                        offlineSavedDevices.forEach { device ->
+                        visibleOfflineSavedDevices.forEach { device ->
                             SavedOfflineTargetRow(
                                 device = device,
                                 selectionEnabled = true,
@@ -406,12 +428,15 @@ private fun V4TargetSplitLayout(
     locationStepLabel: String,
     targetStepLabel: String,
     selectedMap: OfflineMapDefinition?,
-    snapshot: PrsSnapshot,
+    visibleContacts: List<PrsContactSnapshot>,
+    totalContactCount: Int,
     scanStatus: BleScanStatus,
     mode: PrsOperatingMode,
     registry: PrsDeviceRegistry,
     probeNode: PrsProbeNodeSnapshot,
     probeLinkStatus: String,
+    targetQuery: String,
+    onTargetQueryChanged: (String) -> Unit,
     useProbabilityArea: Boolean,
     onMapSelected: (OfflineMapDefinition) -> Unit,
     onChangeLocation: () -> Unit,
@@ -489,24 +514,30 @@ private fun V4TargetSplitLayout(
                 verticalArrangement = Arrangement.spacedBy(9.dp)
             ) {
                 Text("DISPOSITIVOS DETECTADOS", color = PipGreen, fontSize = 21.sp, fontFamily = FontFamily.Monospace)
-                Text("A56 BLE: ${scanStatusLabel(scanStatus)}", color = individualScanStatusColor(scanStatus), fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                 if (mode.probeEnabled) {
                     Text("PROBE: ${prsProbeStateLabel(probeNode.state)} // $probeLinkStatus", color = if (probeNode.state == "ACTIVE") PipGreen else PipAmber, fontSize = 10.sp, fontFamily = FontFamily.Monospace, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                Text("${snapshot.contacts.size} EN DIRECTO + ${offlineSavedDevices.size} GUARDADOS SIN CONEXIÓN // SELECCIONA OBJETIVO", color = PipAmber, fontSize = 13.sp, fontFamily = FontFamily.Monospace)
+                TargetSearchField(
+                    query = targetQuery,
+                    onQueryChanged = onTargetQueryChanged,
+                )
                 Column(
                     modifier = Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(7.dp)
                 ) {
-                    if (snapshot.contacts.isEmpty() && offlineSavedDevices.isEmpty()) {
+                    if (visibleContacts.isEmpty() && offlineSavedDevices.isEmpty()) {
                         Text(
-                            "${scanStatusLabel(scanStatus)} // ESPERANDO ANUNCIOS BLE...",
+                            if (totalContactCount == 0 && offlineSavedDevices.isEmpty()) {
+                                "${scanStatusLabel(scanStatus)} // ESPERANDO ANUNCIOS BLE..."
+                            } else {
+                                "SIN COINCIDENCIAS PARA LA BÚSQUEDA"
+                            },
                             color = individualScanStatusColor(scanStatus),
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace
                         )
                     } else {
-                        snapshot.contacts.forEach { contact ->
+                        visibleContacts.forEach { contact ->
                             val knownRule = registry.savedDeviceFor(contact.measured)
                             val omitted = registry.isIgnored(contact.measured)
                             IndividualTargetRow(
@@ -514,7 +545,6 @@ private fun V4TargetSplitLayout(
                                 knownRule = knownRule,
                                 omittedByPrs = omitted,
                                 selectionEnabled = selectedMap != null,
-                                highlightSavedDevice = true,
                                 onClick = { onTargetSelected(contact) }
                             )
                         }
@@ -1035,18 +1065,113 @@ private fun IndividualTargetDetails(contact: PrsContactSnapshot) {
 }
 
 @Composable
+private fun TargetSearchField(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, PipGreenDim.copy(alpha = 0.45f))
+            .padding(horizontal = 7.dp, vertical = 5.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        Text(
+            "BUSCAR // NOMBRE, ID O MAC",
+            color = PipAmber,
+            fontSize = 10.sp,
+            fontFamily = FontFamily.Monospace,
+        )
+        BasicTextField(
+            value = query,
+            onValueChange = { onQueryChanged(it.take(32)) },
+            singleLine = true,
+            textStyle = TextStyle(
+                color = PipGreen,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                if (query.isBlank()) {
+                    Text(
+                        "ESCRIBE PARA FILTRAR",
+                        color = PipGreenDim,
+                        fontSize = 10.sp,
+                        fontFamily = FontFamily.Monospace,
+                    )
+                }
+                innerTextField()
+            }
+        )
+    }
+}
+
+private fun targetMatchesQuery(
+    contact: PrsContactSnapshot,
+    knownRule: PrsSavedDevice?,
+    query: String,
+): Boolean {
+    val terms = targetQueryTerms(query)
+    if (terms.isEmpty()) return true
+    val searchable = listOf(
+        contact.displayName,
+        knownRule?.displayName,
+        contact.measured.deviceName,
+        contact.measured.deviceIdentifier,
+        contact.contactId,
+    ).filterNotNull().joinToString(" ").uppercase(Locale.US)
+    return terms.all(searchable::contains)
+}
+
+private fun savedDeviceMatchesQuery(device: PrsSavedDevice, query: String): Boolean {
+    val terms = targetQueryTerms(query)
+    if (terms.isEmpty()) return true
+    val searchable = listOf(device.displayName, device.value, device.type.label)
+        .filterNotNull()
+        .joinToString(" ")
+        .uppercase(Locale.US)
+    return terms.all(searchable::contains)
+}
+
+private fun targetQueryTerms(query: String): List<String> = query
+    .trim()
+    .uppercase(Locale.US)
+    .split(Regex("\\s+"))
+    .filter(String::isNotBlank)
+
+private fun targetContactComparator(registry: PrsDeviceRegistry): Comparator<PrsContactSnapshot> =
+    compareByDescending<PrsContactSnapshot> { registry.savedDeviceFor(it.measured) != null }
+        .thenByDescending { it.processed.smoothedRssi }
+        .thenByDescending { it.measured.observedAt }
+        .thenBy { it.displayName.uppercase(Locale.US) }
+
+private fun shortDeviceIdentifier(value: String): String {
+    val compact = value.replace(":", "").replace("-", "").uppercase(Locale.US)
+    return compact.takeLast(6).ifBlank { "------" }
+}
+
+private fun compactAddressType(contact: PrsContactSnapshot): String = when {
+    contact.measured.addressTypeLabel() == "ALEATORIA / PRIVADA" -> "PRIVADA"
+    contact.measured.addressTypeLabel() == "PÚBLICA" -> "PUBLICA"
+    contact.measured.addressTypeLabel() == "ANÓNIMA" -> "ANONIMA"
+    else -> "ID"
+}
+
+@Composable
 private fun IndividualTargetRow(
     contact: PrsContactSnapshot,
     knownRule: PrsSavedDevice?,
     omittedByPrs: Boolean,
     selectionEnabled: Boolean = true,
-    highlightSavedDevice: Boolean = false,
     onClick: () -> Unit
 ) {
-    val enabled = selectionEnabled && !omittedByPrs
-    val savedDevice = highlightSavedDevice && knownRule != null
+    // DEVICES rules exclude noise from SENTRY, but TRACKER is an explicit
+    // target picker. A known device must remain selectable here even when its
+    // SENTRY exclusion rule is active.
+    val enabled = selectionEnabled
+    val savedDevice = knownRule != null
     val color = when {
-        omittedByPrs -> PipGreenDim
         savedDevice -> PipAmber
         enabled -> PipGreen
         else -> PipGreenDim
@@ -1068,28 +1193,26 @@ private fun IndividualTargetRow(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = if (knownRule != null) {
-                "${if (savedDevice) "DISPOSITIVO GUARDADO" else "CONOCIDO: ${knownRule.type.label}"} // ${contact.source.displayName} // RSSI ${contact.measured.rssi}"
-            } else {
-                "NO REGISTRADO // ${contact.source.displayName} // RSSI ${contact.measured.rssi}"
-            },
+            text = "${contact.source.displayName} // RSSI ${contact.measured.rssi} // ID ${shortDeviceIdentifier(contact.measured.deviceIdentifier)} // ${compactAddressType(contact)}",
             color = if (savedDevice) PipAmber else PipGreenDim,
             fontSize = 9.sp,
             fontFamily = FontFamily.Monospace,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        if (savedDevice && !omittedByPrs) {
+        if (savedDevice) {
             Text(
-                "DISPOSITIVO GUARDADO // OBJETIVO LISTO",
+                if (omittedByPrs) {
+                    "GUARDADO // REGLA SENTRY ACTIVA // OBJETIVO DISPONIBLE"
+                } else {
+                    "GUARDADO // OBJETIVO DISPONIBLE"
+                },
                 color = PipAmber,
                 fontSize = 9.sp,
                 fontFamily = FontFamily.Monospace
             )
         }
-        if (omittedByPrs) {
-            Text("OMITIDO POR P.R.S. DEVICES // DESACTIVA LA REGLA PARA SELECCIONAR", color = PipAmber, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
-        } else if (!selectionEnabled) {
+        if (!selectionEnabled) {
             Text("SELECCIONA LA UBICACIÓN ANTES DEL OBJETIVO", color = PipAmber, fontSize = 9.sp, fontFamily = FontFamily.Monospace)
         }
     }

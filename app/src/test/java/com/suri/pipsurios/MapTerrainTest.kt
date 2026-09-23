@@ -84,7 +84,7 @@ class MapTerrainTest {
     @Test fun terrainCatalogKeepsChooseLocationFirstAndMapsAlphabetical() {
         val expectedMaps = when (BuildConfig.DISTRIBUTION_PROFILE) {
             "FENRIR", "ALTAMIRA", "CHECHU" -> listOf("NAVY7", "TESTING")
-            else -> listOf("AIRSOFT TOTAL", "BRICKTOWN", "HOME", "NAVY7", "OFFICE")
+            else -> listOf("AIRSOFT TOTAL", "BRICKTOWN", "HOME", "MAJADAHONDA", "NAVY7", "OFFICE")
         }
         assertEquals(expectedMaps, OfflineMapCatalog.maps.map { it.name })
         assertEquals("choose-location", TerrainFieldSelection.CHOOSE_LOCATION_ID)
@@ -98,6 +98,15 @@ class MapTerrainTest {
         assertTrue(OfflineMapCatalog.OFFICE.bounds.contains(center))
         assertEquals("maps/office_terrain.mbtiles", OfflineMapCatalog.OFFICE.assetPath)
         assertEquals(19, OfflineMapCatalog.OFFICE.maxNativeZoom)
+    }
+
+    @Test fun majadahondaCenterMatchesRequestedCoordinates() {
+        val center = OfflineMapCatalog.MAJADAHONDA.bounds.center
+        assertEquals(40.47334391546396, center.latitude, 1e-12)
+        assertEquals(-3.878185791180616, center.longitude, 1e-12)
+        assertTrue(OfflineMapCatalog.MAJADAHONDA.bounds.contains(center))
+        assertEquals("maps/majadahonda_terrain.mbtiles", OfflineMapCatalog.MAJADAHONDA.assetPath)
+        assertEquals(19, OfflineMapCatalog.MAJADAHONDA.maxNativeZoom)
     }
 
     @Test fun sprint30Navy7CenterMatchesRequestedCoordinates() {
@@ -249,5 +258,79 @@ class MapTerrainTest {
         actions.offerEmpty(); actions.requestEmpty(); actions.confirm()
         assertEquals(MapOverlays(), actions.overlays)
         assertEquals("navy7", OfflineMapCatalog.NAVY7.mapId)
+    }
+
+    @Test fun organizationGridReturnsStableRowAndColumnIdentifiers() {
+        val grid = OrganizationGrid(
+            bounds = MapBounds(west = -4.0, south = 40.0, east = -3.0, north = 41.0),
+            rows = ('A'..'J').map(Char::toString),
+            columns = (1..9).map(Int::toString),
+        )
+        assertEquals("A-1", grid.cellFor(GeoPoint(40.95, -3.95)))
+        assertEquals("F-6", grid.cellFor(GeoPoint(40.45, -3.35)))
+        assertEquals(null, grid.cellFor(GeoPoint(41.1, -3.5)))
+    }
+
+    @Test fun navigationEngineCalculatesDistanceBearingRelativeDirectionAndGrid() {
+        val grid = OrganizationGrid(
+            bounds = MapBounds(-4.0, 40.0, -3.0, 41.0),
+            rows = listOf("A", "B"),
+            columns = listOf("1", "2"),
+        )
+        val destination = MapDestination(
+            id = "waypoint",
+            name = "WAYPOINT",
+            point = GeoPoint(40.751, -3.499),
+            source = DestinationSource.USER_WAYPOINT,
+        )
+        val reading = NavigationEngine.calculate(
+            current = GeoPoint(40.75, -3.501),
+            headingDegrees = 350f,
+            destination = destination,
+            grid = grid,
+        )
+        assertTrue(reading.distanceMeters in 190.0..220.0)
+        assertTrue(reading.bearingDegrees in 55.0..75.0)
+        assertTrue(reading.relativeBearingDegrees!! in 65.0..85.0)
+        assertEquals("A-1", reading.currentGrid)
+        assertEquals("A-2", reading.destinationGrid)
+    }
+
+    @Test fun navigationRelativeBearingWrapsAcrossNorth() {
+        assertEquals(40.0, NavigationEngine.relativeBearingDegrees(350.0, 30.0), 0.001)
+        assertEquals(-40.0, NavigationEngine.relativeBearingDegrees(30.0, 350.0), 0.001)
+    }
+
+    @Test fun organizationCodecPreservesIndependentVectorLayersAndPoiTypes() {
+        val source = """
+            MAP|airsoft_total
+            META|SOURCE_STATUS|PROVISIONAL_QGIS_REVIEW
+            GRID|-4.0|40.0|-3.0|41.0|A,B|1,2
+            CELL|SPECIAL|-3.95|40.75|-3.45|40.98
+            BOUNDARY|field|40.9,-3.9|40.9,-3.1|40.1,-3.1
+            PATH|path_1|CAMINO|40.8,-3.8|40.2,-3.2
+            POI|base_1|BASE|BASE 1|40.5|-3.5
+            POI|ammo_1|AMMO|CAJA|40.6|-3.6
+            POI|medical_1|MEDICAL|PUESTO MEDICO|40.7|-3.7
+            POI|ruins|POI|RUINAS|40.8|-3.8
+        """.trimIndent()
+        val overlay = OrganizationOverlayCodec.decode(source)
+        assertEquals("airsoft_total", overlay.mapId)
+        assertEquals("PROVISIONAL_QGIS_REVIEW", overlay.sourceStatus)
+        assertEquals(3, overlay.fieldBoundary.size)
+        assertEquals(1, overlay.internalPaths.size)
+        assertEquals(listOf("SPECIAL"), overlay.grid?.cells?.map { it.id })
+        assertEquals("SPECIAL", overlay.grid?.cellFor(GeoPoint(40.9, -3.7)))
+        assertEquals(GeoPoint(40.9, -3.9), overlay.fieldBoundary.first())
+        assertEquals(GeoPoint(40.8, -3.8), overlay.internalPaths.single().points.first())
+        assertEquals(
+            listOf(OrganizationPoiType.BASE, OrganizationPoiType.AMMO),
+            overlay.pois.take(2).map { it.type },
+        )
+        assertEquals(listOf("base_1"), overlay.bases.map { it.id })
+        assertEquals(listOf("ammo_1"), overlay.ammunition.map { it.id })
+        assertEquals(listOf("ruins"), overlay.pointsOfInterest.map { it.id })
+        assertEquals("BASE 1", overlay.pois.first().name)
+        assertEquals(OrganizationPoiType("MEDICAL"), overlay.pois[2].type)
     }
 }

@@ -35,8 +35,8 @@ android {
         applicationId = "com.suri.pipsurios"
         minSdk = 34
         targetSdk = 37
-        versionCode = 12
-        versionName = "3.2"
+        versionCode = 13
+        versionName = "3.3"
         buildConfigField("String", "DISTRIBUTION_PROFILE", "\"$distributionProfile\"")
         buildConfigField("boolean", "PROBE_ENABLED", (distributionProfile == "MAIN").toString())
 

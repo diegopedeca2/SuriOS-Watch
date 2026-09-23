@@ -521,3 +521,22 @@ accidentales de las APK tester.
 - Pruebas instrumentadas en Samsung A56: 3/3 correctas.
 - Mapas MBTiles íntegros, en PNG, zoom 16..19 y hashes verificados.
 - Sprint 034 cerrado documentalmente sin incidencias abiertas.
+## Sprint 035 — MAP: ORGANIZATION OVERLAY + WAYPOINT NAVIGATION — 2026-09-23
+
+### Añadido y modificado
+
+- MAP incorpora overlays de organización, GRID identificable, POI geográficos,
+  waypoint manual y navegación offline común hacia waypoints o POI.
+- AIRSOFT TOTAL se regenera con la estética clara de HOME, NAVY7 y OFFICE,
+  cobertura ampliada, perímetro del campo y RESPawn 1 dentro del área visible.
+- Se añade el mapa MAJADAHONDA y se incorporan los POI de prueba de OFFICE.
+- Se mejora la lectura con textos más grandes, negrita, color rojo para POI y
+  flecha de navegación continua de 360 grados.
+- Se corrige el cambio entre mapas y se elimina texto redundante en TRACKER,
+  navegación y carga.
+
+### Validación y cierre
+
+- `test`, `assembleFullDebug` y `lintAnalyzeFullDebug`: correctos.
+- `connectedFullDebugAndroidTest`: 7/7 correctos en Samsung A56.
+- Sprint 035 cerrado con PIP-SuriOS `3.3` (`versionCode=13`).

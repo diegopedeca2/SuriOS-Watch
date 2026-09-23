@@ -148,7 +148,7 @@ Los valores por defecto de `PrsTuning.DEFAULT` son:
 | Cambio significativo | 4,5 dB |
 | Variación considerada estable | 2,0 dB |
 | Confirmaciones para cambiar tendencia | 2 evaluaciones |
-| Expiración sin recibir señal | 15 segundos |
+| Expiración sin recibir señal | 30 segundos |
 
 La tendencia no aparece inmediatamente. Como orientación, primero hacen falta
 varias evaluaciones durante unos segundos y después confirmaciones adicionales.

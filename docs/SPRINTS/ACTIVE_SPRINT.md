@@ -4,14 +4,23 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-06
+last_updated: 2026-09-23
 
 ---
 
 ## Sprint activo
 
-No hay un Sprint activo. El Sprint 034 queda cerrado documental y técnicamente
-el 2026-09-06.
+[Sprint 035 v1.0](SPRINT_035_v1.0.md) - **CLOSED**
+
+[Auditoría Sprint 035](../AUDIT_SPRINT_035.md) — **APROBADA PARA CIERRE**
+
+El Sprint 035 implementa ORGANIZATION OVERLAY y WAYPOINT NAVIGATION básica
+offline para MAP. También incorpora el raster luminoso de AIRSOFT TOTAL,
+regenerado desde QGIS a 4 km x 4 km, su perímetro revisado, los POI de prueba
+de OFFICE y el mapa MAJADAHONDA. El código, los assets, la documentación y las
+pruebas automáticas quedan cerrados. La prueba física de GPS, orientación y
+gestos queda como comprobación operativa del propietario tras el cierre, no
+como incidencia técnica bloqueante.
 
 [Sprint 034 v1.0](SPRINT_034_v1.0.md) — **CLOSED**
 

@@ -44,7 +44,10 @@ object PrsTuning {
         hysteresisDb = 1.5f,
         trendConfirmationEvaluations = 2,
         stableConfirmationEvaluations = 2,
-        contactExpiryMillis = 15_000L,
+        // Keep a target visible through short BLE advertisement gaps common
+        // with phones, watches and field movement. The row still shows the
+        // latest RSSI; this is not an indication that the signal is current.
+        contactExpiryMillis = 30_000L,
         nearMinimumRssi = -76f,
         mediumMinimumRssi = -88f
     )

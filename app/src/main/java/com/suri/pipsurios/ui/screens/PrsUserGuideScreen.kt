@@ -91,7 +91,7 @@ fun PrsUserGuideScreen(onBack: () -> Unit, showProbe: Boolean = true) {
                     BANDAS Y TIEMPO MÍNIMO
                     CERCA: S >= -76 dBm. MEDIA: -88 dBm <= S < -76 dBm. LEJOS: S < -88 dBm. DESCONOCIDA aparece antes de disponer de historial útil. Son umbrales iniciales y pueden variar por cuerpo, orientación, obstáculos y entorno.
 
-                    La primera lectura se evalúa aproximadamente a los 3 s. Para una lectura mínimamente fiable, espera al menos 4 evaluaciones (unos 12 s) y, para que el lado se confirme con mayor estabilidad, 12–15 s. Lo recomendable es mantener 15–20 s si hay movimiento u obstáculos. Si no llega una señal nueva durante 15 s, el contacto puede caducar. El objetivo se supone estático; si se mueve, las zonas superpuestas dejan de representar una única ubicación.
+                    La primera lectura se evalúa aproximadamente a los 3 s. Para una lectura mínimamente fiable, espera al menos 4 evaluaciones (unos 12 s) y, para que el lado se confirme con mayor estabilidad, 12–15 s. Lo recomendable es mantener 15–20 s si hay movimiento u obstáculos. Si no llega una señal nueva durante 30 s, el contacto puede caducar. El objetivo se supone estático; si se mueve, las zonas superpuestas dejan de representar una única ubicación.
                 """.trimIndent()
             )
             PrsGuideBlock(
