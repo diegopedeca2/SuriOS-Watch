@@ -11,7 +11,7 @@ last_updated: 2026-08-31
 ---
 
 Esta versión incorpora al backlog los hallazgos AUD-023-01 a AUD-023-09 de la
-auditoría del Sprint 023. Se interpreta conforme a [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md) y no autoriza por sí misma desarrollo.
+auditoría del Sprint 023. Se interpreta conforme a [PROJECT_GUIDE v1.2](../PROJECT_GUIDE/PROJECT_GUIDE_v1.2.md) y no autoriza por sí misma desarrollo.
 
 Las decisiones del propietario registradas en el cierre administrativo del
 Sprint 024 se reflejan en los elementos heredados. EDL v0.6 queda confirmado

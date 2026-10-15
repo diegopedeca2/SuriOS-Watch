@@ -559,3 +559,24 @@ accidentales de las APK tester.
 - La APK JAVI se instala y arranca correctamente.
 - Sprint 036 cerrado con la auditoría aprobada. La prueba física de campo
   queda como comprobación operativa posterior.
+
+## Sprint 037 — SuriOS Watch: armadura, pasos y terminal animado — 2026-10-16
+
+### Añadido y modificado
+
+- La esfera oficial `com.suri.surioswatch` pasa a `versionName=1.3` y
+  `versionCode=7`.
+- Se sustituye el emblema y el medidor circular por la armadura como fondo y
+  como indicador invertido del progreso diario de pasos.
+- Se incorpora la línea de refresco terminal en modo normal, con 6 segundos de
+  recorrido, 30 fps e intensidad 40%.
+- El modo ambiente queda estático y conserva únicamente hora, armadura con
+  progreso de pasos y batería.
+- Se añade `TRAINING`, enlazado a la lista de ejercicios de Samsung Health.
+
+### Validación y cierre
+
+- `test`, `lint` y `:watchface:assembleDebug`: correctos.
+- Instalación correcta por ADB Wi-Fi en el Galaxy Watch Ultra.
+- Validación visual y funcional final aprobada por el propietario.
+- Sprint 037 cerrado sin incidencias técnicas abiertas dentro de su alcance.

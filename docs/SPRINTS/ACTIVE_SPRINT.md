@@ -4,11 +4,20 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-09-24
+last_updated: 2026-10-16
 
 ---
 
 ## Último Sprint cerrado
+
+[Sprint 037 v1.0](SPRINT_037_v1.0.md) - **CLOSED**
+
+El Sprint 037 actualiza la esfera oficial del Watch Ultra a v1.3, incorpora la
+armadura como indicador invertido de pasos, añade la línea de refresco animada
+en modo normal, simplifica el modo ambiente y valida el acceso `TRAINING` a la
+lista de ejercicios de Samsung Health.
+
+[Auditoría Sprint 037](../AUDIT_SPRINT_037.md) — **APROBADA PARA CIERRE**
 
 [Sprint 036 v1.0](SPRINT_036_v1.0.md) - **CLOSED**
 
@@ -368,6 +377,6 @@ en Sprint 026. La integración Orca-QGIS permanece como continuidad futura.
 - [Sprint 011 v1.0](SPRINT_011_v1.0.md)
 - [User Guide](../USER_GUIDE.md)
 - [SPRINT_HISTORY v1.3](<SPRINT_HISTORY v1.3.md>)
-- [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)
+- [PROJECT_GUIDE v1.2](../PROJECT_GUIDE/PROJECT_GUIDE_v1.2.md)
 - [EDL](../EDL/EDL.md)
 - [MRPD](../MRPD/MRPD.md)

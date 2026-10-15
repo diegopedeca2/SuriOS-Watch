@@ -1,0 +1,7 @@
+# MAJADAHONDA user-supplied POIs.
+# These are independent geographic objects and can be used directly by NAV.
+MAP|majadahonda
+META|SOURCE_STATUS|USER_SUPPLIED_COORDINATES
+POI|boothill|POI|Boothill|40.47334391546396|-3.878185791180616
+POI|luis|POI|Luis|40.47368319786328|-3.8770390146910896
+POI|rocka_rolla|POI|Rocka Rolla|40.47215079762088|-3.8714171501215358

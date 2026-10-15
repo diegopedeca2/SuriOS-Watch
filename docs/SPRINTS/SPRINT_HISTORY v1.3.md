@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-09-06
+last_updated: 2026-10-16
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -20,7 +20,7 @@ La versión anterior se conserva en [SPRINT_HISTORY v1.0](OLD/SPRINT_HISTORY_v1.
 
 Este documento se interpreta conjuntamente con:
 
-- [PROJECT_GUIDE v1.1](../PROJECT_GUIDE/PROJECT_GUIDE_v1.1.md)
+- [PROJECT_GUIDE v1.2](../PROJECT_GUIDE/PROJECT_GUIDE_v1.2.md)
 - [ACTIVE_SPRINT](ACTIVE_SPRINT.md)
 
 La aprobación documental de un Sprint no implica su activación. El único Sprint operativo es el indicado en ACTIVE_SPRINT.
@@ -31,9 +31,9 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 026 | Sprint 026 cerrado |
-| PIP-SuriOS | Ninguno | Sprint 034 | Sprint 034 cerrado; P.R.S., mapas y mantenimiento |
-| SuriOS Ecosystem | Ninguno | Sprint 034 | Sprint 034 cerrado; auditoría completa aprobada |
+| SuriOS Watch | Ninguno | Sprint 037 | Sprint 037 cerrado; watchface v1.3/código 7 |
+| PIP-SuriOS | Ninguno | Sprint 036 | Sprint 036 cerrado; PIP-SuriOS v3.4 |
+| SuriOS Ecosystem | Ninguno | Sprint 037 | Sprint 037 cerrado; auditoría aprobada |
 
 ---
 
@@ -80,6 +80,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 033 | SuriOS Ecosystem / PIP-SuriOS | Correcciones de auditoría, recursos reproducibles y reglas de distribución | Cerrado | Completado con deuda futura explícita | 2026-09-05 | 2026-09-05 | [Sprint 033 v1.0](SPRINT_033_v1.0.md) |
 | 034 | SuriOS Ecosystem / PIP-SuriOS | P.R.S., área probable TRACKER, mapas, comunicaciones, audio y cierre de mantenimiento | Cerrado | PIP-SuriOS v3.2 validado; auditoría sin incidencias abiertas | 2026-09-06 | 2026-09-06 | [Sprint 034 v1.0](SPRINT_034_v1.0.md) |
 | 035 | SuriOS Ecosystem / PIP-SuriOS | MAP: ORGANIZATION OVERLAY, WAYPOINT NAVIGATION y mapas de prueba | Cerrado | PIP-SuriOS v3.3 validado; auditoría aprobada para cierre | 2026-09-23 | 2026-09-23 | [Sprint 035 v1.0](SPRINT_035_v1.0.md) |
+| 036 | SuriOS Ecosystem / PIP-SuriOS | AIRSOFT TOTAL REFERENCE MAP + BETA TESTER BUILDS | Cerrado | PIP-SuriOS v3.4 validado; auditoría aprobada para cierre | 2026-09-24 | 2026-09-24 | [Sprint 036 v1.0](SPRINT_036_v1.0.md) |
+| 037 | SuriOS Watch | Armadura, pasos, terminal animado y modo ambiente simplificado | Cerrado | Watchface v1.3/código 7 validada; auditoría aprobada para cierre | 2026-10-16 | 2026-10-16 | [Sprint 037 v1.0](SPRINT_037_v1.0.md) |
 
 ---
 
@@ -613,10 +615,8 @@ Sprint 009 queda cerrado. PIP-SuriOS v1.9 queda consolidado, no existe ningún S
 
 [ACTIVE_SPRINT](ACTIVE_SPRINT.md) constituye la referencia operativa oficial del proyecto.
 
-Actualmente confirma que Sprint 015, Sprint 016, Sprint 017, Sprint 018, Sprint
-019, Sprint 020, Sprint 021, Sprint 022, Sprint 023, Sprint 024 y Sprint 025 de
-PIP-SuriOS, además del Sprint 026 de SuriOS Watch, están completados y
-cerrados.
+Actualmente confirma que no existe ningún Sprint activo. Sprint 037 de SuriOS
+Watch y Sprint 036 de PIP-SuriOS están completados y cerrados.
 
 El Sprint 027 de SuriOS Ecosystem estuvo limitado a limpieza documental y
 detalles menores. Quedó cerrado el 2026-09-01.
@@ -629,11 +629,10 @@ Sprint 025 está cerrado y PIP-SuriOS v2.7 constituye la versión móvil consoli
 vigente. La nueva superficie INFORMATION, la actualización de dependencias y la
 validación física quedan registradas en su documento de Sprint.
 
-PIW-SuriOS v2.0 constituye el estado visual vigente y validado de SuriOS Watch.
+La esfera oficial `com.suri.surioswatch` en v1.3 (`versionCode=7`) constituye el
+estado visual vigente y validado de SuriOS Watch.
 
-PIP-SuriOS v2.7 con SET-UP persistente en vertical, DATA permanente, STORAGE,
-RADS v2, P.R.S. v3.0, REMOTE PROBE opcional, MAP TERRAIN NAVY7 offline,
-TOOLS reorganizado constituye el estado móvil funcional vigente.
+PIP-SuriOS v3.4 (`versionCode=14`) constituye el estado móvil funcional vigente.
 Todos los Sprints funcionales registrados están cerrados y la edición reducida de P.R.S.
 añade el layout para pantalla externa.
 
@@ -1055,3 +1054,15 @@ correctamente en el Samsung A56. La APK JAVI se instala y arranca sin errores.
 La prueba física de GPS, brújula, navegación y Bluetooth queda como
 verificación operativa posterior, sin incidencias técnicas abiertas dentro del
 alcance del Sprint.
+
+## 44. Cierre de Sprint 037 de SuriOS Watch
+
+El Sprint 037 se cierra el 2026-10-16 con la esfera oficial
+`com.suri.surioswatch` en v1.3 (`versionCode=7`). La auditoría valida la
+armadura con progreso invertido de pasos, la línea de refresco del modo normal,
+el modo ambiente estático, la batería, los accesos existentes y el acceso
+`TRAINING` a `ExerciseListActivity` de Samsung Health.
+
+`test`, `lint` y `:watchface:assembleDebug` terminan correctamente. La esfera
+queda instalada en el Watch Ultra y la validación visual y funcional final fue
+aprobada por el propietario. No existe ningún Sprint activo.
