@@ -19,3 +19,5 @@ Copias posteriores:
 
 - `watchface-v1.3-sprint-038`: esfera oficial v1.3 conservada antes de iniciar
   el Sprint 038.
+- `watchface-v1.4-sprint-039`: esfera oficial v1.4 conservada antes de iniciar
+  el Sprint 039.

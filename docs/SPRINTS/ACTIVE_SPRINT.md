@@ -10,12 +10,19 @@ last_updated: 2026-10-16
 
 ## Sprint activo
 
-Ninguno. El siguiente Sprint se abrirá tras el cierre administrativo del Sprint
-038.
+Ninguno. El Sprint 039 queda cerrado documentalmente. La siguiente iniciativa
+se abrirá cuando el propietario la autorice.
 
 ---
 
 ## Último Sprint cerrado
+
+[Sprint 039 v1.0](SPRINT_039_v1.0.md) - **CLOSED**
+
+El Sprint 039 entrega la esfera v1.5, `versionCode 9`, en WFF v2, con
+indicadores meteorológicos, ciclos de pasos y un modo ambiente reducido.
+
+[Auditoría Sprint 039](../AUDIT_SPRINT_039.md) — **APROBADA PARA CIERRE DOCUMENTAL**
 
 [Sprint 038 v1.0](SPRINT_038_v1.0.md) - **CLOSED**
 

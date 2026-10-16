@@ -38,6 +38,28 @@
             <Image resource="brotherhood_emblem_pipgreendim" />
         </PartImage>
 
+        <Group
+            name="surios_brotherhood_emblem_ambient"
+            alpha="0"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="255" />
+            <PartImage
+                name="surios_brotherhood_emblem_pipgreen_ambient"
+                alpha="255"
+                height="382"
+                width="322"
+                x="64"
+                y="34">
+                <Image resource="brotherhood_emblem_pipgreen" />
+            </PartImage>
+        </Group>
+
         <PartImage
             name="surios_armor_background"
             alpha="224"
@@ -45,6 +67,10 @@
             width="192"
             x="129"
             y="81">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
             <Image resource="armor_background" />
         </PartImage>
 
@@ -55,6 +81,10 @@
             width="450"
             x="0"
             y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
             <Image resource="gear_frame" />
         </PartImage>
 
@@ -98,10 +128,10 @@
                         y="0">
                         <Transform
                             target="y"
-                            value="288 - clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                            value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
                         <Transform
                             target="height"
-                            value="clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                            value="clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
                         <Fill color="#FFFFFFFF" />
                     </Rectangle>
                 </PartDraw>
@@ -304,7 +334,92 @@
                             </Compare>
                         </Condition>
 
+                        <!-- One energy cell is recorded for each completed step goal. -->
+                        <Condition><Expressions><Expression name="step_cell_1"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 1)]]></Expression></Expressions><Compare expression="step_cell_1"><PartDraw name="surios_step_cell_1" height="5" width="5" x="319" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_2"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 2)]]></Expression></Expressions><Compare expression="step_cell_2"><PartDraw name="surios_step_cell_2" height="5" width="5" x="325" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_3"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3"><PartDraw name="surios_step_cell_3" height="5" width="5" x="331" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_4"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4"><PartDraw name="surios_step_cell_4" height="5" width="5" x="337" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_5"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5"><PartDraw name="surios_step_cell_5" height="5" width="5" x="343" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_6"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 6)]]></Expression></Expressions><Compare expression="step_cell_6"><PartDraw name="surios_step_cell_6" height="5" width="5" x="349" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_7"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 7)]]></Expression></Expressions><Compare expression="step_cell_7"><PartDraw name="surios_step_cell_7" height="5" width="5" x="355" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_8"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 8)]]></Expression></Expressions><Compare expression="step_cell_8"><PartDraw name="surios_step_cell_8" height="5" width="5" x="361" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_9"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 9)]]></Expression></Expressions><Compare expression="step_cell_9"><PartDraw name="surios_step_cell_9" height="5" width="5" x="367" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_10"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 10)]]></Expression></Expressions><Compare expression="step_cell_10"><PartDraw name="surios_step_cell_10" height="5" width="5" x="373" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+
                     </Group>
+                </Default>
+            </Condition>
+
+            <!-- Weather indicators: temperature at 7 o'clock, rain chance at 5 o'clock. -->
+            <Condition>
+                <Expressions>
+                    <Expression name="weather_available">[WEATHER.IS_AVAILABLE]</Expression>
+                </Expressions>
+                <Compare expression="weather_available">
+                    <PartText
+                        name="surios_weather_temperature"
+                        height="28"
+                        width="106"
+                        x="80"
+                        y="360">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="15">
+                                <Template><![CDATA[TEMP %s°]]>
+                                    <Parameter expression="[WEATHER.TEMPERATURE]" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+
+                    <PartText
+                        name="surios_weather_rain"
+                        height="28"
+                        width="106"
+                        x="264"
+                        y="360">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="15">
+                                <Template><![CDATA[RAIN %s%%]]>
+                                    <Parameter expression="[WEATHER.CHANCE_OF_PRECIPITATION]" />
+                                </Template>
+                            </Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Default>
+                    <PartText
+                        name="surios_weather_temperature_unavailable"
+                        height="28"
+                        width="106"
+                        x="80"
+                        y="360">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="15">TEMP --</Font>
+                        </Text>
+                    </PartText>
+
+                    <PartText
+                        name="surios_weather_rain_unavailable"
+                        height="28"
+                        width="106"
+                        x="264"
+                        y="360">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF3FAF5A"
+                                family="SYNC_TO_DEVICE"
+                                size="15">RAIN --</Font>
+                        </Text>
+                    </PartText>
                 </Default>
             </Condition>
 
@@ -329,6 +444,7 @@
                         y="0">
                         <Stroke color="#FF66FF66" thickness="2" />
                     </RoundRectangle>
+                        <Launch target="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity" />
                 </PartDraw>
 
                 <PartText
@@ -343,7 +459,6 @@
                             family="SYNC_TO_DEVICE"
                             size="18">CAPS</Font>
                     </Text>
-                    <Launch target="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity" />
                 </PartText>
 
                 <PartDraw
@@ -361,6 +476,7 @@
                         y="0">
                         <Stroke color="#FF66FF66" thickness="2" />
                     </RoundRectangle>
+                        <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.home.HomeActivity" />
                 </PartDraw>
 
                 <PartText
@@ -375,7 +491,6 @@
                             family="SYNC_TO_DEVICE"
                             size="18">STATUS</Font>
                     </Text>
-                    <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.home.HomeActivity" />
                 </PartText>
 
                 <PartDraw
@@ -393,6 +508,7 @@
                         y="0">
                         <Stroke color="#FF66FF66" thickness="2" />
                     </RoundRectangle>
+                        <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.exercise.view.ExerciseListActivity" />
                 </PartDraw>
 
                 <PartText
@@ -407,7 +523,6 @@
                             family="SYNC_TO_DEVICE"
                             size="18">TRAINING</Font>
                     </Text>
-                    <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.exercise.view.ExerciseListActivity" />
                 </PartText>
 
                 <PartDraw
@@ -425,6 +540,7 @@
                         y="0">
                         <Stroke color="#FF66FF66" thickness="2" />
                     </RoundRectangle>
+                        <Launch target="com.spotify.music/com.spotify.wear.main.MainActivity" />
                 </PartDraw>
 
                 <PartText
@@ -439,7 +555,6 @@
                             family="SYNC_TO_DEVICE"
                             size="18">RADIO</Font>
                     </Text>
-                    <Launch target="com.spotify.music/com.spotify.wear.main.MainActivity" />
                 </PartText>
             </Group>
 
@@ -459,7 +574,7 @@
                         <Font
                             color="#FF3FAF5A"
                             family="SYNC_TO_DEVICE"
-                            size="28">v1.4</Font>
+                            size="28">v1.5</Font>
                     </Text>
                 </PartText>
             </Group>
@@ -505,6 +620,10 @@
                 width="192"
                 x="129"
                 y="81">
+                <Variant
+                    mode="AMBIENT"
+                    target="alpha"
+                    value="0" />
                 <PartImage
                     name="surios_armor_step_fill_ambient"
                     height="288"
@@ -527,10 +646,10 @@
                         y="0">
                         <Transform
                             target="y"
-                            value="288 - clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                            value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
                         <Transform
                             target="height"
-                            value="clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                            value="clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
                         <Fill color="#FFFFFFFF" />
                     </Rectangle>
                 </PartDraw>
@@ -547,7 +666,7 @@
                     height="92"
                     width="340"
                     x="55"
-                    y="17">
+                    y="179">
                     <Font
                         color="#FF66FF66"
                         family="SYNC_TO_DEVICE"
@@ -675,6 +794,30 @@
                         </PartDraw>
                     </Compare>
                 </Condition>
+
+                <!-- Keep the completed energy cells visible in ambient mode. -->
+                <Group
+                    name="surios_step_cells_ambient_hidden"
+                    alpha="255"
+                    height="450"
+                    width="450"
+                    x="0"
+                    y="0">
+                    <Variant
+                        mode="AMBIENT"
+                        target="alpha"
+                        value="0" />
+                <Condition><Expressions><Expression name="step_cell_1_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 1)]]></Expression></Expressions><Compare expression="step_cell_1_ambient"><PartDraw name="surios_step_cell_1_ambient" height="5" width="5" x="319" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_2_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 2)]]></Expression></Expressions><Compare expression="step_cell_2_ambient"><PartDraw name="surios_step_cell_2_ambient" height="5" width="5" x="325" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_3_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3_ambient"><PartDraw name="surios_step_cell_3_ambient" height="5" width="5" x="331" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_4_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4_ambient"><PartDraw name="surios_step_cell_4_ambient" height="5" width="5" x="337" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_5_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5_ambient"><PartDraw name="surios_step_cell_5_ambient" height="5" width="5" x="343" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_6_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 6)]]></Expression></Expressions><Compare expression="step_cell_6_ambient"><PartDraw name="surios_step_cell_6_ambient" height="5" width="5" x="349" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_7_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 7)]]></Expression></Expressions><Compare expression="step_cell_7_ambient"><PartDraw name="surios_step_cell_7_ambient" height="5" width="5" x="355" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_8_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 8)]]></Expression></Expressions><Compare expression="step_cell_8_ambient"><PartDraw name="surios_step_cell_8_ambient" height="5" width="5" x="361" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_9_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 9)]]></Expression></Expressions><Compare expression="step_cell_9_ambient"><PartDraw name="surios_step_cell_9_ambient" height="5" width="5" x="367" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_10_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 10)]]></Expression></Expressions><Compare expression="step_cell_10_ambient"><PartDraw name="surios_step_cell_10_ambient" height="5" width="5" x="373" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                </Group>
             </Group>
         </Group>
     </Scene>

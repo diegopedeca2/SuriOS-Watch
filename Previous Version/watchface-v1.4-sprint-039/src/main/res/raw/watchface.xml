@@ -1,0 +1,681 @@
+<WatchFace
+    clipShape="CIRCLE"
+    height="450"
+    width="450">
+
+    <Metadata
+        key="CLOCK_TYPE"
+        value="DIGITAL" />
+
+    <Scene>
+        <PartDraw
+            name="surios_background"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Rectangle
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <Fill color="#FF000000" />
+            </Rectangle>
+        </PartDraw>
+
+        <!-- Dim Brotherhood emblem: visible in normal mode, hidden in ambient mode. -->
+        <PartImage
+            name="surios_brotherhood_emblem_background"
+            alpha="88"
+            height="382"
+            width="322"
+            x="64"
+            y="34">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
+            <Image resource="brotherhood_emblem_pipgreendim" />
+        </PartImage>
+
+        <PartImage
+            name="surios_armor_background"
+            alpha="224"
+            height="288"
+            width="192"
+            x="129"
+            y="81">
+            <Image resource="armor_background" />
+        </PartImage>
+
+        <!-- A single vertically symmetric toothed ring replaces the former frame lines. -->
+        <PartImage
+            name="surios_gear_frame"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Image resource="gear_frame" />
+        </PartImage>
+
+        <Group
+            name="surios_active"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
+
+            <!-- The armor fill is clipped from the bottom upward as steps progress. -->
+            <Group
+                name="surios_armor_step_fill_layer"
+                height="288"
+                width="192"
+                x="129"
+                y="81">
+                <PartImage
+                    name="surios_armor_step_fill"
+                    height="288"
+                    width="192"
+                    x="0"
+                    y="0">
+                    <Image resource="armor_fill" />
+                </PartImage>
+                <PartDraw
+                    name="surios_armor_step_fill_mask"
+                    height="288"
+                    width="192"
+                    renderMode="MASK"
+                    x="0"
+                    y="0">
+                    <Rectangle
+                        height="288"
+                        width="192"
+                        x="0"
+                        y="0">
+                        <Transform
+                            target="y"
+                            value="288 - clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Transform
+                            target="height"
+                            value="clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Fill color="#FFFFFFFF" />
+                    </Rectangle>
+                </PartDraw>
+            </Group>
+
+            <DigitalClock
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <TimeText
+                    format="hh:mm"
+                    hourFormat="24"
+                    height="92"
+                    width="340"
+                    x="55"
+                    y="17">
+                    <Font
+                        color="#FF66FF66"
+                        family="SYNC_TO_DEVICE"
+                        size="47" />
+                </TimeText>
+            </DigitalClock>
+
+            <PartText
+                name="surios_date_day_month"
+                height="32"
+                width="106"
+                x="52"
+                y="92">
+                <Text>
+                    <Font
+                        color="#FF3FAF5A"
+                        family="SYNC_TO_DEVICE"
+                        size="28">
+                        <Template>%s/%s
+                            <Parameter expression="[DAY_Z]" />
+                            <Parameter expression="[MONTH_Z]" />
+                        </Template>
+                    </Font>
+                </Text>
+            </PartText>
+
+            <PartText
+                name="surios_date_year"
+                height="32"
+                width="106"
+                x="52"
+                y="124">
+                <Text>
+                    <Font
+                        color="#FF3FAF5A"
+                        family="SYNC_TO_DEVICE"
+                        size="28">
+                        <Template>%s
+                            <Parameter expression="[YEAR]" />
+                        </Template>
+                    </Font>
+                </Text>
+            </PartText>
+
+            <Condition>
+                <Expressions>
+                    <Expression name="active_battery_charging">[BATTERY_CHARGING_STATUS]</Expression>
+                </Expressions>
+                <Compare expression="active_battery_charging">
+                    <PartText
+                        name="surios_battery_recharging_active"
+                        height="28"
+                        width="106"
+                        x="292"
+                        y="110">
+                        <Text align="CENTER">
+                            <Font
+                                color="#FF66FF66"
+                                family="SYNC_TO_DEVICE"
+                                size="15">RECHARGING</Font>
+                        </Text>
+                    </PartText>
+                </Compare>
+                <Default>
+                    <Group
+                        name="surios_battery_active"
+                        height="450"
+                        width="450"
+                        x="0"
+                        y="-106">
+                        <PartDraw
+                            name="surios_battery_outline"
+                            height="24"
+                            width="63"
+                            x="319"
+                            y="218">
+                            <Rectangle height="24" width="58" x="0" y="0">
+                                <Stroke color="#FF66FF66" thickness="2" />
+                            </Rectangle>
+                            <Rectangle height="10" width="5" x="58" y="7">
+                                <Fill color="#FF66FF66" />
+                            </Rectangle>
+                        </PartDraw>
+
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_1"><![CDATA[[BATTERY_PERCENT] >= 1]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_1">
+                                <PartDraw height="16" width="4" x="323" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_2"><![CDATA[[BATTERY_PERCENT] >= 11]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_2">
+                                <PartDraw height="16" width="4" x="328" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_3"><![CDATA[[BATTERY_PERCENT] >= 21]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_3">
+                                <PartDraw height="16" width="4" x="333" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_4"><![CDATA[[BATTERY_PERCENT] >= 31]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_4">
+                                <PartDraw height="16" width="4" x="338" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_5"><![CDATA[[BATTERY_PERCENT] >= 41]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_5">
+                                <PartDraw height="16" width="4" x="343" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_6"><![CDATA[[BATTERY_PERCENT] >= 51]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_6">
+                                <PartDraw height="16" width="4" x="348" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_7"><![CDATA[[BATTERY_PERCENT] >= 61]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_7">
+                                <PartDraw height="16" width="4" x="353" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_8"><![CDATA[[BATTERY_PERCENT] >= 71]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_8">
+                                <PartDraw height="16" width="4" x="358" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_9"><![CDATA[[BATTERY_PERCENT] >= 81]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_9">
+                                <PartDraw height="16" width="4" x="363" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+                        <Condition>
+                            <Expressions>
+                                <Expression name="battery_level_10"><![CDATA[[BATTERY_PERCENT] >= 91]]></Expression>
+                            </Expressions>
+                            <Compare expression="battery_level_10">
+                                <PartDraw height="16" width="4" x="368" y="222">
+                                    <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle>
+                                </PartDraw>
+                            </Compare>
+                        </Condition>
+
+                    </Group>
+                </Default>
+            </Condition>
+
+            <Group
+                name="surios_fallout_access_labels_active"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <PartDraw
+                    name="surios_wallet_caps_outline"
+                    height="46"
+                    width="88"
+                    x="52"
+                    y="286">
+                    <RoundRectangle
+                        cornerRadiusX="8"
+                        cornerRadiusY="8"
+                        height="46"
+                        width="88"
+                        x="0"
+                        y="0">
+                        <Stroke color="#FF66FF66" thickness="2" />
+                    </RoundRectangle>
+                </PartDraw>
+
+                <PartText
+                    name="surios_wallet_caps"
+                    height="24"
+                    width="88"
+                    x="52"
+                    y="297">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF66FF66"
+                            family="SYNC_TO_DEVICE"
+                            size="18">CAPS</Font>
+                    </Text>
+                    <Launch target="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity" />
+                </PartText>
+
+                <PartDraw
+                    name="surios_status_reference_outline"
+                    height="46"
+                    width="92"
+                    x="47"
+                    y="202">
+                    <RoundRectangle
+                        cornerRadiusX="8"
+                        cornerRadiusY="8"
+                        height="46"
+                        width="92"
+                        x="0"
+                        y="0">
+                        <Stroke color="#FF66FF66" thickness="2" />
+                    </RoundRectangle>
+                </PartDraw>
+
+                <PartText
+                    name="surios_status_reference"
+                    height="24"
+                    width="92"
+                    x="47"
+                    y="213">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF66FF66"
+                            family="SYNC_TO_DEVICE"
+                            size="18">STATUS</Font>
+                    </Text>
+                    <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.home.HomeActivity" />
+                </PartText>
+
+                <PartDraw
+                    name="surios_training_outline"
+                    height="46"
+                    width="92"
+                    x="311"
+                    y="202">
+                    <RoundRectangle
+                        cornerRadiusX="8"
+                        cornerRadiusY="8"
+                        height="46"
+                        width="92"
+                        x="0"
+                        y="0">
+                        <Stroke color="#FF66FF66" thickness="2" />
+                    </RoundRectangle>
+                </PartDraw>
+
+                <PartText
+                    name="surios_training"
+                    height="46"
+                    width="92"
+                    x="311"
+                    y="202">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF66FF66"
+                            family="SYNC_TO_DEVICE"
+                            size="18">TRAINING</Font>
+                    </Text>
+                    <Launch target="com.samsung.android.wear.shealth/com.samsung.android.wear.shealth.app.exercise.view.ExerciseListActivity" />
+                </PartText>
+
+                <PartDraw
+                    name="surios_spotify_radio_outline"
+                    height="46"
+                    width="88"
+                    x="310"
+                    y="286">
+                    <RoundRectangle
+                        cornerRadiusX="8"
+                        cornerRadiusY="8"
+                        height="46"
+                        width="88"
+                        x="0"
+                        y="0">
+                        <Stroke color="#FF66FF66" thickness="2" />
+                    </RoundRectangle>
+                </PartDraw>
+
+                <PartText
+                    name="surios_spotify_radio"
+                    height="24"
+                    width="88"
+                    x="310"
+                    y="297">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF66FF66"
+                            family="SYNC_TO_DEVICE"
+                            size="18">RADIO</Font>
+                    </Text>
+                    <Launch target="com.spotify.music/com.spotify.wear.main.MainActivity" />
+                </PartText>
+            </Group>
+
+            <Group
+                name="surios_lower_text_active"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <PartText
+                    name="surios_lower_version"
+                    height="38"
+                    width="320"
+                    x="65"
+                    y="382">
+                    <Text align="CENTER">
+                        <Font
+                            color="#FF3FAF5A"
+                            family="SYNC_TO_DEVICE"
+                            size="28">v1.4</Font>
+                    </Text>
+                </PartText>
+            </Group>
+
+            <!-- Fallout-style refresh scanline, matching the mobile terminal chrome. -->
+            <PartDraw
+                name="surios_terminal_scanline"
+                height="2"
+                width="450"
+                x="0"
+                y="0">
+                <Line startX="12" startY="1" endX="438" endY="1">
+                    <Stroke color="#6666FF66" thickness="2" />
+                </Line>
+                <Transform
+                    target="y"
+                    value="450">
+                    <Animation
+                        duration="6.0"
+                        interpolation="LINEAR"
+                        fps="30"
+                        repeat="-1" />
+                </Transform>
+            </PartDraw>
+        </Group>
+
+        <Group
+            name="surios_ambient"
+            alpha="0"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="255" />
+
+            <!-- Ambient mode stays static but keeps the live bottom-up step fill. -->
+            <Group
+                name="surios_armor_step_fill_layer_ambient"
+                height="288"
+                width="192"
+                x="129"
+                y="81">
+                <PartImage
+                    name="surios_armor_step_fill_ambient"
+                    height="288"
+                    width="192"
+                    x="0"
+                    y="0">
+                    <Image resource="armor_fill" />
+                </PartImage>
+                <PartDraw
+                    name="surios_armor_step_fill_mask_ambient"
+                    height="288"
+                    width="192"
+                    renderMode="MASK"
+                    x="0"
+                    y="0">
+                    <Rectangle
+                        height="288"
+                        width="192"
+                        x="0"
+                        y="0">
+                        <Transform
+                            target="y"
+                            value="288 - clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Transform
+                            target="height"
+                            value="clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Fill color="#FFFFFFFF" />
+                    </Rectangle>
+                </PartDraw>
+            </Group>
+
+            <DigitalClock
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <TimeText
+                    format="hh:mm"
+                    hourFormat="24"
+                    height="92"
+                    width="340"
+                    x="55"
+                    y="17">
+                    <Font
+                        color="#FF66FF66"
+                        family="SYNC_TO_DEVICE"
+                        size="47" />
+                </TimeText>
+            </DigitalClock>
+
+            <Group
+                name="surios_battery_ambient"
+                height="450"
+                width="450"
+                x="0"
+                y="-106">
+                <PartDraw
+                    name="surios_battery_outline_ambient"
+                    height="24"
+                    width="63"
+                    x="319"
+                    y="218">
+                    <Rectangle height="24" width="58" x="0" y="0">
+                        <Stroke color="#FF3FAF5A" thickness="2" />
+                    </Rectangle>
+                    <Rectangle height="10" width="5" x="58" y="7">
+                        <Fill color="#FF3FAF5A" />
+                    </Rectangle>
+                </PartDraw>
+
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_1_ambient"><![CDATA[[BATTERY_PERCENT] >= 1]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_1_ambient">
+                        <PartDraw height="16" width="4" x="323" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_2_ambient"><![CDATA[[BATTERY_PERCENT] >= 11]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_2_ambient">
+                        <PartDraw height="16" width="4" x="328" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_3_ambient"><![CDATA[[BATTERY_PERCENT] >= 21]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_3_ambient">
+                        <PartDraw height="16" width="4" x="333" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_4_ambient"><![CDATA[[BATTERY_PERCENT] >= 31]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_4_ambient">
+                        <PartDraw height="16" width="4" x="338" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_5_ambient"><![CDATA[[BATTERY_PERCENT] >= 41]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_5_ambient">
+                        <PartDraw height="16" width="4" x="343" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_6_ambient"><![CDATA[[BATTERY_PERCENT] >= 51]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_6_ambient">
+                        <PartDraw height="16" width="4" x="348" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_7_ambient"><![CDATA[[BATTERY_PERCENT] >= 61]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_7_ambient">
+                        <PartDraw height="16" width="4" x="353" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_8_ambient"><![CDATA[[BATTERY_PERCENT] >= 71]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_8_ambient">
+                        <PartDraw height="16" width="4" x="358" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_9_ambient"><![CDATA[[BATTERY_PERCENT] >= 81]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_9_ambient">
+                        <PartDraw height="16" width="4" x="363" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+                <Condition>
+                    <Expressions>
+                        <Expression name="battery_level_10_ambient"><![CDATA[[BATTERY_PERCENT] >= 91]]></Expression>
+                    </Expressions>
+                    <Compare expression="battery_level_10_ambient">
+                        <PartDraw height="16" width="4" x="368" y="222">
+                            <Rectangle height="16" width="4" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle>
+                        </PartDraw>
+                    </Compare>
+                </Condition>
+            </Group>
+        </Group>
+    </Scene>
+</WatchFace>
