@@ -21,3 +21,15 @@ Copias posteriores:
   el Sprint 038.
 - `watchface-v1.4-sprint-039`: esfera oficial v1.4 conservada antes de iniciar
   el Sprint 039.
+- `mobile-app-v3.4-sprint-040`: aplicación móvil v3.4 conservada antes de
+  iniciar el Sprint 040.
+- `bricktown-v1.1-sprint-040`: MBTiles de BRICKTOWN conservado antes de
+  sustituirlo por la cartografía híbrida PNOA 2023.
+- `bricktown-hybrid-pnoa2023-v3.5-correction`: copia exacta del MBTiles
+  híbrido anterior, conservada antes de aplicar la corrección topográfica.
+- `mobile-app-v3.5-sprint-040-final`: copia de la aplicación móvil v3.5 al
+  cierre del Sprint 040, sin salidas de compilación ni cachés.
+
+La cartografía híbrida anterior se conserva dentro de esa copia. La salida
+actual corregida vuelve al estilo topográfico negro/verde y usa PNOA 2023 solo
+como referencia para digitalizar estructuras visibles.

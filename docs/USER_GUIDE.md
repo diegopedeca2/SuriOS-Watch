@@ -1,6 +1,6 @@
 # PIP-SuriOS — Guía de usuario
 
-Versión de la aplicación: **3.4** (`versionCode=14`)
+Versión de la aplicación: **3.5** (`versionCode=15`)
 Esta guía explica las funciones principales de PIP-SuriOS con palabras
 sencillas. Los nombres de los botones se mantienen como aparecen en pantalla.
 

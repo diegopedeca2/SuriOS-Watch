@@ -1,0 +1,97 @@
+{
+  "type": "FeatureCollection",
+  "name": "bricktown_pnoa_visible_2023",
+  "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:OGC:1.3:CRS84"}},
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Cubierta visible desde el aire; no implica uso jugable"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352572500,40.430937000],[-3.352021250,40.430939600],[-3.352005500,40.430749800],[-3.352567250,40.430736800],[-3.352572500,40.430937000]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Cubierta visible desde el aire; no implica uso jugable"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352567250,40.430734200],[-3.352000250,40.430734200],[-3.351995000,40.430541800],[-3.352564625,40.430534000],[-3.352567250,40.430734200]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Cubierta visible desde el aire; no implica uso jugable"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352564625,40.430528800],[-3.351989750,40.430528800],[-3.351984500,40.430336400],[-3.352559375,40.430326000],[-3.352564625,40.430528800]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Cubierta visible desde el aire; no implica uso jugable"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352559375,40.430320800],[-3.351981875,40.430320800],[-3.351976625,40.430128400],[-3.352546250,40.430115400],[-3.352559375,40.430320800]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Cubierta visible desde el aire; no implica uso jugable"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352546250,40.430110200],[-3.351976625,40.430110200],[-3.351968750,40.429980200],[-3.352488500,40.429943800],[-3.352546250,40.429988000],[-3.352546250,40.430110200]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Anexo visible junto a la nave principal"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.351981875,40.430669200],[-3.351748250,40.430669200],[-3.351690500,40.430445600],[-3.351968750,40.430430000],[-3.351981875,40.430669200]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "alta", "note": "Anexo visible junto a la nave principal"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.351968750,40.430424800],[-3.351680000,40.430424800],[-3.351645875,40.430183000],[-3.351968750,40.430183000],[-3.351968750,40.430424800]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "media", "note": "Pequena cubierta visible al oeste del conjunto"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352840250,40.430770600],[-3.352748375,40.430770600],[-3.352745750,40.430596400],[-3.352837625,40.430596400],[-3.352840250,40.430770600]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "building", "source": "PNOA 2023", "confidence": "media", "note": "Pequena cubierta visible al sur del conjunto"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352732625,40.429902200],[-3.352491125,40.429915200],[-3.352493750,40.429816400],[-3.352730000,40.429829400],[-3.352732625,40.429902200]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "surface", "source": "PNOA 2023", "confidence": "alta", "note": "Explanada y superficies despejadas visibles"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.352761500,40.430804400],[-3.352572500,40.430950000],[-3.351979250,40.430976000],[-3.351561875,40.430736800],[-3.351598625,40.430081600],[-3.351895250,40.429910000],[-3.352551500,40.429803400],[-3.352782500,40.430034800],[-3.352861250,40.430443000],[-3.352761500,40.430804400]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "surface", "source": "PNOA 2023", "confidence": "alta", "note": "Explanada despejada al este; no es perimetro oficial"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.351666875,40.430905800],[-3.350971250,40.431012400],[-3.350546000,40.430705600],[-3.350892500,40.430248000],[-3.351575000,40.430279200],[-3.351666875,40.430905800]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "surface", "source": "PNOA 2023", "confidence": "media", "note": "Superficie clara y removida visible al sureste"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.351522500,40.430268800],[-3.350879375,40.430242800],[-3.350551250,40.429780000],[-3.351010625,40.429442000],[-3.351391250,40.429676000],[-3.351522500,40.430268800]]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "track", "source": "PNOA 2023", "confidence": "alta", "note": "Acceso visible; no se clasifica como carretera oficial"},
+      "geometry": {"type": "LineString", "coordinates": [[-3.354200000,40.430994200],[-3.353609375,40.430877200],[-3.353110625,40.430812200],[-3.352769375,40.430692600],[-3.352572500,40.430651000]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "track", "source": "PNOA 2023", "confidence": "alta", "note": "Pista visible al sur del conjunto"},
+      "geometry": {"type": "LineString", "coordinates": [[-3.352782500,40.430040000],[-3.352533125,40.429910000],[-3.351955625,40.429865800],[-3.351496250,40.429689000],[-3.351102500,40.429410800],[-3.350393750,40.429000000]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "track", "source": "PNOA 2023", "confidence": "alta", "note": "Pista visible hacia el este"},
+      "geometry": {"type": "LineString", "coordinates": [[-3.351653750,40.430440400],[-3.351483125,40.430235000],[-3.351286250,40.429910000],[-3.351063125,40.429624000],[-3.350905625,40.429234000]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "track", "source": "PNOA 2023", "confidence": "media", "note": "Trazado de pista visible en la explanada oriental"},
+      "geometry": {"type": "LineString", "coordinates": [[-3.351575000,40.430274000],[-3.351286250,40.430209000],[-3.350945000,40.430040000],[-3.350551250,40.429754000],[-3.350131250,40.429416000]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "track", "source": "PNOA 2023", "confidence": "media", "note": "Pista visible en la ladera oriental"},
+      "geometry": {"type": "LineString", "coordinates": [[-3.351273125,40.431041000],[-3.350892500,40.431132000],[-3.350393750,40.431301000],[-3.350026250,40.431535000]]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"kind": "vegetation", "source": "PNOA 2023", "confidence": "media", "note": "Limite general de matorral visible; no es limite de campo"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-3.351575000,40.431600000],[-3.350000000,40.431600000],[-3.350000000,40.429000000],[-3.350433125,40.429234000],[-3.350840000,40.429624000],[-3.351233750,40.430053000],[-3.351470000,40.430508000],[-3.351575000,40.431600000]]]}
+    }
+  ]
+}

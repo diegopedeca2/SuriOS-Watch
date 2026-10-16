@@ -220,3 +220,30 @@ El flujo reproducible es:
 La salida generada contiene 1.669 teselas PNG en zoom 16-19 y 310 curvas de
 nivel derivadas del MDT05. Sus bounds son
 `-3.632211590216,40.428166307246,-3.608639683177,40.446177345158`.
+
+## BRICKTOWN PNOA 2023 topografico
+
+La salida actual de BRICKTOWN se genera con `build_bricktown_topographic.py`.
+La ortofotografia oficial PNOA se utiliza unicamente como referencia para
+digitalizar elementos visibles; no se carga ningun raster ni WMS en las
+teselas finales.
+
+La fuente editable adicional es
+`data/bricktown_pnoa_visible.geojson`. Contiene cubiertas, anexos,
+explanadas, pistas y un limite general de matorral identificados visualmente
+en la captura PNOA 2023. Las propiedades de cada elemento indican el grado de
+confianza y dejan claro que no son perimetros oficiales ni zonas jugables.
+
+El resultado mantiene fondo negro, curvas verdes, edificios con contorno
+verde y relleno oscuro, caminos verdes y superficies discretas. La cobertura
+es de 2.500 x 2.500 m, centrada en las coordenadas de BRICKTOWN, con teselas
+PNG en zoom 16-19.
+
+El MBTiles incluye la atribucion `PNOA 2023 (captura 28/07/2023-04/08/2023)
+(c) IGN/CNIG`, el enlace del WMS, la resolucion de 0,25 m/pixel y una nota
+explicita de que no contiene fotografia aerea. La reutilizacion y las obras
+derivadas deben conservar la atribucion exigida por el CNIG/IGN.
+
+`build_bricktown_hybrid.py` se conserva como herramienta historica de la
+primera prueba; no forma parte de la salida actual porque aquella variante
+mostraba la ortofotografia como fondo.

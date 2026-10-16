@@ -825,6 +825,9 @@ fun MapTerrainScreen(onBack: () -> Unit) {
                     TerrainAction("CANCEL", modifier = Modifier.fillMaxWidth()) { navigationPrompt = NavigationPrompt.NONE }
                 }
                 Text(loadError ?: "$locationStatus  $headingStatus  Z${"%.1f".format(zoom)}", color=if(loadError==null) PipGreenDim else PipRed, fontSize=12.sp, fontFamily=MapTextFont)
+                if (selectedDefinition?.mapId == "bricktown") {
+                    Text("PNOA 2023 (captura 2023-07) (c) IGN/CNIG", color=PipGreenDim, fontSize=9.sp, fontFamily=MapTextFont)
+                }
                 if (hasSelectedMap) Text("TAP BLUE POINT // RECENTER", color = PipBlue, fontSize = 11.sp, fontFamily = MapTextFont)
                 if (hasSelectedMap) Text("LONG PRESS // SET WAYPOINT", color = PipGreenBright, fontSize = 11.sp, fontFamily = MapTextFont)
                 TerrainAction(

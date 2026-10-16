@@ -90,14 +90,15 @@ object OfflineMapCatalog {
         mapId = "bricktown",
         name = "BRICKTOWN",
         assetPath = "maps/bricktown_terrain.mbtiles",
-        assetSha256 = "E8CAEBE149C7A66FAEFE3E49407F056800F243C8974F5380D09955648120D6AD",
-        // Target center: 40.43061267348348, -3.3518651804964206.
-        // Sprint 031 footprint: 2 km x 2 km, zoom 16..19, with altitude lines.
+        assetSha256 = "6BB6D376FE8DF7C17F310C115D90904E894E7E4195233E8B82CF5BE61A3FC748",
+        // Reference point: 40.430605602539934, -3.3523772372189526.
+        // Sprint 040 correction: topographic vector map from PNOA 2023 references,
+        // 2.5 km x 2.5 km, zoom 16..19. The final asset contains no aerial photo.
         bounds = MapBounds(
-            west = -3.363649988871,
-            south = 40.421607144278,
-            east = -3.340080372122,
-            north = 40.439618202689
+            west = -3.367108246144,
+            south = 40.419348691019,
+            east = -3.337646228294,
+            north = 40.441862514061
         ),
         minZoom = 16,
         maxNativeZoom = 19,

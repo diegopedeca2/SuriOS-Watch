@@ -4,18 +4,25 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-10-16
+last_updated: 2026-10-17
 
 ---
 
 ## Sprint activo
 
-Ninguno. El Sprint 039 queda cerrado documentalmente. La siguiente iniciativa
+Ninguno. El Sprint 040 queda cerrado documentalmente. La siguiente iniciativa
 se abrirá cuando el propietario la autorice.
 
 ---
 
 ## Último Sprint cerrado
+
+[Sprint 040 v1.0](SPRINT_040_v1.0.md) - **CLOSED**
+
+El Sprint 040 corrige la cartografía de BRICKTOWN y entrega PIP-SuriOS v3.5,
+código 15, con mapa topográfico basado en referencias PNOA 2023.
+
+[Auditoría Sprint 040](../AUDIT_SPRINT_040.md) — **APROBADA PARA CIERRE DOCUMENTAL**
 
 [Sprint 039 v1.0](SPRINT_039_v1.0.md) - **CLOSED**
 

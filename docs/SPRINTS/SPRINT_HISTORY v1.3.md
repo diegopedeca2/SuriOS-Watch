@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-10-16
+last_updated: 2026-10-17
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -32,7 +32,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
 | SuriOS Watch | Ninguno | Sprint 039 | Sprint 039 cerrado; watchface v1.5/código 9, WFF v2; auditoría aprobada para cierre documental |
-| PIP-SuriOS | Ninguno | Sprint 036 | Sprint 036 cerrado; PIP-SuriOS v3.4 |
+| PIP-SuriOS | Ninguno | Sprint 040 | Sprint 040 cerrado; PIP-SuriOS v3.5/código 15; auditoría aprobada |
 | SuriOS Ecosystem | Ninguno | Sprint 037 | Sprint 037 cerrado; auditoría aprobada |
 
 ---
@@ -84,6 +84,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 037 | SuriOS Watch | Armadura, pasos, terminal animado y modo ambiente simplificado | Cerrado | Watchface v1.3/código 7 validada; auditoría aprobada para cierre | 2026-10-16 | 2026-10-16 | [Sprint 037 v1.0](SPRINT_037_v1.0.md) |
 | 038 | SuriOS Watch | Armadura, rueda dentada y emblema Brotherhood de fondo | Cerrado | Watchface v1.4/código 8 validada; auditoría aprobada para cierre | 2026-10-16 | 2026-10-16 | [Sprint 038 v1.0](SPRINT_038_v1.0.md) |
 | 039 | SuriOS Watch | Meteorología, ciclos de pasos y migración a WFF v2 | Cerrado | Completado; watchface v1.5/código 9, WFF v2; auditoría aprobada para cierre documental | 2026-10-16 | 2026-10-16 | [Sprint 039 v1.0](SPRINT_039_v1.0.md) |
+| 040 | PIP-SuriOS | Corrección topográfica de la cartografía BRICKTOWN basada en referencias PNOA 2023 | Cerrado | PIP-SuriOS v3.5/código 15 validado; auditoría aprobada para cierre | 2026-10-17 | 2026-10-17 | [Sprint 040 v1.0](SPRINT_040_v1.0.md) |
 
 ---
 

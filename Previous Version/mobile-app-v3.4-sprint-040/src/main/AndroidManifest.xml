@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- P.R.S. uses the A56 locally and can ingest the executable Watch 2 PROBE. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- MORSE and BINARY use CameraManager only to control the rear flash. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <queries>
+        <package android:name="com.atakmap.app.civ" />
+        <package android:name="com.google.android.apps.maps" />
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="${appIcon}"
+        android:label="${appLabel}"
+        android:roundIcon="${appIcon}"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.PIPSuriOS">
+        <activity
+            android:name=".TextToMorseActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".TextToBinaryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".OperationInputActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".OperatorSetupActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".SetUpActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".InformationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".StatisticsLaunchActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.PIPSuriOS"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
+            android:finishOnTaskLaunch="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.PIPSuriOS"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity,DiscouragedApi">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".prs.ProbeDataLayerService"
+            android:enabled="${probeEnabled}"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/suri/probe/telemetry/"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

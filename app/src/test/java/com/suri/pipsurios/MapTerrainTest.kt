@@ -100,6 +100,18 @@ class MapTerrainTest {
         assertEquals(19, OfflineMapCatalog.OFFICE.maxNativeZoom)
     }
 
+    @Test fun bricktownKeepsStableIdAndPNOA2023TopographicCoverage() {
+        val bricktown = OfflineMapCatalog.BRICKTOWN
+        assertEquals("bricktown", bricktown.mapId)
+        assertEquals("maps/bricktown_terrain.mbtiles", bricktown.assetPath)
+        assertTrue(bricktown.bounds.contains(GeoPoint(40.430605602539934, -3.3523772372189526)))
+        assertEquals(-3.367108246144, bricktown.bounds.west, 1e-12)
+        assertEquals(40.419348691019, bricktown.bounds.south, 1e-12)
+        assertEquals(-3.337646228294, bricktown.bounds.east, 1e-12)
+        assertEquals(40.441862514061, bricktown.bounds.north, 1e-12)
+        assertEquals(19, bricktown.maxNativeZoom)
+    }
+
     @Test fun majadahondaCenterMatchesRequestedCoordinates() {
         val center = OfflineMapCatalog.MAJADAHONDA.bounds.center
         assertEquals(40.47334391546396, center.latitude, 1e-12)
