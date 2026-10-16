@@ -23,6 +23,21 @@
             </Rectangle>
         </PartDraw>
 
+        <!-- Dim Brotherhood emblem: visible in normal mode, hidden in ambient mode. -->
+        <PartImage
+            name="surios_brotherhood_emblem_background"
+            alpha="88"
+            height="382"
+            width="322"
+            x="64"
+            y="34">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
+            <Image resource="brotherhood_emblem_pipgreendim" />
+        </PartImage>
+
         <PartImage
             name="surios_armor_background"
             alpha="224"
@@ -33,64 +48,15 @@
             <Image resource="armor_background" />
         </PartImage>
 
-        <!-- Official SuriOS frame: restrained green ring and cardinal/diagonal marks. -->
-        <PartDraw
-            name="surios_official_frame"
+        <!-- A single vertically symmetric toothed ring replaces the former frame lines. -->
+        <PartImage
+            name="surios_gear_frame"
             height="450"
             width="450"
             x="0"
             y="0">
-            <Ellipse
-                height="430"
-                width="430"
-                x="10"
-                y="10">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Ellipse>
-            <Ellipse
-                height="406"
-                width="406"
-                x="22"
-                y="22">
-                <Stroke color="#FF3FAF5A" thickness="1" />
-            </Ellipse>
-            <Line startX="225" startY="12" endX="225" endY="29">
-                <Stroke color="#FF66FF66" thickness="3" />
-            </Line>
-            <Line startX="225" startY="421" endX="225" endY="438">
-                <Stroke color="#FF66FF66" thickness="3" />
-            </Line>
-            <Line startX="12" startY="225" endX="29" endY="225">
-                <Stroke color="#FF66FF66" thickness="3" />
-            </Line>
-            <Line startX="421" startY="225" endX="438" endY="225">
-                <Stroke color="#FF66FF66" thickness="3" />
-            </Line>
-            <Line startX="117" startY="39" endX="125" endY="53">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="333" startY="39" endX="325" endY="53">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="39" startY="117" endX="53" endY="125">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="411" startY="117" endX="397" endY="125">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="39" startY="333" endX="53" endY="325">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="411" startY="333" endX="397" endY="325">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="117" startY="411" endX="125" endY="397">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-            <Line startX="333" startY="411" endX="325" endY="397">
-                <Stroke color="#FF66FF66" thickness="2" />
-            </Line>
-        </PartDraw>
+            <Image resource="gear_frame" />
+        </PartImage>
 
         <Group
             name="surios_active"
@@ -103,18 +69,43 @@
                 target="alpha"
                 value="0" />
 
-            <!-- The dark armor plates fill gradually with the watch's daily step progress. -->
-            <PartImage
-                name="surios_armor_step_fill"
+            <!-- The armor fill is clipped from the bottom upward as steps progress. -->
+            <Group
+                name="surios_armor_step_fill_layer"
                 height="288"
                 width="192"
                 x="129"
                 y="81">
-                <Transform
-                    target="alpha"
-                    value="clamp((100 - [STEP_PERCENT]) * 2.55, 0, 255)" />
-                <Image resource="armor_fill" />
-            </PartImage>
+                <PartImage
+                    name="surios_armor_step_fill"
+                    height="288"
+                    width="192"
+                    x="0"
+                    y="0">
+                    <Image resource="armor_fill" />
+                </PartImage>
+                <PartDraw
+                    name="surios_armor_step_fill_mask"
+                    height="288"
+                    width="192"
+                    renderMode="MASK"
+                    x="0"
+                    y="0">
+                    <Rectangle
+                        height="288"
+                        width="192"
+                        x="0"
+                        y="0">
+                        <Transform
+                            target="y"
+                            value="288 - clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Transform
+                            target="height"
+                            value="clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Fill color="#FFFFFFFF" />
+                    </Rectangle>
+                </PartDraw>
+            </Group>
 
             <DigitalClock
                 height="450"
@@ -468,7 +459,7 @@
                         <Font
                             color="#FF3FAF5A"
                             family="SYNC_TO_DEVICE"
-                            size="28">v1.3</Font>
+                            size="28">v1.4</Font>
                     </Text>
                 </PartText>
             </Group>
@@ -507,18 +498,43 @@
                 target="alpha"
                 value="255" />
 
-            <!-- Ambient mode stays static but keeps the live step progress. -->
-            <PartImage
-                name="surios_armor_step_fill_ambient"
+            <!-- Ambient mode stays static but keeps the live bottom-up step fill. -->
+            <Group
+                name="surios_armor_step_fill_layer_ambient"
                 height="288"
                 width="192"
                 x="129"
                 y="81">
-                <Transform
-                    target="alpha"
-                    value="clamp((100 - [STEP_PERCENT]) * 2.55, 0, 255)" />
-                <Image resource="armor_fill" />
-            </PartImage>
+                <PartImage
+                    name="surios_armor_step_fill_ambient"
+                    height="288"
+                    width="192"
+                    x="0"
+                    y="0">
+                    <Image resource="armor_fill" />
+                </PartImage>
+                <PartDraw
+                    name="surios_armor_step_fill_mask_ambient"
+                    height="288"
+                    width="192"
+                    renderMode="MASK"
+                    x="0"
+                    y="0">
+                    <Rectangle
+                        height="288"
+                        width="192"
+                        x="0"
+                        y="0">
+                        <Transform
+                            target="y"
+                            value="288 - clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Transform
+                            target="height"
+                            value="clamp((100 - [STEP_PERCENT]) * 2.88, 0, 288)" />
+                        <Fill color="#FFFFFFFF" />
+                    </Rectangle>
+                </PartDraw>
+            </Group>
 
             <DigitalClock
                 height="450"

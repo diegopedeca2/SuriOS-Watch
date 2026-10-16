@@ -1,3 +1,20 @@
+## Sprint 038 — SuriOS Watch: rueda dentada y emblema de fondo — 2026-10-16
+
+### Añadido y modificado
+
+- El progreso de pasos de la armadura pasa a representarse mediante un recorte
+  vertical de abajo hacia arriba.
+- Las dos líneas circulares se sustituyen por una rueda dentada exterior
+  simétrica; se eliminan el anillo interior y las marcas horarias.
+- Se añade `brotherhood_emblem_pipgreendim` como fondo tenue del modo normal.
+- La esfera mantiene el modo ambiente validado sin emblema ni animación.
+
+### Validación y cierre
+
+- Tests, lint, compilación y parseo XML correctos.
+- Validación visual del propietario completada.
+- SPRINT 038 cerrado con auditoría aprobada.
+
 ## Sprint 025 — INFORMATION, disclaimers y actualización de dependencias — 2026-08-31
 
 ### Añadido y modificado

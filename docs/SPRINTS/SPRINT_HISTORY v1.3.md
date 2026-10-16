@@ -31,7 +31,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 037 | Sprint 037 cerrado; watchface v1.3/código 7 |
+| SuriOS Watch | Ninguno | Sprint 038 | Sprint 038 cerrado; watchface v1.4/código 8 |
 | PIP-SuriOS | Ninguno | Sprint 036 | Sprint 036 cerrado; PIP-SuriOS v3.4 |
 | SuriOS Ecosystem | Ninguno | Sprint 037 | Sprint 037 cerrado; auditoría aprobada |
 
@@ -82,6 +82,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 035 | SuriOS Ecosystem / PIP-SuriOS | MAP: ORGANIZATION OVERLAY, WAYPOINT NAVIGATION y mapas de prueba | Cerrado | PIP-SuriOS v3.3 validado; auditoría aprobada para cierre | 2026-09-23 | 2026-09-23 | [Sprint 035 v1.0](SPRINT_035_v1.0.md) |
 | 036 | SuriOS Ecosystem / PIP-SuriOS | AIRSOFT TOTAL REFERENCE MAP + BETA TESTER BUILDS | Cerrado | PIP-SuriOS v3.4 validado; auditoría aprobada para cierre | 2026-09-24 | 2026-09-24 | [Sprint 036 v1.0](SPRINT_036_v1.0.md) |
 | 037 | SuriOS Watch | Armadura, pasos, terminal animado y modo ambiente simplificado | Cerrado | Watchface v1.3/código 7 validada; auditoría aprobada para cierre | 2026-10-16 | 2026-10-16 | [Sprint 037 v1.0](SPRINT_037_v1.0.md) |
+| 038 | SuriOS Watch | Armadura, rueda dentada y emblema Brotherhood de fondo | Cerrado | Watchface v1.4/código 8 validada; auditoría aprobada para cierre | 2026-10-16 | 2026-10-16 | [Sprint 038 v1.0](SPRINT_038_v1.0.md) |
 
 ---
 

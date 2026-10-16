@@ -14,3 +14,8 @@ de compilación, cachés y salidas temporales quedan fuera de la copia.
 Primera copia realizada:
 
 - `watchface-v1.2`: esfera oficial de Galaxy Watch Ultra.
+
+Copias posteriores:
+
+- `watchface-v1.3-sprint-038`: esfera oficial v1.3 conservada antes de iniciar
+  el Sprint 038.

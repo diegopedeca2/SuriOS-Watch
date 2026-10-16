@@ -8,7 +8,22 @@ last_updated: 2026-10-16
 
 ---
 
+## Sprint activo
+
+Ninguno. El siguiente Sprint se abrirá tras el cierre administrativo del Sprint
+038.
+
+---
+
 ## Último Sprint cerrado
+
+[Sprint 038 v1.0](SPRINT_038_v1.0.md) - **CLOSED**
+
+El Sprint 038 modifica la lectura visual del progreso de pasos, sustituye el
+marco circular por una rueda dentada simétrica y añade el emblema Brotherhood
+como fondo tenue en modo normal.
+
+[Auditoría Sprint 038](../AUDIT_SPRINT_038.md) — **APROBADA PARA CIERRE**
 
 [Sprint 037 v1.0](SPRINT_037_v1.0.md) - **CLOSED**
 
