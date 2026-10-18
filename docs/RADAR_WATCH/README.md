@@ -61,6 +61,11 @@ notificaciones.
 La capa BLE, el decodificador y la pantalla estan separados. Si se pierde la
 conexion, el cliente vuelve a buscar automaticamente `SuriOS Radar`.
 
+La actividad fija su orientacion ignorando el sensor del reloj. Ademas, volver
+a primer plano no reinicia una conexion BLE que ya este activa. La desconexion
+de ADB no forma parte de la conexion BLE; si el proceso de la aplicacion es
+terminado por el sistema, la app debe volver a abrirse y seleccionar `REAL`.
+
 ## Modo simulado
 
 El modo `SIM` genera tres objetivos de prueba. El modo `REAL` escanea y recibe
@@ -77,7 +82,7 @@ Desde `D:\WristOS`:
 Con el Galaxy Watch Ultra conectado por ADB Wi-Fi:
 
 ```powershell
-adb -s 192.168.1.63:32815 install -r watch\radarwatch\build\outputs\apk\debug\radarwatch-debug.apk
+adb -s 192.168.1.63:45843 install -r watch\radarwatch\build\outputs\apk\debug\radarwatch-debug.apk
 ```
 
 El modo `REAL` solicita `BLUETOOTH_SCAN` y `BLUETOOTH_CONNECT`. No se solicita

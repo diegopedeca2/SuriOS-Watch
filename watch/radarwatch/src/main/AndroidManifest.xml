@@ -28,6 +28,7 @@
         <activity
             android:name=".MainActivity"
             android:taskAffinity="com.suri.suriosradar"
+            android:screenOrientation="nosensor"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

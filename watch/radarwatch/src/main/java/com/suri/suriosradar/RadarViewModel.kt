@@ -86,8 +86,9 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setPermissionsGranted(granted: Boolean) {
+        val permissionsWereGranted = _uiState.value.permissionsGranted
         _uiState.update { it.copy(permissionsGranted = granted) }
-        if (granted && _uiState.value.mode == RadarDataMode.REAL_BLE) {
+        if (granted && !permissionsWereGranted && _uiState.value.mode == RadarDataMode.REAL_BLE) {
             bleClient.start()
         }
     }

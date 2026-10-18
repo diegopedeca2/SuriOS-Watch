@@ -37,13 +37,6 @@
                 mode="AMBIENT"
                 target="alpha"
                 value="0" />
-            <!-- Subtle horizontal flip simulates a vertical-axis turn in interactive mode. -->
-            <Transform target="scaleX" value="[SECOND] % 12 &lt; 6 ? 1 : -1">
-                <Animation
-                    duration="5.0"
-                    interpolation="EASE_IN_OUT"
-                    fps="30" />
-            </Transform>
             <PartImage
                 name="surios_brotherhood_emblem_background_image"
                 alpha="255"
@@ -75,12 +68,6 @@
                 width="322"
                 x="64"
                 y="34">
-                <!-- Horizontal compression/expansion simulates a turn around the vertical axis. -->
-                <Transform target="scaleX" value="[SECOND] % 2 == 0 ? 1 : -1">
-                    <Animation
-                        duration="1.0"
-                        interpolation="EASE_IN_OUT" />
-                </Transform>
                 <Image resource="brotherhood_emblem_pipgreendim" />
             </PartImage>
         </Group>

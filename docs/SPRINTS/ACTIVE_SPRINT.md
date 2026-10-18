@@ -10,7 +10,17 @@ last_updated: 2026-10-18
 
 ## Sprint activo
 
-[Sprint 041 v1.0](SPRINT_041_v1.0.md) - **ACTIVE**
+No hay un Sprint abierto en este momento.
+
+## Sprints cerrados recientemente
+
+[Sprint 042 v1.0](SPRINT_042_v1.0.md) - **CLOSED**
+
+El Sprint 042 corrige la orientacion involuntaria de SuriOS Radar, estabiliza
+el ciclo de vida de la conexion BLE y elimina la rotacion del emblema en la
+esfera normal, bloqueo y ambiente.
+
+[Sprint 041 v1.0](SPRINT_041_v1.0.md) - **CLOSED**
 
 El Sprint 041 incluye el desarrollo de SuriOS Radar para representar
 objetivos BLE en tiempo real, ademas de cerrar los temas abiertos de la esfera.

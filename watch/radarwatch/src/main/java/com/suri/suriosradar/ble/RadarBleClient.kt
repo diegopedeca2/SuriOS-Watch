@@ -93,7 +93,7 @@ class RadarBleClient(context: Context) {
         @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             val announcedName = result.scanRecord?.deviceName ?: result.device.name
-            if (announcedName == RADAR_NAME) {
+            if (announcedName == RADAR_NAME && gatt == null) {
                 stopScan()
                 connect(result.device)
             }
@@ -109,6 +109,14 @@ class RadarBleClient(context: Context) {
     private val gattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             handler.post {
+                if (!running) {
+                    closeGatt(gatt)
+                    return@post
+                }
+                if (this@RadarBleClient.gatt != null && this@RadarBleClient.gatt !== gatt) {
+                    closeGatt(gatt)
+                    return@post
+                }
                 if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                     this@RadarBleClient.gatt = gatt
                     setStatus(BleConnectionState.CONNECTING, "discovering_services")
@@ -169,6 +177,7 @@ class RadarBleClient(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun start() {
+        if (running) return
         running = true
         handler.removeCallbacks(reconnect)
         closeGatt(gatt)
@@ -286,7 +295,10 @@ class RadarBleClient(context: Context) {
 
     @SuppressLint("MissingPermission")
     private fun closeGatt(candidate: BluetoothGatt?) {
-        candidate?.close()
+        candidate?.let {
+            runCatching { it.disconnect() }
+            runCatching { it.close() }
+        }
         if (gatt === candidate) gatt = null
     }
 
