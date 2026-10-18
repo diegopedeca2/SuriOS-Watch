@@ -94,8 +94,6 @@
                 target="alpha"
                 value="0" />
             <Image resource="armor_background" />
-            <!-- The armor center acts as the shortcut to the standalone radar app. -->
-            <Launch target="com.suri.suriosradar" />
         </PartImage>
 
         <!-- A single vertically symmetric toothed ring replaces the former frame lines. -->
@@ -173,18 +171,18 @@
                         width="192"
                         x="129"
                         y="81">
-                        <Rectangle height="12" width="192" x="0" y="0">
+                        <Rectangle height="32" width="192" x="0" y="0">
                             <Transform
                                 target="y"
-                                value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288) - 6" />
+                                value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288) - 16" />
                             <Fill color="#00000000">
                                 <LinearGradient
                                     startX="0"
                                     startY="0"
                                     endX="0"
-                                    endY="12"
-                                    colors="#003FAF5A #B366FF66 #003FAF5A"
-                                    positions="0 0.5 1" />
+                                    endY="32"
+                                    colors="#003FAF5A #204FAF5A #805CFF66 #B366FF66 #805CFF66 #204FAF5A #003FAF5A"
+                                    positions="0 0.16 0.33 0.5 0.67 0.84 1" />
                             </Fill>
                         </Rectangle>
                     </PartDraw>
@@ -205,10 +203,24 @@
                     y="17">
                     <Font
                         color="#FF66FF66"
-                        family="SYNC_TO_DEVICE"
+                        family="consolas"
                         size="47" />
                 </TimeText>
             </DigitalClock>
+
+            <PartText
+                name="surios_version_above_date"
+                height="18"
+                width="106"
+                x="52"
+                y="72">
+                <Text>
+                    <Font
+                        color="#FF3FAF5A"
+                        family="consolas"
+                        size="14">v1.7</Font>
+                </Text>
+            </PartText>
 
             <PartText
                 name="surios_date_day_month"
@@ -219,7 +231,7 @@
                 <Text>
                     <Font
                         color="#FF3FAF5A"
-                        family="SYNC_TO_DEVICE"
+                        family="consolas"
                         size="28">
                         <Template>%s/%s
                             <Parameter expression="[DAY_Z]" />
@@ -238,7 +250,7 @@
                 <Text>
                     <Font
                         color="#FF3FAF5A"
-                        family="SYNC_TO_DEVICE"
+                        family="consolas"
                         size="28">
                         <Template>%s
                             <Parameter expression="[YEAR]" />
@@ -261,7 +273,7 @@
                         <Text align="CENTER">
                             <Font
                                 color="#FF66FF66"
-                                family="SYNC_TO_DEVICE"
+                                family="consolas"
                                 size="15">RECHARGING</Font>
                         </Text>
                     </PartText>
@@ -394,7 +406,7 @@
                         <Condition><Expressions><Expression name="step_cell_3"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3"><PartDraw name="surios_step_cell_3" height="20" width="14" x="347" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
                         <Condition><Expressions><Expression name="step_cell_4"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4"><PartDraw name="surios_step_cell_4" height="20" width="14" x="364" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
                         <Condition><Expressions><Expression name="step_cell_5"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5"><PartDraw name="surios_step_cell_5" height="20" width="14" x="381" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cells_plus"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cells_plus"><PartText name="surios_step_cells_plus" height="20" width="18" x="399" y="238"><Text align="CENTER"><Font color="#FF66FF66" family="SYNC_TO_DEVICE" size="18" weight="BOLD">+</Font></Text></PartText></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cells_plus"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cells_plus"><PartText name="surios_step_cells_plus" height="20" width="18" x="399" y="238"><Text align="CENTER"><Font color="#FF66FF66" family="consolas" size="18" weight="BOLD">+</Font></Text></PartText></Compare></Condition>
 
                     </Group>
                 </Default>
@@ -415,7 +427,7 @@
                         <Text align="CENTER">
                             <Font
                                 color="#FF66FF66"
-                                family="SYNC_TO_DEVICE"
+                                family="consolas"
                                 size="15">
                                 <Template><![CDATA[TEMP %s°]]>
                                     <Parameter expression="[WEATHER.TEMPERATURE]" />
@@ -433,7 +445,7 @@
                         <Text align="CENTER">
                             <Font
                                 color="#FF66FF66"
-                                family="SYNC_TO_DEVICE"
+                                family="consolas"
                                 size="15">
                                 <Template><![CDATA[RAIN %s%%]]>
                                     <Parameter expression="[WEATHER.CHANCE_OF_PRECIPITATION]" />
@@ -452,7 +464,7 @@
                         <Text align="CENTER">
                             <Font
                                 color="#FF3FAF5A"
-                                family="SYNC_TO_DEVICE"
+                                family="consolas"
                                 size="15">TEMP --</Font>
                         </Text>
                     </PartText>
@@ -466,7 +478,7 @@
                         <Text align="CENTER">
                             <Font
                                 color="#FF3FAF5A"
-                                family="SYNC_TO_DEVICE"
+                                family="consolas"
                                 size="15">RAIN --</Font>
                         </Text>
                     </PartText>
@@ -506,7 +518,7 @@
                     <Text align="CENTER">
                         <Font
                             color="#FF66FF66"
-                            family="SYNC_TO_DEVICE"
+                            family="consolas"
                             size="18">CAPS</Font>
                     </Text>
                 </PartText>
@@ -538,7 +550,7 @@
                     <Text align="CENTER">
                         <Font
                             color="#FF66FF66"
-                            family="SYNC_TO_DEVICE"
+                            family="consolas"
                             size="18">STATUS</Font>
                     </Text>
                 </PartText>
@@ -570,7 +582,7 @@
                     <Text align="CENTER">
                         <Font
                             color="#FF66FF66"
-                            family="SYNC_TO_DEVICE"
+                            family="consolas"
                             size="18">TRAINING</Font>
                     </Text>
                 </PartText>
@@ -602,29 +614,46 @@
                     <Text align="CENTER">
                         <Font
                             color="#FF66FF66"
-                            family="SYNC_TO_DEVICE"
+                            family="consolas"
                             size="18">RADIO</Font>
                     </Text>
                 </PartText>
             </Group>
 
             <Group
-                name="surios_lower_text_active"
+                name="surios_radar_button_active"
                 height="450"
                 width="450"
                 x="0"
                 y="0">
+                <PartDraw
+                    name="surios_radar_button_outline"
+                    height="46"
+                    width="92"
+                    x="179"
+                    y="378">
+                    <RoundRectangle
+                        cornerRadiusX="8"
+                        cornerRadiusY="8"
+                        height="46"
+                        width="92"
+                        x="0"
+                        y="0">
+                        <Stroke color="#FF66FF66" thickness="2" />
+                    </RoundRectangle>
+                    <Launch target="com.suri.suriosradar" />
+                </PartDraw>
                 <PartText
-                    name="surios_lower_version"
-                    height="38"
-                    width="320"
-                    x="65"
-                    y="382">
+                    name="surios_radar_button_label"
+                    height="24"
+                    width="92"
+                    x="179"
+                    y="389">
                     <Text align="CENTER">
                         <Font
-                            color="#FF3FAF5A"
-                            family="SYNC_TO_DEVICE"
-                            size="28">v1.6</Font>
+                            color="#FF66FF66"
+                            family="consolas"
+                            size="18">RADAR</Font>
                     </Text>
                 </PartText>
             </Group>
@@ -715,18 +744,18 @@
                         width="192"
                         x="129"
                         y="81">
-                        <Rectangle height="12" width="192" x="0" y="0">
+                        <Rectangle height="32" width="192" x="0" y="0">
                             <Transform
                                 target="y"
-                                value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288) - 6" />
+                                value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288) - 16" />
                             <Fill color="#00000000">
                                 <LinearGradient
                                     startX="0"
                                     startY="0"
                                     endX="0"
-                                    endY="12"
-                                    colors="#003FAF5A #663FAF5A #003FAF5A"
-                                    positions="0 0.5 1" />
+                                    endY="32"
+                                    colors="#003FAF5A #203FAF5A #603FAF5A #8C3FAF5A #603FAF5A #203FAF5A #003FAF5A"
+                                    positions="0 0.16 0.33 0.5 0.67 0.84 1" />
                             </Fill>
                         </Rectangle>
                     </PartDraw>
@@ -747,7 +776,7 @@
                     y="171">
                     <Font
                         color="#FF66FF66"
-                        family="SYNC_TO_DEVICE"
+                        family="consolas"
                         size="56"
                         weight="EXTRA_BOLD" />
                 </TimeText>
@@ -903,7 +932,7 @@
                 <Condition><Expressions><Expression name="step_cell_3_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3_ambient"><PartDraw name="surios_step_cell_3_ambient" height="20" width="14" x="347" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
                 <Condition><Expressions><Expression name="step_cell_4_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4_ambient"><PartDraw name="surios_step_cell_4_ambient" height="20" width="14" x="364" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
                 <Condition><Expressions><Expression name="step_cell_5_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5_ambient"><PartDraw name="surios_step_cell_5_ambient" height="20" width="14" x="381" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cells_plus_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cells_plus_ambient"><PartText name="surios_step_cells_plus_ambient" height="20" width="18" x="399" y="238"><Text align="CENTER"><Font color="#FF3FAF5A" family="SYNC_TO_DEVICE" size="18" weight="BOLD">+</Font></Text></PartText></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cells_plus_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cells_plus_ambient"><PartText name="surios_step_cells_plus_ambient" height="20" width="18" x="399" y="238"><Text align="CENTER"><Font color="#FF3FAF5A" family="consolas" size="18" weight="BOLD">+</Font></Text></PartText></Compare></Condition>
                 </Group>
             </Group>
         </Group>

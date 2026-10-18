@@ -21,7 +21,7 @@ como versión canónica del ecosistema.
 
 | ID | Estado | Prioridad | Origen | Elemento | Observaciones |
 |---|---|---|---|---|---|
-| BL-001 | Cerrado | Alta | Sprint 001 | Validar tipografía definitiva Consolas | Consolas es la fuente oficial. Las watchfaces usan temporalmente `SYNC_TO_DEVICE`, una fuente disponible en el dispositivo, porque Consolas no está empaquetada dentro de la esfera. Esta deuda no afecta al funcionamiento actual. |
+| BL-001 | Cerrado | Alta | Sprint 001 / Sprint 043 | Validar tipografía definitiva Consolas | Consolas es la fuente oficial y está empaquetada en `watch/watchface/src/main/res/font`. La esfera activa ya no depende de `SYNC_TO_DEVICE` ni de la fuente instalada en el dispositivo. |
 | BL-002 | Histórico | Media | Sprint 001 | Actualizar `preview.png` | No se actualiza; se conserva como recurso histórico. |
 | BL-003 | Cerrado | Alta | Auditoría documental | Versionar documentación oficial en Git | Política de documentación en Git aprobada y aplicada. |
 | BL-004 | Cerrado | Media | Organización | Definir política GitHub | `master` es la rama estable; commits funcionales y push tras validación. |

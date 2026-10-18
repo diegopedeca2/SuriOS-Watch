@@ -4,7 +4,7 @@
 document: SPRINT
 project: SuriOS Watch
 version: 1.0
-status: Activo
+status: CLOSED
 owner: Diego Pérez de Camino
 date: 2026-10-18
 predecessor: Sprint 040

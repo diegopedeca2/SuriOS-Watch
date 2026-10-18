@@ -14,6 +14,12 @@ No hay un Sprint abierto en este momento.
 
 ## Sprints cerrados recientemente
 
+[Sprint 043 v1.0](SPRINT_043_v1.0.md) - **CLOSED**
+
+El Sprint 043 entrega la esfera v1.7, `versionCode 11`, con el acceso RADAR
+centrado y adaptado al estilo visual del resto de accesos. También mantiene la
+pantalla de Radar activa y muestra los objetivos únicamente como puntos rojos.
+
 [Sprint 042 v1.0](SPRINT_042_v1.0.md) - **CLOSED**
 
 El Sprint 042 corrige la orientacion involuntaria de SuriOS Radar, estabiliza
@@ -32,10 +38,10 @@ desarrollo de SuriOS Radar para representar objetivos BLE en tiempo real.
 
 ## Último Sprint cerrado
 
-[Sprint 040 v1.0](SPRINT_040_v1.0.md) - **CLOSED**
+[Sprint 043 v1.0](SPRINT_043_v1.0.md) - **CLOSED**
 
-El Sprint 040 corrige la cartografía de BRICKTOWN y entrega PIP-SuriOS v3.5,
-código 15, con mapa topográfico basado en referencias PNOA 2023.
+El Sprint 043 cierra la actualización de SuriOS Watch v1.7 y deja instaladas la
+watchface y la app Radar en el Watch Ultra.
 
 [Auditoría Sprint 040](../AUDIT_SPRINT_040.md) — **APROBADA PARA CIERRE DOCUMENTAL**
 

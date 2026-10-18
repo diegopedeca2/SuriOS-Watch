@@ -1,3 +1,24 @@
+## Sprint 043 - SuriOS Watch v1.7 y acceso RADAR - 2026-10-18
+
+### Añadido y modificado
+
+- Se actualiza la esfera oficial a `v1.7`, `versionCode 11`.
+- Se elimina el lanzamiento del radar desde el centro de la armadura.
+- Se añade el botón `RADAR` centrado en la posición de la firma anterior,
+  usando el mismo patrón visual que los demás accesos.
+- La firma de versión pasa a mostrarse reducida encima de la fecha.
+- Se suaviza el difuminado del progreso de la armadura.
+- Se empaqueta Consolas dentro de `watchface/src/main/res/font`.
+- SuriOS Radar mantiene la pantalla activa mientras está visible.
+- Los objetivos del radar se muestran únicamente como puntos rojos.
+
+### Validación y cierre
+
+- `test`, `lint` y los ensamblados de `watchface` y `radarwatch`: correctos.
+- Instalación en el Watch Ultra por ADB Wi-Fi: `Success`.
+- Validación visual del propietario: completada.
+- Sprint 043 cerrado.
+
 ## Sprint 038 — SuriOS Watch: rueda dentada y emblema de fondo — 2026-10-16
 
 ### Añadido y modificado

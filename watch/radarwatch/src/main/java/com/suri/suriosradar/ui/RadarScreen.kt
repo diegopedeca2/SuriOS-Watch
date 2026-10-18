@@ -1,6 +1,5 @@
 package com.suri.suriosradar.ui
 
-import android.graphics.Paint
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -31,11 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -49,7 +45,6 @@ import com.suri.suriosradar.RadarDisplayState
 import com.suri.suriosradar.RadarUiState
 import com.suri.suriosradar.RadarViewModel
 import com.suri.suriosradar.model.RadarTarget
-import com.suri.suriosradar.model.TargetState
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -326,45 +321,7 @@ private fun RadarCone(targets: List<RadarTarget>, modifier: Modifier) {
                 bearing,
                 distance / MAX_RANGE_MM
             )
-            val color = markerColor(target.slot)
-            val alpha = if (target.state == TargetState.RETAINED) 0.42f else 1f
-            drawCircle(RadarPalette.Black, radius = 7f, center = marker)
-            drawCircle(color.copy(alpha = alpha), radius = 5f, center = marker)
-            if (target.state == TargetState.RETAINED) {
-                drawCircle(
-                    color = color.copy(alpha = 0.8f),
-                    radius = 9f,
-                    center = marker,
-                    style = Stroke(width = 1.5f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 3f)))
-                )
-            }
-        }
-
-        drawIntoCanvas { canvas ->
-            val targetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                textSize = with(density) { 8.sp.toPx() }
-                typeface = android.graphics.Typeface.MONOSPACE
-            }
-            visibleTargets.forEach { target ->
-                val distance = hypot(target.xMm.toFloat(), target.yMm.toFloat())
-                val bearing = Math.toDegrees(atan2(target.xMm.toDouble(), target.yMm.toDouble())).toFloat()
-                val marker = pointAtRange(
-                    origin,
-                    displayRadius,
-                    bearing,
-                    distance / MAX_RANGE_MM
-                )
-                val label = "T${target.slot}"
-                targetPaint.color = markerColor(target.slot).toArgb()
-                val labelWidth = targetPaint.measureText(label)
-                val labelX = if (marker.x < origin.x) {
-                    marker.x - labelWidth - 8f
-                } else {
-                    marker.x + 8f
-                }.coerceIn(2f, size.width - labelWidth - 2f)
-                val labelY = (marker.y - 6f).coerceIn(targetPaint.textSize, size.height - 2f)
-                canvas.nativeCanvas.drawText(label, labelX, labelY, targetPaint)
-            }
+            drawCircle(RadarPalette.Red, radius = 5f, center = marker)
         }
     }
 }
@@ -424,15 +381,6 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawRangeTick(
         cap = StrokeCap.Round
     )
 }
-
-private fun markerColor(slot: Int): Color = RadarPalette.Red
-
-private fun Color.toArgb(): Int = android.graphics.Color.argb(
-    (alpha * 255).toInt(),
-    (red * 255).toInt(),
-    (green * 255).toInt(),
-    (blue * 255).toInt()
-)
 
 private fun RadarUiState.statusText(): String = when (mode) {
     RadarDataMode.SIMULATED -> "SIM | PRUEBA"

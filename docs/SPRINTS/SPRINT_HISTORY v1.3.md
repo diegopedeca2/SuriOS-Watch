@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-10-17
+last_updated: 2026-10-18
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -31,7 +31,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 039 | Sprint 039 cerrado; watchface v1.5/código 9, WFF v2; auditoría aprobada para cierre documental |
+| SuriOS Watch | Ninguno | Sprint 043 | Sprint 043 cerrado; watchface v1.7/código 11, WFF v2; watchface y Radar instalados y validados |
 | PIP-SuriOS | Ninguno | Sprint 040 | Sprint 040 cerrado; PIP-SuriOS v3.5/código 15; auditoría aprobada |
 | SuriOS Ecosystem | Ninguno | Sprint 037 | Sprint 037 cerrado; auditoría aprobada |
 
@@ -85,6 +85,9 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 038 | SuriOS Watch | Armadura, rueda dentada y emblema Brotherhood de fondo | Cerrado | Watchface v1.4/código 8 validada; auditoría aprobada para cierre | 2026-10-16 | 2026-10-16 | [Sprint 038 v1.0](SPRINT_038_v1.0.md) |
 | 039 | SuriOS Watch | Meteorología, ciclos de pasos y migración a WFF v2 | Cerrado | Completado; watchface v1.5/código 9, WFF v2; auditoría aprobada para cierre documental | 2026-10-16 | 2026-10-16 | [Sprint 039 v1.0](SPRINT_039_v1.0.md) |
 | 040 | PIP-SuriOS | Corrección topográfica de la cartografía BRICKTOWN basada en referencias PNOA 2023 | Cerrado | PIP-SuriOS v3.5/código 15 validado; auditoría aprobada para cierre | 2026-10-17 | 2026-10-17 | [Sprint 040 v1.0](SPRINT_040_v1.0.md) |
+| 041 | SuriOS Watch | Limpieza de temas abiertos y primera integración de SuriOS Radar | Cerrado | Watchface v1.6/código 10 y Radar v0.1/código 1 implementados | 2026-10-18 | 2026-10-18 | [Sprint 041 v1.0](SPRINT_041_v1.0.md) |
+| 042 | SuriOS Watch | Estabilidad BLE, orientación fija y emblema estático | Cerrado | Correcciones técnicas implementadas; validaciones físicas trasladadas explícitamente | 2026-10-18 | 2026-10-18 | [Sprint 042 v1.0](SPRINT_042_v1.0.md) |
+| 043 | SuriOS Watch | Watchface v1.7, acceso RADAR y lectura simplificada de objetivos | Cerrado | Watchface v1.7/código 11 y Radar actualizados, instalados y validados | 2026-10-18 | 2026-10-18 | [Sprint 043 v1.0](SPRINT_043_v1.0.md) |
 
 ---
 
@@ -1069,3 +1072,29 @@ el modo ambiente estático, la batería, los accesos existentes y el acceso
 `test`, `lint` y `:watchface:assembleDebug` terminan correctamente. La esfera
 queda instalada en el Watch Ultra y la validación visual y funcional final fue
 aprobada por el propietario. No existe ningún Sprint activo.
+
+## 45. Cierre de Sprint 041 de SuriOS Watch
+
+El Sprint 041 queda cerrado tras incorporar SuriOS Radar como aplicación Wear
+OS independiente y actualizar la esfera a v1.6 (`versionCode 10`). El Sprint
+042 y el Sprint 043 continúan su evolución técnica sobre esta base.
+
+## 46. Cierre de Sprint 042 de SuriOS Watch
+
+El Sprint 042 queda cerrado tras corregir la orientación de SuriOS Radar, el
+ciclo de vida BLE y la rotación del emblema. Las comprobaciones que requerían
+observación adicional quedaron identificadas en su documento y no se presentan
+como validadas antes de tiempo.
+
+## 47. Cierre de Sprint 043 de SuriOS Watch
+
+El Sprint 043 se cierra el 2026-10-18 con la esfera oficial
+`com.suri.surioswatch` en v1.7 (`versionCode 11`). Se elimina el lanzamiento
+del radar desde la armadura, se incorpora el botón RADAR con el mismo patrón
+visual que el resto de accesos, se suaviza el progreso de la armadura y se
+empaqueta Consolas dentro del proyecto.
+
+SuriOS Radar mantiene la pantalla activa mientras está visible y muestra los
+objetivos solo como puntos rojos. `test`, `lint`, los ensamblados de
+`watchface` y `radarwatch`, la instalación por ADB Wi-Fi y la validación visual
+del propietario terminan correctamente. No existe ningún Sprint activo.
