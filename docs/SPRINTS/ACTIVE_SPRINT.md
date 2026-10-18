@@ -4,14 +4,19 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-10-17
+last_updated: 2026-10-18
 
 ---
 
 ## Sprint activo
 
-Ninguno. El Sprint 040 queda cerrado documentalmente. La siguiente iniciativa
-se abrirá cuando el propietario la autorice.
+[Sprint 041 v1.0](SPRINT_041_v1.0.md) - **ACTIVE**
+
+El Sprint 041 incluye el desarrollo de SuriOS Radar para representar
+objetivos BLE en tiempo real, ademas de cerrar los temas abiertos de la esfera.
+
+El Sprint 041 combina la limpieza de temas abiertos de la esfera con el
+desarrollo de SuriOS Radar para representar objetivos BLE en tiempo real.
 
 ---
 

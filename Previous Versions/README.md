@@ -11,7 +11,7 @@ incluyen carpetas `build`, cachés ni salidas temporales.
 
 ## Copias actuales
 
-- `watchface-v1.4-sprint-039/`: versión anterior al Sprint 039.
+- `watchface-v1.5-sprint-041/`: versión anterior al Sprint 041.
 - `watchface-v1.5-sprint-039-final/`: versión final del Sprint 039.
 
 La carpeta histórica `Previous Version` se conserva para mantener las

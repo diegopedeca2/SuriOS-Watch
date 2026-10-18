@@ -24,19 +24,36 @@
         </PartDraw>
 
         <!-- Dim Brotherhood emblem: visible in normal mode, hidden in ambient mode. -->
-        <PartImage
+        <Group
             name="surios_brotherhood_emblem_background"
             alpha="88"
-            height="382"
-            width="322"
-            x="64"
-            y="34">
+            height="450"
+            width="450"
+            x="0"
+            y="0"
+            pivotX="0.5"
+            pivotY="0.5">
             <Variant
                 mode="AMBIENT"
                 target="alpha"
                 value="0" />
-            <Image resource="brotherhood_emblem_pipgreendim" />
-        </PartImage>
+            <!-- Subtle horizontal flip simulates a vertical-axis turn in interactive mode. -->
+            <Transform target="scaleX" value="[SECOND] % 12 &lt; 6 ? 1 : -1">
+                <Animation
+                    duration="5.0"
+                    interpolation="EASE_IN_OUT"
+                    fps="30" />
+            </Transform>
+            <PartImage
+                name="surios_brotherhood_emblem_background_image"
+                alpha="255"
+                height="382"
+                width="322"
+                x="64"
+                y="34">
+                <Image resource="brotherhood_emblem_pipgreendim" />
+            </PartImage>
+        </Group>
 
         <Group
             name="surios_brotherhood_emblem_ambient"
@@ -51,14 +68,32 @@
                 value="255" />
             <PartImage
                 name="surios_brotherhood_emblem_pipgreen_ambient"
-                alpha="255"
+                alpha="72"
                 height="382"
+                pivotX="0.5"
+                pivotY="0.5"
                 width="322"
                 x="64"
                 y="34">
-                <Image resource="brotherhood_emblem_pipgreen" />
+                <!-- Horizontal compression/expansion simulates a turn around the vertical axis. -->
+                <Transform target="scaleX" value="[SECOND] % 2 == 0 ? 1 : -1">
+                    <Animation
+                        duration="1.0"
+                        interpolation="EASE_IN_OUT" />
+                </Transform>
+                <Image resource="brotherhood_emblem_pipgreendim" />
             </PartImage>
         </Group>
+
+        <PartImage
+            name="surios_gear_frame_ambient"
+            alpha="72"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Image resource="gear_frame" />
+        </PartImage>
 
         <PartImage
             name="surios_armor_background"
@@ -100,42 +135,72 @@
                 value="0" />
 
             <!-- The armor fill is clipped from the bottom upward as steps progress. -->
-            <Group
-                name="surios_armor_step_fill_layer"
-                height="288"
-                width="192"
-                x="129"
-                y="81">
-                <PartImage
-                    name="surios_armor_step_fill"
-                    height="288"
-                    width="192"
-                    x="0"
-                    y="0">
-                    <Image resource="armor_fill" />
-                </PartImage>
-                <PartDraw
-                    name="surios_armor_step_fill_mask"
-                    height="288"
-                    width="192"
-                    renderMode="MASK"
-                    x="0"
-                    y="0">
-                    <Rectangle
+            <Condition>
+                <Expressions>
+                    <Expression name="steps_below_500_percent"><![CDATA[[STEP_COUNT] < ([STEP_GOAL] * 5)]]></Expression>
+                </Expressions>
+                <Compare expression="steps_below_500_percent">
+                    <Group
+                        name="surios_armor_step_fill_layer"
                         height="288"
                         width="192"
-                        x="0"
-                        y="0">
-                        <Transform
-                            target="y"
-                            value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
-                        <Transform
-                            target="height"
-                            value="clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
-                        <Fill color="#FFFFFFFF" />
-                    </Rectangle>
-                </PartDraw>
-            </Group>
+                        x="129"
+                        y="81">
+                        <PartImage
+                            name="surios_armor_step_fill"
+                            height="288"
+                            width="192"
+                            x="0"
+                            y="0">
+                            <Image resource="armor_fill" />
+                        </PartImage>
+                        <PartDraw
+                            name="surios_armor_step_fill_mask"
+                            height="288"
+                            width="192"
+                            renderMode="MASK"
+                            x="0"
+                            y="0">
+                            <Rectangle
+                                height="288"
+                                width="192"
+                                x="0"
+                                y="0">
+                                <Transform
+                                    target="y"
+                                    value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
+                                <Transform
+                                    target="height"
+                                    value="clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
+                                <Fill color="#FFFFFFFF" />
+                            </Rectangle>
+                        </PartDraw>
+                    </Group>
+
+                    <!-- A soft glow hides the hard edge of the step-progress fill. -->
+                    <PartDraw
+                        name="surios_armor_step_progress_glow"
+                        height="288"
+                        width="192"
+                        x="129"
+                        y="81">
+                        <Rectangle height="12" width="192" x="0" y="0">
+                            <Transform
+                                target="y"
+                                value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288) - 6" />
+                            <Fill color="#00000000">
+                                <LinearGradient
+                                    startX="0"
+                                    startY="0"
+                                    endX="0"
+                                    endY="12"
+                                    colors="#003FAF5A #B366FF66 #003FAF5A"
+                                    positions="0 0.5 1" />
+                            </Fill>
+                        </Rectangle>
+                    </PartDraw>
+                </Compare>
+            </Condition>
 
             <DigitalClock
                 height="450"
@@ -334,17 +399,13 @@
                             </Compare>
                         </Condition>
 
-                        <!-- One energy cell is recorded for each completed step goal. -->
-                        <Condition><Expressions><Expression name="step_cell_1"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 1)]]></Expression></Expressions><Compare expression="step_cell_1"><PartDraw name="surios_step_cell_1" height="5" width="5" x="319" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_2"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 2)]]></Expression></Expressions><Compare expression="step_cell_2"><PartDraw name="surios_step_cell_2" height="5" width="5" x="325" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_3"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3"><PartDraw name="surios_step_cell_3" height="5" width="5" x="331" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_4"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4"><PartDraw name="surios_step_cell_4" height="5" width="5" x="337" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_5"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5"><PartDraw name="surios_step_cell_5" height="5" width="5" x="343" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_6"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 6)]]></Expression></Expressions><Compare expression="step_cell_6"><PartDraw name="surios_step_cell_6" height="5" width="5" x="349" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_7"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 7)]]></Expression></Expressions><Compare expression="step_cell_7"><PartDraw name="surios_step_cell_7" height="5" width="5" x="355" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_8"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 8)]]></Expression></Expressions><Compare expression="step_cell_8"><PartDraw name="surios_step_cell_8" height="5" width="5" x="361" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_9"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 9)]]></Expression></Expressions><Compare expression="step_cell_9"><PartDraw name="surios_step_cell_9" height="5" width="5" x="367" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
-                        <Condition><Expressions><Expression name="step_cell_10"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 10)]]></Expression></Expressions><Compare expression="step_cell_10"><PartDraw name="surios_step_cell_10" height="5" width="5" x="373" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF66FF66" /></Rectangle></PartDraw></Compare></Condition>
+                        <!-- Five separated fusion-core cells, one for each completed goal. -->
+                        <Condition><Expressions><Expression name="step_cell_1"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 1)]]></Expression></Expressions><Compare expression="step_cell_1"><PartDraw name="surios_step_cell_1" height="20" width="14" x="313" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_2"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 2)]]></Expression></Expressions><Compare expression="step_cell_2"><PartDraw name="surios_step_cell_2" height="20" width="14" x="330" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_3"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3"><PartDraw name="surios_step_cell_3" height="20" width="14" x="347" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_4"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4"><PartDraw name="surios_step_cell_4" height="20" width="14" x="364" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cell_5"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5"><PartDraw name="surios_step_cell_5" height="20" width="14" x="381" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF66FF66" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF66FF99" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                        <Condition><Expressions><Expression name="step_cells_plus"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cells_plus"><PartText name="surios_step_cells_plus" height="20" width="18" x="399" y="238"><Text align="CENTER"><Font color="#FF66FF66" family="SYNC_TO_DEVICE" size="18" weight="BOLD">+</Font></Text></PartText></Compare></Condition>
 
                     </Group>
                 </Default>
@@ -574,7 +635,7 @@
                         <Font
                             color="#FF3FAF5A"
                             family="SYNC_TO_DEVICE"
-                            size="28">v1.5</Font>
+                            size="28">v1.6</Font>
                     </Text>
                 </PartText>
             </Group>
@@ -614,46 +675,74 @@
                 value="255" />
 
             <!-- Ambient mode stays static but keeps the live bottom-up step fill. -->
-            <Group
-                name="surios_armor_step_fill_layer_ambient"
-                height="288"
-                width="192"
-                x="129"
-                y="81">
-                <Variant
-                    mode="AMBIENT"
-                    target="alpha"
-                    value="0" />
-                <PartImage
-                    name="surios_armor_step_fill_ambient"
-                    height="288"
-                    width="192"
-                    x="0"
-                    y="0">
-                    <Image resource="armor_fill" />
-                </PartImage>
-                <PartDraw
-                    name="surios_armor_step_fill_mask_ambient"
-                    height="288"
-                    width="192"
-                    renderMode="MASK"
-                    x="0"
-                    y="0">
-                    <Rectangle
+            <Condition>
+                <Expressions>
+                    <Expression name="steps_below_500_percent_ambient"><![CDATA[[STEP_COUNT] < ([STEP_GOAL] * 5)]]></Expression>
+                </Expressions>
+                <Compare expression="steps_below_500_percent_ambient">
+                    <Group
+                        name="surios_armor_step_fill_layer_ambient"
                         height="288"
                         width="192"
-                        x="0"
-                        y="0">
-                        <Transform
-                            target="y"
-                            value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
-                        <Transform
-                            target="height"
-                            value="clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
-                        <Fill color="#FFFFFFFF" />
-                    </Rectangle>
-                </PartDraw>
-            </Group>
+                        x="129"
+                        y="81">
+                        <Variant
+                            mode="AMBIENT"
+                            target="alpha"
+                            value="0" />
+                        <PartImage
+                            name="surios_armor_step_fill_ambient"
+                            height="288"
+                            width="192"
+                            x="0"
+                            y="0">
+                            <Image resource="armor_fill" />
+                        </PartImage>
+                        <PartDraw
+                            name="surios_armor_step_fill_mask_ambient"
+                            height="288"
+                            width="192"
+                            renderMode="MASK"
+                            x="0"
+                            y="0">
+                            <Rectangle
+                                height="288"
+                                width="192"
+                                x="0"
+                                y="0">
+                                <Transform
+                                    target="y"
+                                    value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
+                                <Transform
+                                    target="height"
+                                    value="clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288)" />
+                                <Fill color="#FFFFFFFF" />
+                            </Rectangle>
+                        </PartDraw>
+                    </Group>
+                    <PartDraw
+                        name="surios_armor_step_progress_glow_ambient"
+                        height="288"
+                        width="192"
+                        x="129"
+                        y="81">
+                        <Rectangle height="12" width="192" x="0" y="0">
+                            <Transform
+                                target="y"
+                                value="288 - clamp((100 - (([STEP_COUNT] % [STEP_GOAL]) * 100 / [STEP_GOAL])) * 2.88, 0, 288) - 6" />
+                            <Fill color="#00000000">
+                                <LinearGradient
+                                    startX="0"
+                                    startY="0"
+                                    endX="0"
+                                    endY="12"
+                                    colors="#003FAF5A #663FAF5A #003FAF5A"
+                                    positions="0 0.5 1" />
+                            </Fill>
+                        </Rectangle>
+                    </PartDraw>
+                </Compare>
+            </Condition>
 
             <DigitalClock
                 height="450"
@@ -663,16 +752,29 @@
                 <TimeText
                     format="hh:mm"
                     hourFormat="24"
-                    height="92"
-                    width="340"
-                    x="55"
-                    y="179">
+                    height="108"
+                    width="390"
+                    x="30"
+                    y="171">
                     <Font
                         color="#FF66FF66"
                         family="SYNC_TO_DEVICE"
-                        size="47" />
+                        size="56"
+                        weight="EXTRA_BOLD" />
                 </TimeText>
             </DigitalClock>
+
+            <!-- Static ambient terminal scanline: ambient mode is rendered sparingly to save power. -->
+            <PartDraw
+                name="surios_terminal_scanline_ambient"
+                height="2"
+                width="450"
+                x="0"
+                y="0">
+                <Line startX="12" startY="310" endX="438" endY="310">
+                    <Stroke color="#663FAF5A" thickness="2" />
+                </Line>
+            </PartDraw>
 
             <Group
                 name="surios_battery_ambient"
@@ -807,16 +909,12 @@
                         mode="AMBIENT"
                         target="alpha"
                         value="0" />
-                <Condition><Expressions><Expression name="step_cell_1_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 1)]]></Expression></Expressions><Compare expression="step_cell_1_ambient"><PartDraw name="surios_step_cell_1_ambient" height="5" width="5" x="319" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_2_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 2)]]></Expression></Expressions><Compare expression="step_cell_2_ambient"><PartDraw name="surios_step_cell_2_ambient" height="5" width="5" x="325" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_3_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3_ambient"><PartDraw name="surios_step_cell_3_ambient" height="5" width="5" x="331" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_4_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4_ambient"><PartDraw name="surios_step_cell_4_ambient" height="5" width="5" x="337" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_5_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5_ambient"><PartDraw name="surios_step_cell_5_ambient" height="5" width="5" x="343" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_6_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 6)]]></Expression></Expressions><Compare expression="step_cell_6_ambient"><PartDraw name="surios_step_cell_6_ambient" height="5" width="5" x="349" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_7_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 7)]]></Expression></Expressions><Compare expression="step_cell_7_ambient"><PartDraw name="surios_step_cell_7_ambient" height="5" width="5" x="355" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_8_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 8)]]></Expression></Expressions><Compare expression="step_cell_8_ambient"><PartDraw name="surios_step_cell_8_ambient" height="5" width="5" x="361" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_9_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 9)]]></Expression></Expressions><Compare expression="step_cell_9_ambient"><PartDraw name="surios_step_cell_9_ambient" height="5" width="5" x="367" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
-                <Condition><Expressions><Expression name="step_cell_10_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 10)]]></Expression></Expressions><Compare expression="step_cell_10_ambient"><PartDraw name="surios_step_cell_10_ambient" height="5" width="5" x="373" y="245"><Rectangle height="5" width="5" x="0" y="0"><Fill color="#FF3FAF5A" /></Rectangle></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_1_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 1)]]></Expression></Expressions><Compare expression="step_cell_1_ambient"><PartDraw name="surios_step_cell_1_ambient" height="20" width="14" x="313" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_2_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 2)]]></Expression></Expressions><Compare expression="step_cell_2_ambient"><PartDraw name="surios_step_cell_2_ambient" height="20" width="14" x="330" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_3_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 3)]]></Expression></Expressions><Compare expression="step_cell_3_ambient"><PartDraw name="surios_step_cell_3_ambient" height="20" width="14" x="347" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_4_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 4)]]></Expression></Expressions><Compare expression="step_cell_4_ambient"><PartDraw name="surios_step_cell_4_ambient" height="20" width="14" x="364" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cell_5_ambient"><![CDATA[[STEP_COUNT] >= ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cell_5_ambient"><PartDraw name="surios_step_cell_5_ambient" height="20" width="14" x="381" y="238"><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Fill color="#FF06130C" /></RoundRectangle><RoundRectangle cornerRadiusX="4" cornerRadiusY="4" height="20" width="14" x="0" y="0"><Stroke color="#FF3FAF5A" thickness="1.5" /></RoundRectangle><RoundRectangle cornerRadiusX="2" cornerRadiusY="2" height="10" width="6" x="4" y="5"><Fill color="#FF3FAF5A" /></RoundRectangle><Line startX="3" startY="3" endX="11" endY="3"><Stroke color="#FF3FAF5A" thickness="1" /></Line><Line startX="3" startY="17" endX="11" endY="17"><Stroke color="#FF3FAF5A" thickness="1" /></Line></PartDraw></Compare></Condition>
+                <Condition><Expressions><Expression name="step_cells_plus_ambient"><![CDATA[[STEP_COUNT] > ([STEP_GOAL] * 5)]]></Expression></Expressions><Compare expression="step_cells_plus_ambient"><PartText name="surios_step_cells_plus_ambient" height="20" width="18" x="399" y="238"><Text align="CENTER"><Font color="#FF3FAF5A" family="SYNC_TO_DEVICE" size="18" weight="BOLD">+</Font></Text></PartText></Compare></Condition>
                 </Group>
             </Group>
         </Group>
