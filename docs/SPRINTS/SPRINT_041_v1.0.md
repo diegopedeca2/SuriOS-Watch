@@ -85,6 +85,7 @@ de distancia cada metro, desde 1 hasta 6 metros.
 - [x] Mejorar Ambient Mode con hora mas visible, emblema atenuado, linea de
       terminal y marco de rueda dentada.
 - [x] Simular el giro vertical del emblema mediante compresion horizontal 2D.
+- [x] Hacer pulsable el centro de la armadura para abrir `SURIOS RADAR`.
 
 No se modifica el cableado, el firmware del ESP32 ni el protocolo BLE.
 
@@ -108,6 +109,8 @@ No se modifica el cableado, el firmware del ESP32 ni el protocolo BLE.
 - [x] Instalación de la esfera en el Watch Ultra — `Success`.
 - [x] Paquete instalado — `com.suri.surioswatch`, v1.6, `versionCode 10`.
 - [x] Comprobación visual de la esfera activa — firma visible `v1.6`.
+- [x] Pulsación del centro probada en el Watch Ultra — abre
+      `com.suri.suriosradar/.MainActivity`.
 
 ## Validaciones visuales pendientes
 

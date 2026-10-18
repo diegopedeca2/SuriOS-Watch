@@ -107,6 +107,8 @@
                 target="alpha"
                 value="0" />
             <Image resource="armor_background" />
+            <!-- The armor center acts as the shortcut to the standalone radar app. -->
+            <Launch target="com.suri.suriosradar" />
         </PartImage>
 
         <!-- A single vertically symmetric toothed ring replaces the former frame lines. -->
