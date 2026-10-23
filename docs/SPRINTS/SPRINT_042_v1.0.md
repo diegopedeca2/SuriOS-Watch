@@ -57,16 +57,17 @@ vista normal, bloqueo y ambiente.
 Las siguientes comprobaciones requieren observar el resultado en uso normal y
 se mantienen pendientes hasta disponer de esa validacion visual o funcional:
 
-- [ ] Confirmar visualmente que SuriOS Radar permanece fijo al mover la
+- [x] Confirmar visualmente que SuriOS Radar permanece fijo al mover la
       muneca.
-- [ ] Confirmar visualmente el emblema estatico en la esfera normal.
-- [ ] Confirmar visualmente el emblema estatico en la pantalla de bloqueo.
-- [ ] Confirmar visualmente el emblema estatico en modo ambiente.
+- [x] Confirmar visualmente el emblema estatico en la esfera normal.
+- [x] Confirmar visualmente el emblema estatico en la pantalla de bloqueo.
+- [x] Confirmar visualmente el emblema estatico en modo ambiente.
 - [ ] Repetir una prueba con ADB completamente desconectado y confirmar que la
       sesion BLE no se interrumpe mientras la aplicacion sigue activa.
 
-Estas casillas no bloquean el cierre tecnico del Sprint, pero deben revisarse
-en la siguiente validacion sobre el reloj.
+Las cuatro validaciones visuales fueron confirmadas por el propietario el
+2026-10-23. La prueba con ADB completamente desconectado permanece pendiente y
+no bloquea el cierre tecnico del Sprint.
 
 ## Cierre
 

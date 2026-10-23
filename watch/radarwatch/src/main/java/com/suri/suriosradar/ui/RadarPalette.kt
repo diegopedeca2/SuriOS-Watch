@@ -12,9 +12,4 @@ object RadarPalette {
     val Gray = Color(0xFF5A5A5A)
     val Amber = Color(0xFFFFC857)
     val Red = Color(0xFFFF4D4D)
-    val Neutral = Color.White
-    val NeutralDim = Color.LightGray
-    val Panel = Color(0xFF06130C)
-    val MapBackground = Color(0xFF050805)
-    val ActionBackground = Color(0xFF303030)
 }

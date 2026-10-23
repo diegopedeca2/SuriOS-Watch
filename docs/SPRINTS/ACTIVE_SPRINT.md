@@ -4,7 +4,7 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-10-18
+last_updated: 2026-10-23
 
 ---
 
@@ -12,7 +12,24 @@ last_updated: 2026-10-18
 
 No hay un Sprint abierto en este momento.
 
+## Pendientes de validación física
+
+- [ ] `RADAR PROTOYPE`: comprobar físicamente el apantallamiento trasero del
+      LD2450 con una pantalla metálica. El filtro de zona y el filtrado por
+      coordenadas ya están implementados; queda pendiente confirmar que el
+      eco posterior desaparece con el montaje físico definitivo.
+- [ ] Sprint 042: repetir una prueba con ADB completamente desconectado
+      durante una sesión BLE activa. Esta validación operativa no bloquea los
+      cierres documentales posteriores.
+
 ## Sprints cerrados recientemente
+
+[Sprint 044 v1.0](SPRINT_044_v1.0.md) - **CLOSED**
+
+El Sprint 044 entrega la watchface v1.8, la app RADAR compacta y el primer
+firmware documentado del `RADAR PROTOYPE` con LD2450.
+
+[Auditoría Sprint 044](../AUDIT_SPRINT_044.md) — **APROBADA PARA CIERRE DOCUMENTAL**
 
 [Sprint 043 v1.0](SPRINT_043_v1.0.md) - **CLOSED**
 
@@ -20,11 +37,15 @@ El Sprint 043 entrega la esfera v1.7, `versionCode 11`, con el acceso RADAR
 centrado y adaptado al estilo visual del resto de accesos. También mantiene la
 pantalla de Radar activa y muestra los objetivos únicamente como puntos rojos.
 
+[Auditoría Sprint 043](../AUDIT_SPRINT_043.md) — **APROBADA PARA CIERRE DOCUMENTAL**
+
 [Sprint 042 v1.0](SPRINT_042_v1.0.md) - **CLOSED**
 
 El Sprint 042 corrige la orientacion involuntaria de SuriOS Radar, estabiliza
 el ciclo de vida de la conexion BLE y elimina la rotacion del emblema en la
 esfera normal, bloqueo y ambiente.
+
+[Auditoría Sprint 042](../AUDIT_SPRINT_042.md) — **APROBADA PARA CIERRE DOCUMENTAL CON UNA VALIDACIÓN OPERATIVA PENDIENTE**
 
 [Sprint 041 v1.0](SPRINT_041_v1.0.md) - **CLOSED**
 
@@ -34,9 +55,15 @@ objetivos BLE en tiempo real, ademas de cerrar los temas abiertos de la esfera.
 El Sprint 041 combina la limpieza de temas abiertos de la esfera con el
 desarrollo de SuriOS Radar para representar objetivos BLE en tiempo real.
 
+[Auditoría Sprint 041](../AUDIT_SPRINT_041.md) — **APROBADA PARA CIERRE DOCUMENTAL**
+
 ---
 
 ## Último Sprint cerrado
+
+[Sprint 044 v1.0](SPRINT_044_v1.0.md) - **CLOSED**
+
+[Auditoría Sprint 044](../AUDIT_SPRINT_044.md) — **APROBADA PARA CIERRE DOCUMENTAL**
 
 [Sprint 043 v1.0](SPRINT_043_v1.0.md) - **CLOSED**
 

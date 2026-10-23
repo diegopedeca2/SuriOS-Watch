@@ -12,8 +12,8 @@ android {
         applicationId = "com.suri.surioswatch"
         minSdk = 34
         targetSdk = 37
-        versionCode = 11
-        versionName = "1.7"
+        versionCode = 12
+        versionName = "1.8"
 
     }
 

@@ -8,16 +8,20 @@ modifica el firmware, el cableado ni el protocolo del radar.
 
 ## Interfaz
 
-La aplicacion muestra primero un menu para elegir `REAL` o `SIM`. El grid no
-incluye controles de cambio de modo; se vuelve al menu con el boton atras del
-reloj.
+La aplicacion muestra primero un menu para elegir `REAL` o `SIM`. El menu
+mantiene el marco de rueda dentada y el emblema de la Hermandad como fondo.
+Por limitacion de espacio en el reloj, no muestra el texto institucional
+`BROTHERHOOD OF STEEL`; conserva solo el nombre compacto `SURIOS RADAR`. El
+grid no incluye controles de cambio de modo; se vuelve al menu con el boton
+atras del reloj.
 
 La vista radar usa la paleta oficial de PIP-SuriOS:
 
 - fondo negro
 - verde PIP para el radar y T1
-- azul PIP para el cono y los anillos
-- rojo PIP para los objetivos y sus etiquetas
+- azul PIP para el cono y los anillos (excepcion especifica de este modulo,
+  solo como geometria del radar)
+- rojo PIP para los objetivos
 - gris para la informacion secundaria
 
 El cono parte de las 6 en punto, tiene una apertura inicial de 120 grados y
@@ -25,9 +29,9 @@ marca los rangos de 1 a 6 metros. Todos los objetivos y sus etiquetas se
 representan en rojo PIP. Los objetivos retenidos (`flags=3`) aparecen
 atenuados y con anillo discontinuo.
 
-El grid no muestra leyenda de metros ni coordenadas escritas. Cada objetivo se
-identifica solo como `T1`, `T2` o `T3`; los radios laterales tienen seis tramos
-iguales y la curva superior marca el limite del area de deteccion.
+El grid no muestra leyenda de metros, coordenadas escritas ni etiquetas sobre
+los objetivos; los radios laterales tienen seis tramos iguales y la curva
+superior marca el limite del area de deteccion.
 
 ## Estetica de la esfera
 
@@ -82,7 +86,7 @@ Desde `D:\WristOS`:
 Con el Galaxy Watch Ultra conectado por ADB Wi-Fi:
 
 ```powershell
-adb -s 192.168.1.63:45843 install -r watch\radarwatch\build\outputs\apk\debug\radarwatch-debug.apk
+adb -s 192.168.1.63:41979 install -r watch\radarwatch\build\outputs\apk\debug\radarwatch-debug.apk
 ```
 
 El modo `REAL` solicita `BLUETOOTH_SCAN` y `BLUETOOTH_CONNECT`. No se solicita

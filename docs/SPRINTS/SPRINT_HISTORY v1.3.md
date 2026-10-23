@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-10-18
+last_updated: 2026-10-23
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -31,7 +31,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 043 | Sprint 043 cerrado; watchface v1.7/código 11, WFF v2; watchface y Radar instalados y validados |
+| SuriOS Watch | Ninguno | Sprint 044 | Sprint 044 cerrado; watchface v1.8/código 12, app RADAR compacta y prototipo LD2450 documentados |
 | PIP-SuriOS | Ninguno | Sprint 040 | Sprint 040 cerrado; PIP-SuriOS v3.5/código 15; auditoría aprobada |
 | SuriOS Ecosystem | Ninguno | Sprint 037 | Sprint 037 cerrado; auditoría aprobada |
 
@@ -88,6 +88,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 041 | SuriOS Watch | Limpieza de temas abiertos y primera integración de SuriOS Radar | Cerrado | Watchface v1.6/código 10 y Radar v0.1/código 1 implementados | 2026-10-18 | 2026-10-18 | [Sprint 041 v1.0](SPRINT_041_v1.0.md) |
 | 042 | SuriOS Watch | Estabilidad BLE, orientación fija y emblema estático | Cerrado | Correcciones técnicas implementadas; validaciones físicas trasladadas explícitamente | 2026-10-18 | 2026-10-18 | [Sprint 042 v1.0](SPRINT_042_v1.0.md) |
 | 043 | SuriOS Watch | Watchface v1.7, acceso RADAR y lectura simplificada de objetivos | Cerrado | Watchface v1.7/código 11 y Radar actualizados, instalados y validados | 2026-10-18 | 2026-10-18 | [Sprint 043 v1.0](SPRINT_043_v1.0.md) |
+| 044 | SuriOS Watch / RADAR PROTOYPE | Watchface v1.8, RADAR compacto y firmware LD2450 | Cerrado | Watchface v1.8/código 12, app RADAR y firmware documentados; validaciones físicas no bloqueantes registradas | 2026-10-23 | 2026-10-23 | [Sprint 044 v1.0](SPRINT_044_v1.0.md) |
 
 ---
 
@@ -1098,3 +1099,15 @@ SuriOS Radar mantiene la pantalla activa mientras está visible y muestra los
 objetivos solo como puntos rojos. `test`, `lint`, los ensamblados de
 `watchface` y `radarwatch`, la instalación por ADB Wi-Fi y la validación visual
 del propietario terminan correctamente. No existe ningún Sprint activo.
+
+## 48. Cierre de Sprint 044 de SuriOS Watch / RADAR PROTOYPE
+
+El Sprint 044 se cierra el 2026-10-23 con la watchface v1.8
+(`versionCode 12`), la app RADAR compacta y el firmware inicial del ESP32 con
+LD2450 documentados. La auditoría valida la compilación, los tests, Lint, el
+ensamblado de la esfera y RADAR, la instalación ADB de la app y la presencia
+del menú `REAL/SIM` con el patrón visual de la watchface.
+
+El apantallamiento físico trasero del LD2450 y la prueba de sesión BLE con ADB
+completamente desconectado quedan como validaciones operativas no bloqueantes.
+No existe ningún Sprint activo.

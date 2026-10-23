@@ -109,6 +109,10 @@ HEX: #33AAFF
 Uso: Identificación visual del nodo remoto P.R.S.
 No utilizar para: Representar distancia, dirección o una clasificación de proximidad
 
+Excepción documentada para `SuriOS Radar`: PipBlue también puede utilizarse
+exclusivamente para dibujar la geometría del cono y sus anillos. No representa
+distancia, dirección, estado ni proximidad de los objetivos.
+
 #### PipGray
 
 HEX: #5A5A5A
@@ -127,7 +131,11 @@ Rectangular, esquinas rectas, borde fino verde, fondo negro, inversión de color
 
 ### 5.3 Cabecera estándar
 
-Todas las pantallas utilizarán el encabezado institucional BROTHERHOOD OF STEEL seguido del nombre del módulo.
+Todas las pantallas utilizarán el encabezado institucional BROTHERHOOD OF STEEL
+seguido del nombre del módulo. En superficies Wear OS compactas, cuando el
+espacio disponible comprometa la lectura o los controles, el texto
+institucional podrá omitirse y se conservará el nombre del módulo; la
+excepción deberá quedar documentada en el PRD o README del módulo.
 
 ### 5.4 Iconografía
 

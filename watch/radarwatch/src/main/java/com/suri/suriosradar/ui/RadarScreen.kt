@@ -12,6 +12,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -25,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -35,6 +38,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +58,13 @@ import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.min
 import kotlin.math.sin
+
+private val RadarConsolas = FontFamily(
+    Font(R.font.consolas_regular, FontWeight.Normal),
+    Font(R.font.consolas_bold, FontWeight.Bold),
+    Font(R.font.consolas_italic, FontWeight.Normal, FontStyle.Italic),
+    Font(R.font.consolas_bold_italic, FontWeight.Bold, FontStyle.Italic)
+)
 
 @Composable
 fun RadarScreen(
@@ -97,27 +110,32 @@ private fun RadarModeMenu(
             .background(RadarPalette.Black),
         contentAlignment = Alignment.Center
     ) {
+        RadarBackdrop(modifier = Modifier.fillMaxSize())
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(9.dp)
         ) {
             Text(
                 text = "SURIOS RADAR",
                 color = RadarPalette.GreenBright,
                 fontSize = 17.sp,
+                fontFamily = RadarConsolas,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "SELECCIONA MODO",
-                color = RadarPalette.NeutralDim,
+                color = RadarPalette.Gray,
+                fontFamily = RadarConsolas,
                 fontSize = 9.sp
             )
-            ModeButton("REAL", RadarPalette.Green, onChooseReal)
-            ModeButton("SIM", RadarPalette.Blue, onChooseSimulated)
+            ModeButton("REAL", onChooseReal)
+            ModeButton("SIM", onChooseSimulated)
             if (!permissionsGranted) {
                 Text(
                     text = "REAL requiere permiso BLE",
-                    color = RadarPalette.NeutralDim,
+                    color = RadarPalette.Gray,
+                    fontFamily = RadarConsolas,
                     fontSize = 8.sp
                 )
             }
@@ -126,18 +144,29 @@ private fun RadarModeMenu(
 }
 
 @Composable
-private fun ModeButton(label: String, color: Color, onClick: () -> Unit) {
+private fun ModeButton(label: String, onClick: () -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val fillColor = if (pressed) RadarPalette.Green else RadarPalette.Black
+    val textColor = if (pressed) RadarPalette.Black else RadarPalette.Green
+
     Box(
         modifier = Modifier
-            .size(width = 116.dp, height = 38.dp)
-            .border(1.5.dp, color, RoundedCornerShape(19.dp))
-            .clickable(onClick = onClick),
+            .size(width = 92.dp, height = 46.dp)
+            .background(fillColor)
+            .border(2.dp, RadarPalette.Green, RoundedCornerShape(8.dp))
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,
-            color = color,
-            fontSize = 13.sp,
+            color = textColor,
+            fontFamily = RadarConsolas,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
     }
@@ -166,15 +195,28 @@ private fun RadarGridScreen(
 
         TerminalScanline(modifier = Modifier.fillMaxSize())
 
-        Text(
-            text = ui.statusText(),
-            color = ui.statusColor(),
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Bold,
+        Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 7.dp)
-        )
+                .padding(top = 4.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(1.dp)
+        ) {
+            Text(
+                text = "SURIOS RADAR",
+                color = RadarPalette.GreenBright,
+                fontFamily = RadarConsolas,
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = ui.statusText(),
+                color = ui.statusColor(),
+                fontFamily = RadarConsolas,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         Column(
             modifier = Modifier
@@ -184,13 +226,15 @@ private fun RadarGridScreen(
         ) {
             Text(
                 text = "SEQ ${ui.lastSequence?.toString() ?: "--"} | PERD ${ui.lostPackets} | ${ui.lastPacketAgeMillis?.formatAge() ?: "--"}",
-                color = RadarPalette.NeutralDim,
+                color = RadarPalette.Gray,
+                fontFamily = RadarConsolas,
                 fontSize = 8.sp
             )
             if (!permissionsGranted && ui.mode == RadarDataMode.REAL_BLE) {
                 Text(
                     text = "PERMISO BLE",
                     color = RadarPalette.Red,
+                    fontFamily = RadarConsolas,
                     fontSize = 8.sp,
                     modifier = Modifier.clickable(onClick = onRequestPermissions)
                 )
@@ -389,13 +433,13 @@ private fun RadarUiState.statusText(): String = when (mode) {
 }
 
 private fun RadarUiState.statusColor(): Color = when (mode) {
-    RadarDataMode.SIMULATED -> RadarPalette.Blue
+    RadarDataMode.SIMULATED -> RadarPalette.GreenDim
     RadarDataMode.REAL_BLE -> when (displayState) {
         RadarDisplayState.RECEIVING -> RadarPalette.Green
         RadarDisplayState.ERROR -> RadarPalette.Red
         else -> RadarPalette.Amber
     }
-    null -> RadarPalette.Neutral
+    null -> RadarPalette.Gray
 }
 
 private fun RadarDisplayState.label(): String = when (this) {

@@ -5,9 +5,11 @@
 document: WATCHFACE_LAYOUT
 project: SuriOS Watch
 version: 1.4
-status: Aprobado y vigente
-implementation_status: Aprobado
+status: Histórico; obsoleto por SuriOS Watch v1.7
+implementation_status: Histórico
+audit_scope: historical_only
 replaces: WATCHFACE_LAYOUT v1.3
+superseded_by: SuriOS Watch v1.7
 owner: Diego Pérez de Camino
 date: 2026-10-18
 
@@ -15,7 +17,13 @@ date: 2026-10-18
 
 # 1. Autoridad y propósito
 
-Este documento constituye el anexo visual normativo de **WFPRD v1.6** y está subordinado a él.
+Este documento constituyó el anexo visual normativo de **WFPRD v1.6** y queda
+conservado únicamente como referencia histórica.
+
+> Este documento es obsoleto para la watchface v1.7. No debe utilizarse como
+> fuente normativa ni generar incidencias en auditorías futuras; las decisiones
+> vigentes se documentan en el Sprint correspondiente y en la implementación
+> actual de SuriOS Watch.
 
 Su finalidad es definir exclusivamente la composición visual, la geometría, la jerarquía y las relaciones espaciales de todos los componentes de la esfera SuriOS Watch.
 
@@ -33,9 +41,9 @@ Su marco metodológico queda definido por:
 
 Los comportamientos funcionales de cada componente se regulan en sus respectivos WFPRD.
 
-Actualmente:
+Referencias funcionales de la versión archivada:
 
-- [WFPRD v1.4](../WFPRD/WFPRD_v1.4.md)
+- [WFPRD v1.6](../WFPRD/WFPRD_v1.6.md)
 - [WFPRD_AMBIENT_MODE v1.1](../WFPRD/WFPRD_AMBIENT_MODE_v1.1.md)
 - [WFPRD_BATTERY_INDICATOR v1.2](../WFPRD/WFPRD_BATTERY_INDICATOR_v1.2.md)
 - [WFPRD_STEP_INDICATOR v1.1](../WFPRD/WFPRD_STEP_INDICATOR_v1.1.md)
