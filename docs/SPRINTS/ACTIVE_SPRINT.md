@@ -4,13 +4,42 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-10-23
+last_updated: 2026-10-24
+sprint_046_status: CLOSED_DOCUMENTALLY
+play_console_status: ACCOUNT_CREATED_PENDING_GOOGLE_VALIDATION
+publication_status: PENDING
+submission_status: PENDING
 
 ---
 
 ## Sprint activo
 
-No hay un Sprint abierto en este momento.
+No hay un sprint de ELY activo. El Sprint 046 queda cerrado documentalmente;
+la distribucion externa sigue pendiente de Google Play Console.
+
+[Sprint 046 v1.0](SPRINT_046_v1.0.md) - **CLOSED**
+
+El Sprint 046 reconstruye la esfera independiente Ely sobre `ely 2.png`, con
+Cormorant Garamond y zonas táctiles transparentes para Wallet y música. El
+Ultra está conectado por ADB en `192.168.1.63:39459`.
+
+[Auditoría Sprint 046](../AUDIT_SPRINT_046.md) — **V2.0 DESPLEGADA; AMBIENTE Y TRAZABILIDAD PENDIENTES**
+
+## Pendientes post-sprint de ELY
+
+- [x] Sustituir la implementación anterior por el fondo limpio `ely 2.png`.
+- [x] Integrar una tipografía serif ornamental para los datos numéricos.
+- [x] Crear zonas táctiles 100% transparentes sobre Wallet y música.
+- [ ] Validar el modo ambiente fuera del cargador y durante una sesión
+      prolongada.
+- [ ] Validar visualmente el llenado del icono de batería en varios niveles.
+- [ ] Versionar el módulo ELY, sus assets y la documentación antes del cierre.
+
+### Distribución externa pendiente
+
+- [ ] Esperar la validacion de la cuenta de Google Play Console.
+- [ ] Publicar la prueba interna.
+- [ ] Enviar la aplicacion a Google Play.
 
 ## Pendientes de validación física
 
@@ -23,6 +52,19 @@ No hay un Sprint abierto en este momento.
       cierres documentales posteriores.
 
 ## Sprints cerrados recientemente
+
+[Sprint 046 v1.0](SPRINT_046_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+ELY queda preparada para distribucion. La validacion de Play Console,
+publicacion y envio de la app permanecen pendientes.
+
+[Sprint 045 v1.0](SPRINT_045_v1.0.md) - **CLOSED**
+
+El Sprint 045 entrega la esfera independiente Ely para Wear OS, la instala y la
+activa en el Galaxy Watch Ultra. `Music` abre el reproductor predeterminado
+mediante `MUSIC_PLAYER`.
+
+[Auditoría Sprint 045](../AUDIT_SPRINT_045.md) — **APROBADA PARA CIERRE DOCUMENTAL CON DEUDAS VISUALES NO BLOQUEANTES**
 
 [Sprint 044 v1.0](SPRINT_044_v1.0.md) - **CLOSED**
 
@@ -60,6 +102,14 @@ desarrollo de SuriOS Radar para representar objetivos BLE en tiempo real.
 ---
 
 ## Último Sprint cerrado
+
+[Sprint 046 v1.0](SPRINT_046_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+[Auditoría Sprint 046](../AUDIT_SPRINT_046.md) — **PUBLICACIÓN Y ENVÍO PENDIENTES**
+
+[Sprint 045 v1.0](SPRINT_045_v1.0.md) - **CLOSED**
+
+[Auditoría Sprint 045](../AUDIT_SPRINT_045.md) — **APROBADA PARA CIERRE DOCUMENTAL CON DEUDAS VISUALES NO BLOQUEANTES**
 
 [Sprint 044 v1.0](SPRINT_044_v1.0.md) - **CLOSED**
 

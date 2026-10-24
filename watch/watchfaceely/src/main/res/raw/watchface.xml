@@ -1,0 +1,217 @@
+<WatchFace
+    clipShape="CIRCLE"
+    height="450"
+    width="450">
+
+    <Metadata
+        key="CLOCK_TYPE"
+        value="DIGITAL" />
+
+    <Scene>
+        <Group
+            name="ely_active"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="0" />
+
+            <PartImage
+                name="ely_background"
+                alpha="255"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <Image resource="ely_background" />
+            </PartImage>
+
+            <DigitalClock
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <TimeText
+                    format="hh:mm"
+                    hourFormat="24"
+                    height="78"
+                    width="230"
+                    x="110"
+                    y="40">
+                    <Font
+                        color="#FFFFD88A"
+                        family="cormorant_garamond_semibold"
+                        size="78" />
+                </TimeText>
+            </DigitalClock>
+
+            <PartText
+                name="ely_date"
+                height="30"
+                width="190"
+                x="130"
+                y="383">
+                <Text align="CENTER">
+                    <Font
+                        color="#FFFFD88A"
+                        family="cormorant_garamond_semibold"
+                        size="32">
+                        <Template>%s/%s/%s
+                            <Parameter expression="[DAY_Z]" />
+                            <Parameter expression="[MONTH_Z]" />
+                            <Parameter expression="[YEAR]" />
+                        </Template>
+                    </Font>
+                </Text>
+            </PartText>
+
+            <PartDraw
+                name="ely_battery_icon"
+                height="27"
+                width="57"
+                x="64"
+                y="155">
+                <Rectangle
+                    height="22"
+                    width="51"
+                    x="0"
+                    y="0">
+                    <Stroke color="#FFFFD88A" thickness="2" />
+                </Rectangle>
+                <Rectangle
+                    height="8"
+                    width="4"
+                    x="51"
+                    y="7">
+                    <Fill color="#FFFFD88A" />
+                </Rectangle>
+                <Rectangle
+                    height="14"
+                    width="43"
+                    x="4"
+                    y="4">
+                    <Fill color="#99D9A85C" />
+                </Rectangle>
+                <Transform
+                    target="width"
+                    value="4 + clamp([BATTERY_PERCENT] * 0.43, 0, 43)" />
+            </PartDraw>
+
+            <PartText
+                name="ely_steps_label"
+                height="22"
+                width="100"
+                x="317"
+                y="142">
+                <Text align="CENTER">
+                    <Font
+                        color="#FFFFD88A"
+                        family="cormorant_garamond_semibold"
+                        size="15">STEPS</Font>
+                </Text>
+            </PartText>
+
+            <PartText
+                name="ely_steps_value"
+                height="34"
+                width="110"
+                x="317"
+                y="155">
+                <Text align="CENTER">
+                    <Font
+                        color="#FFFFD88A"
+                        family="cormorant_garamond_semibold"
+                        size="25">
+                        <Template>%d
+                            <Parameter expression="[STEP_COUNT]" />
+                        </Template>
+                    </Font>
+                </Text>
+            </PartText>
+
+            <!-- Fully transparent touch target over the left book. -->
+            <PartDraw
+                name="ely_wallet_button"
+                height="130"
+                width="112"
+                x="34"
+                y="224">
+                <Rectangle
+                    height="130"
+                    width="112"
+                    x="0"
+                    y="0">
+                    <Fill color="#00000000" />
+                </Rectangle>
+                <Launch target="com.google.android.apps.walletnfcrel/com.google.commerce.tapandpay.wear.cardlist.WalletThemedWearCardListActivity" />
+            </PartDraw>
+
+            <!-- Fully transparent touch target over the right book. -->
+            <PartDraw
+                name="ely_music_button"
+                height="130"
+                width="112"
+                x="304"
+                y="224">
+                <Rectangle
+                    height="130"
+                    width="112"
+                    x="0"
+                    y="0">
+                    <Fill color="#00000000" />
+                </Rectangle>
+                <Launch target="MUSIC_PLAYER" />
+            </PartDraw>
+        </Group>
+
+        <Group
+            name="ely_ambient"
+            alpha="0"
+            height="450"
+            width="450"
+            x="0"
+            y="0">
+            <Variant
+                mode="AMBIENT"
+                target="alpha"
+                value="255" />
+
+            <PartDraw
+                name="ely_ambient_background"
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <Rectangle
+                    height="450"
+                    width="450"
+                    x="0"
+                    y="0">
+                    <Fill color="#FF000000" />
+                </Rectangle>
+            </PartDraw>
+
+            <DigitalClock
+                height="450"
+                width="450"
+                x="0"
+                y="0">
+                <TimeText
+                    format="hh:mm"
+                    hourFormat="24"
+                    height="72"
+                    width="250"
+                    x="100"
+                    y="190">
+                    <Font
+                        color="#FFB8955A"
+                        family="cormorant_garamond_semibold"
+                        size="50" />
+                </TimeText>
+            </DigitalClock>
+        </Group>
+    </Scene>
+</WatchFace>

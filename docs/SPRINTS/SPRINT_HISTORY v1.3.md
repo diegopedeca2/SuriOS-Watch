@@ -7,7 +7,7 @@ project: SuriOS Ecosystem
 version: 1.3
 status: Vigente; registro operativo canónico
 owner: Diego Pérez de Camino
-last_updated: 2026-10-23
+last_updated: 2026-10-24
 previous_snapshot: OLD/SPRINT_HISTORY_v1.0.md
 
 ---
@@ -31,7 +31,7 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 
 | Proyecto | Sprint activo | Último completado | Estado |
 |---|---|---|---|
-| SuriOS Watch | Ninguno | Sprint 044 | Sprint 044 cerrado; watchface v1.8/código 12, app RADAR compacta y prototipo LD2450 documentados |
+| SuriOS Watch | Ninguno | Sprint 046 | Sprint 046 cerrado documentalmente; ELY v2.0 lista para Play Console con publicación pendiente |
 | PIP-SuriOS | Ninguno | Sprint 040 | Sprint 040 cerrado; PIP-SuriOS v3.5/código 15; auditoría aprobada |
 | SuriOS Ecosystem | Ninguno | Sprint 037 | Sprint 037 cerrado; auditoría aprobada |
 
@@ -89,6 +89,8 @@ La aprobación documental de un Sprint no implica su activación. El único Spri
 | 042 | SuriOS Watch | Estabilidad BLE, orientación fija y emblema estático | Cerrado | Correcciones técnicas implementadas; validaciones físicas trasladadas explícitamente | 2026-10-18 | 2026-10-18 | [Sprint 042 v1.0](SPRINT_042_v1.0.md) |
 | 043 | SuriOS Watch | Watchface v1.7, acceso RADAR y lectura simplificada de objetivos | Cerrado | Watchface v1.7/código 11 y Radar actualizados, instalados y validados | 2026-10-18 | 2026-10-18 | [Sprint 043 v1.0](SPRINT_043_v1.0.md) |
 | 044 | SuriOS Watch / RADAR PROTOYPE | Watchface v1.8, RADAR compacto y firmware LD2450 | Cerrado | Watchface v1.8/código 12, app RADAR y firmware documentados; validaciones físicas no bloqueantes registradas | 2026-10-23 | 2026-10-23 | [Sprint 044 v1.0](SPRINT_044_v1.0.md) |
+| 045 | SuriOS Watch / Ely | Nueva esfera Ely independiente para Wear OS | Cerrado | Ely v1.3/código 4 instalada y validada; deudas visuales y ambiente trasladadas | 2026-10-23 | 2026-10-23 | [Sprint 045 v1.0](SPRINT_045_v1.0.md) |
+| 046 | SuriOS Watch / Ely | Refinamiento visual, preview y validación de ambiente de Ely | Cerrado documentalmente | ELY v2.0, release firmado, WFF v2 y memoria validados; cuenta Play Console pendiente de validación, publicación y envío abiertos | 2026-10-24 | 2026-10-24 | [Sprint 046 v1.0](SPRINT_046_v1.0.md) |
 
 ---
 
@@ -1111,3 +1113,35 @@ del menú `REAL/SIM` con el patrón visual de la watchface.
 El apantallamiento físico trasero del LD2450 y la prueba de sesión BLE con ADB
 completamente desconectado quedan como validaciones operativas no bloqueantes.
 No existe ningún Sprint activo.
+
+## 49. Cierre de Sprint 045 de SuriOS Watch / Ely
+
+El Sprint 045 se cierra el 2026-10-23 con la nueva esfera independiente
+`com.suri.surioswatch.ely` en v1.3 (`versionCode 4`) y WFF 2. La referencia
+`Ely.jpg` se integra como fondo PNG, mientras hora, fecha, batería y pasos se
+mantienen como capas dinámicas.
+
+La esfera se instala y activa en el Galaxy Watch Ultra `SM-L705F` con Wear OS
+API 36. El acceso `Music` usa `MUSIC_PLAYER`; la prueba física resuelve el
+reproductor predeterminado actual del reloj, Spotify, sin fijarlo en el XML de
+la esfera.
+
+La auditoría confirma compilación, instalación, registro WFF, activación y
+captura real. Quedan como continuidad no bloqueante la limpieza visual de los
+valores estáticos de la referencia, la preview limpia y la validación
+prolongada del modo ambiente.
+
+Documento del Sprint: [Sprint 045 v1.0](SPRINT_045_v1.0.md).
+Auditoría: [AUDIT_SPRINT_045](../AUDIT_SPRINT_045.md).
+
+## 50. Cierre documental de Sprint 046 de SuriOS Watch / Ely
+
+El Sprint 046 se cierra documentalmente el 2026-10-24 con ELY v2.0 en WFF 2,
+su AAB release firmado y las validaciones de Lint, WFF y memoria superadas.
+
+La cuenta de Google Play Console está creada y pendiente de validación por
+Google. La publicación, la prueba interna y el envío de la aplicación quedan
+abiertos como siguiente paso externo.
+
+Documento del Sprint: [Sprint 046 v1.0](SPRINT_046_v1.0.md).
+Auditoría: [AUDIT_SPRINT_046](../AUDIT_SPRINT_046.md).

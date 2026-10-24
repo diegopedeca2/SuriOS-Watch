@@ -13,8 +13,9 @@ autorización expresa para integrarlos.
 
 | Asset | Uso previsto | Estado | Próximo contexto |
 |---|---|---|---|
-| [Ely.jpg](../../PICTURES/WATCHFACE_REFERENCES/Ely.jpg) | Referencia para desarrollar una nueva esfera basada en Wear OS. | Intencional; no integrado | Nuevo Sprint de watchface Wear OS |
+| [Ely.jpg](../../PICTURES/WATCHFACE_REFERENCES/Ely.jpg) | Referencia para desarrollar una nueva esfera basada en Wear OS. | Integrado como referencia de Sprint 045 | Ajustes visuales de Ely |
 | [Screenshot_20251220_192658_Instagram~2.jpg](../../assets/map/Screenshot_20251220_192658_Instagram~2.jpg) | Referencia para corregir el mapa topográfico de BRICKTOWN. | Intencional; no integrado | Nuevo Sprint de cartografía BRICKTOWN |
+| [ely_active_watch_ultra.png](ELY/ely_active_watch_ultra.png) | Evidencia de la esfera Ely activa en el Galaxy Watch Ultra. | Evidencia de Sprint 045 | Auditoría y ajustes visuales de Ely |
 
 ## Regla de auditoría
 
