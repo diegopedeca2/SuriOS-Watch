@@ -42,6 +42,8 @@ import com.suri.pipsurios.InformationActivity
 import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
 import com.suri.pipsurios.ui.screens.DetectorScreen
+import com.suri.pipsurios.ui.screens.PftS3LinkScreen
+import com.suri.pipsurios.ui.screens.PftS3DetectorScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerProbeScreen
@@ -207,6 +209,8 @@ private enum class PIPSuriOSDestination {
     ToolsLoading,
     Tools,
     Detector,
+    PftS3Link,
+    PftS3Detector,
     ProximityRadioScannerLoading,
     ProximityRadioScanner,
     ProximityRadioScannerProbe,
@@ -329,7 +333,9 @@ private fun destinationUsesTerminalOverlay(destination: PIPSuriOSDestination): B
         PIPSuriOSDestination.MapTerrain,
         PIPSuriOSDestination.CivTakLoading,
         PIPSuriOSDestination.GoogleMapsLoading,
-        PIPSuriOSDestination.Detector -> false
+        PIPSuriOSDestination.Detector,
+        PIPSuriOSDestination.PftS3Link,
+        PIPSuriOSDestination.PftS3Detector -> false
         else -> true
     }
 
@@ -760,6 +766,7 @@ private fun PIPSuriOSApp(
                 onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
                 onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
                 onDetectorSelected = { destination = PIPSuriOSDestination.Detector },
+                onPftS3Selected = { destination = PIPSuriOSDestination.PftS3Link },
                 onGeigerCounterSelected = {
                     destination = PIPSuriOSDestination.GeigerCounterLoading
                 },
@@ -771,6 +778,15 @@ private fun PIPSuriOSApp(
 
             PIPSuriOSDestination.Detector -> DetectorScreen(
                 onBack = { destination = PIPSuriOSDestination.Tools }
+            )
+
+            PIPSuriOSDestination.PftS3Link -> PftS3LinkScreen(
+                onBack = { destination = PIPSuriOSDestination.Tools },
+                onDetectorSelected = { destination = PIPSuriOSDestination.PftS3Detector }
+            )
+
+            PIPSuriOSDestination.PftS3Detector -> PftS3DetectorScreen(
+                onBack = { destination = PIPSuriOSDestination.PftS3Link }
             )
 
             PIPSuriOSDestination.ProximityRadioScannerLoading -> ProximityRadioScannerLoadingScreen(
