@@ -620,44 +620,6 @@
                 </PartText>
             </Group>
 
-            <Group
-                name="surios_radar_button_active"
-                height="450"
-                width="450"
-                x="0"
-                y="0">
-                <PartDraw
-                    name="surios_radar_button_outline"
-                    height="46"
-                    width="92"
-                    x="179"
-                    y="378">
-                    <RoundRectangle
-                        cornerRadiusX="8"
-                        cornerRadiusY="8"
-                        height="46"
-                        width="92"
-                        x="0"
-                        y="0">
-                        <Stroke color="#FF66FF66" thickness="2" />
-                    </RoundRectangle>
-                    <Launch target="com.suri.suriosradar" />
-                </PartDraw>
-                <PartText
-                    name="surios_radar_button_label"
-                    height="24"
-                    width="92"
-                    x="179"
-                    y="389">
-                    <Text align="CENTER">
-                        <Font
-                            color="#FF66FF66"
-                            family="consolas"
-                            size="18">RADAR</Font>
-                    </Text>
-                </PartText>
-            </Group>
-
             <!-- Fallout-style refresh scanline, matching the mobile terminal chrome. -->
             <PartDraw
                 name="surios_terminal_scanline"

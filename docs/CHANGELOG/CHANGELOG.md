@@ -618,3 +618,22 @@ accidentales de las APK tester.
 - Instalación correcta por ADB Wi-Fi en el Galaxy Watch Ultra.
 - Validación visual y funcional final aprobada por el propietario.
 - Sprint 037 cerrado sin incidencias técnicas abiertas dentro de su alcance.
+## Sprint 047 — SuriOS mobile 3.6 y Radar — 2026-10-26
+
+### Añadido y modificado
+
+- Se entrega `TOOLS > DETECTOR` para leer el ESP32/LD2450 por BLE.
+- Se termina `COMMS > RUNE TRANSLATOR` en formato vertical.
+- Se sincroniza la pantalla del radar entre movil y reloj.
+- Se añaden los controles manuales `ECO` / `NORMAL`.
+- Se eliminan las lineas `SEQ` y se corrigen las posiciones de los botones sin
+  cambiar el GRID.
+- La onda pasa a ser una linea curva que recorre el sector cada 10 segundos.
+- La app movil pasa a `3.6` (`versionCode 16`) y se guarda la copia anterior.
+
+### Validacion y cierre
+
+- Tests, compilacion, Lint e instalacion en A56 y Watch Ultra: correctos.
+- El ahorro de energia fisico del ESP32/LD2450 queda documentado como trabajo
+  pendiente por `ESP_ERR_NOT_SUPPORTED` en el framework Arduino.
+- Sprint 047 cerrado documentalmente.

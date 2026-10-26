@@ -4,8 +4,8 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-10-24
-sprint_046_status: CLOSED_DOCUMENTALLY
+last_updated: 2026-10-26
+sprint_047_status: CLOSED_DOCUMENTALLY
 play_console_status: ACCOUNT_CREATED_PENDING_GOOGLE_VALIDATION
 publication_status: PENDING
 submission_status: PENDING
@@ -14,8 +14,18 @@ submission_status: PENDING
 
 ## Sprint activo
 
-No hay un sprint de ELY activo. El Sprint 046 queda cerrado documentalmente;
-la distribucion externa sigue pendiente de Google Play Console.
+No hay un Sprint activo. El Sprint 047 queda cerrado documentalmente;
+la distribucion externa de Google Play Console y las validaciones fisicas
+pendientes siguen fuera del alcance de este cierre.
+
+[Sprint 047 v1.0](SPRINT_047_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+El Sprint 047 entrega el DETECTOR de la app movil, el traductor de runas,
+la sincronizacion visual del radar entre movil y reloj y los controles ECO /
+NORMAL. La animacion de onda conserva el GRID y recorre todo su ancho cada
+10 segundos.
+
+[Auditoria Sprint 047](../AUDIT_SPRINT_047.md) — **APROBADA PARA CIERRE CON DEUDA TECNICA DOCUMENTADA**
 
 [Sprint 046 v1.0](SPRINT_046_v1.0.md) - **CLOSED**
 
@@ -52,6 +62,14 @@ Ultra está conectado por ADB en `192.168.1.63:39459`.
       cierres documentales posteriores.
 
 ## Sprints cerrados recientemente
+
+[Sprint 047 v1.0](SPRINT_047_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+La version movil queda en `3.6` (`versionCode 16`). La auditoria confirma
+compilacion, tests, Lint, instalacion en A56 y validacion final de la pantalla
+del reloj.
+
+[Auditoria Sprint 047](../AUDIT_SPRINT_047.md) — **ECO FISICO Y CORTE DE ALIMENTACION PENDIENTES**
 
 [Sprint 046 v1.0](SPRINT_046_v1.0.md) - **CLOSED DOCUMENTALLY**
 
@@ -102,6 +120,10 @@ desarrollo de SuriOS Radar para representar objetivos BLE en tiempo real.
 ---
 
 ## Último Sprint cerrado
+
+[Sprint 047 v1.0](SPRINT_047_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+[Auditoria Sprint 047](../AUDIT_SPRINT_047.md) — **CERRADO CON SEGUIMIENTO DE BAJO CONSUMO**
 
 [Sprint 046 v1.0](SPRINT_046_v1.0.md) - **CLOSED DOCUMENTALLY**
 

@@ -1,6 +1,8 @@
 package com.suri.pipsurios
 
+import android.app.Activity
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.content.Intent
 import android.view.KeyEvent
@@ -39,6 +41,7 @@ import com.suri.pipsurios.ui.screens.HomeOperationScreen
 import com.suri.pipsurios.InformationActivity
 import com.suri.pipsurios.ui.screens.ToolsLoadingScreen
 import com.suri.pipsurios.ui.screens.ToolsScreen
+import com.suri.pipsurios.ui.screens.DetectorScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerLoadingScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerScreen
 import com.suri.pipsurios.ui.screens.ProximityRadioScannerProbeScreen
@@ -134,6 +137,8 @@ import com.suri.pipsurios.ui.screens.MorseToTextOutputScreen
 import com.suri.pipsurios.ui.screens.BinaryModeSelectionScreen
 import com.suri.pipsurios.ui.screens.BinaryToTextInputScreen
 import com.suri.pipsurios.ui.screens.BinaryToTextOutputScreen
+import com.suri.pipsurios.ui.screens.RunicTranslatorScreen
+import com.suri.pipsurios.runic.RunicCodec
 import com.suri.pipsurios.ui.screens.GoogleMapsLoadingScreen
 import com.suri.pipsurios.ui.screens.MapLoadingScreen
 import com.suri.pipsurios.ui.screens.MapModeSelectionScreen
@@ -201,6 +206,7 @@ private enum class PIPSuriOSDestination {
     HomeOperation,
     ToolsLoading,
     Tools,
+    Detector,
     ProximityRadioScannerLoading,
     ProximityRadioScanner,
     ProximityRadioScannerProbe,
@@ -286,6 +292,7 @@ private enum class PIPSuriOSDestination {
     BinaryModeSelection,
     BinaryToTextInput,
     BinaryToTextOutput,
+    RunicTranslator,
     MapLoading,
     MapModeSelection,
     MapTerrain,
@@ -321,7 +328,8 @@ private fun destinationUsesTerminalOverlay(destination: PIPSuriOSDestination): B
         PIPSuriOSDestination.MapLoading,
         PIPSuriOSDestination.MapTerrain,
         PIPSuriOSDestination.CivTakLoading,
-        PIPSuriOSDestination.GoogleMapsLoading -> false
+        PIPSuriOSDestination.GoogleMapsLoading,
+        PIPSuriOSDestination.Detector -> false
         else -> true
     }
 
@@ -339,6 +347,14 @@ private fun PIPSuriOSApp(
     var destination by rememberSaveable(
         stateSaver = PIPSuriOSDestinationSaver
     ) { mutableStateOf(initialDestination) }
+    LaunchedEffect(destination) {
+        val activity = context as? Activity ?: return@LaunchedEffect
+        activity.requestedOrientation = if (destination == PIPSuriOSDestination.RunicTranslator) {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+    }
     val operatorProfileRepository = remember(context) {
         OperatorProfileRepository.from(context.applicationContext)
     }
@@ -371,6 +387,9 @@ private fun PIPSuriOSApp(
     var morseOutput by remember { mutableStateOf("") }
     var binaryInput by remember { mutableStateOf("") }
     var binaryOutput by remember { mutableStateOf("") }
+    var runicInput by remember { mutableStateOf("") }
+    var runicOutput by remember { mutableStateOf("") }
+    var runicDirection by remember { mutableStateOf(RunicCodec.Direction.LATIN_TO_RUNES) }
     val loadoutConfigurationRepository = remember(context) {
         LoadoutConfigurationRepository.from(context.applicationContext)
     }
@@ -740,6 +759,7 @@ private fun PIPSuriOSApp(
             PIPSuriOSDestination.Tools -> ToolsScreen(
                 onMapSelected = { destination = PIPSuriOSDestination.MapLoading },
                 onCommsSelected = { destination = PIPSuriOSDestination.CommsLoading },
+                onDetectorSelected = { destination = PIPSuriOSDestination.Detector },
                 onGeigerCounterSelected = {
                     destination = PIPSuriOSDestination.GeigerCounterLoading
                 },
@@ -747,6 +767,10 @@ private fun PIPSuriOSApp(
                     destination = PIPSuriOSDestination.ProximityRadioScannerLoading
                 },
                 onBack = { destination = PIPSuriOSDestination.HomeOperation }
+            )
+
+            PIPSuriOSDestination.Detector -> DetectorScreen(
+                onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
             PIPSuriOSDestination.ProximityRadioScannerLoading -> ProximityRadioScannerLoadingScreen(
@@ -1467,6 +1491,12 @@ private fun PIPSuriOSApp(
                 onFrequenciesSelected = { destination = PIPSuriOSDestination.CommsFrequencies },
                 onMorseSelected = { destination = PIPSuriOSDestination.MorseModeSelection },
                 onBinarySelected = { destination = PIPSuriOSDestination.BinaryModeSelection },
+                onRunicSelected = {
+                    runicInput = ""
+                    runicOutput = ""
+                    runicDirection = RunicCodec.Direction.LATIN_TO_RUNES
+                    destination = PIPSuriOSDestination.RunicTranslator
+                },
                 onBack = { destination = PIPSuriOSDestination.Tools }
             )
 
@@ -1532,6 +1562,25 @@ private fun PIPSuriOSApp(
                     binaryOutput = ""
                     destination = PIPSuriOSDestination.BinaryToTextInput
                 }
+            )
+
+            PIPSuriOSDestination.RunicTranslator -> RunicTranslatorScreen(
+                input = runicInput,
+                output = runicOutput,
+                direction = runicDirection,
+                onInputChanged = { runicInput = it },
+                onDirectionChanged = {
+                    runicDirection = it
+                    runicOutput = ""
+                },
+                onTranslate = {
+                    runicOutput = RunicCodec.translate(runicInput, runicDirection)
+                },
+                onClear = {
+                    runicInput = ""
+                    runicOutput = ""
+                },
+                onBack = { destination = PIPSuriOSDestination.CommsModeSelection }
             )
 
             PIPSuriOSDestination.MapLoading -> MapLoadingScreen(

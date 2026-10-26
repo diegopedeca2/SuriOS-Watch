@@ -29,6 +29,8 @@ Copias posteriores:
   híbrido anterior, conservada antes de aplicar la corrección topográfica.
 - `mobile-app-v3.5-sprint-040-final`: copia de la aplicación móvil v3.5 al
   cierre del Sprint 040, sin salidas de compilación ni cachés.
+- `mobile-app-v3.5-sprint-047`: copia de la aplicación móvil v3.5 conservada
+  antes de iniciar el nuevo Sprint móvil.
 
 La cartografía híbrida anterior se conserva dentro de esa copia. La salida
 actual corregida vuelve al estilo topográfico negro/verde y usa PNOA 2023 solo

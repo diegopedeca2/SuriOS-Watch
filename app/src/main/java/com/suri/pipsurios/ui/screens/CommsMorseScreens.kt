@@ -27,13 +27,15 @@ fun CommsModeSelectionScreen(
     onFrequenciesSelected: () -> Unit,
     onMorseSelected: () -> Unit,
     onBinarySelected: () -> Unit,
+    onRunicSelected: () -> Unit,
     onBack: () -> Unit
 ) = TerminalSelectionScreen(
     title = "COMMS SELECT MODE",
     options = listOf(
         "> FREQUENCIES" to onFrequenciesSelected,
         "> MORSE" to onMorseSelected,
-        "> BINARY" to onBinarySelected
+        "> BINARY" to onBinarySelected,
+        "> RUNE TRANSLATOR" to onRunicSelected
     ),
     onBack = onBack
 )

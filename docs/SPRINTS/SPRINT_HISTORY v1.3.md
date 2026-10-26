@@ -1145,3 +1145,23 @@ abiertos como siguiente paso externo.
 
 Documento del Sprint: [Sprint 046 v1.0](SPRINT_046_v1.0.md).
 Auditoría: [AUDIT_SPRINT_046](../AUDIT_SPRINT_046.md).
+
+## 51. Cierre documental de Sprint 047 de SuriOS mobile / Radar
+
+El Sprint 047 se cierra el 2026-10-26 con la app movil en v3.6
+(`versionCode 16`). Se entrega `TOOLS > DETECTOR`, `COMMS > RUNE TRANSLATOR`,
+la lectura BLE del ESP32/LD2450 y la pantalla equivalente del radar en el
+reloj.
+
+La auditoria valida tests, compilacion, Lint, instalacion en el Samsung A56 y
+la instalacion en el Galaxy Watch Ultra. La pantalla movil mantiene el GRID y
+usa controles simetricos; el reloj muestra `E` y `N` dentro de la rueda
+dentada. Ambos representan la onda como una linea curva de 10 segundos.
+
+El control `ECO` llega correctamente al firmware y detiene el sondeo mientras
+mantiene Bluetooth. El ahorro de energia fisico queda abierto porque el
+framework Arduino devuelve `ESP_ERR_NOT_SUPPORTED`; tambien queda abierto el
+corte de alimentacion del LD2450 mediante hardware.
+
+Documento del Sprint: [Sprint 047 v1.0](SPRINT_047_v1.0.md).
+Auditoria: [AUDIT_SPRINT_047](../AUDIT_SPRINT_047.md).

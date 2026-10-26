@@ -413,6 +413,7 @@ fun ProximityRadioScannerV4Screen(
 fun ToolsScreen(
     onMapSelected: () -> Unit,
     onCommsSelected: () -> Unit,
+    onDetectorSelected: () -> Unit,
     onGeigerCounterSelected: () -> Unit,
     onProximityRadioScannerSelected: () -> Unit,
     onBack: () -> Unit
@@ -437,6 +438,13 @@ fun ToolsScreen(
                 fontSize = 24.sp,
                 fontFamily = FontFamily.Monospace,
                 modifier = Modifier.clickable(onClick = onCommsSelected)
+            )
+            Text(
+                text = "> DETECTOR",
+                color = PipGreen,
+                fontSize = 24.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable(onClick = onDetectorSelected)
             )
             Text(
                 text = "> MAP",
