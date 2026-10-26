@@ -25,7 +25,7 @@ datos que gestionen esas aplicaciones.
 Si ELY cambia sus funciones de datos, esta política se actualizará antes de la
 distribución de la nueva versión.
 
-Contacto del desarrollador: [añadir aquí el correo público del desarrollador]
+Contacto del desarrollador: diegopedeca2@gmail.com
 
 Este borrador debe publicarse en una URL accesible antes de una publicación
 cerrada o pública y debe revisarse con los datos reales del desarrollador.
