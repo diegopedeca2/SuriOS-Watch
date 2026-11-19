@@ -4,19 +4,50 @@
 
 document: ACTIVE_SPRINT
 status: Registro operativo canonico
-last_updated: 2026-10-26
+last_updated: 2026-11-19
 sprint_047_status: CLOSED_DOCUMENTALLY
-play_console_status: ACCOUNT_CREATED_PENDING_GOOGLE_VALIDATION
-publication_status: PENDING
-submission_status: PENDING
+sprint_048_status: CLOSED_DOCUMENTALLY
+sprint_049_status: CLOSED_DOCUMENTALLY
+sprint_050_status: CONTINUITY_PHYSICAL_TEST_PENDING
+sprint_051_status: CLOSED_TECHNICAL
+play_console_status: ACCOUNT_VALIDATED
+publication_status: WEAR_OS_INTERNAL_TEST_PUBLISHED
+submission_status: TESTER_OPT_IN_PENDING
+tester_device_status: HUAWEI_GT6_NOT_COMPATIBLE_WITH_WEAR_OS_RELEASE
 
 ---
 
-## Sprint activo
+## Sprint cerrado
 
-No hay un Sprint activo. El Sprint 047 queda cerrado documentalmente;
-la distribucion externa de Google Play Console y las validaciones fisicas
-pendientes siguen fuera del alcance de este cierre.
+El Sprint 051 queda cerrado tecnicamente. Se alinearon el transporte y los
+visualizadores con la semantica de ESPHome, se mejoro la tolerancia a huecos de
+deteccion y se aislo la perdida de alcance en el primer modulo LD2450 probado.
+El segundo modulo alcanzo aproximadamente 5,6 m. ELY y el resto de proyectos
+quedan fuera de alcance.
+
+[Sprint 051 v1.0](SPRINT_051_v1.0.md) - **CLOSED TECHNICALLY**
+
+[Auditoria Sprint 051](../AUDIT_SPRINT_051.md) - **CLOSED; BUILD/LINT PASS; MODULE ISSUE ISOLATED**
+
+[Sprint 050 v1.0](SPRINT_050_v1.0.md) - **CONTINUITY; PHYSICAL TEST PENDING**
+
+[Auditoria Sprint 050](../AUDIT_SPRINT_050.md) - **ACTIVE; CORRECCIONES INTEGRADAS; PRUEBA FISICA PENDIENTE**
+
+[Sprint 049 v1.0](SPRINT_049_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+[Auditoria Sprint 049](../AUDIT_SPRINT_049.md) - **CLOSED DOCUMENTALLY; P1 FISICO, ESTABILIDAD Y ESTETICA PENDIENTES**
+
+[Investigacion LD2450 Sprint 049](../RESEARCH_LD2450_SPRINT_049.md) - **COMPLETADA**
+
+El Sprint 048 queda cerrado documentalmente; su validacion operativa queda
+fuera del Sprint 049.
+
+[Sprint 048 v1.0](SPRINT_048_v1.0.md) - **CLOSED DOCUMENTALLY**
+
+El Sprint 048 publica la esfera ELY como `Library Watchface` en el canal
+especifico de pruebas internas de Wear OS. El AAB `versionCode 6` queda
+publicado y el acceso esta limitado a la lista `Library Watchface testers`,
+con `eknobelsdorf@gmail.com` como unica tester autorizada.
 
 [Sprint 047 v1.0](SPRINT_047_v1.0.md) - **CLOSED DOCUMENTALLY**
 
@@ -45,11 +76,13 @@ Ultra está conectado por ADB en `192.168.1.63:39459`.
 - [ ] Validar visualmente el llenado del icono de batería en varios niveles.
 - [ ] Versionar el módulo ELY, sus assets y la documentación antes del cierre.
 
-### Distribución externa pendiente
+### Distribucion externa pendiente
 
-- [ ] Esperar la validacion de la cuenta de Google Play Console.
-- [ ] Publicar la prueba interna.
-- [ ] Enviar la aplicacion a Google Play.
+- [x] Esperar la validacion de la cuenta de Google Play Console.
+- [x] Publicar la prueba interna.
+- [ ] Enviar la aplicacion a Google Play en produccion.
+- [ ] Si se solicita, abrir un Sprint independiente para portar ELY a Huawei
+      Themes / Watch Face Store.
 
 ## Pendientes de validación física
 

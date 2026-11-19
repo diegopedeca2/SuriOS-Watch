@@ -19,6 +19,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
+import android.os.Build
+import android.util.Log
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -38,7 +40,10 @@ data class BleStatus(
     val detail: String? = null
 )
 
-class RadarBleClient(context: Context) {
+class RadarBleClient(
+    context: Context,
+    private val dataCharacteristicUuid: UUID = DATA_CHARACTERISTIC_UUID
+) {
     private val appContext = context.applicationContext
     private val bluetoothAdapter: BluetoothAdapter? =
         appContext.getSystemService(android.bluetooth.BluetoothManager::class.java)?.adapter
@@ -52,7 +57,12 @@ class RadarBleClient(context: Context) {
     private var scanner: BluetoothLeScanner? = null
     private var gatt: BluetoothGatt? = null
     private var controlCharacteristic: BluetoothGattCharacteristic? = null
+    private var notificationsConfigured = false
     private var running = false
+
+    private val mtuFallback = Runnable {
+        gatt?.let { enableNotificationsOnce(it) }
+    }
 
     private val adapterStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -93,8 +103,16 @@ class RadarBleClient(context: Context) {
     private val scanCallback = object : ScanCallback() {
         @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val announcedName = result.scanRecord?.deviceName ?: result.device.name
-            if (announcedName == RADAR_NAME && gatt == null) {
+            val record = result.scanRecord
+            val announcedName = record?.deviceName ?: result.device.name
+            val serviceAdvertised = record?.serviceUuids?.any { it.uuid == SERVICE_UUID } == true
+            val nameMatches = announcedName == RADAR_NAME || announcedName?.startsWith(RADAR_NAME) == true
+            Log.d(
+                TAG,
+                "BLE scan address=${result.device.address} name=$announcedName " +
+                    "service=$serviceAdvertised rssi=${result.rssi}"
+            )
+            if ((nameMatches || serviceAdvertised) && gatt == null) {
                 stopScan()
                 connect(result.device)
             }
@@ -121,6 +139,7 @@ class RadarBleClient(context: Context) {
                 if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothProfile.STATE_CONNECTED) {
                     this@RadarBleClient.gatt = gatt
                     controlCharacteristic = null
+                    notificationsConfigured = false
                     setStatus(BleConnectionState.CONNECTING, "discovering_services")
                     discoverServices(gatt)
                 } else {
@@ -131,6 +150,7 @@ class RadarBleClient(context: Context) {
             }
         }
 
+        @SuppressLint("MissingPermission")
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             handler.post {
                 if (status != BluetoothGatt.GATT_SUCCESS) {
@@ -139,7 +159,23 @@ class RadarBleClient(context: Context) {
                     if (running) scheduleReconnect("services_failed")
                     return@post
                 }
-                enableNotifications(gatt)
+                // Radar v2 sends 29-byte frames. Request enough ATT payload
+                // before subscribing; the fallback keeps v1 compatible with
+                // stacks that reject MTU negotiation.
+                handler.removeCallbacks(mtuFallback)
+                val mtuRequested = runCatching { gatt.requestMtu(64) }.getOrDefault(false)
+                if (!mtuRequested) {
+                    enableNotificationsOnce(gatt)
+                } else {
+                    handler.postDelayed(mtuFallback, MTU_FALLBACK_MILLIS)
+                }
+            }
+        }
+
+        override fun onMtuChanged(gatt: BluetoothGatt, mtu: Int, status: Int) {
+            handler.post {
+                handler.removeCallbacks(mtuFallback)
+                enableNotificationsOnce(gatt)
             }
         }
 
@@ -150,6 +186,7 @@ class RadarBleClient(context: Context) {
         ) {
             handler.post {
                 if (descriptor.uuid != CLIENT_CHARACTERISTIC_CONFIG_UUID) return@post
+                Log.d(TAG, "BLE descriptor write uuid=${descriptor.uuid} status=$status")
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     setStatus(BleConnectionState.CONNECTED, "notifications_enabled")
                 } else {
@@ -180,6 +217,7 @@ class RadarBleClient(context: Context) {
     @SuppressLint("MissingPermission")
     fun start() {
         if (running) return
+        Log.i(TAG, "BLE client start")
         running = true
         handler.removeCallbacks(reconnect)
         closeGatt(gatt)
@@ -191,6 +229,7 @@ class RadarBleClient(context: Context) {
         running = false
         handler.removeCallbacks(scanTimeout)
         handler.removeCallbacks(reconnect)
+        handler.removeCallbacks(mtuFallback)
         stopScan()
         closeGatt(gatt)
         gatt = null
@@ -204,9 +243,14 @@ class RadarBleClient(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun setEcoMode(enabled: Boolean): Boolean {
+        return writeControlByte(if (enabled) CONTROL_ECO else CONTROL_NORMAL)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun writeControlByte(command: Byte): Boolean {
         val activeGatt = gatt ?: return false
         val control = controlCharacteristic ?: return false
-        val value = byteArrayOf(if (enabled) CONTROL_ECO else CONTROL_NORMAL)
+        val value = byteArrayOf(command)
         val result = activeGatt.writeCharacteristic(
             control,
             value,
@@ -218,6 +262,7 @@ class RadarBleClient(context: Context) {
     @SuppressLint("MissingPermission")
     private fun startScan() {
         if (!running) return
+        Log.i(TAG, "BLE scan requested")
         val adapter = bluetoothAdapter
         if (adapter == null || !adapter.isEnabled) {
             setStatus(BleConnectionState.ERROR, "bluetooth_unavailable")
@@ -234,11 +279,15 @@ class RadarBleClient(context: Context) {
 
         setStatus(BleConnectionState.SCANNING)
         handler.removeCallbacks(scanTimeout)
+        // ESPHome may put the local name in the scan response. Some Wear OS
+        // stacks do not apply a device-name filter to that response, so use an
+        // unfiltered scan and match name/service UUID in onScanResult().
         scanner?.startScan(
-            listOf(ScanFilter.Builder().setDeviceName(RADAR_NAME).build()),
+            null,
             ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build(),
             scanCallback
         )
+        Log.i(TAG, "BLE scan started")
         handler.postDelayed(scanTimeout, SCAN_TIMEOUT_MILLIS)
     }
 
@@ -267,9 +316,11 @@ class RadarBleClient(context: Context) {
     }
 
     @SuppressLint("MissingPermission")
-    private fun enableNotifications(gatt: BluetoothGatt) {
+    private fun enableNotificationsOnce(gatt: BluetoothGatt) {
+        if (notificationsConfigured) return
+        notificationsConfigured = true
         val service = gatt.getService(SERVICE_UUID)
-        val characteristic = service?.getCharacteristic(DATA_CHARACTERISTIC_UUID)
+        val characteristic = service?.getCharacteristic(dataCharacteristicUuid)
         controlCharacteristic = service?.getCharacteristic(CONTROL_CHARACTERISTIC_UUID)
         val descriptor = characteristic?.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG_UUID)
         if (characteristic == null || descriptor == null) {
@@ -286,19 +337,29 @@ class RadarBleClient(context: Context) {
             return
         }
 
-        @Suppress("DEPRECATION")
-        run {
-            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-            if (!gatt.writeDescriptor(descriptor)) {
+        val writeResult = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            gatt.writeDescriptor(descriptor, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)
+        } else {
+            @Suppress("DEPRECATION")
+            run {
+                descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                if (gatt.writeDescriptor(descriptor)) {
+                    BluetoothGatt.GATT_SUCCESS
+                } else {
+                    BluetoothGatt.GATT_FAILURE
+                }
+            }
+        }
+        Log.d(TAG, "BLE descriptor write requested result=$writeResult")
+        if (writeResult != BluetoothGatt.GATT_SUCCESS) {
                 closeGatt(gatt)
                 setStatus(BleConnectionState.ERROR, "descriptor_write_rejected")
                 if (running) scheduleReconnect("descriptor_write_rejected")
-            }
         }
     }
 
     private fun publishCharacteristic(uuid: UUID, value: ByteArray?) {
-        if (uuid != DATA_CHARACTERISTIC_UUID || value == null) return
+        if (uuid != dataCharacteristicUuid || value == null) return
         _packets.tryEmit(value.copyOf())
     }
 
@@ -315,8 +376,11 @@ class RadarBleClient(context: Context) {
             runCatching { it.disconnect() }
             runCatching { it.close() }
         }
-        if (gatt === candidate) gatt = null
-        if (this.gatt == null) controlCharacteristic = null
+        if (gatt === candidate) {
+            gatt = null
+            controlCharacteristic = null
+            notificationsConfigured = false
+        }
     }
 
     private fun setStatus(state: BleConnectionState, detail: String? = null) {
@@ -327,6 +391,8 @@ class RadarBleClient(context: Context) {
         const val RADAR_NAME = "SuriOS Radar"
         val SERVICE_UUID: UUID = UUID.fromString("9e5d0001-7b3a-4c0f-91c2-245000000001")
         val DATA_CHARACTERISTIC_UUID: UUID = UUID.fromString("9e5d0002-7b3a-4c0f-91c2-245000000001")
+        val V2_DATA_CHARACTERISTIC_UUID: UUID = UUID.fromString("9e5d0004-7b3a-4c0f-91c2-245000000001")
+        val MINI_DATA_CHARACTERISTIC_UUID: UUID = UUID.fromString("9e5d0005-7b3a-4c0f-91c2-245000000001")
         val CONTROL_CHARACTERISTIC_UUID: UUID = UUID.fromString("9e5d0003-7b3a-4c0f-91c2-245000000001")
         private const val CONTROL_NORMAL: Byte = 0x00
         private const val CONTROL_ECO: Byte = 0x01
@@ -334,5 +400,7 @@ class RadarBleClient(context: Context) {
             UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
         private const val SCAN_TIMEOUT_MILLIS = 10_000L
         private const val RECONNECT_DELAY_MILLIS = 1_500L
+        private const val MTU_FALLBACK_MILLIS = 1_500L
+        private const val TAG = "RadarBleClient"
     }
 }

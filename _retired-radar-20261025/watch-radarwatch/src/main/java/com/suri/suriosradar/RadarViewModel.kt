@@ -16,6 +16,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -66,7 +67,9 @@ class RadarViewModel(application: Application) : AndroidViewModel(application) {
             bleClient.status.collectLatest(::onBleStatus)
         }
         viewModelScope.launch {
-            bleClient.packets.collectLatest(::onPacketBytes)
+            // Process every packet in order. Packet handling is synchronous and
+            // cheap; collectLatest could cancel a packet while a burst arrives.
+            bleClient.packets.collect(::onPacketBytes)
         }
         viewModelScope.launch {
             while (isActive) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="false"
+        android:label="SuriOS Wallet"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+        <activity
+            android:name=".WalletBridgeActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+    </application>
+
+</manifest>

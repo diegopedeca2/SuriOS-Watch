@@ -265,6 +265,12 @@ private fun RadarGridScreen(
                     modifier = Modifier.clickable(onClick = onRequestPermissions)
                 )
             }
+            Text(
+                text = ui.packetDiagnostics(),
+                color = RadarPalette.Gray,
+                fontFamily = RadarConsolas,
+                fontSize = 7.sp
+            )
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 EcoControlButton(label = "E", selected = ui.ecoMode) {
                     onEcoModeToggle(true)
@@ -393,7 +399,7 @@ private fun RadarCone(targets: List<RadarTarget>, modifier: Modifier) {
             val distance = hypot(target.xMm.toFloat(), target.yMm.toFloat())
             val bearing = Math.toDegrees(atan2(target.xMm.toDouble(), target.yMm.toDouble())).toFloat()
             target.visible &&
-                target.yMm >= 0 &&
+                target.yMm > 0 &&
                 distance <= MAX_RANGE_MM &&
                 abs(bearing) <= halfBeam
         }
@@ -490,6 +496,15 @@ private fun RadarUiState.statusColor(): Color = when (mode) {
         else -> RadarPalette.Amber
     }
     null -> RadarPalette.Gray
+}
+
+private fun RadarUiState.packetDiagnostics(): String {
+    val sequence = lastSequence?.toString() ?: "--"
+    val age = lastPacketAgeMillis?.let {
+        String.format(Locale.US, "%.1fs", it / 1000f)
+    } ?: "--"
+    val visible = targets.count { it.visible }
+    return "RX:$receivedPackets V:$visible SEQ:$sequence AGE:$age LOST:$lostPackets"
 }
 
 private fun RadarDisplayState.label(): String = when (this) {
